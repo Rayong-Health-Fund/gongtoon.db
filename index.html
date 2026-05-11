@@ -1395,6 +1395,34 @@ body {
 .p1-badge-other    { background:#f3f4f6; color:#374151; }
 .p1-error-wrap { display:flex; align-items:center; gap:0.6rem; padding:0.875rem 1rem; background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; color:#c2410c; font-size:0.8rem; margin-bottom:1rem; }
 
+/* ── P1 Accordion Inline Dashboard ── */
+.p1-acc-search-sticky {
+  position: sticky;
+  top: 52px;
+  background: var(--white);
+  z-index: 50;
+  padding: 0.45rem 0;
+  margin-bottom: 0.75rem;
+  border-bottom: 1.5px solid var(--border-light);
+}
+/* P1 District Drill-down */
+.p1-dist-item { margin-bottom:0.55rem; border:1.5px solid var(--border-light); border-radius:10px; overflow:hidden; transition:box-shadow 0.18s; }
+.p1-dist-item:hover { box-shadow:0 3px 12px rgba(30,64,175,0.10); }
+.p1-dist-header { display:flex; align-items:center; gap:0.65rem; padding:0.65rem 1rem; background:var(--bg-light); cursor:pointer; user-select:none; -webkit-tap-highlight-color:transparent; }
+.p1-dist-header:hover { background:#e8edf5; }
+.p1-dist-title { flex:1; font-size:0.88rem; font-weight:700; color:var(--text-dark); }
+.p1-dist-meta { font-size:0.7rem; color:var(--text-gray); white-space:nowrap; }
+.p1-dist-badge { font-size:0.65rem; background:#d1fae5; color:#065f46; padding:2px 8px; border-radius:10px; white-space:nowrap; flex-shrink:0; }
+.p1-dist-chevron { font-size:0.78rem; color:var(--text-gray); transition:transform 0.25s ease; flex-shrink:0; }
+.p1-dist-body { display:none; border-top:1px solid var(--border-light); }
+.p1-sd-row:hover td { background:#f8fafc; }
+@media (max-width:600px) {
+  .p1-dist-meta { display:none; }
+  #p1-dashboard .chart-container { height:160px !important; }
+  #tab1-dashboard > div[style*="grid-template-columns:1fr 1fr"] { display:block !important; }
+  #tab1-dashboard > div[style*="grid-template-columns:1fr 1fr"] > div { margin-bottom:0.75rem; }
+}
+
 /* ── PROJECT 2 EQUIPMENT ─────────────────────────── */
 /* Service center list */
 .p2-search-wrap { margin-bottom:0.5rem; }
@@ -1636,22 +1664,189 @@ body {
     </div>
     <div class="acc-body" id="accBody1">
       <div class="acc-body-inner">
-        <div id="p1-content">
+
+        <!-- ── Skeleton: shown until accordion first opens ── -->
+        <div id="p1-loading">
           <div class="sk-screen">
-            <div class="sk-kpi-row">
-              <div class="sk-card sk-block"></div>
+            <div class="sk-kpi-row" style="grid-template-columns:repeat(3,1fr);">
               <div class="sk-card sk-block"></div>
               <div class="sk-card sk-block"></div>
               <div class="sk-card sk-block"></div>
             </div>
-            <div class="sk-bar sk-block"></div>
-            <div class="sk-line sk-block"></div>
-            <div class="sk-line sk-block w70"></div>
+            <div class="sk-bar sk-block" style="margin-bottom:.5rem;"></div>
+            <div class="sk-kpi-row" style="margin-bottom:.75rem;">
+              <div class="sk-block" style="height:28px;border-radius:6px;"></div>
+              <div class="sk-block" style="height:28px;border-radius:6px;"></div>
+              <div class="sk-block" style="height:28px;border-radius:6px;"></div>
+              <div class="sk-block" style="height:28px;border-radius:6px;"></div>
+            </div>
+            <div class="sk-equip-row sk-block"></div>
+            <div class="sk-equip-row sk-block"></div>
+            <div class="sk-equip-row sk-block" style="width:75%;"></div>
           </div>
         </div>
-        <button class="acc-open-btn" onclick="openModal('project1Modal')">
-          📊 เปิดแดชบอร์ดเต็ม
-        </button>
+
+        <!-- ── Full Inline Dashboard (shown after initProject1 runs) ── -->
+        <div id="p1-dashboard" style="display:none;">
+
+          <!-- Live data status badge -->
+          <div id="p1-live-status"></div>
+
+          <!-- KPI Summary Cards (populated by initProject1) -->
+          <div class="summary-cards" style="margin-bottom:1.1rem;">
+            <div class="summary-card" style="border-top:3px solid #1e40af;">
+              <span class="summary-card-value" style="color:#1e40af;" id="p1ModalTotal">—</span>
+              <span class="summary-card-label">รายการทั้งหมด (ราย)</span>
+            </div>
+            <div class="summary-card" style="border-top:3px solid #10b981;">
+              <span class="summary-card-value" style="color:#10b981;" id="p1ModalDone">—</span>
+              <span class="summary-card-label">แล้วเสร็จ (ราย)</span>
+            </div>
+            <div class="summary-card" style="border-top:3px solid #f59e0b;">
+              <span class="summary-card-value" style="color:#f59e0b;" id="p1ModalPending">—</span>
+              <span class="summary-card-label">กำลังดำเนินการ (ราย)</span>
+            </div>
+            <div class="summary-card" style="border-top:3px solid #059669;">
+              <span class="summary-card-value" style="color:#059669;" id="p1ModalBudget">—</span>
+              <span class="summary-card-label">งบประมาณรวม (บาท)</span>
+            </div>
+            <div class="summary-card" style="border-top:3px solid #8b5cf6;">
+              <span class="summary-card-value" style="color:#8b5cf6;" id="p1ModalDistricts">—</span>
+              <span class="summary-card-label">อำเภอ</span>
+            </div>
+            <div class="summary-card" style="border-top:3px solid #06b6d4;">
+              <span class="summary-card-value" style="color:#06b6d4;" id="p1ModalAvg">—</span>
+              <span class="summary-card-label">งบเฉลี่ย/หลัง</span>
+            </div>
+          </div>
+
+          <!-- Tab Buttons -->
+          <div class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab1('dashboard', this)">📊 แดชบอร์ด</button>
+            <button class="tab-btn" onclick="switchTab1('list', this)">📋 รายการบ้าน</button>
+            <button class="tab-btn" onclick="switchTab1('summary', this)">🗺️ สรุปข้อมูล</button>
+          </div>
+
+          <!-- TAB: DASHBOARD (Charts) -->
+          <div id="tab1-dashboard" class="tab-content active">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+              <div>
+                <h6 class="section-header" style="font-size:0.78rem;">📅 งบประมาณตามปีงบประมาณ (ล้านบาท)</h6>
+                <div class="chart-container" style="height:220px;padding:0.75rem;">
+                  <canvas id="p1ChartYear"></canvas>
+                </div>
+              </div>
+              <div>
+                <h6 class="section-header" style="font-size:0.78rem;">📍 สัดส่วนตามอำเภอ (หลัง)</h6>
+                <div class="chart-container" style="height:220px;padding:0.75rem;">
+                  <canvas id="p1ChartDistrict"></canvas>
+                </div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+              <div>
+                <h6 class="section-header" style="font-size:0.78rem;">👤 ประเภทผู้รับประโยชน์</h6>
+                <div class="chart-container" style="height:200px;padding:0.75rem;">
+                  <canvas id="p1ChartType"></canvas>
+                </div>
+              </div>
+              <div>
+                <h6 class="section-header" style="font-size:0.78rem;">♿ ประเภทความพิการ (ป.1–ป.7)</h6>
+                <div class="chart-container" style="height:200px;padding:0.75rem;">
+                  <canvas id="p1ChartDisability"></canvas>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h6 class="section-header" style="font-size:0.78rem;">🎂 การกระจายตัวตามช่วงอายุ</h6>
+              <div class="chart-container" style="height:180px;padding:0.75rem;">
+                <canvas id="p1ChartAge"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: LIST (รายการบ้าน) -->
+          <div id="tab1-list" class="tab-content">
+            <h6 class="section-header">📋 รายการบ้านทั้งหมด</h6>
+            <div class="filter-row">
+              <div class="filter-group">
+                <label class="filter-label">ปีงบประมาณ</label>
+                <select class="year-select" id="p1YearFilter" onchange="loadP1List()">
+                  <option value="all">ทั้งหมด</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label class="filter-label">เลือกอำเภอ</label>
+                <select class="year-select" id="p1DistrictFilter" onchange="updateP1SubDistrictFilter();loadP1List()">
+                  <option value="all">ทั้งหมด</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label class="filter-label">เลือกตำบล</label>
+                <select class="year-select" id="p1SubDistrictFilter" onchange="loadP1List()">
+                  <option value="all">ทั้งหมด</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label class="filter-label">ประเภท</label>
+                <select class="year-select" id="p1TypeFilter" onchange="loadP1List()">
+                  <option value="all">ทั้งหมด</option>
+                  <option value="ผู้สูงอายุ">ผู้สูงอายุ</option>
+                  <option value="ผู้พิการ">ผู้พิการ</option>
+                  <option value="ผู้สูงอายุ/ผู้พิการ">ผู้สูงอายุ/ผู้พิการ</option>
+                </select>
+              </div>
+            </div>
+            <!-- รพ.สต. Specific Search -->
+            <div class="filter-row" style="margin-top:-.4rem;margin-bottom:.35rem;">
+              <div class="filter-group" style="flex:1;min-width:180px;">
+                <label class="filter-label">🏥 ค้นหาตาม รพ.สต. / ตำบล</label>
+                <input type="text" class="year-select" id="p1HpcSearch"
+                  placeholder="พิมพ์ชื่อ รพ.สต. หรือ ตำบล..."
+                  oninput="loadP1List()"
+                  style="font-size:0.84rem;padding:0.45rem 0.75rem;font-family:inherit;">
+              </div>
+            </div>
+            <!-- Global Search -->
+            <div class="p1-acc-search-sticky">
+              <input type="text" class="modal-search-input" id="p1Search"
+                placeholder="🔍 ค้นหาชื่อ, ตำบล, อำเภอ, สถานะ..." onkeyup="loadP1List()">
+            </div>
+            <div class="table-action-row">
+              <div id="p1ListCount" style="font-size:0.78rem;color:var(--text-gray);"></div>
+              <button class="btn-export" onclick="exportToExcel('p1ListTable','P1_รายการบ้าน')">📥 Export Excel</button>
+            </div>
+            <div class="table-responsive sticky-table">
+              <table class="table-custom" id="p1ListTable">
+                <thead><tr>
+                  <th style="width:4%;">#</th>
+                  <th style="width:18%;">ชื่อ</th>
+                  <th style="width:5%;">อายุ</th>
+                  <th style="width:12%;">ประเภท</th>
+                  <th style="width:12%;">ตำบล</th>
+                  <th style="width:9%;">อำเภอ</th>
+                  <th style="width:10%;">งบประมาณ</th>
+                  <th style="width:7%;">ปี</th>
+                  <th style="width:11%;">สถานะ</th>
+                  <th style="width:12%;">ประเภทความพิการ</th>
+                </tr></thead>
+                <tbody id="p1ListBody"></tbody>
+              </table>
+            </div>
+            <div id="p1ListNoResults" class="no-results" style="display:none;">
+              <div class="no-results-icon">🔍</div><p class="no-results-text">ไม่พบข้อมูล</p>
+            </div>
+            <div id="p1Pagination" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px;padding:1rem 0 0.5rem;"></div>
+          </div>
+
+          <!-- TAB: SUMMARY (สรุปข้อมูล) — District → Subdistrict Drill-down -->
+          <div id="tab1-summary" class="tab-content">
+            <h6 class="section-header">🗺️ สรุปข้อมูล · อำเภอ → ตำบล</h6>
+            <p style="font-size:0.75rem;color:var(--text-gray);margin-bottom:1rem;">คลิกที่ชื่ออำเภอเพื่อดูรายละเอียดระดับตำบล</p>
+            <div id="p1-district-drilldown"></div>
+          </div>
+
+        </div><!-- /#p1-dashboard -->
       </div>
     </div>
   </div>
@@ -1814,188 +2009,7 @@ body {
 
 </div>
 
-<!-- PROJECT MODALS -->
-<div class="modal fade" id="project1Modal" tabindex="-1">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><span style="font-size:1.5rem;">🏠</span> ปรับสภาพบ้านผู้พิการและผู้สูงอายุ</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="alert-info">
-          <span style="font-size:1.4rem;">📊</span>
-          <div><strong>สรุปข้อมูล:</strong> 342 หลัง, 9 ปีงบประมาณ, 8 อำเภอ, งบรวม ฿15.55M</div>
-        </div>
-
-        <!-- KPI CARDS -->
-        <div style="margin-bottom:1.25rem;">
-          <h6 class="section-header">📈 ตัวชี้วัดสำคัญ</h6>
-          <div class="summary-cards">
-            <div class="summary-card" style="border-top:3px solid #1e40af;">
-              <span class="summary-card-value" style="color:#1e40af;" id="p1ModalTotal">342</span>
-              <span class="summary-card-label">รายการทั้งหมด (ราย)</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #ef4444;">
-              <span class="summary-card-value" style="color:#ef4444;" id="p1ModalDone">331</span>
-              <span class="summary-card-label">แล้วเสร็จ (ราย)</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #f59e0b;">
-              <span class="summary-card-value" style="color:#f59e0b;" id="p1ModalPending">11</span>
-              <span class="summary-card-label">กำลังดำเนินการ (ราย)</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #10b981;">
-              <span class="summary-card-value" style="color:#10b981;">15.55M</span>
-              <span class="summary-card-label">งบประมาณรวม (บาท)</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #8b5cf6;">
-              <span class="summary-card-value" style="color:#8b5cf6;">8</span>
-              <span class="summary-card-label">อำเภอ</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #06b6d4;">
-              <span class="summary-card-value" style="color:#06b6d4;">45.5K</span>
-              <span class="summary-card-label">งบเฉลี่ย/หลัง</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- TABS -->
-        <div class="tabs-container">
-          <button class="tab-btn active" onclick="switchTab1('dashboard', this)">📊 แดชบอร์ด</button>
-          <button class="tab-btn" onclick="switchTab1('list', this)">📋 รายการบ้าน</button>
-          <button class="tab-btn" onclick="switchTab1('district', this)">🗺️ รายอำเภอ</button>
-        </div>
-
-        <!-- TAB: DASHBOARD -->
-        <div id="tab1-dashboard" class="tab-content active">
-          <!-- Row 1: Budget trend + District distribution -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-            <div>
-              <h6 class="section-header" style="font-size:0.78rem;">📅 งบประมาณตามปีงบประมาณ (ล้านบาท)</h6>
-              <div class="chart-container" style="height:220px;padding:0.75rem;">
-                <canvas id="p1ChartYear"></canvas>
-              </div>
-            </div>
-            <div>
-              <h6 class="section-header" style="font-size:0.78rem;">📍 สัดส่วนตามอำเภอ (หลัง)</h6>
-              <div class="chart-container" style="height:220px;padding:0.75rem;">
-                <canvas id="p1ChartDistrict"></canvas>
-              </div>
-            </div>
-          </div>
-          <!-- Row 2: Person type + Disability type -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-            <div>
-              <h6 class="section-header" style="font-size:0.78rem;">👤 ประเภทผู้รับประโยชน์</h6>
-              <div class="chart-container" style="height:200px;padding:0.75rem;">
-                <canvas id="p1ChartType"></canvas>
-              </div>
-            </div>
-            <div>
-              <h6 class="section-header" style="font-size:0.78rem;">♿ ประเภทความพิการ (ป.1–ป.7)</h6>
-              <div class="chart-container" style="height:200px;padding:0.75rem;">
-                <canvas id="p1ChartDisability"></canvas>
-              </div>
-            </div>
-          </div>
-          <!-- Row 3: Age distribution -->
-          <div>
-            <h6 class="section-header" style="font-size:0.78rem;">🎂 การกระจายตัวตามช่วงอายุ</h6>
-            <div class="chart-container" style="height:180px;padding:0.75rem;">
-              <canvas id="p1ChartAge"></canvas>
-            </div>
-          </div>
-        </div>
-
-        <!-- TAB: LIST -->
-        <div id="tab1-list" class="tab-content">
-          <h6 class="section-header">📋 รายการบ้านทั้งหมด</h6>
-          <div class="filter-row">
-            <div class="filter-group">
-              <label class="filter-label">ปีงบประมาณ</label>
-              <select class="year-select" id="p1YearFilter" onchange="loadP1List()">
-                <option value="all">ทั้งหมด</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label class="filter-label">เลือกอำเภอ</label>
-              <select class="year-select" id="p1DistrictFilter" onchange="updateP1SubDistrictFilter();loadP1List()">
-                <option value="all">ทั้งหมด</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label class="filter-label">เลือกตำบล</label>
-              <select class="year-select" id="p1SubDistrictFilter" onchange="loadP1List()">
-                <option value="all">ทั้งหมด</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label class="filter-label">ประเภท</label>
-              <select class="year-select" id="p1TypeFilter" onchange="loadP1List()">
-                <option value="all">ทั้งหมด</option>
-                <option value="ผู้สูงอายุ">ผู้สูงอายุ</option>
-                <option value="ผู้พิการ">ผู้พิการ</option>
-                <option value="ผู้สูงอายุ/ผู้พิการ">ผู้สูงอายุ/ผู้พิการ</option>
-              </select>
-            </div>
-          </div>
-          <div class="modal-search-sticky">
-            <input type="text" class="modal-search-input" id="p1Search"
-              placeholder="🔍 ค้นหาชื่อ, ตำบล, อำเภอ..." onkeyup="loadP1List()">
-          </div>
-          <div class="table-action-row">
-            <div id="p1ListCount" style="font-size:0.78rem;color:var(--text-gray);"></div>
-            <button class="btn-export" onclick="exportToExcel('p1ListTable','P1_รายการบ้าน')">📥 Export Excel</button>
-          </div>
-          <div class="table-responsive sticky-table">
-            <table class="table-custom" id="p1ListTable">
-              <thead><tr>
-                <th style="width:4%;">#</th>
-                <th style="width:18%;">ชื่อ</th>
-                <th style="width:5%;">อายุ</th>
-                <th style="width:12%;">ประเภท</th>
-                <th style="width:12%;">ตำบล</th>
-                <th style="width:9%;">อำเภอ</th>
-                <th style="width:10%;">งบประมาณ</th>
-                <th style="width:7%;">ปี</th>
-                <th style="width:11%;">สถานะ</th>
-                <th style="width:12%;">ประเภทความพิการ</th>
-              </tr></thead>
-              <tbody id="p1ListBody"></tbody>
-            </table>
-          </div>
-          <div id="p1ListNoResults" class="no-results" style="display:none;">
-            <div class="no-results-icon">🔍</div><p class="no-results-text">ไม่พบข้อมูล</p>
-          </div>
-          <!-- PAGINATION -->
-          <div id="p1Pagination" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px;padding:1rem 0 0.5rem;"></div>
-        </div>
-
-        <!-- TAB: DISTRICT -->
-        <div id="tab1-district" class="tab-content">
-          <h6 class="section-header">🗺️ สรุปข้อมูลรายอำเภอ</h6>
-          <div class="table-responsive">
-            <table class="table-custom" id="p1DistrictTable">
-              <thead><tr>
-                <th style="width:14%;">อำเภอ</th>
-                <th style="width:8%;">หลัง</th>
-                <th style="width:13%;">งบรวม (บาท)</th>
-                <th style="width:12%;">งบเฉลี่ย</th>
-                <th style="width:9%;">ผู้สูงอายุ</th>
-                <th style="width:9%;">ผู้พิการ</th>
-                <th style="width:12%;">สูงอายุ/พิการ</th>
-                <th style="width:9%;">แล้วเสร็จ</th>
-                <th style="width:14%;">กำลังดำเนินการ</th>
-              </tr></thead>
-              <tbody id="p1DistrictBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
+<!-- PROJECT MODALS (Project 1 is now inline in the accordion above) -->
 
 <div class="modal fade" id="project2Modal" tabindex="-1">
   <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -3927,8 +3941,7 @@ window.openModal = function openModal(modalId) {
   modal.show();
   // Init project data after modal is shown
   modalEl.addEventListener('shown.bs.modal', function() {
-    if (modalId === "project1Modal") initProject1();
-    else if (modalId === "project2Modal") initProject2();
+    if (modalId === "project2Modal") initProject2();
     else if (modalId === "project3Modal") initP3();
     else if (modalId === "project4Modal") initP4();
   }, { once: true });
@@ -4640,19 +4653,30 @@ var project1Records=[{"n":"นายนารี รื่นรมย์","a":5
 var p1Charts = {};
 
 function switchTab1(tab, btnEl) {
-  document.querySelectorAll("#project1Modal .tab-btn").forEach(function(b){b.classList.remove("active");});
+  document.querySelectorAll("#p1-dashboard .tab-btn").forEach(function(b){b.classList.remove("active");});
   if (btnEl) btnEl.classList.add("active");
-  document.querySelectorAll("#project1Modal .tab-content").forEach(function(c){c.classList.remove("active");});
-  document.getElementById("tab1-" + tab).classList.add("active");
-  if (tab === "dashboard") renderP1Charts();
+  document.querySelectorAll("#p1-dashboard .tab-content").forEach(function(c){c.classList.remove("active");});
+  var tabEl = document.getElementById("tab1-" + tab);
+  if (tabEl) tabEl.classList.add("active");
+  if (tab === "dashboard") setTimeout(renderP1Charts, 50);
+  if (tab === "summary") buildP1DistrictDrilldown();
+  setTimeout(p1RefreshHeight, 120);
 }
 
 function initProject1() {
   if (window.p1Initialized) return;
   window.p1Initialized = true;
 
-  // Populate year filter
-  var years = ["2558-2560","2561","2562","2563","2564","2565","2566","2567","2568","2569"];
+  // Hide skeleton, show dashboard
+  var loading = document.getElementById('p1-loading');
+  var dashboard = document.getElementById('p1-dashboard');
+  if (loading) loading.style.display = 'none';
+  if (dashboard) { dashboard.style.display = 'block'; p1FadeIn(dashboard); }
+
+  // Populate year filter (derived from actual data, latest first)
+  var yearSet = {};
+  project1Records.forEach(function(r){ if(r.y) yearSet[r.y]=true; });
+  var years = Object.keys(yearSet).sort(function(a,b){ return b.localeCompare(a); });
   var ySel = document.getElementById("p1YearFilter");
   if (ySel) years.forEach(function(y){
     var o = document.createElement("option"); o.value = y; o.textContent = "ปีงบ " + y;
@@ -4660,30 +4684,43 @@ function initProject1() {
   });
 
   // Populate district filter
-  var districts = ["นิคมพัฒนา","บ้านค่าย","บ้านฉาง","ปลวกแดง","วังจันทร์","เขาชะเมา","เมือง","แกลง"];
+  var distSet = {};
+  project1Records.forEach(function(r){ if(r.d) distSet[r.d]=true; });
+  var districts = Object.keys(distSet).sort(function(a,b){ return a.localeCompare(b,'th'); });
   var dSel = document.getElementById("p1DistrictFilter");
   if (dSel) districts.forEach(function(d){
     var o = document.createElement("option"); o.value = d; o.textContent = d;
     dSel.appendChild(o);
   });
 
-  // Update modal summary KPI cards with real data
-  var p1Total   = project1Records.length;
-  var p1Done    = project1Records.filter(function(r){ return r.s && r.s.indexOf('แล้วเสร็จ') > -1; }).length;
-  var p1Pend    = Math.max(0, p1Total - p1Done);
-  var elT = document.getElementById('p1ModalTotal');
-  var elD = document.getElementById('p1ModalDone');
-  var elP = document.getElementById('p1ModalPending');
-  if (elT) elT.textContent = p1Total;
-  if (elD) elD.textContent = p1Done;
-  if (elP) elP.textContent = p1Pend;
+  // Calculate KPI stats
+  var p1Total  = project1Records.length;
+  var p1Done   = project1Records.filter(function(r){ return r.s && r.s.indexOf('แล้วเสร็จ') > -1; }).length;
+  var p1Pend   = Math.max(0, p1Total - p1Done);
+  var totalBud = project1Records.reduce(function(s,r){ return s+(r.b||0); }, 0);
+  var distCount = Object.keys(distSet).length;
+  var avgBud    = p1Total > 0 ? Math.round(totalBud / p1Total) : 0;
 
-  // Fill district summary table
-  buildP1DistrictTable();
+  // Update inline KPI cards
+  function setEl(id, v) { var e=document.getElementById(id); if(e) e.textContent=v; }
+  setEl('p1ModalTotal',     p1Total);
+  setEl('p1ModalDone',      p1Done);
+  setEl('p1ModalPending',   p1Pend);
+  setEl('p1ModalBudget',    (totalBud/1000000).toFixed(2)+'M');
+  setEl('p1ModalDistricts', distCount);
+  setEl('p1ModalAvg',       avgBud.toLocaleString('th-TH'));
 
-  // Initial list + dashboard
+  // Update accordion header mini-stats
+  setEl('p1HeaderHouses', p1Total);
+  setEl('p1HeaderBudget', (totalBud/1000000).toFixed(2)+'M');
+
+  // Build district drill-down
+  buildP1DistrictDrilldown();
+
+  // Load list (latest first) + render charts
   loadP1List();
-  renderP1Charts();
+  setTimeout(renderP1Charts, 100);
+  setTimeout(p1RefreshHeight, 350);
 }
 
 function renderP1Charts() {
@@ -4826,16 +4863,27 @@ function loadP1List() {
   var distVal    = (document.getElementById("p1DistrictFilter")||{}).value || "all";
   var subdistVal = (document.getElementById("p1SubDistrictFilter")||{}).value || "all";
   var typeVal    = (document.getElementById("p1TypeFilter")||{}).value || "all";
+  var hpcQuery   = ((document.getElementById("p1HpcSearch")||{}).value||"").toLowerCase().trim();
   var query      = ((document.getElementById("p1Search")||{}).value||"").toLowerCase().trim();
   var keywords   = query ? query.split(/\s+/).filter(Boolean) : [];
 
-  p1FilteredRecords = project1Records.filter(function(r) {
+  // Sort latest-first by budget year
+  var sorted = project1Records.slice().sort(function(a, b) {
+    return String(b.y||'').localeCompare(String(a.y||''));
+  });
+
+  p1FilteredRecords = sorted.filter(function(r) {
     if (yearVal    !== "all" && r.y  !== yearVal)    return false;
     if (distVal    !== "all" && r.d  !== distVal)    return false;
     if (subdistVal !== "all" && r.tb !== subdistVal) return false;
     if (typeVal    !== "all" && r.t  !== typeVal)    return false;
+    // รพ.สต. filter: match against agency OR subdistrict (proxy for รพ.สต. coverage area)
+    if (hpcQuery) {
+      var hpcHay = ((r.ag||'') + ' ' + (r.tb||'')).toLowerCase();
+      if (hpcHay.indexOf(hpcQuery) === -1) return false;
+    }
     if (keywords.length > 0) {
-      var hay = (r.n + " " + r.tb + " " + r.d + " " + r.t + " " + r.s).toLowerCase();
+      var hay = ((r.n||'') + " " + (r.tb||'') + " " + (r.d||'') + " " + (r.t||'') + " " + (r.s||'')).toLowerCase();
       if (!keywords.every(function(kw){ return hay.indexOf(kw) > -1; })) return false;
     }
     return true;
@@ -4953,37 +5001,93 @@ function renderP1Pagination(totalPages) {
   container.appendChild(mkBtn("ถัดไป ›", p1CurrentPage+1, p1CurrentPage===totalPages, false));
 }
 
-function buildP1DistrictTable() {
-  var tbody = document.getElementById("p1DistrictBody");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-  var districtData = [
-    {d:"แกลง",     count:175, budget:8042565, senior:63, disabled:56, both:56, done:175, inprog:0},
-    {d:"บ้านฉาง",  count:41,  budget:1962900, senior:21, disabled:7,  both:13, done:36,  inprog:5},
-    {d:"เขาชะเมา", count:41,  budget:1692641, senior:16, disabled:12, both:13, done:41,  inprog:0},
-    {d:"เมือง",    count:24,  budget:1257733, senior:9,  disabled:8,  both:7,  done:23,  inprog:1},
-    {d:"นิคมพัฒนา",count:21, budget:925773,  senior:10, disabled:8,  both:3,  done:16,  inprog:5},
-    {d:"บ้านค่าย", count:21,  budget:924152,  senior:3,  disabled:3,  both:15, done:21,  inprog:0},
-    {d:"วังจันทร์", count:14, budget:500100,  senior:9,  disabled:2,  both:3,  done:14,  inprog:0},
-    {d:"ปลวกแดง",  count:5,   budget:249100,  senior:1,  disabled:2,  both:2,  done:5,   inprog:0},
-  ];
-  districtData.forEach(function(row) {
-    var avgBudget = row.count > 0 ? Math.round(row.budget/row.count) : 0;
-    var tr = document.createElement("tr");
-    tr.innerHTML =
-      "<td><strong>"+row.d+"</strong></td>" +
-      "<td style=\"text-align:center;font-weight:700;color:#1e40af;\">"+row.count+"</td>" +
-      "<td style=\"text-align:right;\">฿"+Number(row.budget).toLocaleString(undefined,{maximumFractionDigits:0})+"</td>" +
-      "<td style=\"text-align:right;\">฿"+Number(avgBudget).toLocaleString()+"</td>" +
-      "<td style=\"text-align:center;color:#065f46;\">"+row.senior+"</td>" +
-      "<td style=\"text-align:center;color:#991b1b;\">"+row.disabled+"</td>" +
-      "<td style=\"text-align:center;color:#5b21b6;\">"+row.both+"</td>" +
-      "<td style=\"text-align:center;\"><span class=\"badge-status badge-success\">"+row.done+"</span></td>" +
-      "<td style=\"text-align:center;\">"+
-        (row.inprog>0?"<span class=\"badge-status badge-warning\">"+row.inprog+"</span>":"<span style=\"color:var(--text-gray)\">-</span>")+
-      "</td>";
-    tbody.appendChild(tr);
+function buildP1DistrictDrilldown() {
+  var container = document.getElementById('p1-district-drilldown');
+  if (!container || container.dataset.built === '1') return;
+  container.dataset.built = '1';
+
+  // Aggregate from live project1Records
+  var distData = {};
+  project1Records.forEach(function(r) {
+    if (!r.d) return;
+    if (!distData[r.d]) distData[r.d] = { count:0, budget:0, done:0, inprog:0, subs:{} };
+    var dd = distData[r.d];
+    dd.count++;  dd.budget += (r.b||0);
+    if (r.s && r.s.indexOf('แล้วเสร็จ') > -1) dd.done++; else dd.inprog++;
+    var tb = r.tb || '—';
+    if (!dd.subs[tb]) dd.subs[tb] = { count:0, budget:0, elderly:0, disabled:0, both:0 };
+    var sd = dd.subs[tb];
+    sd.count++;  sd.budget += (r.b||0);
+    if (r.t === 'ผู้พิการ') sd.disabled++;
+    else if (r.t === 'ผู้สูงอายุ') sd.elderly++;
+    else sd.both++;
   });
+
+  // Sort districts: most entries first
+  var distList = Object.keys(distData).sort(function(a,b){ return distData[b].count - distData[a].count; });
+
+  var html = '';
+  distList.forEach(function(dist, di) {
+    var dd = distData[dist];
+    var avgBud = dd.count > 0 ? Math.round(dd.budget / dd.count) : 0;
+    var donePct = dd.count > 0 ? Math.round((dd.done / dd.count) * 100) : 0;
+
+    // Subdistricts sorted by count desc
+    var sdList = Object.keys(dd.subs).sort(function(a,b){ return dd.subs[b].count - dd.subs[a].count; });
+    var sdRows = sdList.map(function(tb) {
+      var sd = dd.subs[tb];
+      var sdAvg = sd.count > 0 ? Math.round(sd.budget / sd.count) : 0;
+      var badges = '';
+      if (sd.elderly > 0)  badges += '<span style="font-size:0.6rem;background:#d1fae5;color:#065f46;padding:1px 6px;border-radius:8px;margin-right:2px;">สูงอายุ:'+sd.elderly+'</span>';
+      if (sd.disabled > 0) badges += '<span style="font-size:0.6rem;background:#fee2e2;color:#991b1b;padding:1px 6px;border-radius:8px;margin-right:2px;">พิการ:'+sd.disabled+'</span>';
+      if (sd.both > 0)     badges += '<span style="font-size:0.6rem;background:#ede9fe;color:#5b21b6;padding:1px 6px;border-radius:8px;">รวม:'+sd.both+'</span>';
+      return '<tr class="p1-sd-row">' +
+        '<td style="padding:0.38rem 0.65rem 0.38rem 2rem;font-size:0.75rem;color:var(--text-dark);">' +
+          '<span style="color:#94a3b8;margin-right:4px;">↳</span>ต.' + tb +
+        '</td>' +
+        '<td style="text-align:center;font-weight:700;color:#1e40af;font-size:0.75rem;">' + sd.count + '</td>' +
+        '<td style="text-align:right;font-size:0.72rem;color:#059669;">฿' + sd.budget.toLocaleString(undefined,{maximumFractionDigits:0}) + '</td>' +
+        '<td style="text-align:right;font-size:0.72rem;color:#0369a1;">฿' + sdAvg.toLocaleString() + '</td>' +
+        '<td style="font-size:0.65rem;padding:0.38rem 0.65rem;">' + badges + '</td>' +
+      '</tr>';
+    }).join('');
+
+    html +=
+      '<div class="p1-dist-item">' +
+        '<div class="p1-dist-header" onclick="toggleP1District(this)">' +
+          '<span style="font-size:1rem;">📍</span>' +
+          '<span class="p1-dist-title">อ.' + dist + '</span>' +
+          '<span class="p1-dist-meta">' + dd.count + ' หลัง · ฿' + (dd.budget/1000000).toFixed(2) + 'M · เฉลี่ย ฿' + avgBud.toLocaleString() + '</span>' +
+          '<span class="p1-dist-badge">' + donePct + '% เสร็จ</span>' +
+          '<span class="p1-dist-chevron">▾</span>' +
+        '</div>' +
+        '<div class="p1-dist-body">' +
+          '<div class="table-responsive" style="margin:0;">' +
+            '<table class="table-custom" style="margin:0;font-size:0.78rem;">' +
+              '<thead><tr style="font-size:0.65rem;">' +
+                '<th style="padding-left:2rem;">ตำบล</th>' +
+                '<th style="text-align:center;">จำนวนหลัง</th>' +
+                '<th style="text-align:right;">งบประมาณรวม</th>' +
+                '<th style="text-align:right;">งบประมาณเฉลี่ย</th>' +
+                '<th>ประเภทผู้รับประโยชน์</th>' +
+              '</tr></thead>' +
+              '<tbody>' + sdRows + '</tbody>' +
+            '</table>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  });
+
+  container.innerHTML = html || '<p style="color:var(--text-gray);text-align:center;padding:2rem;">ไม่พบข้อมูล</p>';
+}
+
+function toggleP1District(headerEl) {
+  var body = headerEl.nextElementSibling;
+  var chevron = headerEl.querySelector('.p1-dist-chevron');
+  var isOpen = body.style.display === 'block';
+  body.style.display = isOpen ? 'none' : 'block';
+  if (chevron) chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+  setTimeout(p1RefreshHeight, 150);
 }
 
 
@@ -5010,6 +5114,7 @@ function toggleAcc(n) {
   if (!isOpen) {
     item.classList.add('open');
     body.style.maxHeight = body.scrollHeight + 'px';
+    if (n === 1) setTimeout(initProject1, 60);
   }
 }
 
@@ -5032,6 +5137,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Expose functions to global scope (fixes "use strict" onclick issues)
 window.switchTab1 = switchTab1;
+window.toggleP1District = toggleP1District;
+window.buildP1DistrictDrilldown = buildP1DistrictDrilldown;
+window.loadP1List = loadP1List;
+window.initProject1 = initProject1;
 window.switchTab2 = switchTab2;
 window.switchTab3 = switchTab3;
 window.switchTab4 = switchTab4;

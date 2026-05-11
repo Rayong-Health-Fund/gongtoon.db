@@ -100,137 +100,43 @@ function p1FadeIn(container) {
 }
 
 function p1RenderContent(allHouseData, formsData) {
-  var container = document.getElementById('p1-content');
-  if (!container) return;
-
   var masterRows = p1Normalize(allHouseData);
   var formRows   = p1Normalize(formsData);
 
-  // Aggregate stats from master sheet
+  // Aggregate stats from live API data
   var totalHouses = masterRows.length;
   var totalBudgetNum = 0;
-  var districtSet = {};
   masterRows.forEach(function(row) {
     var b = parseFloat(String(p1Col(row, 'budget')).replace(/[^0-9.]/g, '')) || 0;
     totalBudgetNum += b;
-    var d = p1Col(row, 'district');
-    if (d) districtSet[d] = true;
   });
-  var totalDistricts = Object.keys(districtSet).length;
   var budgetM = totalBudgetNum > 0 ? (totalBudgetNum / 1000000).toFixed(2) : '15.89';
-
-  // Count completed houses from master data
-  var completedCount = masterRows.filter(function(r) {
-    var s = p1Col(r, 'projectStatus');
-    return s.indexOf('แล้วเสร็จ') !== -1;
-  }).length;
 
   // Notification dot: show red badge if any form entry is < 24h old
   var hasRecent = p1HasRecentEntry(formRows);
   var notifDot  = document.getElementById('p1NotifDot');
   if (notifDot) notifDot.style.display = hasRecent ? 'inline-block' : 'none';
 
-  // Update accordion header mini-stats
+  // Update accordion header mini-stats with live API counts
   var elHouses = document.getElementById('p1HeaderHouses');
   var elBudget = document.getElementById('p1HeaderBudget');
-  if (elHouses) elHouses.textContent = totalHouses || 351;
-  if (elBudget) elBudget.textContent = budgetM + 'M';
+  if (elHouses && totalHouses) elHouses.textContent = totalHouses;
+  if (elBudget && totalBudgetNum) elBudget.textContent = budgetM + 'M';
 
-  // Timestamp
+  // Show live badge in the inline dashboard if open
   var now = new Date();
   var ts = now.toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })
            + ' ' + now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
-
-  // Recent form entries — newest first, max 8, strip private columns
-  var recent = formRows.slice().reverse().slice(0, 8);
-  var tableBody = '';
-  if (recent.length === 0) {
-    tableBody = '<tr><td colspan="5" style="text-align:center;color:var(--text-gray);padding:1.25rem 0;">ยังไม่มีรายการจากแบบฟอร์ม</td></tr>';
-  } else {
-    recent.forEach(function(row, idx) {
-      var name   = p1Col(row, 'name')          || '—';
-      var pStat  = p1Col(row, 'personStatus');
-      var dist   = p1Col(row, 'district')       || '—';
-      var pjStat = p1Col(row, 'projectStatus');
-      tableBody +=
-        '<tr>' +
-        '<td class="p1-num-cell">' + (idx + 1) + '</td>' +
-        '<td><strong>' + name + '</strong></td>' +
-        '<td>' + p1PersonBadge(pStat) + '</td>' +
-        '<td>' + dist + '</td>' +
-        '<td style="white-space:nowrap;">' + p1ProjectBadge(pjStat) + '</td>' +
-        '</tr>';
-    });
+  var liveEl = document.getElementById('p1-live-status');
+  if (liveEl) {
+    liveEl.innerHTML = '<div class="p1-live-badge"><div class="p1-live-dot"></div>ข้อมูลสด · อัปเดต ' + ts + '</div>';
   }
-
-  var recentSection = formRows.length > 0
-    ? '<div class="p1-section-label">📋 รายการล่าสุดจากแบบฟอร์ม</div>' +
-      '<div class="p1-table-wrap">' +
-        '<table class="p1-mini-table">' +
-          '<thead><tr>' +
-            '<th>#</th><th>ชื่อผู้รับประโยชน์</th><th>สถานะ</th><th>อำเภอ</th><th>สถานะโครงการ</th>' +
-          '</tr></thead>' +
-          '<tbody>' + tableBody + '</tbody>' +
-        '</table>' +
-      '</div>'
-    : '';
-
-  var pendingCount = Math.max(0, totalHouses - completedCount);
-
-  var html =
-    '<div class="p1-live-badge"><div class="p1-live-dot"></div>ข้อมูลสด · อัปเดต ' + ts + '</div>' +
-
-    '<div class="kpi-summary-3">' +
-      '<div class="kpi3-card" style="border-top-color:#3b82f6;">' +
-        '<span class="kpi3-num" style="color:#3b82f6;">' + (totalHouses || 351) + '</span>' +
-        '<span class="kpi3-unit">ราย</span>' +
-        '<span class="kpi3-label">รายการทั้งหมด</span>' +
-      '</div>' +
-      '<div class="kpi3-card" style="border-top-color:#10b981;">' +
-        '<span class="kpi3-num" style="color:#10b981;">' + (completedCount || 0) + '</span>' +
-        '<span class="kpi3-unit">ราย</span>' +
-        '<span class="kpi3-label">แล้วเสร็จ</span>' +
-      '</div>' +
-      '<div class="kpi3-card" style="border-top-color:#f59e0b;">' +
-        '<span class="kpi3-num" style="color:#f59e0b;">' + pendingCount + '</span>' +
-        '<span class="kpi3-unit">ราย</span>' +
-        '<span class="kpi3-label">กำลังดำเนินการ</span>' +
-      '</div>' +
-    '</div>' +
-
-    '<div class="acc-progress-bar">' +
-      '<div class="acc-progress-fill" style="width:' +
-        (totalHouses ? Math.round((completedCount / totalHouses) * 100) : 90) +
-      '%;background:#3b82f6;"></div>' +
-    '</div>' +
-
-    '<p class="acc-summary-text">' +
-      'ดำเนินการปรับสภาพบ้านให้กับผู้พิการและผู้สูงอายุ ' + (totalHouses || 351) + ' หลัง' +
-      ' ใน ' + (totalDistricts || 8) + ' อำเภอ เสร็จสิ้นแล้ว ' + (completedCount || 0) + ' หลัง' +
-      ' งบประมาณรวม ~' + budgetM + ' ล้านบาท' +
-    '</p>' +
-
-    recentSection;
-
-  container.innerHTML = html;
-  p1FadeIn(container);
-  setTimeout(p1RefreshHeight, 100);
 }
 
 function p1RenderError() {
-  var container = document.getElementById('p1-content');
-  if (!container) return;
-  container.innerHTML =
-    '<div class="p1-error-wrap">⚠️ ไม่สามารถโหลดข้อมูลสดได้ กำลังแสดงข้อมูลสำรอง</div>' +
-    '<div class="kpi-summary-3">' +
-      '<div class="kpi3-card" style="border-top-color:#3b82f6;"><span class="kpi3-num" style="color:#3b82f6;">351</span><span class="kpi3-unit">ราย</span><span class="kpi3-label">รายการทั้งหมด</span></div>' +
-      '<div class="kpi3-card" style="border-top-color:#10b981;"><span class="kpi3-num" style="color:#10b981;">331</span><span class="kpi3-unit">ราย</span><span class="kpi3-label">แล้วเสร็จ</span></div>' +
-      '<div class="kpi3-card" style="border-top-color:#f59e0b;"><span class="kpi3-num" style="color:#f59e0b;">20</span><span class="kpi3-unit">ราย</span><span class="kpi3-label">กำลังดำเนินการ</span></div>' +
-    '</div>' +
-    '<div class="acc-progress-bar"><div class="acc-progress-fill" style="width:90%;background:#3b82f6;"></div></div>' +
-    '<p class="acc-summary-text">ดำเนินการปรับสภาพบ้านให้กับผู้พิการและผู้สูงอายุ 351 หลัง ใน 8 อำเภอ งบประมาณรวมทั้งสิ้น ~15.89 ล้านบาท</p>';
-  p1FadeIn(container);
-  setTimeout(p1RefreshHeight, 100);
+  // Silent fail — inline dashboard shows static data from project1Records
+  var notifDot = document.getElementById('p1NotifDot');
+  if (notifDot) notifDot.style.display = 'none';
 }
 
 function renderProject1Dashboard() {
