@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Hub – กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(255,212,100,0.38) 0%, transparent 38%),
+    radial-gradient(ellipse at 5% 48%, rgba(255,168,168,0.32) 0%, transparent 38%),
+    radial-gradient(ellipse at 50% 42%, rgba(210,185,240,0.24) 0%, transparent 42%),
+    radial-gradient(ellipse at 88% 68%, rgba(148,218,255,0.38) 0%, transparent 38%),
+    #f8fafc;
+  background-attachment: fixed;
+  color: #1e293b;
+}
+
+/* NAVBAR */
+.navbar {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #0f172a;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  width: 38px;
+  height: 38px;
+  background: #1e40af;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: white;
+}
+
+.logout-btn {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 7px;
+  padding: 0.4rem 0.9rem;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.logout-btn:hover { background: #e2e8f0; color: #1e293b; }
+
+/* MAIN */
+.main {
+  max-width: 800px;
+  margin: 3rem auto;
+  padding: 0 1.25rem;
+}
+
+.hub-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.hub-badge {
+  display: inline-block;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.9rem;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.hub-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.4rem;
+}
+
+.hub-subtitle {
+  font-size: 1rem;
+  color: #64748b;
+}
+
+/* FORM CARDS */
+.forms-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 560px) {
+  .forms-grid { grid-template-columns: 1fr; }
+  .hub-title { font-size: 1.5rem; }
+}
+
+.form-card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  border: 1.5px solid #e2e8f0;
+  padding: 1.5rem 1.5rem 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.form-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  border-radius: 14px 14px 0 0;
+}
+
+.form-card.p1::before { background: linear-gradient(90deg, #1e40af, #3b82f6); }
+.form-card.p2::before { background: linear-gradient(90deg, #b45309, #f59e0b); }
+.form-card.p3::before { background: linear-gradient(90deg, #047857, #10b981); }
+.form-card.p4::before { background: linear-gradient(90deg, #6d28d9, #a78bfa); }
+
+.form-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.12);
+  border-color: #cbd5e1;
+}
+
+.form-card-icon {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.form-card-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.form-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+}
+
+.form-card-desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 0.1rem;
+}
+
+.form-card-arrow {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color 0.2s, gap 0.2s;
+}
+
+.form-card:hover .form-card-arrow {
+  color: #1e40af;
+  gap: 0.5rem;
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">
+    <div class="navbar-logo">🏥</div>
+    <span>กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</span>
+  </a>
+  <a href="login.html" class="logout-btn">🔒 Logout</a>
+</nav>
+
+<main class="main">
+  <div class="hub-header">
+    <span class="hub-badge">Staff Hub</span>
+    <h1 class="hub-title">แบบฟอร์มกรอกข้อมูล</h1>
+    <p class="hub-subtitle">เลือกโครงการที่ต้องการกรอกข้อมูล</p>
+  </div>
+
+  <div class="forms-grid">
+
+    <a href="entry-form.html" class="form-card p1">
+      <div class="form-card-icon">🏠</div>
+      <div class="form-card-label">โครงการที่ 1</div>
+      <div class="form-card-title">ปรับสภาพบ้านคนพิการ / ผู้สูงอายุ</div>
+      <div class="form-card-desc">กรอกข้อมูลการปรับปรุงที่พักอาศัย</div>
+      <div class="form-card-arrow">เปิดแบบฟอร์ม →</div>
+    </a>
+
+    <a href="entry-form-project2.html" class="form-card p2">
+      <div class="form-card-icon">🩺</div>
+      <div class="form-card-label">โครงการที่ 2</div>
+      <div class="form-card-title">อุปกรณ์ทางการแพทย์</div>
+      <div class="form-card-desc">กรอกข้อมูลอุปกรณ์และหน่วยบริการ</div>
+      <div class="form-card-arrow">เปิดแบบฟอร์ม →</div>
+    </a>
+
+    <a href="entry-form-project3.html" class="form-card p3">
+      <div class="form-card-icon">📋</div>
+      <div class="form-card-label">โครงการที่ 3</div>
+      <div class="form-card-title">โครงการฟื้นฟูสมรรถภาพ</div>
+      <div class="form-card-desc">กรอกข้อมูลโครงการและงบประมาณ</div>
+      <div class="form-card-arrow">เปิดแบบฟอร์ม →</div>
+    </a>
+
+    <a href="entry-form-project4.html" class="form-card p4">
+      <div class="form-card-icon">🛠️</div>
+      <div class="form-card-label">โครงการที่ 4</div>
+      <div class="form-card-title">อุปกรณ์เครื่องช่วยความพิการ</div>
+      <div class="form-card-desc">กรอกข้อมูลอุปกรณ์ช่วยเหลือผู้พิการ</div>
+      <div class="form-card-arrow">เปิดแบบฟอร์ม →</div>
+    </a>
+
+  </div>
+</main>
+
+</body>
+</html>

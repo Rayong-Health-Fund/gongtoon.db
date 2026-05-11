@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Portal | ศูนย์จัดการข้อมูลกองทุน</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary-blue: #1e40af;
+  --primary-navy: #0f172a;
+  --bg-light: #f8fafc;
+  --bg-gray: #f1f5f9;
+  --text-dark: #1e293b;
+  --text-gray: #64748b;
+  --border-light: #e2e8f0;
+  --white: #ffffff;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(255,212,100,0.42) 0%, transparent 38%),
+    radial-gradient(ellipse at 5% 48%, rgba(255,168,168,0.38) 0%, transparent 38%),
+    radial-gradient(ellipse at 50% 42%, rgba(210,185,240,0.28) 0%, transparent 42%),
+    radial-gradient(ellipse at 88% 68%, rgba(148,218,255,0.42) 0%, transparent 38%),
+    radial-gradient(ellipse at 65% 92%, rgba(175,228,252,0.35) 0%, transparent 36%),
+    #f8fafc;
+  background-attachment: fixed;
+  color: var(--text-dark);
+  font-size: 18px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* NAVIGATION */
+.navbar {
+  background: var(--white);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 0.75rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.container-custom {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--primary-navy) !important;
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  width: 40px;
+  height: 40px;
+  background: var(--primary-blue);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-gray);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  border-color: #94a3b8;
+  color: var(--text-dark);
+  background: var(--bg-light);
+}
+
+/* PAGE HEADER */
+.page-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  color: white;
+  padding: 2.5rem 2rem;
+  margin-bottom: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(168,85,247,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.page-header-inner {
+  position: relative;
+  text-align: center;
+}
+
+.page-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  color: rgba(255,255,255,0.9);
+}
+
+.page-header-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+}
+
+.page-header-subtitle {
+  font-size: 1rem;
+  opacity: 0.75;
+}
+
+/* MAIN CONTENT */
+.main-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+}
+
+/* SECTION LABEL */
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-gray);
+  margin-bottom: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-light);
+}
+
+/* CARD BASE */
+.sp-card {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+
+.sp-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.sp-card-header {
+  padding: 1.1rem 1.25rem 0.875rem;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sp-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.sp-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.1rem;
+}
+
+.sp-card-desc {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+}
+
+.sp-card-body {
+  padding: 1.1rem 1.25rem;
+}
+
+/* PROJECT ROWS */
+.project-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.project-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.project-row:first-child {
+  padding-top: 0;
+}
+
+.project-row-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.project-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.project-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.project-name-sub {
+  font-size: 0.78rem;
+  color: var(--text-gray);
+  margin-top: 0.1rem;
+}
+
+/* BUTTONS */
+.btn-form {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-form-primary {
+  background: var(--primary-blue);
+  color: white;
+}
+
+.btn-form-primary:hover {
+  background: #1e3a8a;
+  color: white;
+}
+
+.btn-form-green {
+  background: #10b981;
+  color: white;
+}
+
+.btn-form-green:hover {
+  background: #059669;
+  color: white;
+}
+
+.btn-form-disabled {
+  background: var(--bg-gray);
+  color: var(--text-gray);
+  cursor: not-allowed;
+  pointer-events: none;
+  border: 1px solid var(--border-light);
+}
+
+/* COMING SOON BADGE */
+.coming-soon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-gray);
+  background: var(--bg-gray);
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+}
+
+/* DOCUMENT ROWS */
+.doc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.doc-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.doc-row:first-child {
+  padding-top: 0;
+}
+
+.doc-info {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.doc-icon-wrap {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.doc-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.doc-meta {
+  font-size: 0.75rem;
+  color: var(--text-gray);
+  margin-top: 0.1rem;
+}
+
+.btn-download-placeholder {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-gray);
+  background: var(--bg-gray);
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  cursor: not-allowed;
+  white-space: nowrap;
+}
+
+/* NOTICE BOX */
+.notice-box {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 0.875rem 1.1rem;
+  font-size: 0.82rem;
+  color: #1e40af;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+
+/* FOOTER */
+.site-footer {
+  background: rgba(15,23,42,0.96);
+  color: rgba(255,255,255,0.85);
+  padding: 1.75rem 0 1.25rem;
+  margin-top: 2.5rem;
+  font-size: 0.875rem;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem 3rem;
+  align-items: start;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.footer-logo {
+  font-size: 2rem;
+  width: 52px;
+  height: 52px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.footer-org {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.footer-org-sub {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.6);
+  margin-top: 0.15rem;
+}
+
+.footer-copy {
+  grid-column: 1 / -1;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 0.875rem;
+  text-align: center;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 600px) {
+  .footer-inner { grid-template-columns: 1fr; }
+  .page-header-title { font-size: 1.4rem; }
+}
+
+@media (max-width: 768px) {
+  .project-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .doc-row { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container-custom" style="display:flex;align-items:center;justify-content:space-between;">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo">🏥</div>
+      <span>กองทุนหลักประกันสุขภาพจังหวัดระยอง</span>
+    </a>
+    <a href="index.html" class="back-btn">
+      ← กลับหน้าหลัก
+    </a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-header-badge">👤 Staff Portal</div>
+    <div class="page-header-title">ศูนย์จัดการข้อมูลกองทุน</div>
+    <div class="page-header-subtitle">สำหรับเจ้าหน้าที่กองทุนฟื้นฟูสมรรถภาพจังหวัดระยอง</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <!-- NOTICE -->
+  <div class="notice-box">
+    <span style="font-size:1.1rem;flex-shrink:0;">ℹ️</span>
+    <span>หน้านี้ใช้สำหรับเจ้าหน้าที่ในการบันทึกข้อมูลและดาวน์โหลดเอกสาร กรุณาตรวจสอบข้อมูลให้ถูกต้องก่อนส่งแบบฟอร์ม</span>
+  </div>
+
+  <!-- SECTION 1: DATA ENTRY -->
+  <div class="section-label">📋 แบบฟอร์มกรอกข้อมูล · Data Entry</div>
+
+  <div class="sp-card" style="margin-bottom:2rem;">
+    <div class="sp-card-header">
+      <div class="sp-card-icon" style="background:#dbeafe;">📝</div>
+      <div>
+        <div class="sp-card-title">แบบฟอร์มบันทึกข้อมูลโครงการ</div>
+        <div class="sp-card-desc">เลือกโครงการที่ต้องการกรอกข้อมูล แล้วคลิกปุ่มเปิดฟอร์ม</div>
+      </div>
+    </div>
+    <div class="sp-card-body">
+
+      <!-- Project 1 -->
+      <div class="project-row">
+        <div class="project-row-info">
+          <div class="project-dot" style="background:#10b981;"></div>
+          <div>
+            <div class="project-name">โครงการที่ 1 · บ้านผู้สูงอายุและผู้พิการ</div>
+            <div class="project-name-sub">ข้อมูลผู้รับประโยชน์ / งบประมาณ / สถานะบ้าน</div>
+          </div>
+        </div>
+        <a href="https://forms.gle/mUChQCMxDUuVU8sz6" target="_blank" class="btn-form btn-form-green">
+          🔗 เปิดฟอร์ม
+        </a>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-row">
+        <div class="project-row-info">
+          <div class="project-dot" style="background:#f59e0b;"></div>
+          <div>
+            <div class="project-name">โครงการที่ 2 · อุปกรณ์การแพทย์</div>
+            <div class="project-name-sub">ข้อมูลอุปกรณ์ / ศูนย์บริการ / การซ่อมบำรุง</div>
+          </div>
+        </div>
+        <a href="https://forms.gle/vr3VyT4wjFxdZ8KMA" target="_blank" class="btn-form btn-form-primary">
+          🔗 เปิดฟอร์ม
+        </a>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="project-row">
+        <div class="project-row-info">
+          <div class="project-dot" style="background:#3b82f6;"></div>
+          <div>
+            <div class="project-name">โครงการที่ 3 · เครือข่ายฝึกอบรม</div>
+            <div class="project-name-sub">ข้อมูลการฝึกอบรม / ผู้เข้าร่วม / หลักสูตร</div>
+          </div>
+        </div>
+        <span class="coming-soon-badge">🕐 เร็วๆ นี้ (Coming Soon)</span>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="project-row">
+        <div class="project-row-info">
+          <div class="project-dot" style="background:#8b5cf6;"></div>
+          <div>
+            <div class="project-name">โครงการที่ 4 · ศูนย์ซ่อมอุปกรณ์</div>
+            <div class="project-name-sub">ข้อมูลการซ่อม / อะไหล่ / ประวัติการซ่อมบำรุง</div>
+          </div>
+        </div>
+        <span class="coming-soon-badge">🕐 เร็วๆ นี้ (Coming Soon)</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 2: DOCUMENTS -->
+  <div class="section-label">📁 เอกสารและงบประมาณ · Documents</div>
+
+  <div class="sp-card" style="margin-bottom:2rem;">
+    <div class="sp-card-header">
+      <div class="sp-card-icon" style="background:#fef3c7;">📂</div>
+      <div>
+        <div class="sp-card-title">เอกสารประกอบและงบประมาณ</div>
+        <div class="sp-card-desc">เอกสารสำหรับดาวน์โหลด — กำลังจัดเตรียม</div>
+      </div>
+    </div>
+    <div class="sp-card-body">
+
+      <div class="doc-row">
+        <div class="doc-info">
+          <div class="doc-icon-wrap">📊</div>
+          <div>
+            <div class="doc-name">Budget_2568.pdf</div>
+            <div class="doc-meta">แผนงบประมาณประจำปี 2568 · กำลังจัดทำ</div>
+          </div>
+        </div>
+        <span class="btn-download-placeholder">⬇️ เร็วๆ นี้</span>
+      </div>
+
+      <div class="doc-row">
+        <div class="doc-info">
+          <div class="doc-icon-wrap">📋</div>
+          <div>
+            <div class="doc-name">Report_Q1_2568.pdf</div>
+            <div class="doc-meta">รายงานสรุปผลไตรมาส 1 · กำลังจัดทำ</div>
+          </div>
+        </div>
+        <span class="btn-download-placeholder">⬇️ เร็วๆ นี้</span>
+      </div>
+
+      <div class="doc-row">
+        <div class="doc-info">
+          <div class="doc-icon-wrap">📝</div>
+          <div>
+            <div class="doc-name">Guidelines_Project1.pdf</div>
+            <div class="doc-meta">แนวทางปฏิบัติโครงการที่ 1 · กำลังจัดทำ</div>
+          </div>
+        </div>
+        <span class="btn-download-placeholder">⬇️ เร็วๆ นี้</span>
+      </div>
+
+      <div class="doc-row">
+        <div class="doc-info">
+          <div class="doc-icon-wrap">🗂️</div>
+          <div>
+            <div class="doc-name">Equipment_Catalog_2568.pdf</div>
+            <div class="doc-meta">คู่มืออุปกรณ์การแพทย์ · กำลังจัดทำ</div>
+          </div>
+        </div>
+        <span class="btn-download-placeholder">⬇️ เร็วๆ นี้</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BACK BUTTON -->
+  <div style="text-align:center;margin-top:1.5rem;">
+    <a href="index.html" class="btn-form btn-form-primary" style="font-size:0.9rem;padding:0.55rem 1.5rem;">
+      ← กลับสู่แดชบอร์ดหลัก
+    </a>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">🏥</div>
+      <div>
+        <div class="footer-org">กองทุนฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพ</div>
+        <div class="footer-org-sub">จังหวัดระยอง</div>
+      </div>
+    </div>
+    <div class="footer-copy">© 2568 กองทุนฟื้นฟูสมรรถภาพจังหวัดระยอง</div>
+  </div>
+</footer>
+
+</body>
+</html>

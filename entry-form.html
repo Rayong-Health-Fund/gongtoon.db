@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>กรอกข้อมูล – กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary-blue: #1e40af;
+  --primary-navy: #0f172a;
+  --bg-light: #f8fafc;
+  --bg-gray: #f1f5f9;
+  --text-dark: #1e293b;
+  --text-gray: #64748b;
+  --border-light: #e2e8f0;
+  --white: #ffffff;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(255,212,100,0.42) 0%, transparent 38%),
+    radial-gradient(ellipse at 5% 48%, rgba(255,168,168,0.38) 0%, transparent 38%),
+    radial-gradient(ellipse at 50% 42%, rgba(210,185,240,0.28) 0%, transparent 42%),
+    radial-gradient(ellipse at 88% 68%, rgba(148,218,255,0.42) 0%, transparent 38%),
+    radial-gradient(ellipse at 65% 92%, rgba(175,228,252,0.35) 0%, transparent 36%),
+    #f8fafc;
+  background-attachment: fixed;
+  color: var(--text-dark);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* NAVIGATION */
+.navbar {
+  background: var(--white);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 0.75rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--primary-navy) !important;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+.navbar-logo {
+  width: 40px;
+  height: 40px;
+  background: var(--primary-blue);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: white;
+}
+.nav-back-btn {
+  background: var(--bg-gray);
+  border: 1.5px solid var(--border-light);
+  color: var(--text-dark);
+  padding: 0.35rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: 'Sarabun', sans-serif;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.nav-back-btn:hover {
+  background: var(--border-light);
+  color: var(--primary-navy);
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  color: white;
+  padding: 2rem 2rem 1.75rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(168,85,247,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+.hero-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.4rem;
+  position: relative;
+}
+.hero-subtitle {
+  font-size: 1rem;
+  text-align: center;
+  opacity: 0.85;
+  position: relative;
+}
+
+/* MAIN LAYOUT */
+.main-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+}
+
+/* CARDS */
+.form-card {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-light);
+}
+.card-header-bar {
+  background: linear-gradient(135deg, var(--primary-navy), var(--primary-blue));
+  color: white;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.card-header-bar .icon {
+  font-size: 1.3rem;
+}
+.card-body-pad {
+  padding: 1.5rem;
+}
+
+/* SECTION HEADER INSIDE FORM */
+.section-header {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  margin-top: 0.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* FORM CONTROLS */
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.35rem;
+  font-family: 'Sarabun', sans-serif;
+}
+.form-control, .form-select {
+  font-family: 'Sarabun', sans-serif;
+  font-size: 0.9rem;
+  border: 1.5px solid var(--border-light);
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  color: var(--text-dark);
+  background: var(--white);
+  transition: all 0.25s;
+}
+.form-control:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(30,64,175,0.1);
+}
+.form-control::placeholder { color: #94a3b8; }
+
+/* DISABILITY CHECKBOXES */
+.disability-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.6rem;
+}
+.disability-check-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-light);
+  border: 1.5px solid var(--border-light);
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.disability-check-item:hover {
+  border-color: var(--primary-blue);
+  background: #eff6ff;
+}
+.disability-check-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary-blue);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.disability-check-item input[type="checkbox"]:checked + .check-label {
+  color: var(--primary-blue);
+  font-weight: 700;
+}
+.disability-check-item.checked-active {
+  border-color: var(--primary-blue);
+  background: #eff6ff;
+}
+.check-label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  transition: color 0.2s;
+  line-height: 1.3;
+}
+.check-badge {
+  margin-left: auto;
+  font-size: 0.65rem;
+  background: var(--primary-blue);
+  color: white;
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.disability-check-item.checked-active .check-badge { opacity: 1; }
+
+/* SUBMIT BUTTON */
+.btn-submit {
+  background: linear-gradient(135deg, var(--primary-blue), #2563eb);
+  color: white;
+  border: none;
+  padding: 0.75rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Sarabun', sans-serif;
+  transition: all 0.25s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 4px 12px rgba(30,64,175,0.3);
+}
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(30,64,175,0.4);
+  background: linear-gradient(135deg, #1d3a9c, var(--primary-blue));
+}
+.btn-submit:active { transform: translateY(0); }
+
+.btn-reset {
+  background: var(--white);
+  color: var(--text-gray);
+  border: 1.5px solid var(--border-light);
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Sarabun', sans-serif;
+  transition: all 0.25s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-reset:hover {
+  background: var(--bg-gray);
+  border-color: #94a3b8;
+  color: var(--text-dark);
+}
+
+/* SUCCESS TOAST */
+.toast-container {
+  position: fixed;
+  top: 80px;
+  right: 1.5rem;
+  z-index: 9999;
+}
+.toast-item {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--success);
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  animation: slideIn 0.3s ease, fadeOut 0.4s ease 2.6s forwards;
+  min-width: 260px;
+}
+.toast-icon { font-size: 1.2rem; }
+@keyframes slideIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes fadeOut {
+  to { opacity: 0; transform: translateX(60%); }
+}
+
+/* LIVE PREVIEW SECTION */
+.preview-card {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+}
+.preview-header-bar {
+  background: linear-gradient(135deg, #065f46, #10b981);
+  color: white;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.preview-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.preview-count-badge {
+  background: rgba(255,255,255,0.25);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+}
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #86efac;
+  margin-right: 0.3rem;
+  animation: pulse-dot 1.5s infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+
+.preview-empty {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--text-gray);
+}
+.preview-empty-icon { font-size: 3rem; margin-bottom: 0.75rem; opacity: 0.4; }
+.preview-empty-text { font-size: 0.95rem; }
+
+/* TABLE */
+.table-responsive {
+  border-radius: 0;
+  overflow-x: auto;
+}
+.table-custom {
+  font-size: 0.82rem;
+  margin-bottom: 0;
+  background: var(--white);
+  width: 100%;
+  border-collapse: collapse;
+}
+.table-custom thead th {
+  background: var(--bg-gray);
+  color: var(--text-dark);
+  font-weight: 700;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 2px solid var(--border-light);
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.table-custom tbody td {
+  padding: 0.65rem 0.75rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-light);
+  font-family: 'Sarabun', sans-serif;
+  white-space: nowrap;
+}
+.table-custom tbody tr:last-child td { border-bottom: none; }
+.table-custom tbody tr:hover { background: var(--bg-light); }
+.table-custom tbody tr.new-row {
+  animation: rowAppear 0.5s ease;
+}
+@keyframes rowAppear {
+  from { background: #d1fae5; opacity: 0; transform: translateY(-6px); }
+  to   { background: transparent; opacity: 1; transform: translateY(0); }
+}
+
+/* STATUS BADGES */
+.badge-status {
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: inline-block;
+  white-space: nowrap;
+}
+.badge-success { background: #d1fae5; color: #065f46; }
+.badge-warning { background: #fef3c7; color: #92400e; }
+.badge-danger  { background: #fecaca; color: #991b1b; }
+.badge-info    { background: #dbeafe; color: #1e40af; }
+.badge-gray    { background: var(--bg-gray); color: var(--text-gray); }
+
+/* CHECK MARK IN TABLE */
+.check-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+/* ROW NUMBER */
+.row-num {
+  background: var(--primary-blue);
+  color: white;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+/* CLEAR PREVIEW BTN */
+.btn-clear-preview {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Sarabun', sans-serif;
+  transition: all 0.2s;
+}
+.btn-clear-preview:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* REQUIRED STAR */
+.req { color: var(--danger); margin-left: 2px; }
+
+/* FORM VALIDATION */
+.form-control.is-invalid, .form-select.is-invalid {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+}
+.invalid-msg {
+  font-size: 0.75rem;
+  color: var(--danger);
+  margin-top: 0.25rem;
+  display: none;
+}
+.show-invalid .invalid-msg { display: block; }
+
+/* BUDGET INPUT WRAPPER */
+.budget-input-wrap {
+  position: relative;
+}
+.budget-input-wrap .currency-prefix {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-gray);
+  font-size: 0.85rem;
+  font-weight: 600;
+  pointer-events: none;
+}
+.budget-input-wrap .form-control { padding-left: 2.25rem; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .disability-grid { grid-template-columns: 1fr 1fr; }
+  .hero-title { font-size: 1.4rem; }
+  .main-wrapper { padding: 0 1rem 2rem; }
+}
+@media (max-width: 480px) {
+  .disability-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+    <a class="navbar-brand" href="index.html">
+      <div class="navbar-logo">🏠</div>
+      <div>
+        <div>กองทุนฟื้นฟูสมรรถภาพ</div>
+        <div style="font-size:0.75rem;font-weight:400;color:var(--text-gray)">จังหวัดระยอง</div>
+      </div>
+    </a>
+    <a href="index.html" class="nav-back-btn">← กลับหน้าหลัก</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-title">📋 กรอกข้อมูลผู้รับงบประมาณ</div>
+  <div class="hero-subtitle">โครงการปรับปรุงที่อยู่อาศัยสำหรับผู้พิการและผู้สูงอายุ · จังหวัดระยอง</div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- MAIN CONTENT -->
+<div class="main-wrapper">
+
+  <!-- ENTRY FORM CARD -->
+  <div class="form-card">
+    <div class="card-header-bar">
+      <span class="icon">✏️</span>
+      แบบฟอร์มกรอกข้อมูล
+      <span style="font-size:0.75rem;font-weight:400;opacity:0.8;margin-left:auto">กรอกข้อมูลให้ครบถ้วนแล้วกด Submit</span>
+    </div>
+    <div class="card-body-pad">
+      <form id="entryForm" novalidate>
+
+        <!-- SECTION 1: Agency & Recipient -->
+        <div class="section-header">🏢 ข้อมูลหน่วยงานและผู้รับงบประมาณ</div>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label">ชื่อหน่วยงาน</label>
+            <input type="text" class="form-control" id="f_agency" name="agency" placeholder="ระบุชื่อหน่วยงาน">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">ชื่อผู้รับงบประมาณ <span class="req">*</span></label>
+            <input type="text" class="form-control" id="f_name" name="name" placeholder="เช่น นายนารี รื่นรมย์" required>
+            <div class="invalid-msg">กรุณากรอกชื่อผู้รับงบประมาณ</div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">อายุ (ปี) <span class="req">*</span></label>
+            <input type="number" class="form-control" id="f_age" name="age" min="1" max="120" placeholder="เช่น 65" required>
+            <div class="invalid-msg">กรุณากรอกอายุ (1–120)</div>
+          </div>
+          <div class="col-md-8">
+            <label class="form-label">สถานะภาพ <span class="req">*</span></label>
+            <select class="form-select" id="f_status" name="status" required>
+              <option value="">-- เลือกสถานะภาพ --</option>
+              <option value="ผู้พิการ">ผู้พิการ</option>
+              <option value="ผู้สูงอายุ">ผู้สูงอายุ</option>
+              <option value="ผู้สูงอายุ/ผู้พิการ">ผู้สูงอายุ/ผู้พิการ</option>
+              <option value="อื่นๆ">อื่นๆ</option>
+            </select>
+            <div class="invalid-msg">กรุณาเลือกสถานะภาพ</div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Disability -->
+        <div class="section-header">♿ ข้อมูลความพิการ</div>
+        <div class="disability-grid mb-4" id="disabilityGrid">
+          <label class="disability-check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" name="d_none" id="d_none">
+            <span class="check-label">ไม่พิการ</span>
+            <span class="check-badge">✔</span>
+          </label>
+          <label class="disability-check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" name="d_1" id="d_1">
+            <span class="check-label">ความพิการทางการเห็น (ป.1)</span>
+            <span class="check-badge">✔</span>
+          </label>
+          <label class="disability-check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" name="d_2" id="d_2">
+            <span class="check-label">ความพิการทางการได้ยิน/สื่อความหมาย (ป.2)</span>
+            <span class="check-badge">✔</span>
+          </label>
+          <label class="disability-check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" name="d_3" id="d_3">
+            <span class="check-label">ความพิการทางการเคลื่อนไหว/ร่างกาย (ป.3)</span>
+            <span class="check-badge">✔</span>
+          </label>
+          <label class="disability-check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" name="d_4" id="d_4">
+            <span class="check-label">ความพิการทางจิตใจ/พฤติกรรม (ป.4)</span>
+            <span class="check-badge">✔</span>
+          </label>
+          <label class="disability-check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" name="d_5" id="d_5">
+            <span class="check-label">ความพิการทางสติปัญญา (ป.5)</span>
+            <span class="check-badge">✔</span>
+          </label>
+          <label class="disability-check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" name="d_6" id="d_6">
+            <span class="check-label">ความพิการทางการเรียนรู้ (ป.6)</span>
+            <span class="check-badge">✔</span>
+          </label>
+          <label class="disability-check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" name="d_7" id="d_7">
+            <span class="check-label">ความพิการทางออทิสติก (ป.7)</span>
+            <span class="check-badge">✔</span>
+          </label>
+        </div>
+
+        <!-- SECTION 3: Address -->
+        <div class="section-header">📍 ที่อยู่</div>
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <label class="form-label">บ้านเลขที่ <span class="req">*</span></label>
+            <input type="text" class="form-control" id="f_house" name="house" placeholder="เช่น 98 ม.2" required>
+            <div class="invalid-msg">กรุณากรอกบ้านเลขที่</div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">ตำบล <span class="req">*</span></label>
+            <input type="text" class="form-control" id="f_tambon" name="tambon" placeholder="เช่น ชำฆ้อ" required>
+            <div class="invalid-msg">กรุณากรอกตำบล</div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">อำเภอ <span class="req">*</span></label>
+            <input type="text" class="form-control" id="f_amphoe" name="amphoe" placeholder="เช่น แกลง" required>
+            <div class="invalid-msg">กรุณากรอกอำเภอ</div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: Budget & Project -->
+        <div class="section-header">💰 งบประมาณและโครงการ</div>
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <label class="form-label">งบประมาณ (บาท) <span class="req">*</span></label>
+            <div class="budget-input-wrap">
+              <span class="currency-prefix">฿</span>
+              <input type="number" class="form-control" id="f_budget" name="budget" min="0" step="0.01" placeholder="0.00" required>
+            </div>
+            <div class="invalid-msg">กรุณากรอกงบประมาณ</div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">ปีงบประมาณ <span class="req">*</span></label>
+            <input type="text" class="form-control" id="f_budgetyear" name="budgetyear" placeholder="เช่น 2558-2560" required>
+            <div class="invalid-msg">กรุณากรอกปีงบประมาณ</div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">สถานะโครงการ <span class="req">*</span></label>
+            <select class="form-select" id="f_projstatus" name="projstatus" required>
+              <option value="">-- เลือกสถานะโครงการ --</option>
+              <option value="แล้วเสร็จ">แล้วเสร็จ</option>
+              <option value="กำลังดำเนินการ">กำลังดำเนินการ</option>
+              <option value="ยังไม่เริ่ม">ยังไม่เริ่ม</option>
+              <option value="ยกเลิก">ยกเลิก</option>
+            </select>
+            <div class="invalid-msg">กรุณาเลือกสถานะโครงการ</div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">วันที่อนุมัติ</label>
+            <input type="date" class="form-control" id="f_approvedate" name="approvedate">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">วันที่ทำ MOU</label>
+            <input type="date" class="form-control" id="f_moudate" name="moudate">
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="d-flex gap-3 align-items-center flex-wrap">
+          <button type="submit" class="btn-submit">
+            <span>✅</span> Submit &amp; เพิ่มข้อมูล
+          </button>
+          <button type="button" class="btn-reset" onclick="resetForm()">
+            <span>↺</span> ล้างแบบฟอร์ม
+          </button>
+          <span id="formHint" style="font-size:0.8rem;color:var(--text-gray)">
+            <span class="req">*</span> จำเป็นต้องกรอก
+          </span>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- LIVE PREVIEW CARD -->
+  <div class="preview-card">
+    <div class="preview-header-bar">
+      <div class="preview-header-left">
+        <span>📊</span>
+        <span><span class="live-dot"></span>Live Preview – ข้อมูลที่กรอกแล้ว</span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="preview-count-badge" id="previewCount">0 รายการ</span>
+        <button class="btn-clear-preview" onclick="clearPreview()" id="clearBtn" style="display:none">🗑 ล้าง</button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="preview-empty" id="previewEmpty">
+      <div class="preview-empty-icon">📋</div>
+      <div class="preview-empty-text">ยังไม่มีข้อมูล<br>กรอกแบบฟอร์มด้านบนแล้วกด Submit เพื่อดูข้อมูลที่นี่</div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive" id="previewTableWrap" style="display:none">
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>หน่วยงาน</th>
+            <th>ชื่อผู้รับงบประมาณ</th>
+            <th>อายุ</th>
+            <th>สถานะภาพ</th>
+            <th>ความพิการ</th>
+            <th>บ้านเลขที่</th>
+            <th>ตำบล</th>
+            <th>อำเภอ</th>
+            <th>งบประมาณ</th>
+            <th>ปีงบประมาณ</th>
+            <th>สถานะโครงการ</th>
+            <th>วันที่อนุมัติ</th>
+            <th>วันที่ทำ MOU</th>
+          </tr>
+        </thead>
+        <tbody id="previewTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /main-wrapper -->
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────
+let entries = [];
+let rowCounter = 0;
+
+// ── DISABILITY TOGGLE (visual only — checkbox handles value) ───────────
+function toggleCheck(label) {
+  // checkbox state is toggled by the browser automatically on label click
+  // We just sync the visual class after a microtask so the checkbox state is settled
+  requestAnimationFrame(() => {
+    const cb = label.querySelector('input[type="checkbox"]');
+    if (cb.checked) {
+      label.classList.add('checked-active');
+    } else {
+      label.classList.remove('checked-active');
+    }
+  });
+}
+
+// ── VALIDATION ─────────────────────────────────────────────────────────
+function validateForm() {
+  const required = [
+    { id: 'f_name',       msg: 'กรุณากรอกชื่อผู้รับงบประมาณ' },
+    { id: 'f_age',        msg: 'กรุณากรอกอายุ (1–120)' },
+    { id: 'f_status',     msg: 'กรุณาเลือกสถานะภาพ' },
+    { id: 'f_house',      msg: 'กรุณากรอกบ้านเลขที่' },
+    { id: 'f_tambon',     msg: 'กรุณากรอกตำบล' },
+    { id: 'f_amphoe',     msg: 'กรุณากรอกอำเภอ' },
+    { id: 'f_budget',     msg: 'กรุณากรอกงบประมาณ' },
+    { id: 'f_budgetyear', msg: 'กรุณากรอกปีงบประมาณ' },
+    { id: 'f_projstatus', msg: 'กรุณาเลือกสถานะโครงการ' },
+  ];
+
+  let valid = true;
+  required.forEach(({ id }) => {
+    const el = document.getElementById(id);
+    const wrap = el.closest('.col-md-4, .col-md-6, .col-md-8');
+    const msg = wrap ? wrap.querySelector('.invalid-msg') : null;
+    if (!el.value.trim()) {
+      el.classList.add('is-invalid');
+      if (msg) msg.style.display = 'block';
+      valid = false;
+    } else {
+      el.classList.remove('is-invalid');
+      if (msg) msg.style.display = 'none';
+    }
+  });
+
+  // age range
+  const ageEl = document.getElementById('f_age');
+  if (ageEl.value && (parseInt(ageEl.value) < 1 || parseInt(ageEl.value) > 120)) {
+    ageEl.classList.add('is-invalid');
+    const wrap = ageEl.closest('.col-md-4');
+    if (wrap) wrap.querySelector('.invalid-msg').style.display = 'block';
+    valid = false;
+  }
+
+  return valid;
+}
+
+// Clear validation on input
+document.querySelectorAll('.form-control, .form-select').forEach(el => {
+  el.addEventListener('input', () => {
+    el.classList.remove('is-invalid');
+    const wrap = el.closest('[class*="col-"]');
+    if (wrap) {
+      const msg = wrap.querySelector('.invalid-msg');
+      if (msg) msg.style.display = 'none';
+    }
+  });
+});
+
+// ── COLLECT FORM DATA ──────────────────────────────────────────────────
+function collectFormData() {
+  const disabilityLabels = {
+    d_none: 'ไม่พิการ',
+    d_1: 'ป.1 (การเห็น)',
+    d_2: 'ป.2 (การได้ยิน)',
+    d_3: 'ป.3 (การเคลื่อนไหว)',
+    d_4: 'ป.4 (จิตใจ)',
+    d_5: 'ป.5 (สติปัญญา)',
+    d_6: 'ป.6 (การเรียนรู้)',
+    d_7: 'ป.7 (ออทิสติก)',
+  };
+
+  const checkedDisabilities = [];
+  Object.keys(disabilityLabels).forEach(name => {
+    const cb = document.querySelector(`input[name="${name}"]`);
+    if (cb && cb.checked) checkedDisabilities.push(disabilityLabels[name]);
+  });
+
+  return {
+    agency:      document.getElementById('f_agency').value.trim(),
+    name:        document.getElementById('f_name').value.trim(),
+    age:         document.getElementById('f_age').value.trim(),
+    status:      document.getElementById('f_status').value,
+    disabilities: checkedDisabilities,
+    house:       document.getElementById('f_house').value.trim(),
+    tambon:      document.getElementById('f_tambon').value.trim(),
+    amphoe:      document.getElementById('f_amphoe').value.trim(),
+    budget:      parseFloat(document.getElementById('f_budget').value) || 0,
+    budgetyear:  document.getElementById('f_budgetyear').value.trim(),
+    projstatus:  document.getElementById('f_projstatus').value,
+    approvedate: document.getElementById('f_approvedate').value,
+    moudate:     document.getElementById('f_moudate').value,
+  };
+}
+
+// ── FORMAT HELPERS ─────────────────────────────────────────────────────
+function formatBudget(n) {
+  return n.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function formatDate(d) {
+  if (!d) return '–';
+  const [y, m, day] = d.split('-');
+  return `${day}/${m}/${y}`;
+}
+function statusBadge(s) {
+  const map = {
+    'แล้วเสร็จ':       'badge-success',
+    'กำลังดำเนินการ':  'badge-info',
+    'ยังไม่เริ่ม':      'badge-warning',
+    'ยกเลิก':          'badge-danger',
+  };
+  const cls = map[s] || 'badge-gray';
+  return `<span class="badge-status ${cls}">${s || '–'}</span>`;
+}
+function personBadge(s) {
+  if (!s) return '–';
+  const map = {
+    'ผู้พิการ':          'badge-danger',
+    'ผู้สูงอายุ':         'badge-warning',
+    'ผู้สูงอายุ/ผู้พิการ': 'badge-info',
+    'อื่นๆ':             'badge-gray',
+  };
+  const cls = map[s] || 'badge-gray';
+  return `<span class="badge-status ${cls}">${s}</span>`;
+}
+function disabilityCell(arr) {
+  if (!arr.length) return '<span style="color:#94a3b8;font-size:0.75rem">–</span>';
+  return arr.map(d => `<span class="badge-status badge-info" style="margin:1px;font-size:0.65rem">${d}</span>`).join(' ');
+}
+
+// ── RENDER ROW ─────────────────────────────────────────────────────────
+function renderRow(entry, num, isNew) {
+  const tr = document.createElement('tr');
+  if (isNew) tr.classList.add('new-row');
+  tr.innerHTML = `
+    <td><span class="row-num">${num}</span></td>
+    <td>${entry.agency || '<span style="color:#94a3b8">–</span>'}</td>
+    <td style="font-weight:600">${entry.name}</td>
+    <td style="text-align:center">${entry.age}</td>
+    <td>${personBadge(entry.status)}</td>
+    <td>${disabilityCell(entry.disabilities)}</td>
+    <td>${entry.house}</td>
+    <td>${entry.tambon}</td>
+    <td>${entry.amphoe}</td>
+    <td style="text-align:right;font-weight:700;color:#1e40af">฿${formatBudget(entry.budget)}</td>
+    <td style="text-align:center">${entry.budgetyear}</td>
+    <td>${statusBadge(entry.projstatus)}</td>
+    <td style="text-align:center">${formatDate(entry.approvedate)}</td>
+    <td style="text-align:center">${formatDate(entry.moudate)}</td>
+  `;
+  return tr;
+}
+
+// ── ADD TO PREVIEW ─────────────────────────────────────────────────────
+function addToPreview(entry) {
+  entries.push(entry);
+  rowCounter++;
+
+  const tbody = document.getElementById('previewTableBody');
+  const tr = renderRow(entry, rowCounter, true);
+  tbody.insertBefore(tr, tbody.firstChild); // newest on top
+
+  updatePreviewUI();
+}
+
+function updatePreviewUI() {
+  const count = entries.length;
+  document.getElementById('previewCount').textContent = `${count} รายการ`;
+  document.getElementById('previewEmpty').style.display    = count ? 'none'  : 'block';
+  document.getElementById('previewTableWrap').style.display = count ? 'block' : 'none';
+  document.getElementById('clearBtn').style.display        = count ? 'inline-block' : 'none';
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────
+function showToast(name) {
+  const container = document.getElementById('toastContainer');
+  const div = document.createElement('div');
+  div.className = 'toast-item';
+  div.innerHTML = `<span class="toast-icon">✅</span> เพิ่มข้อมูล <strong>${name}</strong> สำเร็จแล้ว`;
+  container.appendChild(div);
+  setTimeout(() => div.remove(), 3100);
+}
+
+// ── CLEAR PREVIEW ──────────────────────────────────────────────────────
+function clearPreview() {
+  if (!entries.length) return;
+  entries = [];
+  rowCounter = 0;
+  document.getElementById('previewTableBody').innerHTML = '';
+  updatePreviewUI();
+}
+
+// ── RESET FORM ─────────────────────────────────────────────────────────
+function resetForm() {
+  document.getElementById('entryForm').reset();
+  document.querySelectorAll('.disability-check-item').forEach(l => l.classList.remove('checked-active'));
+  document.querySelectorAll('.form-control, .form-select').forEach(el => el.classList.remove('is-invalid'));
+  document.querySelectorAll('.invalid-msg').forEach(m => m.style.display = 'none');
+}
+
+// ── FORM SUBMIT ────────────────────────────────────────────────────────
+document.getElementById('entryForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  if (!validateForm()) return;
+
+  const entry = collectFormData();
+  addToPreview(entry);
+  showToast(entry.name);
+  resetForm();
+
+  // Scroll to preview
+  setTimeout(() => {
+    document.querySelector('.preview-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 150);
+});
+</script>
+
+</body>
+</html>
