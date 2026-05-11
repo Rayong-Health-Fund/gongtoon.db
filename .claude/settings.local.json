@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"D:\\\\My Dashboard Project\" -Recurse | Select-Object -Property @{Name=\"Path\";Expression={$_.FullName.Substring\\(\"D:\\\\My Dashboard Project\".Length\\)}} | Sort-Object Path | ForEach-Object { $_.Path })",
+      "PowerShell(New-Item *)",
+      "PowerShell($lines = [System.IO.File]::ReadAllLines\\('D:\\\\My Dashboard Project\\\\index.html', [System.Text.Encoding]::UTF8\\); \"Total lines: $\\($lines.Count\\)\"; for \\($i=1508; $i -le 1520; $i++\\) { \"$i`t$\\($lines[$i-1]\\)\" })",
+      "PowerShell($lines = [System.IO.File]::ReadAllLines\\('D:\\\\My Dashboard Project\\\\index.html', [System.Text.Encoding]::UTF8\\); for \\($i=1525; $i -le 1580; $i++\\) { \"$i`t$\\($lines[$i-1]\\)\" })",
+      "PowerShell($lines = [System.IO.File]::ReadAllLines\\('D:\\\\My Dashboard Project\\\\index.html', [System.Text.Encoding]::UTF8\\); for \\($i=1; $i -le $lines.Count; $i++\\) { if \\($lines[$i-1] -eq '  </style>' -or $lines[$i-1] -eq '</style>'\\) { \"$i`t$\\($lines[$i-1]\\)\"; break } })",
+      "PowerShell($lines = [System.IO.File]::ReadAllLines\\('D:\\\\My Dashboard Project\\\\index.html', [System.Text.Encoding]::UTF8\\); for \\($i=0; $i -lt $lines.Count; $i++\\) { if \\($lines[$i] -match 'p1-loading-wrap'\\) { Write-Host \"Line $\\($i+1\\): $\\($lines[$i].Trim\\(\\)\\)\" } })",
+      "PowerShell($lines = [System.IO.File]::ReadAllLines\\('D:\\\\My Dashboard Project\\\\index.html', [System.Text.Encoding]::UTF8\\); for \\($i=1585; $i -le 1615; $i++\\) { \"$i`t$\\($lines[$i-1]\\)\" })",
+      "PowerShell(Select-String -Path 'D:\\\\My Dashboard Project\\\\assets\\\\js\\\\main.js' -Pattern 'FadeIn|opacity|transition' | ForEach-Object { \"$\\($_.LineNumber\\)`t$\\($_.Line.Trim\\(\\)\\)\" })",
+      "PowerShell(Get-Command *)",
+      "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\bin\"; cd \"D:\\\\My Dashboard Project\"; git --version; git status)",
+      "Bash(git -C \"D:\\\\My Dashboard Project\" status)",
+      "Bash(git init *)",
+      "Bash(git remote *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git config *)",
+      "Bash(git push *)",
+      "Bash(git branch *)",
+      "Bash(sed -n '2099,2107p' index.html)",
+      "Bash(sed -n '2130,2138p' index.html)",
+      "Bash(sed -n '2285,2295p' index.html)",
+      "Bash(sed -n '2372,2397p' index.html)",
+      "Bash(git *)"
+    ]
+  }
+}
