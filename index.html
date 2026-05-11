@@ -1468,6 +1468,83 @@ body {
   animation: notif-pulse 1.2s ease-in-out infinite;
 }
 .acc-kpi-sub { font-size: .75rem; color: #64748b; margin-top: .1rem; display: block; }
+
+/* ── STICKY FIRST COLUMN ── */
+.sticky-table { position: relative; }
+.sticky-table .table-custom thead th:first-child,
+.sticky-table .table-custom tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 4;
+  background: var(--white);
+}
+.sticky-table .table-custom thead th:first-child {
+  z-index: 11;
+  background: var(--bg-gray);
+}
+
+/* ── EXPORT BUTTON ── */
+.btn-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: #fff;
+  border: 1.5px solid #10b981;
+  color: #065f46;
+  padding: 0.3rem 0.75rem;
+  border-radius: 7px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Sarabun', sans-serif;
+  transition: all 0.18s;
+  margin-bottom: 0.5rem;
+}
+.btn-export:hover { background: #f0fdf4; border-color: #059669; }
+
+/* ── TABLE ACTION ROW (export + count) ── */
+.table-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ── MINIMALIST KPI SUMMARY (3-card) ── */
+.kpi-summary-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 480px) { .kpi-summary-3 { grid-template-columns: repeat(3,1fr); gap:0.4rem; } }
+.kpi3-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-top-width: 3px;
+  border-radius: 10px;
+  padding: 0.75rem 0.875rem;
+  text-align: center;
+}
+.kpi3-num {
+  display: block;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+.kpi3-unit {
+  font-size: 0.65rem;
+  color: var(--text-gray);
+  font-weight: 600;
+}
+.kpi3-label {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-gray);
+  margin-top: 0.2rem;
+}
 </style>
 </head>
 <body>
@@ -1756,16 +1833,20 @@ body {
           <h6 class="section-header">📈 ตัวชี้วัดสำคัญ</h6>
           <div class="summary-cards">
             <div class="summary-card" style="border-top:3px solid #1e40af;">
-              <span class="summary-card-value" style="color:#1e40af;">342</span>
-              <span class="summary-card-label">หลังที่ปรับปรุง</span>
+              <span class="summary-card-value" style="color:#1e40af;" id="p1ModalTotal">342</span>
+              <span class="summary-card-label">รายการทั้งหมด (ราย)</span>
+            </div>
+            <div class="summary-card" style="border-top:3px solid #ef4444;">
+              <span class="summary-card-value" style="color:#ef4444;" id="p1ModalDone">331</span>
+              <span class="summary-card-label">แล้วเสร็จ (ราย)</span>
+            </div>
+            <div class="summary-card" style="border-top:3px solid #f59e0b;">
+              <span class="summary-card-value" style="color:#f59e0b;" id="p1ModalPending">11</span>
+              <span class="summary-card-label">กำลังดำเนินการ (ราย)</span>
             </div>
             <div class="summary-card" style="border-top:3px solid #10b981;">
               <span class="summary-card-value" style="color:#10b981;">15.55M</span>
               <span class="summary-card-label">งบประมาณรวม (บาท)</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #f59e0b;">
-              <span class="summary-card-value" style="color:#f59e0b;">9</span>
-              <span class="summary-card-label">ปีงบประมาณ</span>
             </div>
             <div class="summary-card" style="border-top:3px solid #8b5cf6;">
               <span class="summary-card-value" style="color:#8b5cf6;">8</span>
@@ -1774,10 +1855,6 @@ body {
             <div class="summary-card" style="border-top:3px solid #06b6d4;">
               <span class="summary-card-value" style="color:#06b6d4;">45.5K</span>
               <span class="summary-card-label">งบเฉลี่ย/หลัง</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #ef4444;">
-              <span class="summary-card-value" style="color:#ef4444;">331</span>
-              <span class="summary-card-label">แล้วเสร็จ</span>
             </div>
           </div>
         </div>
@@ -1841,8 +1918,14 @@ body {
               </select>
             </div>
             <div class="filter-group">
-              <label class="filter-label">อำเภอ</label>
-              <select class="year-select" id="p1DistrictFilter" onchange="loadP1List()">
+              <label class="filter-label">เลือกอำเภอ</label>
+              <select class="year-select" id="p1DistrictFilter" onchange="updateP1SubDistrictFilter();loadP1List()">
+                <option value="all">ทั้งหมด</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">เลือกตำบล</label>
+              <select class="year-select" id="p1SubDistrictFilter" onchange="loadP1List()">
                 <option value="all">ทั้งหมด</option>
               </select>
             </div>
@@ -1860,8 +1943,11 @@ body {
             <input type="text" class="modal-search-input" id="p1Search"
               placeholder="🔍 ค้นหาชื่อ, ตำบล, อำเภอ..." onkeyup="loadP1List()">
           </div>
-          <div id="p1ListCount" style="font-size:0.78rem;color:var(--text-gray);margin-bottom:0.5rem;"></div>
-          <div class="table-responsive">
+          <div class="table-action-row">
+            <div id="p1ListCount" style="font-size:0.78rem;color:var(--text-gray);"></div>
+            <button class="btn-export" onclick="exportToExcel('p1ListTable','P1_รายการบ้าน')">📥 Export Excel</button>
+          </div>
+          <div class="table-responsive sticky-table">
             <table class="table-custom" id="p1ListTable">
               <thead><tr>
                 <th style="width:4%;">#</th>
@@ -2008,10 +2094,11 @@ body {
         <div id="tab2-byUnit" class="tab-content">
           <h6 class="section-header">🏥 สรุปอุปกรณ์รายหน่วยบริการ</h6>
           <div class="modal-search-sticky">
+            <div style="text-align:right;margin-bottom:0.25rem;"><button class="btn-export" onclick="exportToExcel('p2UnitTable','P2_รายการตามหน่วยงาน')">📥 Export Excel</button></div>
             <input type="text" class="modal-search-input" id="p2UnitSearch"
               placeholder="🔍 ค้นหาหน่วยงาน..." onkeyup="searchTable('p2UnitSearch','p2UnitTable')">
           </div>
-          <div class="table-responsive">
+          <div class="table-responsive sticky-table">
             <table class="table-custom" id="p2UnitTable">
               <thead><tr>
                 <th style="width:26%;">หน่วยบริการ</th>
@@ -2039,10 +2126,11 @@ body {
             <button class="filter-btn" onclick="filterUnits2('สสอ.',this)">🏢 สสอ.</button>
           </div>
           <div class="modal-search-sticky">
+            <div style="text-align:right;margin-bottom:0.25rem;"><button class="btn-export" onclick="exportToExcel('p2MapTable','P2_ศูนย์บริการ')">📥 Export Excel</button></div>
             <input type="text" class="modal-search-input" id="p2MapSearch"
               placeholder="🔍 ค้นหาหน่วยงาน..." onkeyup="searchTable('p2MapSearch','p2MapTable')">
           </div>
-          <div class="table-responsive">
+          <div class="table-responsive sticky-table">
             <table class="table-custom" id="p2MapTable">
               <thead><tr>
                 <th style="width:5%;">#</th>
@@ -2194,8 +2282,11 @@ body {
             <input type="text" class="modal-search-input" id="p3Search"
               placeholder="🔍 ค้นหาโครงการ, หน่วยบริการ, อำเภอ..." onkeyup="loadP3List()">
           </div>
-          <div id="p3ListCount" style="font-size:0.78rem;color:var(--text-gray);margin-bottom:0.5rem;"></div>
-          <div class="table-responsive">
+          <div class="table-action-row">
+            <div id="p3ListCount" style="font-size:0.78rem;color:var(--text-gray);"></div>
+            <button class="btn-export" onclick="exportToExcel('p3ListTable','P3_รายการโครงการ')">📥 Export Excel</button>
+          </div>
+          <div class="table-responsive sticky-table">
             <table class="table-custom" id="p3ListTable">
               <thead><tr>
                 <th style="width:5%;">#</th>
@@ -2281,9 +2372,10 @@ body {
             </div>
           </div>
           <div class="modal-search-sticky">
+            <div style="text-align:right;margin-top:0.25rem;"><button class="btn-export" onclick="exportToExcel('p4EquipTable','P4_รายการอุปกรณ์')">📥 Export Excel</button></div>
             <input type="text" class="modal-search-input" id="p4EquipSearch" placeholder="🔍 ค้นหา..." onkeyup="searchTable('p4EquipSearch','p4EquipTable')">
           </div>
-          <div class="table-responsive">
+          <div class="table-responsive sticky-table">
             <table class="table-custom" id="p4EquipTable">
               <thead><tr><th style="width:12%;">อำเภอ</th><th style="width:18%;">หน่วยงาน</th><th style="width:15%;">กลุ่ม</th>
               <th style="width:22%;">อุปกรณ์</th><th style="width:8%;">ปี</th><th style="width:9%;">จัดซื้อ</th>
@@ -2296,9 +2388,10 @@ body {
         <div id="tab4-budget" class="tab-content">
           <h6 class="section-header">💰 งบประมาณสนับสนุน</h6>
           <div class="modal-search-sticky">
+            <div style="text-align:right;margin-top:0.25rem;"><button class="btn-export" onclick="exportToExcel('p4BudgetTable','P4_งบประมาณ')">📥 Export Excel</button></div>
             <input type="text" class="modal-search-input" id="p4BudgetSearch" placeholder="🔍 ค้นหา..." onkeyup="searchTable('p4BudgetSearch','p4BudgetTable')">
           </div>
-          <div class="table-responsive">
+          <div class="table-responsive sticky-table">
             <table class="table-custom" id="p4BudgetTable">
               <thead><tr><th style="width:6%;">ปี</th><th style="width:22%;">หน่วยงาน</th>
               <th style="width:13%;">งบประมาณ (บาท)</th><th style="width:11%;">ส่งโครงการ</th>
@@ -2314,6 +2407,7 @@ body {
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 "use strict";
@@ -3738,59 +3832,86 @@ function searchTable(searchId, tableId) {
   var input = document.getElementById(searchId);
   var table = document.getElementById(tableId);
   if (!input || !table) return;
-  
-  var filter = input.value.toUpperCase().trim();
+
+  var query = input.value.trim();
+  var keywords = query.toLowerCase().split(/\s+/).filter(Boolean);
   var tbody = table.getElementsByTagName("tbody")[0];
   if (!tbody) return;
-  
+
   var rows = tbody.getElementsByTagName("tr");
   var noResultsId = searchId.replace("Search", "NoResults");
   var noResults = document.getElementById(noResultsId);
   var visibleCount = 0;
-  
+
+  // Build a single regex that matches ANY keyword (for highlighting)
+  var hlRegex = keywords.length > 0
+    ? new RegExp("(" + keywords.map(function(k){ return k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); }).join("|") + ")", "gi")
+    : null;
+
   for (var i = 0; i < rows.length; i++) {
     var row = rows[i];
     var cells = row.getElementsByTagName("td");
-    
+
+    // Restore original HTML before re-checking
     for (var j = 0; j < cells.length; j++) {
-      var cell = cells[j];
-      var originalText = cell.getAttribute("data-original");
-      if (originalText) {
-        cell.innerHTML = originalText;
-      } else {
-        cell.setAttribute("data-original", cell.innerHTML);
-      }
+      var orig = cells[j].getAttribute("data-original");
+      if (orig) cells[j].innerHTML = orig;
+      else cells[j].setAttribute("data-original", cells[j].innerHTML);
     }
-    
-    var hiddenData = row.getAttribute("data-searchable") || "";
+
+    var hiddenData = (row.getAttribute("data-searchable") || "").toLowerCase();
     var cellText = hiddenData;
     for (var j = 0; j < cells.length; j++) {
-      cellText += " " + (cells[j].textContent || cells[j].innerText);
+      cellText += " " + (cells[j].textContent || cells[j].innerText).toLowerCase();
     }
-    
-    var found = filter === "" || cellText.toUpperCase().indexOf(filter) > -1;
-    
-    if (found && filter !== "") {
+
+    // ALL keywords must be present (multi-keyword AND logic)
+    var found = keywords.length === 0 || keywords.every(function(kw){ return cellText.indexOf(kw) > -1; });
+
+    if (found && hlRegex) {
       for (var j = 0; j < cells.length; j++) {
-        var cell = cells[j];
-        var textValue = cell.textContent || cell.innerText;
-        var upperText = textValue.toUpperCase();
-        if (upperText.indexOf(filter) > -1) {
-          var regex = new RegExp("(" + filter.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
-          var highlighted = textValue.replace(regex, '<span class="highlight">$1</span>');
-          cell.innerHTML = highlighted;
+        var cellTxt = cells[j].textContent || cells[j].innerText;
+        if (keywords.some(function(kw){ return cellTxt.toLowerCase().indexOf(kw) > -1; })) {
+          cells[j].innerHTML = cellTxt.replace(hlRegex, '<span class="highlight">$1</span>');
         }
       }
     }
-    
+
     row.style.display = found ? "" : "none";
     if (found) visibleCount++;
   }
-  
+
   if (noResults) {
-    noResults.style.display = (visibleCount === 0 && filter !== "") ? "block" : "none";
+    noResults.style.display = (visibleCount === 0 && keywords.length > 0) ? "block" : "none";
   }
 }
+
+// Export visible table rows to Excel via SheetJS
+function exportToExcel(tableId, filename) {
+  var table = document.getElementById(tableId);
+  if (!table || typeof XLSX === 'undefined') { alert('ไม่สามารถ Export ได้ในขณะนี้'); return; }
+  var wb = XLSX.utils.table_to_book(table, { sheet: 'ข้อมูล', raw: false });
+  XLSX.writeFile(wb, filename + '.xlsx');
+}
+window.exportToExcel = exportToExcel;
+
+// Cascade: populate ตำบล dropdown based on selected อำเภอ
+function updateP1SubDistrictFilter() {
+  var distVal = (document.getElementById('p1DistrictFilter') || {}).value || 'all';
+  var sdSel = document.getElementById('p1SubDistrictFilter');
+  if (!sdSel) return;
+  sdSel.innerHTML = '<option value="all">ทั้งหมด</option>';
+  if (distVal === 'all') return;
+  var seen = {};
+  project1Records.forEach(function(r) {
+    if (r.d === distVal && r.tb && !seen[r.tb]) { seen[r.tb] = true; }
+  });
+  Object.keys(seen).sort(function(a, b){ return a.localeCompare(b, 'th'); }).forEach(function(tb) {
+    var o = document.createElement('option'); o.value = tb; o.textContent = tb;
+    sdSel.appendChild(o);
+  });
+}
+window.updateP1SubDistrictFilter = updateP1SubDistrictFilter;
 
 // openModal - must be on window scope to work with onclick= attributes
 window.openModal = function openModal(modalId) {
@@ -3888,18 +4009,15 @@ function filterP2Cards() {
       return true;
     });
 
-    // Search: name, base_code, unit names, ec/cc codes
+    // Search: multi-keyword AND logic across name, code, unit names, districts
     var searchMatch = true;
     if (search) {
-      var nameMatch = grp.name.toLowerCase().indexOf(search) >= 0;
-      var codeMatch = (grp.base_code || "").toLowerCase().indexOf(search) >= 0;
-      var itemMatch = filteredItems.some(function(item) {
-        return item.unit.toLowerCase().indexOf(search) >= 0 ||
-               (item.ec  || "").toLowerCase().indexOf(search) >= 0 ||
-               (item.cc  || "").toLowerCase().indexOf(search) >= 0 ||
-               item.district.toLowerCase().indexOf(search) >= 0;
-      });
-      searchMatch = nameMatch || codeMatch || itemMatch;
+      var kws2 = search.split(/\s+/).filter(Boolean);
+      var haystack2 = grp.name.toLowerCase() + " " + (grp.base_code || "").toLowerCase() + " " +
+        filteredItems.map(function(i){
+          return (i.unit + " " + (i.ec||"") + " " + (i.cc||"") + " " + i.district).toLowerCase();
+        }).join(" ");
+      searchMatch = kws2.every(function(kw){ return haystack2.indexOf(kw) > -1; });
     }
 
     if (filteredItems.length === 0 || !searchMatch) {
@@ -4371,11 +4489,11 @@ function loadP3List(){
     if(yearVal!=="all"&&String(r.y)!==String(yearVal))return false;
     if(distVal!=="all"&&r.d!==distVal)return false;
     if(statVal!=="all"&&r.s!==statVal)return false;
-    if(searchVal&&!(
-      r.n.toLowerCase().includes(searchVal)||
-      r.u.toLowerCase().includes(searchVal)||
-      r.d.toLowerCase().includes(searchVal)
-    ))return false;
+    if(searchVal){
+      var kws3=searchVal.split(/\s+/).filter(Boolean);
+      var hay3=(r.n+" "+r.u+" "+r.d).toLowerCase();
+      if(!kws3.every(function(kw){return hay3.indexOf(kw)>-1;}))return false;
+    }
     return true;
   });
 
@@ -4549,6 +4667,17 @@ function initProject1() {
     dSel.appendChild(o);
   });
 
+  // Update modal summary KPI cards with real data
+  var p1Total   = project1Records.length;
+  var p1Done    = project1Records.filter(function(r){ return r.s && r.s.indexOf('แล้วเสร็จ') > -1; }).length;
+  var p1Pend    = Math.max(0, p1Total - p1Done);
+  var elT = document.getElementById('p1ModalTotal');
+  var elD = document.getElementById('p1ModalDone');
+  var elP = document.getElementById('p1ModalPending');
+  if (elT) elT.textContent = p1Total;
+  if (elD) elD.textContent = p1Done;
+  if (elP) elP.textContent = p1Pend;
+
   // Fill district summary table
   buildP1DistrictTable();
 
@@ -4693,20 +4822,22 @@ var p1PageSize = 50;
 var p1FilteredRecords = [];
 
 function loadP1List() {
-  var yearVal = (document.getElementById("p1YearFilter")||{}).value || "all";
-  var distVal = (document.getElementById("p1DistrictFilter")||{}).value || "all";
-  var typeVal = (document.getElementById("p1TypeFilter")||{}).value || "all";
-  var searchVal = ((document.getElementById("p1Search")||{}).value||"").toLowerCase().trim();
+  var yearVal    = (document.getElementById("p1YearFilter")||{}).value || "all";
+  var distVal    = (document.getElementById("p1DistrictFilter")||{}).value || "all";
+  var subdistVal = (document.getElementById("p1SubDistrictFilter")||{}).value || "all";
+  var typeVal    = (document.getElementById("p1TypeFilter")||{}).value || "all";
+  var query      = ((document.getElementById("p1Search")||{}).value||"").toLowerCase().trim();
+  var keywords   = query ? query.split(/\s+/).filter(Boolean) : [];
 
   p1FilteredRecords = project1Records.filter(function(r) {
-    if (yearVal !== "all" && r.y !== yearVal) return false;
-    if (distVal !== "all" && r.d !== distVal) return false;
-    if (typeVal !== "all" && r.t !== typeVal) return false;
-    if (searchVal && !(
-      r.n.toLowerCase().includes(searchVal) ||
-      r.tb.toLowerCase().includes(searchVal) ||
-      r.d.toLowerCase().includes(searchVal)
-    )) return false;
+    if (yearVal    !== "all" && r.y  !== yearVal)    return false;
+    if (distVal    !== "all" && r.d  !== distVal)    return false;
+    if (subdistVal !== "all" && r.tb !== subdistVal) return false;
+    if (typeVal    !== "all" && r.t  !== typeVal)    return false;
+    if (keywords.length > 0) {
+      var hay = (r.n + " " + r.tb + " " + r.d + " " + r.t + " " + r.s).toLowerCase();
+      if (!keywords.every(function(kw){ return hay.indexOf(kw) > -1; })) return false;
+    }
     return true;
   });
 

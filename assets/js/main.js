@@ -175,25 +175,26 @@ function p1RenderContent(allHouseData, formsData) {
       '</div>'
     : '';
 
+  var pendingCount = Math.max(0, totalHouses - completedCount);
+
   var html =
     '<div class="p1-live-badge"><div class="p1-live-dot"></div>ข้อมูลสด · อัปเดต ' + ts + '</div>' +
 
-    '<div class="acc-kpi-row">' +
-      '<div class="acc-kpi-card">' +
-        '<span class="acc-kpi-val" style="color:#3b82f6;">' + (totalHouses || 351) + '</span>' +
-        '<span class="acc-kpi-lbl">หลัง (ข้อมูลหลัก)</span>' +
+    '<div class="kpi-summary-3">' +
+      '<div class="kpi3-card" style="border-top-color:#3b82f6;">' +
+        '<span class="kpi3-num" style="color:#3b82f6;">' + (totalHouses || 351) + '</span>' +
+        '<span class="kpi3-unit">ราย</span>' +
+        '<span class="kpi3-label">รายการทั้งหมด</span>' +
       '</div>' +
-      '<div class="acc-kpi-card">' +
-        '<span class="acc-kpi-val" style="color:#10b981;">' + (completedCount || 0) + '</span>' +
-        '<span class="acc-kpi-lbl">บ้านเสร็จสิ้น</span>' +
+      '<div class="kpi3-card" style="border-top-color:#10b981;">' +
+        '<span class="kpi3-num" style="color:#10b981;">' + (completedCount || 0) + '</span>' +
+        '<span class="kpi3-unit">ราย</span>' +
+        '<span class="kpi3-label">แล้วเสร็จ</span>' +
       '</div>' +
-      '<div class="acc-kpi-card">' +
-        '<span class="acc-kpi-val">' + (totalDistricts || 8) + '</span>' +
-        '<span class="acc-kpi-lbl">อำเภอ</span>' +
-      '</div>' +
-      '<div class="acc-kpi-card">' +
-        '<span class="acc-kpi-val" style="color:#3b82f6;">' + budgetM + 'M</span>' +
-        '<span class="acc-kpi-lbl">งบรวม (บาท)</span>' +
+      '<div class="kpi3-card" style="border-top-color:#f59e0b;">' +
+        '<span class="kpi3-num" style="color:#f59e0b;">' + pendingCount + '</span>' +
+        '<span class="kpi3-unit">ราย</span>' +
+        '<span class="kpi3-label">กำลังดำเนินการ</span>' +
       '</div>' +
     '</div>' +
 
@@ -221,11 +222,10 @@ function p1RenderError() {
   if (!container) return;
   container.innerHTML =
     '<div class="p1-error-wrap">⚠️ ไม่สามารถโหลดข้อมูลสดได้ กำลังแสดงข้อมูลสำรอง</div>' +
-    '<div class="acc-kpi-row">' +
-      '<div class="acc-kpi-card"><span class="acc-kpi-val" style="color:#3b82f6;">351</span><span class="acc-kpi-lbl">หลังที่ปรับแล้ว</span></div>' +
-      '<div class="acc-kpi-card"><span class="acc-kpi-val" style="color:#10b981;">—</span><span class="acc-kpi-lbl">บ้านเสร็จสิ้น</span></div>' +
-      '<div class="acc-kpi-card"><span class="acc-kpi-val">8</span><span class="acc-kpi-lbl">อำเภอ</span></div>' +
-      '<div class="acc-kpi-card"><span class="acc-kpi-val" style="color:#3b82f6;">15.89M</span><span class="acc-kpi-lbl">งบรวม (บาท)</span></div>' +
+    '<div class="kpi-summary-3">' +
+      '<div class="kpi3-card" style="border-top-color:#3b82f6;"><span class="kpi3-num" style="color:#3b82f6;">351</span><span class="kpi3-unit">ราย</span><span class="kpi3-label">รายการทั้งหมด</span></div>' +
+      '<div class="kpi3-card" style="border-top-color:#10b981;"><span class="kpi3-num" style="color:#10b981;">331</span><span class="kpi3-unit">ราย</span><span class="kpi3-label">แล้วเสร็จ</span></div>' +
+      '<div class="kpi3-card" style="border-top-color:#f59e0b;"><span class="kpi3-num" style="color:#f59e0b;">20</span><span class="kpi3-unit">ราย</span><span class="kpi3-label">กำลังดำเนินการ</span></div>' +
     '</div>' +
     '<div class="acc-progress-bar"><div class="acc-progress-fill" style="width:90%;background:#3b82f6;"></div></div>' +
     '<p class="acc-summary-text">ดำเนินการปรับสภาพบ้านให้กับผู้พิการและผู้สูงอายุ 351 หลัง ใน 8 อำเภอ งบประมาณรวมทั้งสิ้น ~15.89 ล้านบาท</p>';
@@ -464,24 +464,21 @@ function p2RenderContent(masterData, formsData, mapData) {
       '<div class="p1-live-dot" style="background:#f59e0b;"></div>ข้อมูลสด · อัปเดต ' + ts +
     '</div>' +
 
-    '<div class="acc-kpi-row">' +
-      '<div class="acc-kpi-card">' +
-        '<span class="acc-kpi-val" style="color:#d97706;">' + (totalEquip || 3388).toLocaleString('th-TH') + '</span>' +
-        '<span class="acc-kpi-lbl">ชิ้นทั้งหมด</span>' +
+    '<div class="kpi-summary-3">' +
+      '<div class="kpi3-card" style="border-top-color:#d97706;">' +
+        '<span class="kpi3-num" style="color:#d97706;">' + (totalEquip || 3388).toLocaleString('th-TH') + '</span>' +
+        '<span class="kpi3-unit">หน่วย</span>' +
+        '<span class="kpi3-label">อุปกรณ์ทั้งหมด</span>' +
       '</div>' +
-      '<div class="acc-kpi-card">' +
-        '<span class="acc-kpi-val">' + inUse.toLocaleString('th-TH') + '</span>' +
-        '<span class="acc-kpi-sub">' + inUseLocs + ' แห่ง</span>' +
-        '<span class="acc-kpi-lbl">ใช้งานอยู่</span>' +
+      '<div class="kpi3-card" style="border-top-color:#6366f1;">' +
+        '<span class="kpi3-num" style="color:#6366f1;">' + inUse.toLocaleString('th-TH') + '</span>' +
+        '<span class="kpi3-unit">หน่วย · ' + inUseLocs + ' แห่ง</span>' +
+        '<span class="kpi3-label">กำลังใช้งาน</span>' +
       '</div>' +
-      '<div class="acc-kpi-card">' +
-        '<span class="acc-kpi-val" style="color:#10b981;">' + avail.toLocaleString('th-TH') + '</span>' +
-        '<span class="acc-kpi-sub">' + availLocs + ' แห่ง</span>' +
-        '<span class="acc-kpi-lbl">พร้อมให้บริการ</span>' +
-      '</div>' +
-      '<div class="acc-kpi-card">' +
-        '<span class="acc-kpi-val">' + (totalCenters || 73) + '</span>' +
-        '<span class="acc-kpi-lbl">หน่วยบริการ</span>' +
+      '<div class="kpi3-card" style="border-top-color:#10b981;">' +
+        '<span class="kpi3-num" style="color:#10b981;">' + avail.toLocaleString('th-TH') + '</span>' +
+        '<span class="kpi3-unit">หน่วย · ' + availLocs + ' แห่ง</span>' +
+        '<span class="kpi3-label">พร้อมให้ยืม</span>' +
       '</div>' +
     '</div>' +
 
@@ -508,11 +505,10 @@ function p2RenderError() {
   if (!container) return;
   container.innerHTML =
     '<div class="p1-error-wrap">⚠️ ไม่สามารถโหลดข้อมูลสดได้ กำลังแสดงข้อมูลสำรอง</div>' +
-    '<div class="acc-kpi-row">' +
-      '<div class="acc-kpi-card"><span class="acc-kpi-val" style="color:#d97706;">3,388</span><span class="acc-kpi-lbl">ชิ้นทั้งหมด</span></div>' +
-      '<div class="acc-kpi-card"><span class="acc-kpi-val">1,910</span><span class="acc-kpi-sub">— แห่ง</span><span class="acc-kpi-lbl">ใช้งานอยู่</span></div>' +
-      '<div class="acc-kpi-card"><span class="acc-kpi-val" style="color:#10b981;">1,457</span><span class="acc-kpi-sub">— แห่ง</span><span class="acc-kpi-lbl">พร้อมให้บริการ</span></div>' +
-      '<div class="acc-kpi-card"><span class="acc-kpi-val">73</span><span class="acc-kpi-lbl">หน่วยบริการ</span></div>' +
+    '<div class="kpi-summary-3">' +
+      '<div class="kpi3-card" style="border-top-color:#d97706;"><span class="kpi3-num" style="color:#d97706;">3,388</span><span class="kpi3-unit">หน่วย</span><span class="kpi3-label">อุปกรณ์ทั้งหมด</span></div>' +
+      '<div class="kpi3-card" style="border-top-color:#6366f1;"><span class="kpi3-num" style="color:#6366f1;">1,910</span><span class="kpi3-unit">หน่วย</span><span class="kpi3-label">กำลังใช้งาน</span></div>' +
+      '<div class="kpi3-card" style="border-top-color:#10b981;"><span class="kpi3-num" style="color:#10b981;">1,457</span><span class="kpi3-unit">หน่วย</span><span class="kpi3-label">พร้อมให้ยืม</span></div>' +
     '</div>' +
     '<div class="acc-progress-bar"><div class="acc-progress-fill" style="width:75%;background:#f59e0b;"></div></div>' +
     '<p class="acc-summary-text">จัดให้บริการอุปกรณ์ฟื้นฟูสมรรถภาพรวม 3,388 ชิ้น ครอบคลุม 26 ประเภท ใน 73 หน่วยบริการทั่วจังหวัดระยอง</p>';
