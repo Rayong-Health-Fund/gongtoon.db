@@ -10,7 +10,6 @@
 :root {
   --primary-blue: #1e40af;
   --primary-navy: #0f172a;
-  --bg-light: #f8fafc;
   --text-dark: #1e293b;
   --text-gray: #64748b;
   --border-light: #e2e8f0;
@@ -40,7 +39,7 @@ body {
   position: sticky; top: 0; z-index: 1000;
 }
 .navbar-inner {
-  max-width: 1100px; margin: 0 auto; padding: 0 1.5rem;
+  max-width: 800px; margin: 0 auto; padding: 0 1.5rem;
   display: flex; align-items: center; justify-content: space-between;
 }
 .navbar-brand {
@@ -56,8 +55,7 @@ body {
 .back-btn {
   font-size: 0.82rem; font-weight: 600; color: var(--text-gray);
   text-decoration: none; padding: 0.35rem 0.8rem;
-  border: 1.5px solid var(--border-light); border-radius: 7px;
-  transition: all 0.2s;
+  border: 1.5px solid var(--border-light); border-radius: 7px; transition: all 0.2s;
 }
 .back-btn:hover { color: var(--primary-blue); border-color: #93c5fd; background: #eff6ff; }
 
@@ -84,116 +82,8 @@ body {
 .page-title { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.35rem; }
 .page-subtitle { font-size: 0.92rem; opacity: 0.78; }
 
-/* TOOLBAR */
-.toolbar {
-  max-width: 1100px; margin: 1.75rem auto 0; padding: 0 1.5rem;
-  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
-}
-.search-box {
-  flex: 1; min-width: 220px; position: relative;
-}
-.search-box input {
-  width: 100%; padding: 0.5rem 0.85rem 0.5rem 2.2rem;
-  font-family: 'Sarabun', sans-serif; font-size: 0.88rem;
-  border: 1.5px solid var(--border-light); border-radius: 8px;
-  background: var(--white); color: var(--text-dark); transition: border-color 0.2s, box-shadow 0.2s;
-}
-.search-box input:focus {
-  outline: none; border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgba(30,64,175,0.1);
-}
-.search-icon {
-  position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%);
-  font-size: 0.85rem; color: var(--text-gray); pointer-events: none;
-}
-.filter-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-.filter-tab {
-  font-family: 'Sarabun', sans-serif; font-size: 0.78rem; font-weight: 600;
-  padding: 0.35rem 0.75rem; border-radius: 6px; cursor: pointer;
-  border: 1.5px solid var(--border-light); background: var(--white);
-  color: var(--text-gray); transition: all 0.2s;
-}
-.filter-tab:hover, .filter-tab.active {
-  border-color: var(--primary-blue); background: #eff6ff; color: var(--primary-blue);
-}
-
 /* MAIN */
-.main { max-width: 1100px; margin: 1.5rem auto 4rem; padding: 0 1.5rem; }
-
-/* SECTION HEADER */
-.section-head {
-  display: flex; align-items: center; gap: 0.6rem;
-  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.09em; color: var(--text-gray); margin-bottom: 0.75rem;
-}
-.section-head::after {
-  content: ''; flex: 1; height: 1px; background: var(--border-light);
-}
-.section-icon {
-  width: 26px; height: 26px; border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.95rem; flex-shrink: 0;
-}
-
-/* PROJECT LIST CARD */
-.list-card {
-  background: var(--white); border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.07); border: 1px solid var(--border-light);
-  overflow: hidden; margin-bottom: 1.5rem;
-}
-.list-card-head {
-  padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border-light);
-  background: #f8fafc; display: flex; align-items: center; gap: 0.75rem;
-}
-.list-card-icon {
-  width: 34px; height: 34px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; flex-shrink: 0;
-}
-.list-card-label { font-size: 0.88rem; font-weight: 700; color: var(--text-dark); }
-.list-card-count {
-  margin-left: auto; font-size: 0.72rem; font-weight: 700;
-  color: var(--text-gray); background: var(--border-light);
-  padding: 0.15rem 0.55rem; border-radius: 10px;
-}
-
-/* PROJECT ROW */
-.proj-row {
-  display: flex; align-items: center; gap: 1rem;
-  padding: 0.7rem 1.25rem; border-bottom: 1px solid #f1f5f9;
-  transition: background 0.15s;
-}
-.proj-row:last-child { border-bottom: none; }
-.proj-row:hover { background: #f8fafc; }
-.proj-row.hidden { display: none; }
-
-.proj-num {
-  min-width: 32px; height: 26px; border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.72rem; font-weight: 800; flex-shrink: 0;
-}
-.proj-info { flex: 1; min-width: 0; }
-.proj-name { font-size: 0.9rem; font-weight: 600; color: var(--text-dark); line-height: 1.3; }
-.proj-sub { font-size: 0.75rem; color: var(--text-gray); margin-top: 0.1rem; }
-
-/* BUTTONS */
-.btn-live {
-  display: inline-flex; align-items: center; gap: 0.35rem;
-  padding: 0.38rem 0.9rem; border-radius: 7px; font-family: 'Sarabun', sans-serif;
-  font-size: 0.8rem; font-weight: 700; text-decoration: none;
-  white-space: nowrap; transition: all 0.18s; flex-shrink: 0;
-  background: #10b981; color: white; border: none;
-}
-.btn-live:hover { background: #059669; color: white; transform: translateY(-1px); }
-.btn-placeholder {
-  display: inline-flex; align-items: center; gap: 0.35rem;
-  padding: 0.38rem 0.9rem; border-radius: 7px; font-family: 'Sarabun', sans-serif;
-  font-size: 0.8rem; font-weight: 600; text-decoration: none;
-  white-space: nowrap; transition: all 0.18s; flex-shrink: 0;
-  background: var(--white); color: var(--primary-blue);
-  border: 1.5px solid #93c5fd;
-}
-.btn-placeholder:hover { background: #eff6ff; color: var(--primary-blue); }
+.main { max-width: 800px; margin: 2rem auto 4rem; padding: 0 1.5rem; }
 
 /* NOTICE */
 .notice {
@@ -202,21 +92,71 @@ body {
   display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 1.5rem;
 }
 
+/* CARD */
+.list-card {
+  background: var(--white); border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07); border: 1px solid var(--border-light);
+  overflow: hidden;
+}
+.list-card-head {
+  padding: 1rem 1.4rem; border-bottom: 1px solid var(--border-light);
+  background: #f8fafc; display: flex; align-items: center; gap: 0.75rem;
+}
+.list-card-icon {
+  width: 36px; height: 36px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+}
+.list-card-title { font-size: 0.92rem; font-weight: 700; color: var(--text-dark); }
+.list-card-sub   { font-size: 0.75rem; color: var(--text-gray); margin-top: 0.05rem; }
+
+/* PROJECT ROW */
+.proj-row {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.4rem; border-bottom: 1px solid #f1f5f9; transition: background 0.15s;
+}
+.proj-row:last-child { border-bottom: none; }
+.proj-row:hover { background: #f8fafc; }
+
+.proj-dot {
+  width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0;
+}
+.proj-num {
+  font-size: 0.7rem; font-weight: 800; color: var(--text-gray);
+  min-width: 18px; flex-shrink: 0;
+}
+.proj-info { flex: 1; min-width: 0; }
+.proj-name { font-size: 0.95rem; font-weight: 700; color: var(--text-dark); line-height: 1.3; }
+.proj-sub  { font-size: 0.78rem; color: var(--text-gray); margin-top: 0.15rem; }
+
+/* BUTTONS */
+.btn-live {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.42rem 1rem; border-radius: 8px;
+  font-family: 'Sarabun', sans-serif; font-size: 0.82rem; font-weight: 700;
+  text-decoration: none; white-space: nowrap; flex-shrink: 0;
+  background: #10b981; color: white; transition: all 0.18s;
+}
+.btn-live:hover { background: #059669; color: white; transform: translateY(-1px); }
+
+.btn-soon {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.42rem 1rem; border-radius: 8px;
+  font-family: 'Sarabun', sans-serif; font-size: 0.82rem; font-weight: 600;
+  white-space: nowrap; flex-shrink: 0;
+  background: var(--white); color: var(--text-gray);
+  border: 1.5px dashed #cbd5e1; cursor: default;
+}
+
 /* FOOTER */
 .site-footer {
-  background: rgba(15,23,42,0.96); color: rgba(255,255,255,0.75);
+  background: rgba(15,23,42,0.96); color: rgba(255,255,255,0.7);
   padding: 1.5rem 0 1rem; font-size: 0.82rem; text-align: center;
 }
 .site-footer strong { color: #fff; }
 
-/* EMPTY STATE */
-.empty-state {
-  text-align: center; padding: 2.5rem 1rem; color: var(--text-gray); font-size: 0.88rem;
-}
-
-@media (max-width: 600px) {
+@media (max-width: 560px) {
   .page-title { font-size: 1.35rem; }
-  .proj-row { flex-wrap: wrap; gap: 0.5rem; }
+  .proj-row { flex-wrap: wrap; }
   .proj-sub { display: none; }
 }
 </style>
@@ -239,36 +179,72 @@ body {
   <div class="page-header-inner">
     <div class="page-badge">👤 Staff Portal · ปีงบประมาณ 2568</div>
     <div class="page-title">ศูนย์กรอกข้อมูลโครงการ</div>
-    <div class="page-subtitle">เลือกโครงการแล้วคลิก "เปิดฟอร์ม" เพื่อบันทึกข้อมูล — รวม 28 โครงการ</div>
-  </div>
-</div>
-
-<!-- TOOLBAR -->
-<div class="toolbar">
-  <div class="search-box">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="searchInput" placeholder="ค้นหาชื่อโครงการ...">
-  </div>
-  <div class="filter-tabs" id="filterTabs">
-    <button class="filter-tab active" data-group="all">ทั้งหมด</button>
-    <button class="filter-tab" data-group="A">🏠 บ้าน</button>
-    <button class="filter-tab" data-group="B">🦽 อุปกรณ์</button>
-    <button class="filter-tab" data-group="C">💪 ฟื้นฟู</button>
-    <button class="filter-tab" data-group="D">👩‍🏫 บุคลากร</button>
-    <button class="filter-tab" data-group="E">🌟 คุณภาพชีวิต</button>
-    <button class="filter-tab" data-group="F">⚙️ บริหาร</button>
+    <div class="page-subtitle">เลือกโครงการแล้วคลิก "เปิดฟอร์ม" เพื่อบันทึกข้อมูล</div>
   </div>
 </div>
 
 <!-- MAIN -->
-<div class="main" id="main">
+<div class="main">
+
   <div class="notice">
-    <span style="flex-shrink:0;font-size:1rem;">ℹ️</span>
-    <span>ปุ่ม <strong>สีเขียว</strong> = ฟอร์มพร้อมใช้งาน &nbsp;|&nbsp; ปุ่ม <strong>สีน้ำเงิน (ขอบ)</strong> = กำลังจัดทำ เชื่อมโยงได้เมื่อสร้างไฟล์แล้ว</span>
+    <span style="flex-shrink:0;">ℹ️</span>
+    <span>หน้านี้สำหรับเจ้าหน้าที่กองทุน — กรุณาตรวจสอบข้อมูลให้ถูกต้องก่อนส่งแบบฟอร์ม</span>
   </div>
-  <!-- groups rendered by JS -->
-  <div id="groupContainer"></div>
-  <div class="empty-state" id="emptyState" style="display:none;">ไม่พบโครงการที่ค้นหา</div>
+
+  <div class="list-card">
+    <div class="list-card-head">
+      <div class="list-card-icon" style="background:#dbeafe;">📋</div>
+      <div>
+        <div class="list-card-title">แบบฟอร์มบันทึกข้อมูลโครงการ</div>
+        <div class="list-card-sub">4 โครงการหลัก · ปีงบประมาณ 2568</div>
+      </div>
+    </div>
+
+    <!-- Project 1 -->
+    <div class="proj-row">
+      <div class="proj-dot" style="background:#10b981;"></div>
+      <div class="proj-num">01</div>
+      <div class="proj-info">
+        <div class="proj-name">ปรับสภาพแวดล้อมที่อยู่อาศัย</div>
+        <div class="proj-sub">ผู้สูงอายุและผู้พิการ · ซ่อมแซมบ้าน / งบประมาณ / สถานะ</div>
+      </div>
+      <a href="form-repair.html" class="btn-live">🔗 เปิดฟอร์ม</a>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="proj-row">
+      <div class="proj-dot" style="background:#f59e0b;"></div>
+      <div class="proj-num">02</div>
+      <div class="proj-info">
+        <div class="proj-name">อุปกรณ์เครื่องช่วยความพิการ</div>
+        <div class="proj-sub">จัดสรรอุปกรณ์ / ศูนย์บริการ / ซ่อมบำรุง</div>
+      </div>
+      <span class="btn-soon">🕐 เร็วๆ นี้</span>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="proj-row">
+      <div class="proj-dot" style="background:#3b82f6;"></div>
+      <div class="proj-num">03</div>
+      <div class="proj-info">
+        <div class="proj-name">พัฒนาบุคลากรและเครือข่าย</div>
+        <div class="proj-sub">ฝึกอบรม / ผู้เข้าร่วม / หลักสูตร</div>
+      </div>
+      <span class="btn-soon">🕐 เร็วๆ นี้</span>
+    </div>
+
+    <!-- Project 4 -->
+    <div class="proj-row">
+      <div class="proj-dot" style="background:#8b5cf6;"></div>
+      <div class="proj-num">04</div>
+      <div class="proj-info">
+        <div class="proj-name">ศูนย์ซ่อมอุปกรณ์เครื่องช่วย</div>
+        <div class="proj-sub">รับซ่อม / อะไหล่ / ประวัติการซ่อมบำรุง</div>
+      </div>
+      <span class="btn-soon">🕐 เร็วๆ นี้</span>
+    </div>
+
+  </div>
 </div>
 
 <!-- FOOTER -->
@@ -277,141 +253,5 @@ body {
   <span style="font-size:0.75rem;opacity:0.6;">© 2568 · Data Entry Hub</span>
 </footer>
 
-<script>
-const GROUPS = [
-  {
-    id: 'A', icon: '🏠', label: 'ปรับสภาพที่อยู่อาศัย', color: '#10b981', bg: '#d1fae5',
-    items: [
-      { n:1,  name:'ปรับสภาพบ้านผู้พิการ',                  sub:'ซ่อมแซม / สภาพแวดล้อม / งบประมาณ',          href:'form-repair.html',    live:true },
-      { n:2,  name:'ปรับสภาพบ้านผู้สูงอายุ',                sub:'ซ่อมแซม / สภาพแวดล้อม / งบประมาณ',          href:'form-project2.html' },
-      { n:3,  name:'ปรับปรุงห้องน้ำและทางลาด',              sub:'ราวจับ / ทางลาด / ห้องน้ำผู้พิการ',           href:'form-project3.html' },
-      { n:4,  name:'ติดตั้งสิ่งอำนวยความสะดวกในบ้าน',       sub:'ราวบันได / สวิตช์ไฟ / อื่นๆ',                href:'form-project4.html' },
-    ]
-  },
-  {
-    id: 'B', icon: '🦽', label: 'อุปกรณ์เครื่องช่วย', color: '#f59e0b', bg: '#fef3c7',
-    items: [
-      { n:5,  name:'รถเข็นและไม้ค้ำยัน',                    sub:'จัดสรร / ซ่อมบำรุง / บันทึกผู้รับ',           href:'form-project5.html' },
-      { n:6,  name:'อุปกรณ์ช่วยการเดินและทรงตัว',           sub:'Walker / ไม้เท้า / อุปกรณ์พยุง',             href:'form-project6.html' },
-      { n:7,  name:'อุปกรณ์ช่วยการมองเห็นและการได้ยิน',     sub:'แว่นตา / เครื่องช่วยฟัง / อุปกรณ์สื่อสาร',  href:'form-project7.html' },
-      { n:8,  name:'เตียงและอุปกรณ์ผู้ป่วยติดเตียง',        sub:'เตียง / ที่นอนลม / อุปกรณ์ป้องกันแผล',       href:'form-project8.html' },
-      { n:9,  name:'ศูนย์ซ่อมอุปกรณ์เครื่องช่วย',           sub:'รับซ่อม / อะไหล่ / บันทึกประวัติ',           href:'form-project9.html' },
-    ]
-  },
-  {
-    id: 'C', icon: '💪', label: 'บริการฟื้นฟูสมรรถภาพ', color: '#3b82f6', bg: '#dbeafe',
-    items: [
-      { n:10, name:'กายภาพบำบัดชุมชน',                      sub:'บริการ รพ.สต. / ออกหน่วย / บันทึกผล',         href:'form-project10.html' },
-      { n:11, name:'กิจกรรมบำบัด',                           sub:'OT / ฟื้นฟูทักษะชีวิตประจำวัน',              href:'form-project11.html' },
-      { n:12, name:'แพทย์แผนไทยชุมชน',                      sub:'นวด / สมุนไพร / หัตถการ',                     href:'form-project12.html' },
-      { n:13, name:'ฟื้นฟูสมรรถภาพด้านอาชีพ',               sub:'ฝึกทักษะ / จัดหางาน / ติดตามผล',             href:'form-project13.html' },
-      { n:14, name:'ค่ายฟื้นฟูสมรรถภาพประจำปี',             sub:'ผู้เข้าร่วม / กิจกรรม / ผลการประเมิน',        href:'form-project14.html' },
-    ]
-  },
-  {
-    id: 'D', icon: '👩‍🏫', label: 'พัฒนาบุคลากรและเครือข่าย', color: '#8b5cf6', bg: '#ede9fe',
-    items: [
-      { n:15, name:'อบรมผู้ดูแลผู้พิการ (Care Giver)',       sub:'หลักสูตร / ผู้เข้าอบรม / ผลประเมิน',         href:'form-project15.html' },
-      { n:16, name:'อบรมอาสาสมัครสาธารณสุข (อสม.)',         sub:'หลักสูตร / ชั่วโมง / ใบประกาศ',               href:'form-project16.html' },
-      { n:17, name:'พัฒนาศักยภาพเจ้าหน้าที่กองทุน',         sub:'ดูงาน / ฝึกอบรม / ทดสอบความรู้',              href:'form-project17.html' },
-      { n:18, name:'เครือข่าย รพ.สต. และสถานพยาบาล',        sub:'ประชุม / MOU / รายงานเครือข่าย',              href:'form-project18.html' },
-      { n:19, name:'ประชุมคณะกรรมการกองทุน',                sub:'วาระ / มติ / รายชื่อผู้เข้าร่วม',             href:'form-project19.html' },
-      { n:20, name:'ศึกษาดูงานและแลกเปลี่ยนเรียนรู้',       sub:'สถานที่ / ผู้เข้าร่วม / สรุปผล',              href:'form-project20.html' },
-    ]
-  },
-  {
-    id: 'E', icon: '🌟', label: 'ส่งเสริมคุณภาพชีวิต', color: '#ec4899', bg: '#fce7f3',
-    items: [
-      { n:21, name:'ส่งเสริมอาชีพและรายได้ผู้พิการ',         sub:'กลุ่มอาชีพ / ทุนประกอบอาชีพ / ติดตาม',       href:'form-project21.html' },
-      { n:22, name:'กิจกรรมนันทนาการผู้สูงอายุ',             sub:'กลุ่มกิจกรรม / จำนวนผู้เข้าร่วม / งบประมาณ', href:'form-project22.html' },
-      { n:23, name:'กองทุนสวัสดิการผู้พิการ',                sub:'ผู้รับสวัสดิการ / ประเภท / จำนวนเงิน',        href:'form-project23.html' },
-      { n:24, name:'ออกเยี่ยมบ้านเชิงรุก',                   sub:'ทีมเยี่ยม / บ้านที่เยี่ยม / ผลการประเมิน',   href:'form-project24.html' },
-      { n:25, name:'ส่งเสริมสิทธิและการเข้าถึงบริการ',       sub:'ผู้รับบริการ / ประเภทสิทธิ / สถานะ',          href:'form-project25.html' },
-    ]
-  },
-  {
-    id: 'F', icon: '⚙️', label: 'บริหารจัดการและระบบ', color: '#64748b', bg: '#f1f5f9',
-    items: [
-      { n:26, name:'พัฒนาระบบฐานข้อมูลกองทุน',              sub:'ระบบ / Module / บันทึกการพัฒนา',               href:'form-project26.html' },
-      { n:27, name:'ประชาสัมพันธ์และสื่อสารองค์กร',          sub:'ช่องทาง / กลุ่มเป้าหมาย / งบประมาณ',          href:'form-project27.html' },
-      { n:28, name:'ติดตามและประเมินผลโครงการ',              sub:'ตัวชี้วัด / ผลการดำเนินงาน / ไตรมาส',         href:'form-project28.html' },
-    ]
-  },
-];
-
-function buildRows(items, groupId, color, bg) {
-  return items.map(it => `
-    <div class="proj-row" data-group="${groupId}" data-name="${it.name}">
-      <div class="proj-num" style="background:${bg};color:${color};">${it.n}</div>
-      <div class="proj-info">
-        <div class="proj-name">${it.name}</div>
-        <div class="proj-sub">${it.sub}</div>
-      </div>
-      ${it.live
-        ? `<a href="${it.href}" class="btn-live">🔗 เปิดฟอร์ม</a>`
-        : `<a href="${it.href}" class="btn-placeholder">📋 เปิดฟอร์ม</a>`
-      }
-    </div>`).join('');
-}
-
-function buildGroups(groups) {
-  return groups.map(g => `
-    <div class="section-head" data-group-head="${g.id}">
-      <span class="section-icon" style="background:${g.bg};">${g.icon}</span>
-      ${g.label}
-    </div>
-    <div class="list-card" data-group-card="${g.id}">
-      <div class="list-card-head">
-        <div class="list-card-icon" style="background:${g.bg};">${g.icon}</div>
-        <span class="list-card-label">${g.label}</span>
-        <span class="list-card-count">${g.items.length} โครงการ</span>
-      </div>
-      ${buildRows(g.items, g.id, g.color, g.bg)}
-    </div>`).join('');
-}
-
-document.getElementById('groupContainer').innerHTML = buildGroups(GROUPS);
-
-/* ── Filter + Search ── */
-const searchInput = document.getElementById('searchInput');
-const filterTabs  = document.querySelectorAll('.filter-tab');
-const emptyState  = document.getElementById('emptyState');
-let activeGroup   = 'all';
-
-function applyFilters() {
-  const q = searchInput.value.trim().toLowerCase();
-  let anyVisible = false;
-
-  document.querySelectorAll('.proj-row').forEach(row => {
-    const matchGroup = activeGroup === 'all' || row.dataset.group === activeGroup;
-    const matchSearch = !q || row.dataset.name.toLowerCase().includes(q);
-    const show = matchGroup && matchSearch;
-    row.classList.toggle('hidden', !show);
-    if (show) anyVisible = true;
-  });
-
-  /* hide/show whole cards if all rows hidden */
-  GROUPS.forEach(g => {
-    const card = document.querySelector(`[data-group-card="${g.id}"]`);
-    const head = document.querySelector(`[data-group-head="${g.id}"]`);
-    const hasVisible = card && [...card.querySelectorAll('.proj-row')].some(r => !r.classList.contains('hidden'));
-    if (card) card.style.display = hasVisible ? '' : 'none';
-    if (head) head.style.display = hasVisible ? '' : 'none';
-  });
-
-  emptyState.style.display = anyVisible ? 'none' : 'block';
-}
-
-searchInput.addEventListener('input', applyFilters);
-
-filterTabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    filterTabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    activeGroup = tab.dataset.group;
-    applyFilters();
-  });
-});
-</script>
 </body>
 </html>
