@@ -1183,7 +1183,7 @@ body {
    ACCORDION PROJECTS
 ═══════════════════════════════════════════════════ */
 .accordion-section {
-  max-width: 860px;
+  max-width: min(98%, 1600px);
   margin: 0 auto;
   padding: 1.5rem 1rem 1rem;
 }
@@ -1873,25 +1873,103 @@ body {
     </div>
     <div class="acc-body" id="accBody2">
       <div class="acc-body-inner">
-        <div id="p2-content">
-          <div class="sk-screen">
-            <div class="sk-kpi-row">
-              <div class="sk-card sk-block"></div>
-              <div class="sk-card sk-block"></div>
-              <div class="sk-card sk-block"></div>
-              <div class="sk-card sk-block"></div>
-            </div>
-            <div class="sk-bar sk-block"></div>
-            <div class="sk-line sk-block"></div>
-            <div class="sk-line sk-block w70"></div>
-            <div class="sk-equip-row sk-block"></div>
-            <div class="sk-equip-row sk-block"></div>
-            <div class="sk-equip-row sk-block"></div>
+        <div class="alert-info">
+          <span style="font-size:1.4rem;">📊</span>
+          <div><strong>สรุปข้อมูล:</strong> 3,388 ชิ้น, 26 ประเภท, 71 หน่วยบริการ, 8 อำเภอ</div>
+        </div>
+        <div style="margin-bottom:1.25rem;">
+          <h6 class="section-header" style="margin-top:0.5rem;">📈 สถิติภาพรวม</h6>
+          <div class="summary-cards">
+            <div class="summary-card" style="border-top:3px solid #1e40af;"><span class="summary-card-value" style="color:#1e40af;">3,388</span><span class="summary-card-label">ชิ้นทั้งหมด</span></div>
+            <div class="summary-card" style="border-top:3px solid #10b981;"><span class="summary-card-value" style="color:#10b981;">1,457</span><span class="summary-card-label">พร้อมให้บริการ</span></div>
+            <div class="summary-card" style="border-top:3px solid #f59e0b;"><span class="summary-card-value" style="color:#f59e0b;">1,910</span><span class="summary-card-label">กำลังใช้งาน</span></div>
+            <div class="summary-card" style="border-top:3px solid #ef4444;"><span class="summary-card-value" style="color:#ef4444;">21</span><span class="summary-card-label">ชำรุด</span></div>
+            <div class="summary-card" style="border-top:3px solid #8b5cf6;"><span class="summary-card-value" style="color:#8b5cf6;">26</span><span class="summary-card-label">ประเภทอุปกรณ์</span></div>
+            <div class="summary-card" style="border-top:3px solid #06b6d4;"><span class="summary-card-value" style="color:#06b6d4;">71</span><span class="summary-card-label">หน่วยบริการ</span></div>
           </div>
         </div>
-        <button class="acc-open-btn" onclick="openModal('project2Modal')">
-          📊 เปิดแดชบอร์ดเต็ม
-        </button>
+        <div class="tabs-container">
+          <button class="tab-btn active" onclick="switchTab2('inventory',this)">📦 รายการอุปกรณ์</button>
+          <button class="tab-btn" onclick="switchTab2('byUnit',this)">🏥 รายหน่วยบริการ</button>
+          <button class="tab-btn" onclick="switchTab2('serviceMap',this)">🗺️ แผนที่หน่วยบริการ</button>
+        </div>
+        <div id="tab2-inventory" class="tab-content active">
+          <div class="filter-row" style="margin-top:0.5rem;">
+            <div class="filter-group">
+              <label class="filter-label">ปีงบประมาณ</label>
+              <select class="year-select" id="p2YearFilter" onchange="filterP2Cards()">
+                <option value="all">ทุกปี</option>
+                <option value="2564">2564</option><option value="2565">2565</option>
+                <option value="2566">2566</option><option value="2567">2567</option>
+                <option value="2568">2568</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">หน่วยบริการ</label>
+              <select class="year-select" id="p2UnitFilter" onchange="filterP2Cards()"><option value="all">ทุกหน่วย</option></select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">สถานะ</label>
+              <select class="year-select" id="p2StatusFilter" onchange="filterP2Cards()">
+                <option value="all">ทุกสถานะ</option>
+                <option value="พร้อม">พร้อมให้บริการ</option>
+                <option value="ใช้งานอยู่">กำลังใช้งาน</option>
+                <option value="ชำรุด">ชำรุด</option>
+              </select>
+            </div>
+          </div>
+          <div class="p1-acc-search-sticky">
+            <input type="text" class="modal-search-input" id="p2GroupSearch" placeholder="🔍 ค้นหาชื่ออุปกรณ์ รหัส หน่วยงาน..." onkeyup="filterP2Cards()">
+          </div>
+          <div id="p2CardCount" style="font-size:0.8rem;color:var(--text-gray);margin-bottom:0.75rem;"></div>
+          <div class="equip-group-grid" id="p2GroupGrid"></div>
+          <div class="p2-no-results" id="p2NoResults"><div style="font-size:2rem;">🔍</div><p>ไม่พบอุปกรณ์ที่ตรงกัน</p></div>
+        </div>
+        <div id="tab2-byUnit" class="tab-content">
+          <h6 class="section-header">🏥 สรุปอุปกรณ์รายหน่วยบริการ</h6>
+          <div class="p1-acc-search-sticky">
+            <div style="text-align:right;margin-bottom:0.25rem;"><button class="btn-export" onclick="exportToExcel('p2UnitTable','P2_รายการตามหน่วยงาน')">📥 Export Excel</button></div>
+            <input type="text" class="modal-search-input" id="p2UnitSearch" placeholder="🔍 ค้นหาหน่วยงาน..." onkeyup="searchTable('p2UnitSearch','p2UnitTable')">
+          </div>
+          <div class="table-responsive sticky-table">
+            <table class="table-custom" id="p2UnitTable">
+              <thead><tr>
+                <th style="width:26%;">หน่วยบริการ</th><th style="width:12%;">อำเภอ</th>
+                <th style="width:9%;">ปี 64</th><th style="width:9%;">ปี 65</th>
+                <th style="width:9%;">ปี 66</th><th style="width:9%;">ปี 67</th>
+                <th style="width:9%;">ปี 68</th><th style="width:9%;">รวม</th>
+                <th style="width:8%;">สถานะ</th>
+              </tr></thead>
+              <tbody id="p2UnitBody"></tbody>
+            </table>
+          </div>
+          <div id="p2UnitNoResults" class="no-results" style="display:none;"><div class="no-results-icon">🔍</div><p class="no-results-text">ไม่พบข้อมูล</p></div>
+        </div>
+        <div id="tab2-serviceMap" class="tab-content">
+          <h6 class="section-header">🗺️ แผนที่หน่วยบริการ</h6>
+          <div class="quick-filters" id="p2MapFilters">
+            <button class="filter-btn active" onclick="filterUnits2('all',this)">📍 ทั้งหมด</button>
+            <button class="filter-btn" onclick="filterUnits2('โรงพยาบาล',this)">🏥 โรงพยาบาล</button>
+            <button class="filter-btn" onclick="filterUnits2('รพ.สต.',this)">⛑️ รพ.สต.</button>
+            <button class="filter-btn" onclick="filterUnits2('สสอ.',this)">🏢 สสอ.</button>
+          </div>
+          <div class="p1-acc-search-sticky">
+            <div style="text-align:right;margin-bottom:0.25rem;"><button class="btn-export" onclick="exportToExcel('p2MapTable','P2_ศูนย์บริการ')">📥 Export Excel</button></div>
+            <input type="text" class="modal-search-input" id="p2MapSearch" placeholder="🔍 ค้นหาหน่วยงาน..." onkeyup="searchTable('p2MapSearch','p2MapTable')">
+          </div>
+          <div class="table-responsive sticky-table">
+            <table class="table-custom" id="p2MapTable">
+              <thead><tr>
+                <th style="width:5%;">#</th><th style="width:12%;">ประเภท</th>
+                <th style="width:27%;">ชื่อ</th><th style="width:16%;">ตำบล</th>
+                <th style="width:15%;">อำเภอ</th><th style="width:12%;">โทร</th>
+                <th style="width:13%;">แผนที่</th>
+              </tr></thead>
+              <tbody id="p2MapBody"></tbody>
+            </table>
+          </div>
+          <div id="p2MapNoResults" class="no-results" style="display:none;"><div class="no-results-icon">🔍</div><p class="no-results-text">ไม่พบข้อมูล</p></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1918,35 +1996,103 @@ body {
     </div>
     <div class="acc-body" id="accBody3">
       <div class="acc-body-inner">
-        <div class="acc-kpi-row">
-          <div class="acc-kpi-card">
-            <span class="acc-kpi-val" style="color:#059669;">30</span>
-            <span class="acc-kpi-lbl">โครงการ</span>
-          </div>
-          <div class="acc-kpi-card">
-            <span class="acc-kpi-val">5</span>
-            <span class="acc-kpi-lbl">ปีงบประมาณ</span>
-          </div>
-          <div class="acc-kpi-card">
-            <span class="acc-kpi-val">7</span>
-            <span class="acc-kpi-lbl">อำเภอ</span>
-          </div>
-          <div class="acc-kpi-card">
-            <span class="acc-kpi-val" style="color:#059669;">1.92M</span>
-            <span class="acc-kpi-lbl">งบรวม (บาท)</span>
+        <div class="alert-info">
+          <span style="font-size:1.4rem;">📊</span>
+          <div><strong>สรุปข้อมูล:</strong> 30 โครงการ, 5 ปีงบประมาณ, 7 อำเภอ, 21 หน่วยบริการ</div>
+        </div>
+        <div style="margin-bottom:1.25rem;">
+          <h6 class="section-header">📈 ตัวชี้วัดสำคัญ</h6>
+          <div class="summary-cards">
+            <div class="summary-card" style="border-top:3px solid #3b82f6;"><span class="summary-card-value" style="color:#3b82f6;">30</span><span class="summary-card-label">โครงการ</span></div>
+            <div class="summary-card" style="border-top:3px solid #10b981;"><span class="summary-card-value" style="color:#10b981;">1.92M</span><span class="summary-card-label">งบประมาณรวม (บาท)</span></div>
+            <div class="summary-card" style="border-top:3px solid #f59e0b;"><span class="summary-card-value" style="color:#f59e0b;">5</span><span class="summary-card-label">ปีงบประมาณ</span></div>
+            <div class="summary-card" style="border-top:3px solid #8b5cf6;"><span class="summary-card-value" style="color:#8b5cf6;">7</span><span class="summary-card-label">อำเภอ</span></div>
+            <div class="summary-card" style="border-top:3px solid #06b6d4;"><span class="summary-card-value" style="color:#06b6d4;">21</span><span class="summary-card-label">หน่วยบริการ</span></div>
+            <div class="summary-card" style="border-top:3px solid #ef4444;"><span class="summary-card-value" style="color:#ef4444;">20</span><span class="summary-card-label">เสร็จสิ้น</span></div>
           </div>
         </div>
-        <div class="acc-progress-bar">
-          <div class="acc-progress-fill" style="width:67%;background:#10b981;"></div>
+        <div class="tabs-container">
+          <button class="tab-btn active" onclick="switchTab3('dashboard',this)">📊 แดชบอร์ด</button>
+          <button class="tab-btn" onclick="switchTab3('list',this)">📋 รายการโครงการ</button>
+          <button class="tab-btn" onclick="switchTab3('district',this)">🗺️ รายอำเภอ</button>
         </div>
-        <p class="acc-summary-text">
-          ดำเนินโครงการพัฒนาศักยภาพเครือข่ายบริการฟื้นฟูสมรรถภาพ 30 โครงการ ใน 5 ปีงบประมาณ (2565–2569)
-          ครอบคลุม 7 อำเภอ 21 หน่วยบริการ งบประมาณรวม ~1.92 ล้านบาท
-          โครงการเสร็จสมบูรณ์แล้ว 20 โครงการ · อยู่ระหว่างดำเนินการ 10 โครงการ
-        </p>
-        <button class="acc-open-btn" onclick="openModal('project3Modal')">
-          📊 เปิดแดชบอร์ดเต็ม
-        </button>
+        <div id="tab3-dashboard" class="tab-content active">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+            <div>
+              <h6 class="section-header" style="font-size:0.78rem;">📅 งบประมาณตามปีงบประมาณ</h6>
+              <div class="chart-container" style="height:220px;padding:0.75rem;"><canvas id="p3ChartYear"></canvas></div>
+            </div>
+            <div>
+              <h6 class="section-header" style="font-size:0.78rem;">📍 สัดส่วนตามอำเภอ (โครงการ)</h6>
+              <div class="chart-container" style="height:220px;padding:0.75rem;"><canvas id="p3ChartDistrict"></canvas></div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+            <div>
+              <h6 class="section-header" style="font-size:0.78rem;">✅ สถานะการดำเนินโครงการ</h6>
+              <div class="chart-container" style="height:200px;padding:0.75rem;"><canvas id="p3ChartStatus"></canvas></div>
+            </div>
+            <div>
+              <h6 class="section-header" style="font-size:0.78rem;">🏥 Top 6 หน่วยบริการ (งบสะสม)</h6>
+              <div class="chart-container" style="height:200px;padding:0.75rem;"><canvas id="p3ChartUnits"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <div id="tab3-list" class="tab-content">
+          <h6 class="section-header">📋 รายการโครงการทั้งหมด</h6>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">ปีงบประมาณ</label>
+              <select class="year-select" id="p3YearFilter" onchange="loadP3List()"><option value="all">ทั้งหมด</option></select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">อำเภอ</label>
+              <select class="year-select" id="p3DistrictFilter" onchange="loadP3List()"><option value="all">ทั้งหมด</option></select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">สถานะ</label>
+              <select class="year-select" id="p3StatusFilter" onchange="loadP3List()">
+                <option value="all">ทั้งหมด</option>
+                <option value="เสร็จเรียบร้อย">เสร็จเรียบร้อย</option>
+                <option value="อยู่ระหว่างดำเนินการ">อยู่ระหว่างดำเนินการ</option>
+              </select>
+            </div>
+          </div>
+          <div class="p1-acc-search-sticky">
+            <input type="text" class="modal-search-input" id="p3Search" placeholder="🔍 ค้นหาโครงการ, หน่วยบริการ, อำเภอ..." onkeyup="loadP3List()">
+          </div>
+          <div class="table-action-row">
+            <div id="p3ListCount" style="font-size:0.78rem;color:var(--text-gray);"></div>
+            <button class="btn-export" onclick="exportToExcel('p3ListTable','P3_รายการโครงการ')">📥 Export Excel</button>
+          </div>
+          <div class="table-responsive sticky-table">
+            <table class="table-custom" id="p3ListTable">
+              <thead><tr>
+                <th style="width:5%;">#</th><th style="width:6%;">ปี</th>
+                <th style="width:10%;">อำเภอ</th><th style="width:14%;">หน่วยบริการ</th>
+                <th style="width:43%;">ชื่อโครงการ</th><th style="width:10%;">งบประมาณ</th>
+                <th style="width:12%;">สถานะ</th>
+              </tr></thead>
+              <tbody id="p3ListBody"></tbody>
+            </table>
+          </div>
+          <div id="p3ListNoResults" class="no-results" style="display:none;"><div class="no-results-icon">🔍</div><p class="no-results-text">ไม่พบข้อมูล</p></div>
+          <div id="p3Pagination" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px;padding:1rem 0 0.5rem;"></div>
+        </div>
+        <div id="tab3-district" class="tab-content">
+          <h6 class="section-header">🗺️ สรุปข้อมูลรายอำเภอ</h6>
+          <div class="table-responsive">
+            <table class="table-custom" id="p3DistrictTable">
+              <thead><tr>
+                <th style="width:14%;">อำเภอ</th><th style="width:9%;">โครงการ</th>
+                <th style="width:14%;">งบรวม (บาท)</th><th style="width:12%;">งบเฉลี่ย</th>
+                <th style="width:12%;">หน่วยบริการ</th><th style="width:12%;">เสร็จสิ้น</th>
+                <th style="width:14%;">กำลังดำเนินการ</th>
+              </tr></thead>
+              <tbody id="p3DistrictBody"></tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1973,385 +2119,6 @@ body {
     </div>
     <div class="acc-body" id="accBody4">
       <div class="acc-body-inner">
-        <div class="acc-kpi-row">
-          <div class="acc-kpi-card">
-            <span class="acc-kpi-val" style="color:#7c3aed;">10</span>
-            <span class="acc-kpi-lbl">ศูนย์ซ่อม</span>
-          </div>
-          <div class="acc-kpi-card">
-            <span class="acc-kpi-val">3</span>
-            <span class="acc-kpi-lbl">ปีงบประมาณ</span>
-          </div>
-          <div class="acc-kpi-card">
-            <span class="acc-kpi-val">5</span>
-            <span class="acc-kpi-lbl">อำเภอ</span>
-          </div>
-          <div class="acc-kpi-card">
-            <span class="acc-kpi-val" style="color:#7c3aed;">7.46M</span>
-            <span class="acc-kpi-lbl">งบรวม (บาท)</span>
-          </div>
-        </div>
-        <div class="acc-progress-bar">
-          <div class="acc-progress-fill" style="width:85%;background:#8b5cf6;"></div>
-        </div>
-        <p class="acc-summary-text">
-          ดำเนินการซ่อมบำรุงอุปกรณ์ฟื้นฟูสมรรถภาพผ่าน 10 ศูนย์ซ่อม ใน 5 อำเภอ
-          ครอบคลุม 3 ปีงบประมาณ (2566–2568) · 12 ประเภทอุปกรณ์
-          งบประมาณรวม 7,463,605 บาท (ปี 67 สูงสุด: 3.98M)
-          ปี 68 มีศูนย์ซ่อมใหม่เพิ่มขึ้น รวมถึง รพ.บ้านฉาง (งบ 498,650 บาท)
-        </p>
-        <button class="acc-open-btn" onclick="openModal('project4Modal')">
-          📊 เปิดแดชบอร์ดเต็ม
-        </button>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- PROJECT MODALS (Project 1 is now inline in the accordion above) -->
-
-<div class="modal fade" id="project2Modal" tabindex="-1">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><span style="font-size:1.5rem;">♿</span> ศูนย์สาธิตและยืมอุปกรณ์</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="alert-info">
-          <span style="font-size:1.4rem;">📊</span>
-          <div><strong>สรุปข้อมูล:</strong> 3,388 ชิ้น, 26 ประเภท, 71 หน่วยบริการ, 8 อำเภอ</div>
-        </div>
-
-        <!-- KPI CARDS -->
-        <div style="margin-bottom:1.25rem;">
-          <h6 class="section-header" style="margin-top:0.5rem;">📈 สถิติภาพรวม</h6>
-          <div class="summary-cards">
-            <div class="summary-card" style="border-top:3px solid #1e40af;">
-              <span class="summary-card-value" style="color:#1e40af;">3,388</span>
-              <span class="summary-card-label">ชิ้นทั้งหมด</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #10b981;">
-              <span class="summary-card-value" style="color:#10b981;">1,457</span>
-              <span class="summary-card-label">พร้อมให้บริการ</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #f59e0b;">
-              <span class="summary-card-value" style="color:#f59e0b;">1,910</span>
-              <span class="summary-card-label">กำลังใช้งาน</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #ef4444;">
-              <span class="summary-card-value" style="color:#ef4444;">21</span>
-              <span class="summary-card-label">ชำรุด</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #8b5cf6;">
-              <span class="summary-card-value" style="color:#8b5cf6;">26</span>
-              <span class="summary-card-label">ประเภทอุปกรณ์</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #06b6d4;">
-              <span class="summary-card-value" style="color:#06b6d4;">71</span>
-              <span class="summary-card-label">หน่วยบริการ</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- TABS -->
-        <div class="tabs-container">
-          <button class="tab-btn active" onclick="switchTab2('inventory',this)">📦 รายการอุปกรณ์</button>
-          <button class="tab-btn" onclick="switchTab2('byUnit',this)">🏥 รายหน่วยบริการ</button>
-          <button class="tab-btn" onclick="switchTab2('serviceMap',this)">🗺️ แผนที่หน่วยบริการ</button>
-        </div>
-
-        <!-- TAB: INVENTORY (grouped cards) -->
-        <div id="tab2-inventory" class="tab-content active">
-          <div class="filter-row" style="margin-top:0.5rem;">
-            <div class="filter-group">
-              <label class="filter-label">ปีงบประมาณ</label>
-              <select class="year-select" id="p2YearFilter" onchange="filterP2Cards()">
-                <option value="all">ทุกปี</option>
-                <option value="2564">2564</option>
-                <option value="2565">2565</option>
-                <option value="2566">2566</option>
-                <option value="2567">2567</option>
-                <option value="2568">2568</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label class="filter-label">หน่วยบริการ</label>
-              <select class="year-select" id="p2UnitFilter" onchange="filterP2Cards()">
-                <option value="all">ทุกหน่วย</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label class="filter-label">สถานะ</label>
-              <select class="year-select" id="p2StatusFilter" onchange="filterP2Cards()">
-                <option value="all">ทุกสถานะ</option>
-                <option value="พร้อม">พร้อมให้บริการ</option>
-                <option value="ใช้งานอยู่">กำลังใช้งาน</option>
-                <option value="ชำรุด">ชำรุด</option>
-              </select>
-            </div>
-          </div>
-          <div class="modal-search-sticky">
-            <input type="text" class="modal-search-input" id="p2GroupSearch"
-              placeholder="🔍 ค้นหาชื่ออุปกรณ์ รหัส หน่วยงาน..." onkeyup="filterP2Cards()">
-          </div>
-          <div id="p2CardCount" style="font-size:0.8rem;color:var(--text-gray);margin-bottom:0.75rem;"></div>
-          <div class="equip-group-grid" id="p2GroupGrid"></div>
-          <div class="p2-no-results" id="p2NoResults">
-            <div style="font-size:2rem;">🔍</div>
-            <p>ไม่พบอุปกรณ์ที่ตรงกัน</p>
-          </div>
-        </div>
-
-        <!-- TAB: BY UNIT -->
-        <div id="tab2-byUnit" class="tab-content">
-          <h6 class="section-header">🏥 สรุปอุปกรณ์รายหน่วยบริการ</h6>
-          <div class="modal-search-sticky">
-            <div style="text-align:right;margin-bottom:0.25rem;"><button class="btn-export" onclick="exportToExcel('p2UnitTable','P2_รายการตามหน่วยงาน')">📥 Export Excel</button></div>
-            <input type="text" class="modal-search-input" id="p2UnitSearch"
-              placeholder="🔍 ค้นหาหน่วยงาน..." onkeyup="searchTable('p2UnitSearch','p2UnitTable')">
-          </div>
-          <div class="table-responsive sticky-table">
-            <table class="table-custom" id="p2UnitTable">
-              <thead><tr>
-                <th style="width:26%;">หน่วยบริการ</th>
-                <th style="width:12%;">อำเภอ</th>
-                <th style="width:9%;">ปี 64</th><th style="width:9%;">ปี 65</th>
-                <th style="width:9%;">ปี 66</th><th style="width:9%;">ปี 67</th>
-                <th style="width:9%;">ปี 68</th><th style="width:9%;">รวม</th>
-                <th style="width:8%;">สถานะ</th>
-              </tr></thead>
-              <tbody id="p2UnitBody"></tbody>
-            </table>
-          </div>
-          <div id="p2UnitNoResults" class="no-results" style="display:none;">
-            <div class="no-results-icon">🔍</div><p class="no-results-text">ไม่พบข้อมูล</p>
-          </div>
-        </div>
-
-        <!-- TAB: SERVICE MAP -->
-        <div id="tab2-serviceMap" class="tab-content">
-          <h6 class="section-header">🗺️ แผนที่หน่วยบริการ</h6>
-          <div class="quick-filters" id="p2MapFilters">
-            <button class="filter-btn active" onclick="filterUnits2('all',this)">📍 ทั้งหมด</button>
-            <button class="filter-btn" onclick="filterUnits2('โรงพยาบาล',this)">🏥 โรงพยาบาล</button>
-            <button class="filter-btn" onclick="filterUnits2('รพ.สต.',this)">⛑️ รพ.สต.</button>
-            <button class="filter-btn" onclick="filterUnits2('สสอ.',this)">🏢 สสอ.</button>
-          </div>
-          <div class="modal-search-sticky">
-            <div style="text-align:right;margin-bottom:0.25rem;"><button class="btn-export" onclick="exportToExcel('p2MapTable','P2_ศูนย์บริการ')">📥 Export Excel</button></div>
-            <input type="text" class="modal-search-input" id="p2MapSearch"
-              placeholder="🔍 ค้นหาหน่วยงาน..." onkeyup="searchTable('p2MapSearch','p2MapTable')">
-          </div>
-          <div class="table-responsive sticky-table">
-            <table class="table-custom" id="p2MapTable">
-              <thead><tr>
-                <th style="width:5%;">#</th>
-                <th style="width:12%;">ประเภท</th>
-                <th style="width:27%;">ชื่อ</th>
-                <th style="width:16%;">ตำบล</th>
-                <th style="width:15%;">อำเภอ</th>
-                <th style="width:12%;">โทร</th>
-                <th style="width:13%;">แผนที่</th>
-              </tr></thead>
-              <tbody id="p2MapBody"></tbody>
-            </table>
-          </div>
-          <div id="p2MapNoResults" class="no-results" style="display:none;">
-            <div class="no-results-icon">🔍</div><p class="no-results-text">ไม่พบข้อมูล</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- P2 DETAIL OVERLAY -->
-<div class="p2-detail-overlay" id="p2DetailOverlay" onclick="closeP2Detail(event)">
-  <div class="p2-detail-panel" id="p2DetailPanel">
-    <div class="p2-detail-header">
-      <div>
-        <div class="p2-detail-title" id="p2DetailTitle"></div>
-        <div style="font-size:0.75rem;opacity:0.8;margin-top:3px;" id="p2DetailSubtitle"></div>
-      </div>
-      <button class="p2-detail-close" onclick="document.getElementById('p2DetailOverlay').classList.remove('active')">✕</button>
-    </div>
-    <div class="p2-detail-meta" id="p2DetailMeta"></div>
-    <div class="p2-detail-body" id="p2DetailBody"></div>
-  </div>
-</div>
-
-
-<div class="modal fade" id="project3Modal" tabindex="-1">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><span style="font-size:1.5rem;">📚</span> พัฒนาศักยภาพเครือข่ายฯ</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="alert-info">
-          <span style="font-size:1.4rem;">📊</span>
-          <div><strong>สรุปข้อมูล:</strong> 30 โครงการ, 5 ปีงบประมาณ, 7 อำเภอ, 21 หน่วยบริการ</div>
-        </div>
-
-        <!-- KPI CARDS -->
-        <div style="margin-bottom:1.25rem;">
-          <h6 class="section-header">📈 ตัวชี้วัดสำคัญ</h6>
-          <div class="summary-cards">
-            <div class="summary-card" style="border-top:3px solid #3b82f6;">
-              <span class="summary-card-value" style="color:#3b82f6;">30</span>
-              <span class="summary-card-label">โครงการ</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #10b981;">
-              <span class="summary-card-value" style="color:#10b981;">1.92M</span>
-              <span class="summary-card-label">งบประมาณรวม (บาท)</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #f59e0b;">
-              <span class="summary-card-value" style="color:#f59e0b;">5</span>
-              <span class="summary-card-label">ปีงบประมาณ</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #8b5cf6;">
-              <span class="summary-card-value" style="color:#8b5cf6;">7</span>
-              <span class="summary-card-label">อำเภอ</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #06b6d4;">
-              <span class="summary-card-value" style="color:#06b6d4;">21</span>
-              <span class="summary-card-label">หน่วยบริการ</span>
-            </div>
-            <div class="summary-card" style="border-top:3px solid #ef4444;">
-              <span class="summary-card-value" style="color:#ef4444;">20</span>
-              <span class="summary-card-label">เสร็จสิ้น</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- TABS -->
-        <div class="tabs-container">
-          <button class="tab-btn active" onclick="switchTab3('dashboard',this)" style="touch-action:manipulation;">📊 แดชบอร์ด</button>
-          <button class="tab-btn" onclick="switchTab3('list',this)" style="touch-action:manipulation;">📋 รายการโครงการ</button>
-          <button class="tab-btn" onclick="switchTab3('district',this)" style="touch-action:manipulation;">🗺️ รายอำเภอ</button>
-        </div>
-
-        <!-- TAB: DASHBOARD -->
-        <div id="tab3-dashboard" class="tab-content active">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-            <div>
-              <h6 class="section-header" style="font-size:0.78rem;">📅 งบประมาณตามปีงบประมาณ</h6>
-              <div class="chart-container" style="height:220px;padding:0.75rem;">
-                <canvas id="p3ChartYear"></canvas>
-              </div>
-            </div>
-            <div>
-              <h6 class="section-header" style="font-size:0.78rem;">📍 สัดส่วนตามอำเภอ (โครงการ)</h6>
-              <div class="chart-container" style="height:220px;padding:0.75rem;">
-                <canvas id="p3ChartDistrict"></canvas>
-              </div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-            <div>
-              <h6 class="section-header" style="font-size:0.78rem;">✅ สถานะการดำเนินโครงการ</h6>
-              <div class="chart-container" style="height:200px;padding:0.75rem;">
-                <canvas id="p3ChartStatus"></canvas>
-              </div>
-            </div>
-            <div>
-              <h6 class="section-header" style="font-size:0.78rem;">🏥 Top 6 หน่วยบริการ (งบสะสม)</h6>
-              <div class="chart-container" style="height:200px;padding:0.75rem;">
-                <canvas id="p3ChartUnits"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- TAB: PROJECT LIST -->
-        <div id="tab3-list" class="tab-content">
-          <h6 class="section-header">📋 รายการโครงการทั้งหมด</h6>
-          <div class="filter-row">
-            <div class="filter-group">
-              <label class="filter-label">ปีงบประมาณ</label>
-              <select class="year-select" id="p3YearFilter" onchange="loadP3List()">
-                <option value="all">ทั้งหมด</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label class="filter-label">อำเภอ</label>
-              <select class="year-select" id="p3DistrictFilter" onchange="loadP3List()">
-                <option value="all">ทั้งหมด</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label class="filter-label">สถานะ</label>
-              <select class="year-select" id="p3StatusFilter" onchange="loadP3List()">
-                <option value="all">ทั้งหมด</option>
-                <option value="เสร็จเรียบร้อย">เสร็จเรียบร้อย</option>
-                <option value="อยู่ระหว่างดำเนินการ">อยู่ระหว่างดำเนินการ</option>
-              </select>
-            </div>
-          </div>
-          <div class="modal-search-sticky">
-            <input type="text" class="modal-search-input" id="p3Search"
-              placeholder="🔍 ค้นหาโครงการ, หน่วยบริการ, อำเภอ..." onkeyup="loadP3List()">
-          </div>
-          <div class="table-action-row">
-            <div id="p3ListCount" style="font-size:0.78rem;color:var(--text-gray);"></div>
-            <button class="btn-export" onclick="exportToExcel('p3ListTable','P3_รายการโครงการ')">📥 Export Excel</button>
-          </div>
-          <div class="table-responsive sticky-table">
-            <table class="table-custom" id="p3ListTable">
-              <thead><tr>
-                <th style="width:5%;">#</th>
-                <th style="width:6%;">ปี</th>
-                <th style="width:10%;">อำเภอ</th>
-                <th style="width:14%;">หน่วยบริการ</th>
-                <th style="width:43%;">ชื่อโครงการ</th>
-                <th style="width:10%;">งบประมาณ</th>
-                <th style="width:12%;">สถานะ</th>
-              </tr></thead>
-              <tbody id="p3ListBody"></tbody>
-            </table>
-          </div>
-          <div id="p3ListNoResults" class="no-results" style="display:none;">
-            <div class="no-results-icon">🔍</div><p class="no-results-text">ไม่พบข้อมูล</p>
-          </div>
-          <div id="p3Pagination" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px;padding:1rem 0 0.5rem;"></div>
-        </div>
-
-        <!-- TAB: DISTRICT -->
-        <div id="tab3-district" class="tab-content">
-          <h6 class="section-header">🗺️ สรุปข้อมูลรายอำเภอ</h6>
-          <div class="table-responsive">
-            <table class="table-custom" id="p3DistrictTable">
-              <thead><tr>
-                <th style="width:14%;">อำเภอ</th>
-                <th style="width:9%;">โครงการ</th>
-                <th style="width:14%;">งบรวม (บาท)</th>
-                <th style="width:12%;">งบเฉลี่ย</th>
-                <th style="width:12%;">หน่วยบริการ</th>
-                <th style="width:12%;">เสร็จสิ้น</th>
-                <th style="width:14%;">กำลังดำเนินการ</th>
-              </tr></thead>
-              <tbody id="p3DistrictBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="project4Modal" tabindex="-1">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><span style="font-size:1.5rem;">🔧</span> ศูนย์ซ่อมอุปกรณ์</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
         <div class="alert-info">
           <span style="font-size:1.4rem;">📊</span>
           <div><strong>สรุปข้อมูล:</strong> 12 กลุ่มอุปกรณ์, 3 ปีงบประมาณ, 5 อำเภอ</div>
@@ -2374,26 +2141,25 @@ body {
           <div class="filter-row">
             <div class="filter-group">
               <label class="filter-label">ปีงบประมาณ</label>
-              <select class="year-select" id="p4YearSelect" onchange="loadP4Data()">
-                <option value="all">ทั้งหมด</option>
-              </select>
+              <select class="year-select" id="p4YearSelect" onchange="loadP4Data()"><option value="all">ทั้งหมด</option></select>
             </div>
             <div class="filter-group">
               <label class="filter-label">กลุ่มอุปกรณ์</label>
-              <select class="year-select" id="p4CategorySelect" onchange="loadP4Data()">
-                <option value="all">ทั้งหมด</option>
-              </select>
+              <select class="year-select" id="p4CategorySelect" onchange="loadP4Data()"><option value="all">ทั้งหมด</option></select>
             </div>
           </div>
-          <div class="modal-search-sticky">
+          <div class="p1-acc-search-sticky">
             <div style="text-align:right;margin-top:0.25rem;"><button class="btn-export" onclick="exportToExcel('p4EquipTable','P4_รายการอุปกรณ์')">📥 Export Excel</button></div>
             <input type="text" class="modal-search-input" id="p4EquipSearch" placeholder="🔍 ค้นหา..." onkeyup="searchTable('p4EquipSearch','p4EquipTable')">
           </div>
           <div class="table-responsive sticky-table">
             <table class="table-custom" id="p4EquipTable">
-              <thead><tr><th style="width:12%;">อำเภอ</th><th style="width:18%;">หน่วยงาน</th><th style="width:15%;">กลุ่ม</th>
-              <th style="width:22%;">อุปกรณ์</th><th style="width:8%;">ปี</th><th style="width:9%;">จัดซื้อ</th>
-              <th style="width:8%;">เบิก</th><th style="width:8%;">คงเหลือ</th></tr></thead>
+              <thead><tr>
+                <th style="width:12%;">อำเภอ</th><th style="width:18%;">หน่วยงาน</th>
+                <th style="width:15%;">กลุ่ม</th><th style="width:22%;">อุปกรณ์</th>
+                <th style="width:8%;">ปี</th><th style="width:9%;">จัดซื้อ</th>
+                <th style="width:8%;">เบิก</th><th style="width:8%;">คงเหลือ</th>
+              </tr></thead>
               <tbody id="p4EquipBody"></tbody>
             </table>
           </div>
@@ -2401,16 +2167,18 @@ body {
         </div>
         <div id="tab4-budget" class="tab-content">
           <h6 class="section-header">💰 งบประมาณสนับสนุน</h6>
-          <div class="modal-search-sticky">
+          <div class="p1-acc-search-sticky">
             <div style="text-align:right;margin-top:0.25rem;"><button class="btn-export" onclick="exportToExcel('p4BudgetTable','P4_งบประมาณ')">📥 Export Excel</button></div>
             <input type="text" class="modal-search-input" id="p4BudgetSearch" placeholder="🔍 ค้นหา..." onkeyup="searchTable('p4BudgetSearch','p4BudgetTable')">
           </div>
           <div class="table-responsive sticky-table">
             <table class="table-custom" id="p4BudgetTable">
-              <thead><tr><th style="width:6%;">ปี</th><th style="width:22%;">หน่วยงาน</th>
-              <th style="width:13%;">งบประมาณ (บาท)</th><th style="width:11%;">ส่งโครงการ</th>
-              <th style="width:10%;">อนุมัติ</th><th style="width:10%;">รับเช็ค</th>
-              <th style="width:10%;">ส่งรายงาน</th><th style="width:18%;">หมายเหตุ</th></tr></thead>
+              <thead><tr>
+                <th style="width:6%;">ปี</th><th style="width:22%;">หน่วยงาน</th>
+                <th style="width:13%;">งบประมาณ (บาท)</th><th style="width:11%;">ส่งโครงการ</th>
+                <th style="width:10%;">อนุมัติ</th><th style="width:10%;">รับเช็ค</th>
+                <th style="width:10%;">ส่งรายงาน</th><th style="width:18%;">หมายเหตุ</th>
+              </tr></thead>
               <tbody id="p4BudgetBody"></tbody>
             </table>
           </div>
@@ -2419,7 +2187,27 @@ body {
       </div>
     </div>
   </div>
+
 </div>
+
+
+<!-- P2 DETAIL OVERLAY -->
+<div class="p2-detail-overlay" id="p2DetailOverlay" onclick="closeP2Detail(event)">
+  <div class="p2-detail-panel" id="p2DetailPanel">
+    <div class="p2-detail-header">
+      <div>
+        <div class="p2-detail-title" id="p2DetailTitle"></div>
+        <div style="font-size:0.75rem;opacity:0.8;margin-top:3px;" id="p2DetailSubtitle"></div>
+      </div>
+      <button class="p2-detail-close" onclick="document.getElementById('p2DetailOverlay').classList.remove('active')">✕</button>
+    </div>
+    <div class="p2-detail-meta" id="p2DetailMeta"></div>
+    <div class="p2-detail-body" id="p2DetailBody"></div>
+  </div>
+</div>
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -5115,6 +4903,10 @@ function toggleAcc(n) {
     item.classList.add('open');
     body.style.maxHeight = body.scrollHeight + 'px';
     if (n === 1) setTimeout(initProject1, 60);
+    if (n === 2) setTimeout(initProject2, 60);
+    if (n === 3) setTimeout(initP3, 60);
+    if (n === 4) setTimeout(initP4, 60);
+    setTimeout(function(){ if(item.classList.contains('open')) body.style.maxHeight='none'; }, 380);
   }
 }
 
