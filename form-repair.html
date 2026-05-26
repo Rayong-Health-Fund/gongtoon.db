@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บันทึกข้อมูลซ่อมแซมบ้าน — กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary-blue: #1e40af;
+  --primary-navy: #0f172a;
+  --bg-light: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #64748b;
+  --border-light: #e2e8f0;
+  --white: #ffffff;
+  --success: #10b981;
+  --danger: #ef4444;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(255,212,100,0.35) 0%, transparent 38%),
+    radial-gradient(ellipse at 88% 68%, rgba(148,218,255,0.38) 0%, transparent 38%),
+    #f8fafc;
+  background-attachment: fixed;
+  color: var(--text-dark);
+  font-size: 17px;
+  min-height: 100vh;
+}
+
+/* NAVBAR */
+.navbar {
+  background: var(--white);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 0.75rem 0;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--primary-navy) !important;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  width: 38px;
+  height: 38px;
+  background: var(--primary-blue);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+/* PAGE HEADER */
+.page-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  color: white;
+  padding: 2rem 1.5rem 1.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(16,185,129,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.page-header-inner {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.page-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  margin-bottom: 0.35rem;
+}
+
+.page-subtitle {
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+/* FORM CARD */
+.form-wrapper {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 0 1.25rem 3rem;
+}
+
+.form-card {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.form-section-header {
+  background: #f1f5f9;
+  border-bottom: 1px solid var(--border-light);
+  padding: 0.75rem 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-gray);
+}
+
+.form-body {
+  padding: 1.5rem;
+}
+
+/* FORM CONTROLS */
+.form-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  margin-bottom: 0.35rem;
+}
+
+.form-label .required {
+  color: var(--danger);
+  margin-left: 3px;
+}
+
+.form-control,
+.form-select {
+  font-family: 'Sarabun', sans-serif;
+  font-size: 0.95rem;
+  border: 1.5px solid var(--border-light);
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  color: var(--text-dark);
+  background: var(--white);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(30,64,175,0.1);
+  outline: none;
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: var(--danger);
+  box-shadow: none;
+}
+
+.invalid-feedback {
+  font-size: 0.8rem;
+  color: var(--danger);
+  margin-top: 0.25rem;
+}
+
+.form-text {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+  margin-top: 0.25rem;
+}
+
+/* INPUT GROUP FOR BUDGET */
+.input-group-text {
+  font-family: 'Sarabun', sans-serif;
+  font-size: 0.9rem;
+  background: #f1f5f9;
+  border: 1.5px solid var(--border-light);
+  border-right: none;
+  color: var(--text-gray);
+  border-radius: 8px 0 0 8px;
+  padding: 0.55rem 0.85rem;
+}
+
+.input-group .form-control {
+  border-radius: 0 8px 8px 0;
+}
+
+.input-group .form-control:focus {
+  z-index: 3;
+}
+
+/* BUDGET HINT */
+#budgetHint {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+  margin-top: 0.25rem;
+  min-height: 1.2em;
+}
+
+/* BUTTONS */
+.btn-submit {
+  background: linear-gradient(135deg, var(--primary-blue), #2563eb);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 2.25rem;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(30,64,175,0.25);
+}
+
+.btn-submit:hover {
+  background: linear-gradient(135deg, #1d3a9e, var(--primary-blue));
+  box-shadow: 0 4px 14px rgba(30,64,175,0.35);
+  transform: translateY(-1px);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+.btn-reset {
+  background: transparent;
+  color: var(--text-gray);
+  border: 1.5px solid var(--border-light);
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-reset:hover {
+  border-color: #94a3b8;
+  color: var(--text-dark);
+  background: #f1f5f9;
+}
+
+/* DIVIDER */
+.form-divider {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 1.25rem 0;
+}
+
+/* BACK LINK */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-gray);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover { color: var(--primary-blue); }
+
+/* RESPONSIVE */
+@media (max-width: 576px) {
+  .page-title { font-size: 1.35rem; }
+  .form-body { padding: 1.25rem; }
+  .form-actions { flex-direction: column-reverse; }
+  .form-actions .btn-reset,
+  .form-actions .btn-submit { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo">🏠</div>
+      <span>กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</span>
+    </a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-title">บันทึกข้อมูลการซ่อมแซมบ้าน</div>
+    <div class="page-subtitle">โครงการที่ 1 — ปรับสภาพแวดล้อมและสิ่งอำนวยความสะดวก</div>
+  </div>
+</div>
+
+<!-- FORM WRAPPER -->
+<div class="form-wrapper">
+  <a href="index.html" class="back-link">← กลับสู่แดชบอร์ด</a>
+
+  <div class="form-card">
+    <!-- OWNER SECTION -->
+    <div class="form-section-header">ข้อมูลผู้รับบริการ</div>
+    <div class="form-body">
+      <form id="repairForm" action="submit-repair.php" method="POST" novalidate>
+
+        <div class="row g-3">
+          <!-- Owner Name -->
+          <div class="col-12">
+            <label for="ownerName" class="form-label">ชื่อ–นามสกุล <span class="required">*</span></label>
+            <input
+              type="text"
+              class="form-control"
+              id="ownerName"
+              name="owner_name"
+              placeholder="ชื่อ นามสกุล ผู้รับบริการ"
+              maxlength="200"
+              required
+            >
+            <div class="invalid-feedback">กรุณากรอกชื่อ–นามสกุลผู้รับบริการ</div>
+          </div>
+
+          <!-- ID Card -->
+          <div class="col-12 col-sm-6">
+            <label for="ownerId" class="form-label">เลขบัตรประชาชน <span class="required">*</span></label>
+            <input
+              type="text"
+              class="form-control"
+              id="ownerId"
+              name="owner_id"
+              placeholder="X-XXXX-XXXXX-XX-X"
+              maxlength="13"
+              pattern="\d{13}"
+              inputmode="numeric"
+              required
+            >
+            <div class="invalid-feedback">กรุณากรอกเลขบัตรประชาชน 13 หลัก (ตัวเลขเท่านั้น)</div>
+          </div>
+
+          <!-- Beneficiary Type -->
+          <div class="col-12 col-sm-6">
+            <label for="beneficiaryType" class="form-label">ประเภทผู้รับบริการ <span class="required">*</span></label>
+            <select class="form-select" id="beneficiaryType" name="beneficiary_type" required>
+              <option value="">— เลือกประเภท —</option>
+              <option value="ผู้พิการ">ผู้พิการ</option>
+              <option value="ผู้สูงอายุ">ผู้สูงอายุ</option>
+              <option value="ผู้สูงอายุ/ผู้พิการ">ผู้สูงอายุ/ผู้พิการ</option>
+            </select>
+            <div class="invalid-feedback">กรุณาเลือกประเภทผู้รับบริการ</div>
+          </div>
+        </div>
+
+        <hr class="form-divider">
+
+        <!-- LOCATION SECTION -->
+        <div class="row g-3">
+          <!-- District -->
+          <div class="col-12 col-sm-6">
+            <label for="district" class="form-label">อำเภอ <span class="required">*</span></label>
+            <select class="form-select" id="district" name="district" required>
+              <option value="">— เลือกอำเภอ —</option>
+              <option value="เมือง">เมือง</option>
+              <option value="แกลง">แกลง</option>
+              <option value="บ้านฉาง">บ้านฉาง</option>
+              <option value="บ้านค่าย">บ้านค่าย</option>
+              <option value="ปลวกแดง">ปลวกแดง</option>
+              <option value="วังจันทร์">วังจันทร์</option>
+              <option value="นิคมพัฒนา">นิคมพัฒนา</option>
+              <option value="เขาชะเมา">เขาชะเมา</option>
+            </select>
+            <div class="invalid-feedback">กรุณาเลือกอำเภอ</div>
+          </div>
+
+          <!-- Sub-district -->
+          <div class="col-12 col-sm-6">
+            <label for="subdistrict" class="form-label">ตำบล <span class="required">*</span></label>
+            <select class="form-select" id="subdistrict" name="subdistrict" required disabled>
+              <option value="">— เลือกอำเภอก่อน —</option>
+            </select>
+            <div class="invalid-feedback">กรุณาเลือกตำบล</div>
+          </div>
+        </div>
+
+        <hr class="form-divider">
+
+        <!-- PROJECT SECTION -->
+        <div class="row g-3">
+          <!-- Repair Category -->
+          <div class="col-12 col-sm-6">
+            <label for="repairCategory" class="form-label">หมวดหมู่การซ่อมแซม <span class="required">*</span></label>
+            <select class="form-select" id="repairCategory" name="repair_category" required>
+              <option value="">— เลือกหมวดหมู่ —</option>
+              <option value="ห้องน้ำ">ห้องน้ำ</option>
+              <option value="ทางลาด/ทางเดิน">ทางลาด / ทางเดิน</option>
+              <option value="ห้องนอน">ห้องนอน</option>
+              <option value="ประตู/หน้าต่าง">ประตู / หน้าต่าง</option>
+              <option value="พื้น/หลังคา">พื้น / หลังคา</option>
+              <option value="สิ่งอำนวยความสะดวกพิเศษ">สิ่งอำนวยความสะดวกพิเศษ</option>
+              <option value="อื่นๆ">อื่นๆ</option>
+            </select>
+            <div class="invalid-feedback">กรุณาเลือกหมวดหมู่การซ่อมแซม</div>
+          </div>
+
+          <!-- Project Status -->
+          <div class="col-12 col-sm-6">
+            <label for="projectStatus" class="form-label">สถานะโครงการ <span class="required">*</span></label>
+            <select class="form-select" id="projectStatus" name="project_status" required>
+              <option value="">— เลือกสถานะ —</option>
+              <option value="อยู่ระหว่างดำเนินการ">อยู่ระหว่างดำเนินการ</option>
+              <option value="กำลังดำเนินการ">กำลังดำเนินการ</option>
+              <option value="แล้วเสร็จ">แล้วเสร็จ</option>
+              <option value="เสร็จเรียบร้อย">เสร็จเรียบร้อย</option>
+            </select>
+            <div class="invalid-feedback">กรุณาเลือกสถานะโครงการ</div>
+          </div>
+
+          <!-- Budget -->
+          <div class="col-12 col-sm-6">
+            <label for="budget" class="form-label">งบประมาณ (บาท) <span class="required">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text">฿</span>
+              <input
+                type="number"
+                class="form-control"
+                id="budget"
+                name="budget"
+                placeholder="0"
+                min="1"
+                max="9999999"
+                step="1"
+                inputmode="numeric"
+                required
+              >
+            </div>
+            <div id="budgetHint"></div>
+            <div class="invalid-feedback" id="budgetError">กรุณากรอกงบประมาณที่ถูกต้อง (มากกว่า 0)</div>
+          </div>
+
+          <!-- Fiscal Year -->
+          <div class="col-12 col-sm-6">
+            <label for="fiscalYear" class="form-label">ปีงบประมาณ (พ.ศ.) <span class="required">*</span></label>
+            <input
+              type="number"
+              class="form-control"
+              id="fiscalYear"
+              name="fiscal_year"
+              placeholder="2568"
+              min="2560"
+              max="2580"
+              inputmode="numeric"
+              required
+            >
+            <div class="invalid-feedback">กรุณากรอกปีงบประมาณ (พ.ศ.) ให้ถูกต้อง</div>
+          </div>
+
+          <!-- Notes -->
+          <div class="col-12">
+            <label for="notes" class="form-label">หมายเหตุ</label>
+            <textarea
+              class="form-control"
+              id="notes"
+              name="notes"
+              rows="3"
+              placeholder="ข้อมูลเพิ่มเติม (ถ้ามี)"
+              maxlength="1000"
+            ></textarea>
+            <div class="form-text">ไม่เกิน 1,000 ตัวอักษร</div>
+          </div>
+        </div>
+
+        <hr class="form-divider">
+
+        <!-- ACTIONS -->
+        <div class="d-flex gap-3 justify-content-end form-actions">
+          <button type="button" class="btn-reset" id="resetBtn">ล้างข้อมูล</button>
+          <button type="submit" class="btn-submit">บันทึกข้อมูล →</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Sub-district map keyed by district ── */
+const subdistrictMap = {
+  "เมือง": ["เนินพระ","ตะพง","ท่าประดู่","บ้านแลง","นาตาขวัญ","เนินพระ","กะเฉด","ทับมา","สำนักทอง","เชิงเนิน","ตะพง","หนองตะพาน"],
+  "แกลง": ["กระแสบน","กองดิน","ชากโดน","ชำฆ้อ","ทุ่งควายกิน","ทางเกวียน","น้ำเป็น","ปากน้ำประแส","ป่ายุบใน","พลงตาเอี่ยม","พังราด","วังหว้า","ห้วยทับมอญ"],
+  "บ้านฉาง": ["สำนักท้อน","พลา","บ้านฉาง"],
+  "บ้านค่าย": ["บ้านค่าย","หนองละลอก","หนองตะพาน","ตาขัน","บางบุตร","หนองไร่","ชากโดน"],
+  "ปลวกแดง": ["ปลวกแดง","มาบยางพร","หนองไร่","มาบข่า","ละหาร","แม่น้ำคู้"],
+  "วังจันทร์": ["วังจันทร์","ชุมแสง","ป่ายุบใน","พลงตาเอี่ยม"],
+  "นิคมพัฒนา": ["นิคมพัฒนา","มาบข่า","พนานิคม","บ้านแลง"],
+  "เขาชะเมา": ["เขาน้อย","ห้วยทับมอญ","ชำฆ้อ","น้ำเป็น","เนินฆ้อ"]
+};
+
+const districtEl = document.getElementById('district');
+const subdistrictEl = document.getElementById('subdistrict');
+
+districtEl.addEventListener('change', function () {
+  const opts = subdistrictMap[this.value] || [];
+  subdistrictEl.innerHTML = opts.length
+    ? '<option value="">— เลือกตำบล —</option>' +
+      opts.map(tb => `<option value="${tb}">${tb}</option>`).join('')
+    : '<option value="">— เลือกอำเภอก่อน —</option>';
+  subdistrictEl.disabled = opts.length === 0;
+  subdistrictEl.classList.remove('is-invalid');
+});
+
+/* ── Budget formatter hint ── */
+const budgetEl = document.getElementById('budget');
+const budgetHint = document.getElementById('budgetHint');
+
+budgetEl.addEventListener('input', function () {
+  const val = parseFloat(this.value);
+  budgetHint.textContent = (!isNaN(val) && val > 0)
+    ? '= ' + val.toLocaleString('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0 })
+    : '';
+});
+
+/* ── ID card: digits only, auto-insert dashes visually via placeholder ── */
+const idEl = document.getElementById('ownerId');
+idEl.addEventListener('input', function () {
+  this.value = this.value.replace(/\D/g, '').slice(0, 13);
+});
+
+/* ── Fiscal year default ── */
+document.getElementById('fiscalYear').value = '2568';
+
+/* ── Form validation ── */
+document.getElementById('repairForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  let valid = true;
+
+  this.querySelectorAll('[required]').forEach(el => {
+    if (!el.value.trim()) {
+      el.classList.add('is-invalid');
+      valid = false;
+    } else {
+      el.classList.remove('is-invalid');
+    }
+  });
+
+  /* Extra: ID must be exactly 13 digits */
+  if (idEl.value.length !== 13) {
+    idEl.classList.add('is-invalid');
+    valid = false;
+  }
+
+  /* Extra: budget must be positive */
+  const bv = parseFloat(budgetEl.value);
+  if (isNaN(bv) || bv <= 0) {
+    budgetEl.classList.add('is-invalid');
+    document.getElementById('budgetError').style.display = 'block';
+    valid = false;
+  }
+
+  if (valid) this.submit();
+});
+
+/* Clear invalid state on change */
+document.getElementById('repairForm').querySelectorAll('.form-control, .form-select').forEach(el => {
+  el.addEventListener('input', () => el.classList.remove('is-invalid'));
+  el.addEventListener('change', () => el.classList.remove('is-invalid'));
+});
+
+/* ── Reset button ── */
+document.getElementById('resetBtn').addEventListener('click', function () {
+  if (!confirm('ล้างข้อมูลทั้งหมด?')) return;
+  document.getElementById('repairForm').reset();
+  subdistrictEl.innerHTML = '<option value="">— เลือกอำเภอก่อน —</option>';
+  subdistrictEl.disabled = true;
+  budgetHint.textContent = '';
+  document.getElementById('fiscalYear').value = '2568';
+  document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+});
+</script>
+</body>
+</html>
