@@ -458,54 +458,155 @@ function p4FormatDate(isoStr) {
   } catch(e) { return String(isoStr); }
 }
 
-// Maps API year-suffix columns to display year labels
-var P4_YEAR_MAP = [
-  { year: '2566', buy: 'buy66', paid: 'paid66', bal: 'balance66' },
-  { year: '2567', buy: 'buy67', paid: 'paid67', bal: 'balance67' },
-  { year: '2568', buy: 'buy68', paid: 'paid68', bal: 'balance68' },
-  { year: '2569', buy: 'buy69', paid: 'paid69', bal: 'balance69' }
-];
+// Reads a numeric value; tries Thai spreadsheet column name first, then English alias.
+function p4GetNum(row, thaiKey, engKey) {
+  if (Object.prototype.hasOwnProperty.call(row, thaiKey)) return Number(row[thaiKey]) || 0;
+  if (engKey && Object.prototype.hasOwnProperty.call(row, engKey)) return Number(row[engKey]) || 0;
+  return 0;
+}
+
+// Reads a string value; tries Thai spreadsheet column name first, then English alias.
+function p4GetText(row, thaiKey, engKey) {
+  if (Object.prototype.hasOwnProperty.call(row, thaiKey)) return String(row[thaiKey] || '').trim();
+  return String(row[engKey] || '').trim();
+}
+
+// Sums multiple Thai columns; falls back to a single English key if no Thai keys are present.
+function p4SumThai(row, thaiKeys, engKey) {
+  var hasAny = thaiKeys.some(function(k) { return Object.prototype.hasOwnProperty.call(row, k); });
+  if (hasAny) return thaiKeys.reduce(function(sum, k) { return sum + (Number(row[k]) || 0); }, 0);
+  return (engKey && Object.prototype.hasOwnProperty.call(row, engKey)) ? Number(row[engKey]) || 0 : 0;
+}
 
 // Pivot flat multi-year device rows into the data_by_year shape that
 // initP4() / loadP4Data() already know how to consume.
+//
+// Uses a two-pass algorithm:
+//   Pass 1 — read raw column values per item per year (Thai column names first, English fallback).
+//             Year 2568 sums both procurement phases; year 2569 sums direct + form submissions.
+//   Pass 2 — carry-forward: if a year has no explicit spreadsheet data but the previous year
+//             had a positive remaining balance, create a synthetic row so the item stays visible.
+//             This prevents an item purchased in 2566 from disappearing in the 2568 view.
+var P4_YEARS = ['2566', '2567', '2568', '2569'];
+
 function p4NormalizeDevices(rows) {
-  var data_by_year = {};
+  // — Pass 1: group raw year data by unique item key ——————————————————————
+  var itemMap = {};
+
   rows.forEach(function(row) {
-    P4_YEAR_MAP.forEach(function(yc) {
-      var bought = Number(row[yc.buy])  || 0;
-      var paid   = Number(row[yc.paid]) || 0;
-      var bal    = Number(row[yc.bal])  || 0;
-      if (bought === 0 && paid === 0 && bal === 0) return;
-      if (!data_by_year[yc.year]) data_by_year[yc.year] = [];
-      data_by_year[yc.year].push({
-        district:  row.district    || '',
-        unit:      row.center_name || '',
-        category:  String(row.category || '').trim(),
-        equipment: row.item        || '',
-        unit_type: row.unit        || '',
-        year:      yc.year,
-        purchased: bought,
-        used:      paid,
-        remaining: bal
-      });
+    var dist  = p4GetText(row, 'สถานที่_อำเภอ',                    'district');
+    var unit  = p4GetText(row, 'หน่วยงาน_ที่ตั้งศูนย์ซ่อม',        'center_name');
+    var cat   = p4GetText(row, 'กลุ่ม_อุปกรณ์ที่พร้อมให้บริการ',  'category');
+    var equip = p4GetText(row, 'รายการ_อุปกรณ์',                   'item');
+    var utype = p4GetText(row, 'อุปกรณ์_หน่วย',                    'unit');
+    var key   = [dist, unit, cat, equip].join('\x00');
+
+    if (!itemMap[key]) {
+      itemMap[key] = { dist: dist, unit: unit, cat: cat, equip: equip, utype: utype, yr: {} };
+    }
+
+    var rawYears = {
+      '2566': {
+        buy:  p4GetNum(row, 'จัดซื้อ_ปี66',       'buy66'),
+        paid: p4GetNum(row, 'เบิกจ่าย_ปี66',      'paid66'),
+        bal:  p4GetNum(row, 'ยอดสุทธิ_ปี66(ห้ามแก้ไข)', 'balance66')
+      },
+      '2567': {
+        buy:  p4GetNum(row, 'จัดซื้อ_ปี67',       'buy67'),
+        paid: p4GetNum(row, 'เบิกจ่าย_ปี67',      'paid67'),
+        bal:  p4GetNum(row, 'ยอดสุทธิ_ปี67(ห้ามแก้ไข)', 'balance67')
+      },
+      '2568': {
+        buy:  p4SumThai(row, ['จัดซื้อ_ปี68_ระยะ1','จัดซื้อจากฟอร์ม_68_ร1',
+                               'จัดซื้อ_ปี68_ระยะ2','จัดซื้อ_จากฟอร์ม_68_ร2'], 'buy68'),
+        paid: p4SumThai(row, ['เบิกจ่าย_ปี68_ระยะ1','เบิกจ่าย_จากฟอร์ม_68_ร1',
+                               'เบิกจ่าย_ปี68_ระยะ2','เบิกจ่าย_จากฟอร์ม_68_ร2'], 'paid68'),
+        bal:  p4GetNum(row, 'ยอดสุทธิ_ปี68(ห้ามแก้ไข)', 'balance68')
+      },
+      '2569': {
+        buy:  p4SumThai(row, ['จัดซื้อ_ปี69','จัดซื้อ_จากฟอร์ม_69'], 'buy69'),
+        paid: p4SumThai(row, ['เบิกจ่าย_ปี69','เบิกจ่าย_จากฟอร์ม_69'], 'paid69'),
+        bal:  p4GetNum(row, 'ยอดสุทธิ_ปี69(ห้ามแก้ไข)', 'balance69')
+      }
+    };
+
+    P4_YEARS.forEach(function(y) {
+      var d = rawYears[y];
+      if (d.buy !== 0 || d.paid !== 0 || d.bal !== 0) {
+        itemMap[key].yr[y] = d;
+      }
     });
   });
+
+  // — Pass 2: carry-forward missing years, produce data_by_year ——————————
+  var data_by_year = {};
+
+  Object.keys(itemMap).forEach(function(key) {
+    var item = itemMap[key];
+    var prevBal = 0;
+
+    P4_YEARS.forEach(function(year) {
+      var yd = item.yr[year];
+      if (yd) {
+        // Explicit spreadsheet data exists for this year.
+        // If the authoritative balance column is missing or zero but we have a prior balance,
+        // recompute so the user never sees a phantom zero drop.
+        var effectiveBal = yd.bal > 0 ? yd.bal : Math.max(prevBal + yd.buy - yd.paid, 0);
+        if (!data_by_year[year]) data_by_year[year] = [];
+        data_by_year[year].push({
+          district:     item.dist,
+          unit:         item.unit,
+          category:     item.cat,
+          equipment:    item.equip,
+          unit_type:    item.utype,
+          year:         year,
+          purchased:    yd.buy,
+          used:         yd.paid,
+          remaining:    effectiveBal,
+          carryForward: false
+        });
+        prevBal = effectiveBal;
+      } else if (prevBal > 0) {
+        // No spreadsheet data for this year but stock exists — carry it forward.
+        if (!data_by_year[year]) data_by_year[year] = [];
+        data_by_year[year].push({
+          district:     item.dist,
+          unit:         item.unit,
+          category:     item.cat,
+          equipment:    item.equip,
+          unit_type:    item.utype,
+          year:         year,
+          purchased:    0,
+          used:         0,
+          remaining:    prevBal,
+          carryForward: true
+        });
+        // prevBal unchanged — stock still available
+      }
+      // prevBal = 0 and no data → item not in circulation yet; skip silently
+    });
+  });
+
   return data_by_year;
 }
 
 // Map flat funding rows into the budget array shape used by initP4().
+// Tries actual Thai spreadsheet column names first, then English aliases.
+// Budget values may include Thai currency formatting (e.g. " ฿ 497,500 "); strips non-numeric.
 function p4NormalizeFunding(rows) {
   return rows.map(function(b) {
+    var budgetRaw = String(b['งบประมาณ_จำนวนเงิน'] || b.budget || '');
+    var budget = Number(budgetRaw.replace(/[^0-9.]/g, '')) || 0;
     return {
-      year:      String(b.budget_year || ''),
-      unit:      b.agency || '',
-      budget:    Number(b.budget) || 0,
-      submitted: p4FormatDate(b.submit_date),
-      approved:  p4FormatDate(b.approve_date),
-      mou:       p4FormatDate(b.mou_date),
-      received:  p4FormatDate(b.check_date),
-      reported:  p4FormatDate(b.report_date),
-      notes:     b.remark || ''
+      year:      String(b['ปี_งบประมาณ']          || b.budget_year  || ''),
+      unit:      String(b['ชื่อ_หน่วยงาน']          || b.agency        || ''),
+      budget:    budget,
+      submitted: p4FormatDate(b['วันที่_ส่งโครงการฯ'] || b.submit_date  || ''),
+      approved:  p4FormatDate(b['วันที่_อนุมัติ']      || b.approve_date || ''),
+      mou:       p4FormatDate(b['วันที่_ทำMOU']        || b.mou_date     || ''),
+      received:  p4FormatDate(b['วันที่_รับเช็ค']       || b.check_date   || ''),
+      reported:  p4FormatDate(b['วันที่_ส่งรายงานผล']  || b.report_date  || ''),
+      notes:     String(b['หมายเหตุ'] || b.remark || '')
     };
   });
 }
@@ -542,8 +643,6 @@ function p4BuildData(devicesRows, fundingRows) {
 }
 
 function renderProject4Dashboard() {
-  console.log('[P4] renderProject4Dashboard: fetch start');
-
   // Safety net: if the GAS API hangs and never resolves, fall back after 30 s.
   var p4ApiTimeoutId = setTimeout(function() {
     if (window.p4ApiState === undefined) {
@@ -561,30 +660,20 @@ function renderProject4Dashboard() {
     fetchProject4Data('funding')
   ]).then(function(results) {
     clearTimeout(p4ApiTimeoutId);
-    // Log raw response shape so we can detect p1Normalize format mismatches
-    var _r0 = results[0], _r1 = results[1];
-    var _r0desc = Array.isArray(_r0) ? 'array[' + _r0.length + ']'
-      : (_r0 && typeof _r0 === 'object' ? '{' + Object.keys(_r0).slice(0, 5).join(',') + '}' : typeof _r0);
-    var _r1desc = Array.isArray(_r1) ? 'array[' + _r1.length + ']'
-      : (_r1 && typeof _r1 === 'object' ? '{' + Object.keys(_r1).slice(0, 5).join(',') + '}' : typeof _r1);
-    console.log('[P4] raw API shapes — devices:', _r0desc, ' funding:', _r1desc);
     var devicesRows = p1Normalize(results[0]);
     var fundingRows = p1Normalize(results[1]);
-    console.log('[P4] normalized — devices:', devicesRows.length, ' funding:', fundingRows.length);
     window.p4LiveData  = p4BuildData(devicesRows, fundingRows);
     window.p4ApiState  = 'ready';
-    console.log('[P4] p4ApiState = ready | years:', window.p4LiveData.available_years);
-    console.log('[P4] data_by_year row counts:', Object.keys(window.p4LiveData.data_by_year).map(function(y) {
-      return y + ':' + window.p4LiveData.data_by_year[y].length;
-    }).join(', '));
 
-    // Derive summary counts from live data
-    var centersSet = {};
-    devicesRows.forEach(function(r) { if (r.center_name) centersSet[r.center_name] = true; });
-    var totalCenters = Object.keys(centersSet).length;
-
-    var districtSet = {};
-    devicesRows.forEach(function(r) { if (r.district) districtSet[r.district] = true; });
+    // Derive summary counts from normalized live data (avoids raw API column-name dependency)
+    var centersSet = {}, districtSet = {};
+    window.p4LiveData.available_years.forEach(function(y) {
+      (window.p4LiveData.data_by_year[y] || []).forEach(function(r) {
+        if (r.unit)     centersSet[r.unit]     = true;
+        if (r.district) districtSet[r.district] = true;
+      });
+    });
+    var totalCenters   = Object.keys(centersSet).length;
     var totalDistricts = Object.keys(districtSet).length;
 
     var totalYears   = window.p4LiveData.available_years.length;

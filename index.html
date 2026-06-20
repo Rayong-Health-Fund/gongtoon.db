@@ -1605,6 +1605,127 @@ body {
   font-style: italic;
   animation: p4blink 1.4s ease-in-out infinite;
 }
+/* ── P4 equipment history sub-rows ────────────────────────────── */
+.p4-history-row > td { padding: 0 !important; border: none !important; }
+
+/* Outer container: spans the full cell width with a subtle card feel */
+.p4-hist-wrap {
+  padding: 1rem 1.25rem 1.1rem;
+  background: linear-gradient(160deg, #f8fafc 0%, #f1f5f9 100%);
+  border-top: 2px solid #dbeafe;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* "ประวัติรายปีงบประมาณ" label above the table */
+.p4-hist-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0.55rem;
+}
+
+/* History table: stretch to full width */
+.p4-hist-table {
+  width: 100%;
+  font-size: 0.85rem;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* Header row */
+.p4-hist-table thead th {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #475569;
+  text-align: right;
+  border-bottom: 2px solid #cbd5e1;
+  background: transparent;
+}
+.p4-hist-table thead th:first-child { text-align: left; }
+.p4-hist-table thead th:last-child  { text-align: left; }
+
+/* Data cells */
+.p4-hist-table tbody td {
+  padding: 0.45rem 0.75rem;
+  text-align: right;
+  color: #334155;
+  border-bottom: 1px solid #e8ecf1;
+  vertical-align: middle;
+}
+.p4-hist-table tbody td:first-child { text-align: left; }
+.p4-hist-table tbody td:last-child  { text-align: left; }
+.p4-hist-table tbody tr:last-child td { border-bottom: none; }
+.p4-hist-table tbody tr:hover td { background: rgba(99,102,241,0.04); }
+
+/* Current (selected) year row: blue-tinted highlight + left accent bar */
+.p4-hist-cur td {
+  background: #eff6ff !important;
+}
+.p4-hist-cur td:first-child {
+  border-left: 3px solid #3b82f6;
+  padding-left: calc(0.75rem - 3px);
+}
+
+/* Small arrow marking the current year */
+.p4-hist-cur-mark {
+  display: inline-block;
+  font-size: 0.6rem;
+  color: #3b82f6;
+  margin-left: 5px;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+/* ยกยอด (carry-forward) badge */
+.p4-cf-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  color: #6b7280;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 1px 7px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* Carry-forward main rows: gently dimmed — no new activity this year */
+.p4-cf-row { opacity: 0.7; }
+.p4-cf-row:hover { opacity: 1; transition: opacity 0.15s; }
+
+/* History toggle button */
+.p4-hist-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  font-size: 0.65rem;
+  cursor: pointer;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  background: #f8fafc;
+  color: #64748b;
+  padding: 0;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.p4-hist-btn:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1d4ed8;
+}
+
+/* Responsive: tighten the history panel on small screens */
+@media (max-width: 640px) {
+  .p4-hist-wrap { padding: 0.75rem 0.75rem 0.85rem; }
+  .p4-hist-table { font-size: 0.78rem; }
+  .p4-hist-table thead th,
+  .p4-hist-table tbody td { padding: 0.35rem 0.45rem; }
+}
 /* P4 Dashboard Chart Cards */
 .p4-dash-grid {
   display: grid;
@@ -2218,25 +2339,25 @@ body {
             <!-- B: Status Donut — filtered equipment rows -->
             <div class="p4-chart-card">
               <p class="p4-chart-card-title">📦 สถานะการใช้งานอุปกรณ์</p>
-              <p class="p4-chart-card-sub">สัดส่วนจัดซื้อ / เบิกจ่าย / คงเหลือ ตามชุดข้อมูลที่เลือก</p>
+              <p class="p4-chart-card-sub">จัดซื้อ / เบิกจ่าย / คงเหลือสะสมรวมทุกปี — กรองตามอำเภอ / หน่วยงาน / กลุ่มอุปกรณ์ (ไม่ขึ้นกับปีที่เลือก)</p>
               <div class="p4-chart-wrap" style="height:200px;"><canvas id="p4ChartStatus"></canvas></div>
             </div>
             <!-- C: District Horizontal Bar — filtered equipment rows -->
             <div class="p4-chart-card">
-              <p class="p4-chart-card-title">📍 ปริมาณอุปกรณ์จำแนกตามอำเภอ</p>
-              <p class="p4-chart-card-sub">จำนวนรายการอุปกรณ์ต่ออำเภอ ตามชุดข้อมูลที่เลือก</p>
+              <p class="p4-chart-card-title">📍 จำนวนรายการอุปกรณ์ตามอำเภอ</p>
+              <p class="p4-chart-card-sub">จำนวนรายการอุปกรณ์ต่ออำเภอ (นับแต่ละรายการไม่ซ้ำตามปี) ตามข้อมูลที่เลือก</p>
               <div class="p4-chart-wrap" style="height:200px;"><canvas id="p4ChartDistrict"></canvas></div>
             </div>
             <!-- D: Units Horizontal Bar — filtered equipment rows -->
             <div class="p4-chart-card">
-              <p class="p4-chart-card-title">🏥 หน่วยบริการที่มีปริมาณอุปกรณ์สูงสุด</p>
-              <p class="p4-chart-card-sub">Top 8 ศูนย์ซ่อมบำรุง ตามจำนวนรายการอุปกรณ์</p>
+              <p class="p4-chart-card-title">🏥 หน่วยบริการที่มีรายการอุปกรณ์มากที่สุด</p>
+              <p class="p4-chart-card-sub">Top 8 หน่วยบริการ / ศูนย์ซ่อม ตามจำนวนรายการอุปกรณ์ (ไม่ซ้ำตามปี) ตามข้อมูลที่เลือก</p>
               <div class="p4-chart-wrap" style="height:200px;"><canvas id="p4ChartUnits"></canvas></div>
             </div>
             <!-- E: Category Horizontal Bar — filtered equipment rows (full width) -->
             <div class="p4-chart-card" style="grid-column:1/-1;">
-              <p class="p4-chart-card-title">🔧 กลุ่มอุปกรณ์สำคัญ</p>
-              <p class="p4-chart-card-sub">ปริมาณจัดซื้อรวมแบ่งตามกลุ่มอุปกรณ์ (จำนวนชิ้น) ตามชุดข้อมูลที่เลือก</p>
+              <p class="p4-chart-card-title">🔧 กลุ่มอุปกรณ์ที่พบมากที่สุด</p>
+              <p class="p4-chart-card-sub">Top 10 กลุ่มอุปกรณ์ ตามจำนวนรายการอุปกรณ์ในข้อมูลที่เลือก</p>
               <div class="p4-chart-wrap" style="height:240px;"><canvas id="p4ChartCategory"></canvas></div>
             </div>
           </div>
@@ -2265,15 +2386,16 @@ body {
           </div>
           <div class="p1-acc-search-sticky">
             <div style="text-align:right;margin-top:0.25rem;"><button class="btn-export" onclick="exportP4Equipment()">📥 Export Excel</button></div>
-            <input type="text" class="modal-search-input" id="p4EquipSearch" placeholder="🔍 ค้นหา..." onkeyup="searchTable('p4EquipSearch','p4EquipTable')">
+            <input type="text" class="modal-search-input" id="p4EquipSearch" placeholder="🔍 ค้นหา..." onkeyup="searchP4Equip()">
           </div>
           <div class="table-responsive sticky-table">
             <table class="table-custom" id="p4EquipTable">
               <thead><tr>
-                <th style="width:12%;">อำเภอ</th><th style="width:18%;">หน่วยงาน</th>
-                <th style="width:15%;">กลุ่ม</th><th style="width:22%;">อุปกรณ์</th>
-                <th style="width:8%;">ปี</th><th style="width:9%;">จัดซื้อ</th>
+                <th style="width:11%;">อำเภอ</th><th style="width:17%;">หน่วยงาน</th>
+                <th style="width:14%;">กลุ่ม</th><th style="width:20%;">อุปกรณ์</th>
+                <th style="width:8%;">ปี</th><th style="width:8%;">จัดซื้อ</th>
                 <th style="width:8%;">เบิก</th><th style="width:8%;">คงเหลือ</th>
+                <th style="width:6%;">ประวัติ</th>
               </tr></thead>
               <tbody id="p4EquipBody"></tbody>
             </table>
@@ -4169,7 +4291,7 @@ function p4ShowLoading() {
   });
   // Loading row in equipment table
   var tb = document.getElementById('p4EquipBody');
-  if (tb) tb.innerHTML = '<tr><td colspan="8" class="p4-tbl-loading">⏳ กำลังโหลดข้อมูล...</td></tr>';
+  if (tb) tb.innerHTML = '<tr><td colspan="9" class="p4-tbl-loading">⏳ กำลังโหลดข้อมูล...</td></tr>';
   // Loading row in budget table
   var bb = document.getElementById('p4BudgetBody');
   if (bb) bb.innerHTML = '<tr><td colspan="8" class="p4-tbl-loading">⏳ กำลังโหลดข้อมูล...</td></tr>';
@@ -4203,16 +4325,13 @@ function initP4() {
 
   if (window.p4ApiState === undefined) {
     // Live API still in flight — show skeleton; renderProject4Dashboard() will re-init when done
-    console.log('[P4] initP4: API in flight — skeleton shown');
     p4ShowLoading();
     return;
   }
 
   // API finished (success or error) — clear any overlays and render
-  console.log('[P4] initP4: p4ApiState =', window.p4ApiState, '— dismissing skeleton');
   p4DismissLoading();
   var data = window.p4LiveData || project4Data;
-  console.log('[P4] initP4: using', (window.p4LiveData ? 'LIVE' : 'FALLBACK'), 'data, years:', data.available_years);
 
   // Update stat cards from whichever data we're using.
   // This is the only place that updates them when the API errors or times out —
@@ -4241,7 +4360,6 @@ function initP4() {
         data.available_years.length + ' ปีงบประมาณ, ' +
         Object.keys(dSet).length + ' อำเภอ';
     }
-    console.log('[P4] stat cards: cats=' + Object.keys(cSet).length + ' dists=' + Object.keys(dSet).length + ' years=' + data.available_years.length + ' budget=' + (totBud/1e6).toFixed(2) + 'M');
   })();
 
   // Populate equipment year dropdown (already descending from p4BuildData)
@@ -4261,7 +4379,6 @@ function initP4() {
       }
     }
     yearSel.value = _yrDef;
-    console.log('[P4] year default:', _yrDef);
   }
   window.p4UserSelectedYear = false;
 
@@ -4316,10 +4433,8 @@ function initP4() {
   }
 
   // Load initial data — wrapped so a chart error cannot escape and leave skeleton stuck
-  console.log('[P4] initP4: rendering with', (window.p4LiveData ? 'live' : 'fallback'), 'data');
   try { loadP4Data(); } catch(e) { console.error('[P4] loadP4Data error:', e); }
   try { loadP4Budget(); } catch(e) { console.error('[P4] loadP4Budget error:', e); }
-  console.log('[P4] initP4: complete');
 }
 
 function loadP4Data() {
@@ -4352,10 +4467,23 @@ function loadP4Data() {
   if (unitVal !== "all") rows = rows.filter(function(r) { return r.unit     === unitVal; });
   if (catVal  !== "all") rows = rows.filter(function(r) { return r.category === catVal;  });
 
-  console.log('[P4] loadP4Data: year=' + yearVal + ' dist=' + distVal + ' unit=' + unitVal + ' cat=' + catVal + ' → ' + rows.length + ' rows');
-
   rows.forEach(function(item) {
+    // Build the full 4-year history for this item (used by the expandable sub-row)
+    var histYears = (window.P4_YEARS || ['2566','2567','2568','2569']).map(function(y) {
+      var yRows = data.data_by_year[y] || [];
+      for (var i = 0; i < yRows.length; i++) {
+        var r = yRows[i];
+        if (r.district === item.district && r.unit === item.unit &&
+            r.category === item.category && r.equipment === item.equipment) return r;
+      }
+      return null;
+    }).filter(Boolean);
+
+    // Carry-forward badge: dim the row when it contains no new activity this year
+    var cfClass = item.carryForward ? ' p4-cf-row' : '';
+
     var tr = document.createElement("tr");
+    tr.className = 'p4-equip-main' + cfClass;
     tr.innerHTML =
       "<td>" + (item.district  || '') + "</td>" +
       "<td>" + (item.unit      || '') + "</td>" +
@@ -4364,8 +4492,44 @@ function loadP4Data() {
       "<td><strong>" + (item.year || '') + "</strong></td>" +
       "<td>" + (Number(item.purchased) || 0) + "</td>" +
       "<td>" + (Number(item.used)      || 0) + "</td>" +
-      "<td>" + (Number(item.remaining) || 0) + "</td>";
+      "<td>" + (Number(item.remaining) || 0) + "</td>" +
+      "<td style='text-align:center'>" +
+        "<button class='p4-hist-btn' onclick='toggleP4History(this)' title='ดูประวัติรายปี'>▶</button>" +
+      "</td>";
     tbody.appendChild(tr);
+
+    // Hidden history sub-row — full-width expandable yearly breakdown
+    var histHtml =
+      '<div class="p4-hist-label">ประวัติรายปีงบประมาณ</div>' +
+      '<table class="p4-hist-table"><thead><tr>' +
+        '<th style="width:18%">ปีงบประมาณ</th>' +
+        '<th style="width:18%">จัดซื้อ</th>' +
+        '<th style="width:18%">เบิกจ่าย</th>' +
+        '<th style="width:18%">คงเหลือ</th>' +
+        '<th style="width:28%">หมายเหตุ</th>' +
+      '</tr></thead><tbody>';
+    histYears.forEach(function(h) {
+      var isCur  = h.year === item.year;
+      var curMark = isCur ? '<span class="p4-hist-cur-mark">◀ กำลังดู</span>' : '';
+      var note   = h.carryForward
+        ? '<span class="p4-cf-tag">ยกยอด</span>'
+        : '';
+      histHtml +=
+        '<tr' + (isCur ? ' class="p4-hist-cur"' : '') + '>' +
+        '<td><strong>ปี ' + h.year + '</strong>' + curMark + '</td>' +
+        '<td>' + Number(h.purchased || 0).toLocaleString() + '</td>' +
+        '<td>' + Number(h.used      || 0).toLocaleString() + '</td>' +
+        '<td><strong>' + Number(h.remaining || 0).toLocaleString() + '</strong></td>' +
+        '<td>' + note + '</td>' +
+        '</tr>';
+    });
+    histHtml += '</tbody></table>';
+
+    var histTr = document.createElement("tr");
+    histTr.className = 'p4-history-row';
+    histTr.style.display = 'none';
+    histTr.innerHTML = '<td colspan="9"><div class="p4-hist-wrap">' + histHtml + '</div></td>';
+    tbody.appendChild(histTr);
   });
 
   renderP4Charts(rows);
@@ -4396,6 +4560,39 @@ function loadP4Budget() {
       "<td>" + (b.notes || "-") + "</td>";
     budgetBody.appendChild(tr);
   });
+}
+
+// Toggle the yearly-history sub-row that sits immediately after the main equipment row.
+function toggleP4History(btn) {
+  var mainRow = btn.parentNode.parentNode; // td → tr
+  var histRow = mainRow.nextElementSibling;
+  if (!histRow || !histRow.classList.contains('p4-history-row')) return;
+  var opening = histRow.style.display === 'none';
+  histRow.style.display = opening ? '' : 'none';
+  btn.textContent = opening ? '▼' : '▶';
+}
+
+// Custom search handler: runs generic searchTable on main equipment rows, then repairs
+// history sub-rows. searchTable can corrupt a history row's innerHTML by replacing it
+// with plain-text+highlights; we restore from data-original and re-apply correct display.
+function searchP4Equip() {
+  searchTable('p4EquipSearch', 'p4EquipTable');
+  var histRows = document.querySelectorAll('#p4EquipBody tr.p4-history-row');
+  for (var i = 0; i < histRows.length; i++) {
+    var histRow = histRows[i];
+    var mainRow = histRow.previousElementSibling;
+    // Restore cell innerHTML if searchTable replaced it (data-original holds the original)
+    var cells = histRow.getElementsByTagName('td');
+    for (var j = 0; j < cells.length; j++) {
+      var orig = cells[j].getAttribute('data-original');
+      if (orig) cells[j].innerHTML = orig; // keep data-original for future search cycles
+    }
+    // Hide if parent row is hidden or toggle is not open
+    var parentHidden = !mainRow || mainRow.style.display === 'none';
+    var btn = mainRow ? mainRow.querySelector('.p4-hist-btn') : null;
+    var isOpen = btn && btn.textContent === '▼';
+    histRow.style.display = (parentHidden || !isOpen) ? 'none' : '';
+  }
 }
 
 // Export filtered equipment rows directly from data (not DOM) so search/filter
@@ -4522,21 +4719,53 @@ function renderP4BudgetChart(data) {
   });
 }
 
-// B — Status donut: proportions of purchased / used / remaining from filtered rows
+// B — Status donut: cumulative purchased / used / remaining for items in scope.
+// Uses rows only to identify WHICH items are in scope (district/unit/category filters),
+// then scans ALL year data for those items so the year filter does not hide purchased/used.
+// This prevents the donut from showing "only remaining" when the selected year has no new purchases.
 function renderP4StatusChart(rows) {
   destroyP4Chart("status");
   var ctx = document.getElementById("p4ChartStatus");
   if (!ctx) return;
-  var purchased = 0, used = 0, remaining = 0;
+
+  // Build the set of unique item keys from dimension-filtered rows (ignoring which year they came from)
+  var itemKeys = {};
   rows.forEach(function(r) {
-    purchased += Number(r.purchased) || 0;
-    used      += Number(r.used)      || 0;
-    remaining += Number(r.remaining) || 0;
+    itemKeys[[r.district, r.unit, r.category, r.equipment].join('\x00')] = true;
   });
+
+  // Walk ALL year data for those items — cumulative purchased/used, latest remaining per item
+  var fullData  = window.p4LiveData || project4Data;
+  var yearOrder = {'2566':0,'2567':1,'2568':2,'2569':3};
+  var purchased = 0, used = 0;
+  var latestRemaining = {};
+
+  fullData.available_years.forEach(function(y) {
+    (fullData.data_by_year[y] || []).forEach(function(r) {
+      var k = [r.district, r.unit, r.category, r.equipment].join('\x00');
+      if (!itemKeys[k]) return;
+      // Sum from non-carry-forward rows only (actual procurement events)
+      if (!r.carryForward) {
+        purchased += Number(r.purchased) || 0;
+        used      += Number(r.used)      || 0;
+      }
+      // Track latest-year balance per item to get current remaining
+      var prev = latestRemaining[k];
+      var rOrd = yearOrder[r.year] !== undefined ? yearOrder[r.year] : -1;
+      if (!prev || rOrd > prev.ord) latestRemaining[k] = { ord: rOrd, val: Number(r.remaining) || 0 };
+    });
+  });
+
+  var remaining = 0;
+  Object.keys(latestRemaining).forEach(function(k) { remaining += latestRemaining[k].val; });
+
+  console.log('[P4-audit] StatusChart: items=' + Object.keys(itemKeys).length  // TODO: remove debug
+    + ' purchased=' + purchased + ' used=' + used + ' remaining=' + remaining);
+
   p4Charts["status"] = new Chart(ctx, {
     type: "doughnut",
     data: {
-      labels: ["จัดซื้อ", "เบิกจ่าย", "คงเหลือ"],
+      labels: ["จัดซื้อสะสม", "เบิกจ่ายสะสม", "คงเหลือปัจจุบัน"],
       datasets: [{
         data: [purchased, used, remaining],
         backgroundColor: ["rgba(59,130,246,0.82)", "rgba(245,158,11,0.82)", "rgba(16,185,129,0.82)"],
@@ -4550,26 +4779,41 @@ function renderP4StatusChart(rows) {
         tooltip: {
           callbacks: {
             label: function(c) {
-              var total = c.dataset.data.reduce(function(a, b) { return a + b; }, 0);
-              var pct   = total > 0 ? " (" + (c.parsed / total * 100).toFixed(1) + "%)" : "";
-              return " " + c.label + ": " + c.parsed.toLocaleString() + " ชิ้น" + pct;
-            }
-          }
+              return ' ' + c.label + ': ' + c.parsed.toLocaleString() + ' ชิ้น';
+            },
+            footer: function() { return 'รวมทุกปีงบประมาณ | คงเหลือ = จัดซื้อ − เบิกจ่าย'; }
+          },
+          footerFont: { size: 8 },
+          footerColor: '#9ca3af'
         }
       }
     }
   });
 }
 
-// C — District horizontal bar: equipment record count per district from filtered rows
+// C — District horizontal bar: unique equipment item count per district from filtered rows.
+// Deduplicates by item key so carry-forward rows (same item across years) are not double-counted.
 function renderP4DistrictChart(rows) {
   destroyP4Chart("district");
   var ctx = document.getElementById("p4ChartDistrict");
   if (!ctx) return;
+
+  var seen   = {};
   var counts = {};
-  rows.forEach(function(r) { if (r.district) counts[r.district] = (counts[r.district] || 0) + 1; });
+  rows.forEach(function(r) {
+    if (!r.district) return;
+    var key = [r.district, r.unit, r.category, r.equipment].join('\x00');
+    if (seen[key]) return;
+    seen[key] = true;
+    counts[r.district] = (counts[r.district] || 0) + 1;
+  });
+
   var labels = Object.keys(counts).sort(function(a, b) { return counts[a] - counts[b]; }); // ascending → highest at bottom
   var vals   = labels.map(function(l) { return counts[l]; });
+
+  console.log('[P4-audit] DistrictChart: rows=' + rows.length + ' unique=' + Object.keys(seen).length  // TODO: remove debug
+    + ' labels=' + JSON.stringify(labels) + ' vals=' + JSON.stringify(vals));
+
   p4Charts["district"] = new Chart(ctx, {
     type: "bar",
     data: {
@@ -4580,26 +4824,48 @@ function renderP4DistrictChart(rows) {
       responsive: true, maintainAspectRatio: false, indexAxis: "y",
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: function(c) { return " " + c.parsed.x.toLocaleString() + " รายการ"; } } }
+        tooltip: {
+          callbacks: {
+            title: function(items) { return 'อำเภอ: ' + items[0].label; },
+            label: function(c) { return 'จำนวนรายการอุปกรณ์: ' + c.parsed.x.toLocaleString() + ' รายการ'; },
+            footer: function() { return '* นับแต่ละรายการไม่ซ้ำตามปี'; }
+          },
+          footerFont: { size: 8 },
+          footerColor: '#9ca3af'
+        }
       },
       scales: {
-        x: { beginAtZero: true, ticks: { font: { size: 9 } }, grid: { color: "rgba(0,0,0,0.05)" } },
+        x: { beginAtZero: true, ticks: { font: { size: 9 }, stepSize: 1 }, grid: { color: "rgba(0,0,0,0.05)" } },
         y: { ticks: { font: { size: 9 } } }
       }
     }
   });
 }
 
-// D — Units horizontal bar: top 8 service centers by record count from filtered rows
+// D — Units horizontal bar: top 8 service centers by unique equipment item count.
+// Deduplicates by item key so carry-forward rows (same item across years) are not double-counted.
 function renderP4UnitsChart(rows) {
   destroyP4Chart("units");
   var ctx = document.getElementById("p4ChartUnits");
   if (!ctx) return;
+
+  var seen     = {};
   var unitVals = {};
-  rows.forEach(function(r) { if (r.unit) unitVals[r.unit] = (unitVals[r.unit] || 0) + 1; });
+  rows.forEach(function(r) {
+    if (!r.unit) return;
+    var key = [r.district, r.unit, r.category, r.equipment].join('\x00');
+    if (seen[key]) return;
+    seen[key] = true;
+    unitVals[r.unit] = (unitVals[r.unit] || 0) + 1;
+  });
+
   var all    = Object.keys(unitVals).sort(function(a, b) { return unitVals[a] - unitVals[b]; });
-  var sorted = all.slice(-8); // top 8 with highest at end → shows at bottom of horiz chart
+  var sorted = all.slice(-8); // top 8, highest at end → shows at bottom of horiz chart
   var vals   = sorted.map(function(u) { return unitVals[u]; });
+
+  console.log('[P4-audit] UnitsChart: rows=' + rows.length + ' unique=' + Object.keys(seen).length  // TODO: remove debug
+    + ' top8=' + JSON.stringify(sorted.slice().reverse()));
+
   p4Charts["units"] = new Chart(ctx, {
     type: "bar",
     data: {
@@ -4610,31 +4876,67 @@ function renderP4UnitsChart(rows) {
       responsive: true, maintainAspectRatio: false, indexAxis: "y",
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: function(c) { return " " + c.parsed.x.toLocaleString() + " รายการ"; } } }
+        tooltip: {
+          callbacks: {
+            title: function(items) { return items[0].label; },
+            label: function(c) { return 'จำนวนรายการอุปกรณ์: ' + c.parsed.x.toLocaleString() + ' รายการ'; },
+            footer: function() { return '* นับแต่ละรายการไม่ซ้ำตามปี'; }
+          },
+          footerFont: { size: 8 },
+          footerColor: '#9ca3af'
+        }
       },
       scales: {
-        x: { beginAtZero: true, ticks: { font: { size: 9 } }, grid: { color: "rgba(0,0,0,0.05)" } },
+        x: { beginAtZero: true, ticks: { font: { size: 9 }, stepSize: 1 }, grid: { color: "rgba(0,0,0,0.05)" } },
         y: { ticks: { font: { size: 8 } } }
       }
     }
   });
 }
 
-// E — Category horizontal bar: total purchased quantity per equipment group from filtered rows
+// E — Category horizontal bar: unique item count per equipment group from filtered rows
 function renderP4CategoryChart(rows) {
   destroyP4Chart("category");
   var ctx = document.getElementById("p4ChartCategory");
   if (!ctx) return;
+
+  // Count distinct equipment items per category.
+  // Deduplicate by item key (district+unit+category+equipment) so carry-forward rows
+  // (same item repeated across years) are not counted more than once.
+  var seen    = {};
   var catVals = {};
   rows.forEach(function(r) {
     if (!r.category) return;
-    catVals[r.category] = (catVals[r.category] || 0) + (Number(r.purchased) || 0);
+    var key = [r.district, r.unit, r.category, r.equipment].join('\x00');
+    if (seen[key]) return;
+    seen[key]               = true;
+    catVals[r.category]     = (catVals[r.category] || 0) + 1;
   });
+
+  var sorted = Object.keys(catVals).sort(function(a, b) { return catVals[a] - catVals[b]; });
+  var labels = sorted.slice(-10);  // top 10, highest at bottom of chart
+  var vals   = labels.map(function(c) { return catVals[c]; });
+
+  console.log('[P4-audit] CategoryChart: rows=' + rows.length + ' uniqueItems=' + Object.keys(seen).length  // TODO: remove debug
+    + ' groups=' + Object.keys(catVals).length + ' top10=' + JSON.stringify(labels.slice().reverse()));
+
+  // Empty-state
+  var wrap       = ctx.parentElement;
+  var existingMsg = wrap.querySelector('.p4-chart-empty');
+  if (existingMsg) wrap.removeChild(existingMsg);
+  if (labels.length === 0) {
+    ctx.style.display = 'none';
+    var msg = document.createElement('p');
+    msg.className = 'p4-chart-empty';
+    msg.style.cssText = 'margin:2rem auto;text-align:center;color:#9ca3af;font-size:0.85rem;';
+    msg.textContent = 'ไม่มีข้อมูลอุปกรณ์สำหรับชุดข้อมูลที่เลือก';
+    wrap.appendChild(msg);
+    return;
+  }
+  ctx.style.display = '';
+
   var palette = ["#3b82f6","#8b5cf6","#10b981","#f59e0b","#06b6d4","#ef4444","#ec4899","#84cc16","#f97316","#14b8a6"];
-  var all     = Object.keys(catVals).sort(function(a, b) { return catVals[a] - catVals[b]; });
-  var labels  = all.slice(-10); // top 10 by purchased quantity, highest at bottom
-  var vals    = labels.map(function(c) { return catVals[c]; });
-  var bg      = labels.map(function(_, i) {
+  var bg = labels.map(function(_, i) {
     var hex = palette[i % palette.length];
     var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
     return "rgba(" + r + "," + g + "," + b + ",0.75)";
@@ -4643,18 +4945,24 @@ function renderP4CategoryChart(rows) {
     type: "bar",
     data: {
       labels: labels,
-      datasets: [{ label: "จัดซื้อรวม (ชิ้น)", data: vals, backgroundColor: bg, borderRadius: 4 }]
+      datasets: [{ label: "จำนวนรายการ (ชนิด)", data: vals, backgroundColor: bg, borderRadius: 4 }]
     },
     options: {
       responsive: true, maintainAspectRatio: false, indexAxis: "y",
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: function(c) { return " " + c.parsed.x.toLocaleString() + " ชิ้น"; } } }
+        tooltip: {
+          callbacks: {
+            title: function(items) { return 'กลุ่ม: ' + items[0].label; },
+            label: function(c) { return 'จำนวนรายการ: ' + c.parsed.x.toLocaleString() + ' รายการ'; },
+            footer: function() { return '* นับแต่ละรายการไม่ซ้ำตามปี'; }
+          },
+          footerFont: { size: 8 },
+          footerColor: '#9ca3af'
+        }
       },
       scales: {
-        x: { beginAtZero: true,
-          ticks: { font: { size: 9 }, callback: function(v) { return v >= 1000 ? (v/1000).toFixed(0)+"K" : v; } },
-          grid: { color: "rgba(0,0,0,0.05)" } },
+        x: { beginAtZero: true, ticks: { font: { size: 9 }, stepSize: 1 }, grid: { color: "rgba(0,0,0,0.05)" } },
         y: { ticks: { font: { size: 9 } } }
       }
     }
@@ -5472,6 +5780,8 @@ window.p4OnYearChange = p4OnYearChange;
 window.p4ShowLoading = p4ShowLoading;
 window.p4DismissLoading = p4DismissLoading;
 window.exportP4Equipment = exportP4Equipment;
+window.toggleP4History  = toggleP4History;
+window.searchP4Equip    = searchP4Equip;
 window.filterUnits2 = filterUnits2;
 window.filterP2Cards = filterP2Cards;
 window.openP2Detail = openP2Detail;

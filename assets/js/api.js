@@ -20,3 +20,15 @@ function fetchProject2Data(tabName) {
       return res.json();
     });
 }
+
+// ── Project 4 ────────────────────────────────────────────────────────────────
+var P4_API_URL = 'https://script.google.com/macros/s/AKfycbycPZZSlTIBfPDscaGRxGXj06hhpj7rkRfehx_96GjJ694yteIjh5_AdnqCXNLhJFZGIA/exec';
+
+function fetchProject4Data(action) {
+  var url = P4_API_URL + '?action=' + encodeURIComponent(action);
+  return fetch(url, { method: 'GET' })
+    .then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    });
+}
