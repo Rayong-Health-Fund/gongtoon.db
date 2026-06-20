@@ -4212,6 +4212,37 @@ function initP4() {
   console.log('[P4] initP4: p4ApiState =', window.p4ApiState, '— dismissing skeleton');
   p4DismissLoading();
   var data = window.p4LiveData || project4Data;
+  console.log('[P4] initP4: using', (window.p4LiveData ? 'LIVE' : 'FALLBACK'), 'data, years:', data.available_years);
+
+  // Update stat cards from whichever data we're using.
+  // This is the only place that updates them when the API errors or times out —
+  // renderProject4Dashboard().catch() cannot reach them.
+  (function() {
+    var allR = [];
+    data.available_years.forEach(function(y) { allR = allR.concat(data.data_by_year[y] || []); });
+    var cSet = {}, dSet = {};
+    allR.forEach(function(r) { if (r.category) cSet[r.category] = true; if (r.district) dSet[r.district] = true; });
+    var totBud = 0;
+    Object.keys(data.budget_totals || {}).forEach(function(y) { totBud += data.budget_totals[y] || 0; });
+    var elC = document.getElementById('p4StatCategories');
+    var elD = document.getElementById('p4StatDistricts');
+    var elY = document.getElementById('p4StatYears');
+    var elB = document.getElementById('p4TotalBudget');
+    var elA = document.getElementById('p4AlertInfo');
+    if (elC) elC.textContent = Object.keys(cSet).length || '—';
+    if (elD) elD.textContent = Object.keys(dSet).length || '—';
+    if (elY) elY.textContent = data.available_years.length || '—';
+    if (elB) elB.textContent = totBud > 0 ? (totBud / 1000000).toFixed(2) + 'M' : '—';
+    // Only overwrite alert if it still shows skeleton text (live-success path wrote it before calling initP4)
+    if (elA && elA.querySelector && elA.querySelector('.p4-skel-num')) {
+      elA.innerHTML = '<strong>สรุปข้อมูล' +
+        (window.p4ApiState === 'error' ? ' (ข้อมูลสำรอง)' : '') + ':</strong> ' +
+        Object.keys(cSet).length + ' กลุ่มอุปกรณ์, ' +
+        data.available_years.length + ' ปีงบประมาณ, ' +
+        Object.keys(dSet).length + ' อำเภอ';
+    }
+    console.log('[P4] stat cards: cats=' + Object.keys(cSet).length + ' dists=' + Object.keys(dSet).length + ' years=' + data.available_years.length + ' budget=' + (totBud/1e6).toFixed(2) + 'M');
+  })();
 
   // Populate equipment year dropdown (already descending from p4BuildData)
   var yearSel = document.getElementById("p4YearSelect");
@@ -4222,10 +4253,15 @@ function initP4() {
       opt.textContent = "ปีงบประมาณ " + year;
       yearSel.appendChild(opt);
     });
-    // Default to newest year (available_years[0] is newest since list is descending)
-    if (data.available_years && data.available_years.length > 0) {
-      yearSel.value = data.available_years[0];
+    // Default to the newest year that has actual device rows (skip budget-only years)
+    var _yrDef = 'all';
+    for (var _ydi = 0; _ydi < data.available_years.length; _ydi++) {
+      if ((data.data_by_year[data.available_years[_ydi]] || []).length > 0) {
+        _yrDef = data.available_years[_ydi]; break;
+      }
     }
+    yearSel.value = _yrDef;
+    console.log('[P4] year default:', _yrDef);
   }
   window.p4UserSelectedYear = false;
 
@@ -4315,6 +4351,8 @@ function loadP4Data() {
   if (distVal !== "all") rows = rows.filter(function(r) { return r.district === distVal; });
   if (unitVal !== "all") rows = rows.filter(function(r) { return r.unit     === unitVal; });
   if (catVal  !== "all") rows = rows.filter(function(r) { return r.category === catVal;  });
+
+  console.log('[P4] loadP4Data: year=' + yearVal + ' dist=' + distVal + ' unit=' + unitVal + ' cat=' + catVal + ' → ' + rows.length + ' rows');
 
   rows.forEach(function(item) {
     var tr = document.createElement("tr");
