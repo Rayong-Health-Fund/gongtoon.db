@@ -4203,11 +4203,13 @@ function initP4() {
 
   if (window.p4ApiState === undefined) {
     // Live API still in flight — show skeleton; renderProject4Dashboard() will re-init when done
+    console.log('[P4] initP4: API in flight — skeleton shown');
     p4ShowLoading();
     return;
   }
 
   // API finished (success or error) — clear any overlays and render
+  console.log('[P4] initP4: p4ApiState =', window.p4ApiState, '— dismissing skeleton');
   p4DismissLoading();
   var data = window.p4LiveData || project4Data;
 
@@ -4277,9 +4279,11 @@ function initP4() {
     });
   }
 
-  // Load initial data
-  loadP4Data();
-  loadP4Budget();
+  // Load initial data — wrapped so a chart error cannot escape and leave skeleton stuck
+  console.log('[P4] initP4: rendering with', (window.p4LiveData ? 'live' : 'fallback'), 'data');
+  try { loadP4Data(); } catch(e) { console.error('[P4] loadP4Data error:', e); }
+  try { loadP4Budget(); } catch(e) { console.error('[P4] loadP4Budget error:', e); }
+  console.log('[P4] initP4: complete');
 }
 
 function loadP4Data() {
@@ -4426,11 +4430,11 @@ function destroyP4Chart(id) {
 
 function renderP4Charts(rows) {
   var data = window.p4LiveData || project4Data;
-  renderP4BudgetChart(data);
-  renderP4StatusChart(rows);
-  renderP4DistrictChart(rows);
-  renderP4UnitsChart(rows);
-  renderP4CategoryChart(rows);
+  try { renderP4BudgetChart(data); }   catch(e) { console.error('[P4] Budget chart error:', e); }
+  try { renderP4StatusChart(rows); }   catch(e) { console.error('[P4] Status chart error:', e); }
+  try { renderP4DistrictChart(rows); } catch(e) { console.error('[P4] District chart error:', e); }
+  try { renderP4UnitsChart(rows); }    catch(e) { console.error('[P4] Units chart error:', e); }
+  try { renderP4CategoryChart(rows); } catch(e) { console.error('[P4] Category chart error:', e); }
 }
 
 // A — Budget combo: bar = total budget by fiscal year, line = project count
@@ -4444,6 +4448,7 @@ function renderP4BudgetChart(data) {
   (data.budgets || []).forEach(function(b) { if (b.year) recMap[b.year] = (recMap[b.year] || 0) + 1; });
   var counts  = years.map(function(y) { return recMap[y] || 0; });
   p4Charts["budget"] = new Chart(ctx, {
+    type: "bar",
     data: {
       labels: years,
       datasets: [

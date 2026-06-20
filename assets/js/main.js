@@ -542,14 +542,31 @@ function p4BuildData(devicesRows, fundingRows) {
 }
 
 function renderProject4Dashboard() {
+  console.log('[P4] renderProject4Dashboard: fetch start');
+
+  // Safety net: if the GAS API hangs and never resolves, fall back after 20 s.
+  var p4ApiTimeoutId = setTimeout(function() {
+    if (window.p4ApiState === undefined) {
+      console.warn('[P4] API timeout after 20 s — falling back to static data');
+      window.p4ApiState = 'error';
+      if (window.p4Initialized) {
+        window.p4Initialized = false;
+        if (typeof initP4 === 'function') initP4();
+      }
+    }
+  }, 20000);
+
   Promise.all([
     fetchProject4Data('devices'),
     fetchProject4Data('funding')
   ]).then(function(results) {
+    clearTimeout(p4ApiTimeoutId);
     var devicesRows = p1Normalize(results[0]);
     var fundingRows = p1Normalize(results[1]);
+    console.log('[P4] fetched — devices:', devicesRows.length, ' funding:', fundingRows.length);
     window.p4LiveData  = p4BuildData(devicesRows, fundingRows);
     window.p4ApiState  = 'ready';
+    console.log('[P4] p4ApiState = ready | years:', window.p4LiveData.available_years);
 
     // Derive summary counts from live data
     var centersSet = {};
@@ -626,7 +643,8 @@ function renderProject4Dashboard() {
       }
     }
   }).catch(function(err) {
-    console.warn('Project 4 fetch error:', err);
+    clearTimeout(p4ApiTimeoutId);
+    console.warn('[P4] fetch error — using fallback data:', err);
     window.p4ApiState = 'error';
     // If accordion is open in skeleton state, fall back to static data
     if (window.p4Initialized) {
