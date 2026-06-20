@@ -438,3 +438,204 @@ function renderProject2Dashboard() {
 document.addEventListener('DOMContentLoaded', function() {
   renderProject2Dashboard();
 });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PROJECT 4 — Device Repair Centers (ศูนย์ซ่อมอุปกรณ์ผู้พิการและผู้สูงอายุ)
+// ═══════════════════════════════════════════════════════════════════════════
+
+// API dates arrive as ISO strings whose year is already Buddhist Era
+// (e.g. "2566-07-24T17:00:00.000Z"). Subtract 543 to get CE before parsing,
+// then format back with th-TH locale so the display shows the correct BE year.
+function p4FormatDate(isoStr) {
+  if (!isoStr || String(isoStr).trim() === '' || isoStr === '-') return '-';
+  try {
+    var s = String(isoStr).trim();
+    var beYear = parseInt(s.substring(0, 4), 10);
+    if (beYear > 2400) s = (beYear - 543) + s.substring(4);
+    var d = new Date(s);
+    if (isNaN(d.getTime())) return String(isoStr);
+    return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+  } catch(e) { return String(isoStr); }
+}
+
+// Maps API year-suffix columns to display year labels
+var P4_YEAR_MAP = [
+  { year: '2566', buy: 'buy66', paid: 'paid66', bal: 'balance66' },
+  { year: '2567', buy: 'buy67', paid: 'paid67', bal: 'balance67' },
+  { year: '2568', buy: 'buy68', paid: 'paid68', bal: 'balance68' },
+  { year: '2569', buy: 'buy69', paid: 'paid69', bal: 'balance69' }
+];
+
+// Pivot flat multi-year device rows into the data_by_year shape that
+// initP4() / loadP4Data() already know how to consume.
+function p4NormalizeDevices(rows) {
+  var data_by_year = {};
+  rows.forEach(function(row) {
+    P4_YEAR_MAP.forEach(function(yc) {
+      var bought = Number(row[yc.buy])  || 0;
+      var paid   = Number(row[yc.paid]) || 0;
+      var bal    = Number(row[yc.bal])  || 0;
+      if (bought === 0 && paid === 0 && bal === 0) return;
+      if (!data_by_year[yc.year]) data_by_year[yc.year] = [];
+      data_by_year[yc.year].push({
+        district:  row.district    || '',
+        unit:      row.center_name || '',
+        category:  String(row.category || '').trim(),
+        equipment: row.item        || '',
+        unit_type: row.unit        || '',
+        year:      yc.year,
+        purchased: bought,
+        used:      paid,
+        remaining: bal
+      });
+    });
+  });
+  return data_by_year;
+}
+
+// Map flat funding rows into the budget array shape used by initP4().
+function p4NormalizeFunding(rows) {
+  return rows.map(function(b) {
+    return {
+      year:      String(b.budget_year || ''),
+      unit:      b.agency || '',
+      budget:    Number(b.budget) || 0,
+      submitted: p4FormatDate(b.submit_date),
+      approved:  p4FormatDate(b.approve_date),
+      mou:       p4FormatDate(b.mou_date),
+      received:  p4FormatDate(b.check_date),
+      reported:  p4FormatDate(b.report_date),
+      notes:     b.remark || ''
+    };
+  });
+}
+
+// Assemble the full project4Data-compatible object from raw API arrays.
+function p4BuildData(devicesRows, fundingRows) {
+  var data_by_year = p4NormalizeDevices(devicesRows);
+  var budgets      = p4NormalizeFunding(fundingRows);
+
+  var budget_totals = {};
+  budgets.forEach(function(b) {
+    if (!b.year) return;
+    budget_totals[b.year] = (budget_totals[b.year] || 0) + b.budget;
+  });
+
+  var yearSet = {};
+  Object.keys(data_by_year).forEach(function(y) { yearSet[y] = true; });
+  budgets.forEach(function(b) { if (b.year) yearSet[b.year] = true; });
+  var available_years = Object.keys(yearSet).sort().reverse();
+
+  var catSet = {};
+  available_years.forEach(function(y) {
+    (data_by_year[y] || []).forEach(function(r) { if (r.category) catSet[r.category] = true; });
+  });
+  var categories = Object.keys(catSet).sort();
+
+  return {
+    data_by_year:    data_by_year,
+    budgets:         budgets,
+    budget_totals:   budget_totals,
+    available_years: available_years,
+    categories:      categories
+  };
+}
+
+function renderProject4Dashboard() {
+  Promise.all([
+    fetchProject4Data('devices'),
+    fetchProject4Data('funding')
+  ]).then(function(results) {
+    var devicesRows = p1Normalize(results[0]);
+    var fundingRows = p1Normalize(results[1]);
+    window.p4LiveData  = p4BuildData(devicesRows, fundingRows);
+    window.p4ApiState  = 'ready';
+
+    // Derive summary counts from live data
+    var centersSet = {};
+    devicesRows.forEach(function(r) { if (r.center_name) centersSet[r.center_name] = true; });
+    var totalCenters = Object.keys(centersSet).length;
+
+    var districtSet = {};
+    devicesRows.forEach(function(r) { if (r.district) districtSet[r.district] = true; });
+    var totalDistricts = Object.keys(districtSet).length;
+
+    var totalYears   = window.p4LiveData.available_years.length;
+    var totalCats    = window.p4LiveData.categories.length;
+    var totalBudget  = 0;
+    Object.keys(window.p4LiveData.budget_totals).forEach(function(y) {
+      totalBudget += (window.p4LiveData.budget_totals[y] || 0);
+    });
+
+    // Update accordion header mini-stats
+    var elCenters = document.getElementById('p4HeaderCenters');
+    var elBudget  = document.getElementById('p4HeaderBudget');
+    if (elCenters) elCenters.textContent = totalCenters;
+    if (elBudget)  elBudget.textContent  = (totalBudget / 1000000).toFixed(2) + 'M';
+
+    // Update inner summary cards
+    var elCats  = document.getElementById('p4StatCategories');
+    var elDists = document.getElementById('p4StatDistricts');
+    var elYears = document.getElementById('p4StatYears');
+    if (elCats)  elCats.textContent  = totalCats;
+    if (elDists) elDists.textContent = totalDistricts;
+    if (elYears) elYears.textContent = totalYears;
+
+    // Always write the grand-total budget (year-filter independent)
+    var elTotalBudget = document.getElementById('p4TotalBudget');
+    if (elTotalBudget) elTotalBudget.textContent = (totalBudget / 1000000).toFixed(2) + 'M';
+
+    // Update the alert-info summary sentence with live counts
+    var elAlert = document.getElementById('p4AlertInfo');
+    if (elAlert) elAlert.innerHTML =
+      '<strong>สรุปข้อมูล:</strong> ' + totalCats + ' กลุ่มอุปกรณ์, ' +
+      totalYears + ' ปีงบประมาณ, ' + totalDistricts + ' อำเภอ, ' +
+      totalCenters + ' ศูนย์ซ่อม';
+
+    // If accordion was already opened with fallback data, re-render with live data
+    if (window.p4Initialized) {
+      var yearSel    = document.getElementById('p4YearSelect');
+      var distSel    = document.getElementById('p4DistrictSelect');
+      var unitSel    = document.getElementById('p4UnitSelect');
+      var catSel     = document.getElementById('p4CategorySelect');
+      var budYearSel = document.getElementById('p4BudgetYearSelect');
+      var bBody      = document.getElementById('p4BudgetBody');
+      // Preserve manual year selection so live re-init doesn't override user's choice
+      var savedYear  = (window.p4UserSelectedYear && yearSel) ? yearSel.value : null;
+      if (yearSel)    yearSel.innerHTML    = '<option value="all">ทั้งหมด</option>';
+      if (distSel)    distSel.innerHTML    = '<option value="all">ทั้งหมด</option>';
+      if (unitSel)    unitSel.innerHTML    = '<option value="all">ทั้งหมด</option>';
+      if (catSel)     catSel.innerHTML     = '<option value="all">ทั้งหมด</option>';
+      if (budYearSel) budYearSel.innerHTML = '<option value="all">ทั้งหมด</option>';
+      if (bBody)      bBody.innerHTML      = '';
+      window.p4Initialized = false;
+      if (typeof initP4 === 'function') {
+        initP4(); // defaults to newest live year, resets p4UserSelectedYear
+        // Restore user's manual selection if that year exists in live data
+        if (savedYear && yearSel) {
+          var optFound = false;
+          for (var oi = 0; oi < yearSel.options.length; oi++) {
+            if (yearSel.options[oi].value === savedYear) { optFound = true; break; }
+          }
+          if (optFound) {
+            yearSel.value = savedYear;
+            window.p4UserSelectedYear = true;
+            loadP4Data();
+          }
+        }
+      }
+    }
+  }).catch(function(err) {
+    console.warn('Project 4 fetch error:', err);
+    window.p4ApiState = 'error';
+    // If accordion is open in skeleton state, fall back to static data
+    if (window.p4Initialized) {
+      window.p4Initialized = false;
+      if (typeof initP4 === 'function') initP4();
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  renderProject4Dashboard();
+});
