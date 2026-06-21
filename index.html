@@ -1759,6 +1759,258 @@ body {
 .p4-chart-wrap {
   position: relative;
 }
+
+/* ── P4 Summary Tab ─────────────────────────────────────────────────── */
+.p4-summ-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+.p4-summ-kpi-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.75rem 0.6rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  text-align: center;
+}
+.p4-summ-kpi-val {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1e40af;
+  line-height: 1.2;
+}
+.p4-summ-kpi-lbl {
+  display: block;
+  font-size: 0.67rem;
+  color: #6b7280;
+  margin-top: 0.2rem;
+  line-height: 1.3;
+}
+.p4-summ-note {
+  font-size: 0.72rem;
+  color: #9ca3af;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #f8fafc;
+  border-radius: 6px;
+  border-left: 3px solid #93c5fd;
+  line-height: 1.5;
+}
+.p4-summ-section-hdr {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 1.25rem 0 0.6rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid #dbeafe;
+}
+.p4-summ-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+.p4-summ-table thead th {
+  background: #eff6ff;
+  color: #1e40af;
+  font-weight: 700;
+  font-size: 0.71rem;
+  padding: 0.45rem 0.6rem;
+  text-align: right;
+  border-bottom: 2px solid #bfdbfe;
+  white-space: nowrap;
+}
+.p4-summ-table thead th:first-child { text-align: left; }
+.p4-summ-table tbody td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid #f1f5f9;
+  text-align: right;
+  color: #374151;
+}
+.p4-summ-table tbody td:first-child { text-align: left; font-weight: 600; color: #1e3a8a; }
+.p4-summ-table tbody tr:hover td { background: #f0f9ff; }
+.p4-summ-table tfoot td {
+  padding: 0.45rem 0.6rem;
+  background: #f8fafc;
+  font-weight: 700;
+  text-align: right;
+  border-top: 2px solid #bfdbfe;
+  color: #1e40af;
+  font-size: 0.75rem;
+}
+.p4-summ-table tfoot td:first-child { text-align: left; }
+.p4-summ-skel {
+  text-align: center;
+  padding: 2rem;
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+@media (max-width: 640px) {
+  .p4-summ-kpi-grid { grid-template-columns: repeat(3, 1fr); gap: 0.45rem; }
+  .p4-summ-kpi-val { font-size: 0.95rem; }
+  .p4-summ-kpi-lbl { font-size: 0.62rem; }
+  .p4-summ-table { font-size: 0.72rem; }
+  .p4-summ-table thead th, .p4-summ-table tbody td, .p4-summ-table tfoot td { padding: 0.35rem 0.4rem; }
+}
+@media (max-width: 480px) {
+  .p4-summ-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── P4 Summary Drill-down panels ───────────────────────────────────── */
+.p4-drill-row > td { padding: 0 !important; border: none !important; }
+.p4-drill-panel {
+  padding: 0.8rem 1rem 0.9rem;
+  background: #f0f7ff;
+  border-left: 3px solid #3b82f6;
+  border-bottom: 1px solid #dbeafe;
+}
+.p4-drill-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.p4-drill-hdr {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #1e40af;
+  margin: 0 0 0.4rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid #bfdbfe;
+}
+.p4-drill-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+}
+.p4-drill-tbl thead th {
+  background: #dbeafe;
+  color: #1e3a8a;
+  font-weight: 700;
+  font-size: 0.67rem;
+  padding: 0.3rem 0.45rem;
+  text-align: right;
+  border-bottom: 1px solid #bfdbfe;
+  white-space: nowrap;
+}
+.p4-drill-tbl thead th:first-child { text-align: left; }
+.p4-drill-tbl tbody td {
+  padding: 0.3rem 0.45rem;
+  border-bottom: 1px solid #e2ecff;
+  text-align: right;
+  color: #374151;
+}
+.p4-drill-tbl tbody td:first-child { text-align: left; }
+.p4-drill-tbl tbody tr:last-child td { border-bottom: none; }
+.p4-drill-tbl tbody tr:hover td { background: rgba(59,130,246,0.06); }
+.p4-summ-drillbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #bfdbfe;
+  border-radius: 3px;
+  background: #eff6ff;
+  color: #3b82f6;
+  font-size: 0.6rem;
+  cursor: pointer;
+  vertical-align: middle;
+  margin-right: 4px;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.12s;
+}
+.p4-summ-drillbtn:hover  { background: #dbeafe; border-color: #93c5fd; }
+.p4-summ-drillbtn.open   { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+@media (max-width: 640px) {
+  .p4-drill-sections { grid-template-columns: 1fr; }
+  .p4-drill-panel { padding: 0.6rem 0.65rem 0.7rem; }
+  .p4-drill-tbl { font-size: 0.68rem; }
+  .p4-drill-tbl thead th, .p4-drill-tbl tbody td { padding: 0.25rem 0.3rem; }
+}
+
+/* ── P4 Summary metric legend ────────────────────────────────────────── */
+.p4-summ-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.p4-summ-legend strong { display: block; font-size: 0.72rem; color: #1e40af; margin-bottom: 0.1rem; }
+.p4-summ-legend span   { font-size: 0.68rem; color: #6b7280; line-height: 1.5; }
+
+/* ── P4 Summary Second-level Drill-down ─────────────────────────────── */
+.p4-drill2-row > td { padding: 0 !important; border: none !important; }
+.p4-drill2-panel {
+  padding: 0.65rem 0.85rem 0.75rem;
+  background: #e8f3fe;
+  border-left: 3px solid #60a5fa;
+  border-bottom: 1px solid #bfdbfe;
+}
+.p4-drill2-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+.p4-drill2-hdr {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #1e40af;
+  margin: 0 0 0.35rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid #bfdbfe;
+}
+.p4-drill2-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.7rem;
+}
+.p4-drill2-tbl thead th {
+  background: rgba(59,130,246,0.1);
+  color: #1e3a8a;
+  font-weight: 700;
+  font-size: 0.63rem;
+  padding: 0.25rem 0.4rem;
+  text-align: right;
+  border-bottom: 1px solid #bfdbfe;
+  white-space: nowrap;
+}
+.p4-drill2-tbl thead th:first-child { text-align: left; }
+.p4-drill2-tbl tbody td {
+  padding: 0.25rem 0.4rem;
+  border-bottom: 1px solid #dbeafe;
+  text-align: right;
+  color: #374151;
+  font-size: 0.68rem;
+}
+.p4-drill2-tbl tbody td:first-child { text-align: left; }
+.p4-drill2-tbl tbody tr:last-child td { border-bottom: none; }
+.p4-drill2-tbl tbody tr:hover td { background: rgba(59,130,246,0.07); }
+.p4-summ-drillbtn2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #93c5fd;
+  border-radius: 2px;
+  background: #dbeafe;
+  color: #2563eb;
+  font-size: 0.5rem;
+  cursor: pointer;
+  vertical-align: middle;
+  margin-right: 3px;
+  padding: 0;
+  transition: background 0.12s;
+}
+.p4-summ-drillbtn2:hover { background: #bfdbfe; }
+.p4-summ-drillbtn2.open  { background: #2563eb; color: #fff; border-color: #2563eb; }
+@media (max-width: 640px) {
+  .p4-drill2-sections { grid-template-columns: 1fr; }
+  .p4-drill2-tbl { font-size: 0.65rem; }
+  .p4-drill2-tbl thead th, .p4-drill2-tbl tbody td { padding: 0.2rem 0.3rem; }
+}
 </style>
 </head>
 <body>
@@ -2430,11 +2682,85 @@ body {
           <div id="p4BudgetNoResults" class="no-results"><div class="no-results-icon">🔍</div><p class="no-results-text">ไม่พบข้อมูล</p></div>
         </div>
 
-        <!-- TAB: SUMMARY (placeholder) -->
+        <!-- TAB: SUMMARY -->
         <div id="tab4-summary" class="tab-content">
-          <div style="padding:2rem 1rem;text-align:center;color:#6b7280;">
-            <div style="font-size:2.5rem;margin-bottom:0.75rem;">📋</div>
-            <p style="font-size:0.95rem;margin:0;">กำลังเตรียมข้อมูลสรุปเพิ่มเติม</p>
+          <h6 class="section-header">📋 สรุปข้อมูลภาพรวม</h6>
+
+          <!-- Section A: Executive KPI cards -->
+          <div class="p4-summ-kpi-grid">
+            <div class="p4-summ-kpi-card" style="border-top:3px solid #6366f1;">
+              <span class="p4-summ-kpi-val" id="p4SummDistricts">—</span>
+              <span class="p4-summ-kpi-lbl">จำนวนอำเภอ</span>
+            </div>
+            <div class="p4-summ-kpi-card" style="border-top:3px solid #0891b2;">
+              <span class="p4-summ-kpi-val" id="p4SummUnits">—</span>
+              <span class="p4-summ-kpi-lbl">จำนวนหน่วยบริการ</span>
+            </div>
+            <div class="p4-summ-kpi-card" style="border-top:3px solid #7c3aed;">
+              <span class="p4-summ-kpi-val" id="p4SummCats">—</span>
+              <span class="p4-summ-kpi-lbl">จำนวนกลุ่มอุปกรณ์</span>
+            </div>
+            <div class="p4-summ-kpi-card" style="border-top:3px solid #1d4ed8;">
+              <span class="p4-summ-kpi-val" id="p4SummItems">—</span>
+              <span class="p4-summ-kpi-lbl">รายการอุปกรณ์ไม่ซ้ำ</span>
+            </div>
+            <div class="p4-summ-kpi-card" style="border-top:3px solid #059669;">
+              <span class="p4-summ-kpi-val" id="p4SummBuy">—</span>
+              <span class="p4-summ-kpi-lbl">จัดซื้อสะสมรวม</span>
+            </div>
+            <div class="p4-summ-kpi-card" style="border-top:3px solid #d97706;">
+              <span class="p4-summ-kpi-val" id="p4SummPaid">—</span>
+              <span class="p4-summ-kpi-lbl">เบิกจ่ายสะสมรวม</span>
+            </div>
+            <div class="p4-summ-kpi-card" style="border-top:3px solid #dc2626;">
+              <span class="p4-summ-kpi-val" id="p4SummRemaining">—</span>
+              <span class="p4-summ-kpi-lbl">คงเหลือล่าสุดรวม</span>
+            </div>
+          </div>
+
+          <div class="p4-summ-note p4-summ-legend">
+            <strong>คำอธิบายตัวชี้วัด</strong>
+            <span>● <b>รายการอุปกรณ์ไม่ซ้ำ</b> — นับแบบ unique ตาม หน่วยบริการ + กลุ่มอุปกรณ์ + ชื่ออุปกรณ์  ไม่นับซ้ำข้ามปีงบประมาณ</span>
+            <span>● <b>จัดซื้อสะสม (ชิ้น)</b> — ยอดจัดซื้อรวมทุกปีของรายการในขอบเขตนั้น ไม่นับ carry-forward</span>
+            <span>● <b>เบิกจ่ายสะสม (ชิ้น)</b> — ยอดเบิกจ่ายรวมทุกปีของรายการในขอบเขตนั้น ไม่นับ carry-forward</span>
+            <span>● <b>คงเหลือล่าสุด (ชิ้น)</b> — ยอดคงเหลือปีล่าสุดของแต่ละรายการรวมกัน ไม่นับ carry-forward ซ้ำหลายปี</span>
+            <span>● กดปุ่ม ▶ ที่หน้าแถวเพื่อดูรายละเอียดย่อย</span>
+          </div>
+
+          <!-- Section B: District summary -->
+          <p class="p4-summ-section-hdr">📍 สรุปรายอำเภอ</p>
+          <div class="table-responsive">
+            <table class="p4-summ-table">
+              <thead><tr>
+                <th style="text-align:left;width:18%;">อำเภอ</th>
+                <th>หน่วยบริการ</th>
+                <th>จำนวนกลุ่ม</th>
+                <th>รายการไม่ซ้ำ</th>
+                <th>จัดซื้อสะสม (ชิ้น)</th>
+                <th>เบิกจ่ายสะสม (ชิ้น)</th>
+                <th>คงเหลือล่าสุด (ชิ้น)</th>
+              </tr></thead>
+              <tbody id="p4SummDistBody"><tr><td colspan="7" class="p4-summ-skel">—</td></tr></tbody>
+              <tfoot id="p4SummDistFoot"></tfoot>
+            </table>
+          </div>
+
+          <!-- Section C: Category summary -->
+          <p class="p4-summ-section-hdr">🔧 สรุปรายกลุ่มอุปกรณ์</p>
+          <div class="table-responsive" style="margin-bottom:1rem;">
+            <table class="p4-summ-table">
+              <thead><tr>
+                <th style="text-align:left;width:22%;">กลุ่มอุปกรณ์</th>
+                <th>จำนวนอำเภอ</th>
+                <th>จำนวนหน่วยบริการ</th>
+                <th>รายการไม่ซ้ำ</th>
+                <th>จัดซื้อสะสม (ชิ้น)</th>
+                <th>เบิกจ่ายสะสม (ชิ้น)</th>
+                <th>คงเหลือล่าสุด (ชิ้น)</th>
+              </tr></thead>
+              <tbody id="p4SummCatBody"><tr><td colspan="7" class="p4-summ-skel">—</td></tr></tbody>
+              <tfoot id="p4SummCatFoot"></tfoot>
+            </table>
           </div>
         </div>
 
@@ -4317,6 +4643,7 @@ function switchTab4(tab, btnEl) {
   var contents = document.querySelectorAll("#accBody4 .tab-content");
   contents.forEach(function(c) { c.classList.remove("active"); });
   document.getElementById("tab4-" + tab).classList.add("active");
+  if (tab === 'summary') renderP4Summary();
 }
 
 function initP4() {
@@ -4435,6 +4762,11 @@ function initP4() {
   // Load initial data — wrapped so a chart error cannot escape and leave skeleton stuck
   try { loadP4Data(); } catch(e) { console.error('[P4] loadP4Data error:', e); }
   try { loadP4Budget(); } catch(e) { console.error('[P4] loadP4Budget error:', e); }
+  // If summary tab was already visible before data arrived (e.g. opened mid-load), refresh it now
+  var _summTab = document.getElementById('tab4-summary');
+  if (_summTab && _summTab.classList.contains('active')) {
+    try { renderP4Summary(); } catch(e) { console.error('[P4] renderP4Summary error:', e); }
+  }
 }
 
 function loadP4Data() {
@@ -4560,6 +4892,439 @@ function loadP4Budget() {
       "<td>" + (b.notes || "-") + "</td>";
     budgetBody.appendChild(tr);
   });
+}
+
+// Build and render the Summary tab for Project 4.
+// Supports three levels: KPI cards → L1 district/category aggregations → L2 nested item lists.
+// All levels use the same unique-item logic: latestRemaining from newest year, purchased/used
+// summed only from carryForward===false rows.
+function renderP4Summary() {
+  var distBody = document.getElementById('p4SummDistBody');
+  var catBody  = document.getElementById('p4SummCatBody');
+  var distFoot = document.getElementById('p4SummDistFoot');
+  var catFoot  = document.getElementById('p4SummCatFoot');
+
+  if (window.p4ApiState === undefined) {
+    var skel = '<tr><td colspan="7" class="p4-summ-skel"><span class="p4-skel-num">⏳ กำลังโหลดข้อมูล...</span></td></tr>';
+    if (distBody) distBody.innerHTML = skel;
+    if (catBody)  catBody.innerHTML  = skel;
+    if (distFoot) distFoot.innerHTML = '';
+    if (catFoot)  catFoot.innerHTML  = '';
+    ['p4SummDistricts','p4SummUnits','p4SummCats','p4SummItems',
+     'p4SummBuy','p4SummPaid','p4SummRemaining'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.innerHTML = '<span class="p4-skel-num">...</span>';
+    });
+    return;
+  }
+
+  var data = window.p4LiveData || project4Data;
+
+  var allRows = [];
+  (data.available_years || []).slice().sort().forEach(function(y) {
+    allRows = allRows.concat(data.data_by_year[y] || []);
+  });
+
+  var emptyCell = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#9ca3af;">ไม่พบข้อมูล</td></tr>';
+  if (allRows.length === 0) {
+    if (distBody) distBody.innerHTML = emptyCell;
+    if (catBody)  catBody.innerHTML  = emptyCell;
+    if (distFoot) distFoot.innerHTML = '';
+    if (catFoot)  catFoot.innerHTML  = '';
+    return;
+  }
+
+  // ── Build unique item map ──────────────────────────────────────────
+  // Key = district+unit+category+equipment (same composite key used by p4NormalizeDevices).
+  // latestRemaining: overwritten each pass so the final value is always the newest year's balance.
+  // totalBuy / totalPaid: only from real movement rows (carryForward===false).
+  var itemMap = {};
+  allRows.forEach(function(r) {
+    var key = [r.district || '', r.unit || '', r.category || '', r.equipment || ''].join('\x00');
+    if (!itemMap[key]) {
+      itemMap[key] = {
+        district: r.district || '', unit: r.unit || '',
+        category: r.category || '', equipment: r.equipment || '',
+        latestRemaining: 0, totalBuy: 0, totalPaid: 0
+      };
+    }
+    itemMap[key].latestRemaining = Number(r.remaining) || 0;
+    if (!r.carryForward) {
+      itemMap[key].totalBuy  += Number(r.purchased) || 0;
+      itemMap[key].totalPaid += Number(r.used)      || 0;
+    }
+  });
+
+  var items = Object.keys(itemMap).map(function(k) { return itemMap[k]; });
+
+  // ── Section A: KPI totals ─────────────────────────────────────────
+  var gDistSet = {}, gUnitSet = {}, gCatSet = {};
+  var gBuy = 0, gPaid = 0, gRem = 0;
+  items.forEach(function(it) {
+    if (it.district) gDistSet[it.district] = true;
+    if (it.unit)     gUnitSet[it.unit]     = true;
+    if (it.category) gCatSet[it.category]  = true;
+    gBuy  += it.totalBuy;
+    gPaid += it.totalPaid;
+    gRem  += it.latestRemaining;
+  });
+
+  function fmt(n)         { return Number(n).toLocaleString('th-TH'); }
+  function setEl(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+  setEl('p4SummDistricts', Object.keys(gDistSet).length || '—');
+  setEl('p4SummUnits',     Object.keys(gUnitSet).length || '—');
+  setEl('p4SummCats',      Object.keys(gCatSet).length  || '—');
+  setEl('p4SummItems',     items.length + ' รายการ');
+  setEl('p4SummBuy',       fmt(gBuy) + ' ชิ้น');
+  setEl('p4SummPaid',      fmt(gPaid) + ' ชิ้น');
+  setEl('p4SummRemaining', fmt(gRem) + ' ชิ้น');
+
+  // ── Build district map AND category map in one pass ───────────────
+  // Each entry carries both the summary totals and the drill-down breakdowns.
+  var dMap = {};  // district → { units, cats, count, buy, paid, rem, uDrill, cDrill }
+  var cMap = {};  // category → { dists, units, count, buy, paid, rem, dDrill, uDrill }
+
+  items.forEach(function(it) {
+    var d = it.district  || '(ไม่ระบุ)';
+    var u = it.unit      || '(ไม่ระบุ)';
+    var c = it.category  || '(ไม่ระบุ)';
+    var e = it.equipment || '(ไม่ระบุ)';
+
+    // — District aggregation + L1 drill + L2 item lists ──────────────
+    if (!dMap[d]) dMap[d] = { units: {}, cats: {}, count: 0, buy: 0, paid: 0, rem: 0, uDrill: {}, cDrill: {} };
+    dMap[d].units[u] = true;
+    dMap[d].cats[c]  = true;
+    dMap[d].count++;
+    dMap[d].buy  += it.totalBuy;
+    dMap[d].paid += it.totalPaid;
+    dMap[d].rem  += it.latestRemaining;
+    // L1: per-unit within district; L2: items[] + catBrk for this unit
+    if (!dMap[d].uDrill[u]) dMap[d].uDrill[u] = { cats: {}, catBrk: {}, count: 0, buy: 0, paid: 0, rem: 0, items: [] };
+    dMap[d].uDrill[u].cats[c] = true;
+    dMap[d].uDrill[u].count++;
+    dMap[d].uDrill[u].buy  += it.totalBuy;
+    dMap[d].uDrill[u].paid += it.totalPaid;
+    dMap[d].uDrill[u].rem  += it.latestRemaining;
+    dMap[d].uDrill[u].items.push({ equip: e, cat: c, buy: it.totalBuy, paid: it.totalPaid, rem: it.latestRemaining });
+    if (!dMap[d].uDrill[u].catBrk[c]) dMap[d].uDrill[u].catBrk[c] = { count: 0, rem: 0 };
+    dMap[d].uDrill[u].catBrk[c].count++;
+    dMap[d].uDrill[u].catBrk[c].rem += it.latestRemaining;
+    // L1: per-category within district; L2: items[] for this category
+    if (!dMap[d].cDrill[c]) dMap[d].cDrill[c] = { count: 0, buy: 0, paid: 0, rem: 0, items: [] };
+    dMap[d].cDrill[c].count++;
+    dMap[d].cDrill[c].buy  += it.totalBuy;
+    dMap[d].cDrill[c].paid += it.totalPaid;
+    dMap[d].cDrill[c].rem  += it.latestRemaining;
+    dMap[d].cDrill[c].items.push({ equip: e, unit: u, buy: it.totalBuy, paid: it.totalPaid, rem: it.latestRemaining });
+
+    // — Category aggregation + L1 drill + L2 item lists ──────────────
+    if (!cMap[c]) cMap[c] = { dists: {}, units: {}, count: 0, buy: 0, paid: 0, rem: 0, dDrill: {}, uDrill: {} };
+    cMap[c].dists[d] = true;
+    cMap[c].units[u] = true;
+    cMap[c].count++;
+    cMap[c].buy  += it.totalBuy;
+    cMap[c].paid += it.totalPaid;
+    cMap[c].rem  += it.latestRemaining;
+    // L1: per-district within category; L2: items[] for this district
+    if (!cMap[c].dDrill[d]) cMap[c].dDrill[d] = { units: {}, count: 0, buy: 0, paid: 0, rem: 0, items: [] };
+    cMap[c].dDrill[d].units[u] = true;
+    cMap[c].dDrill[d].count++;
+    cMap[c].dDrill[d].buy  += it.totalBuy;
+    cMap[c].dDrill[d].paid += it.totalPaid;
+    cMap[c].dDrill[d].rem  += it.latestRemaining;
+    cMap[c].dDrill[d].items.push({ equip: e, unit: u, buy: it.totalBuy, paid: it.totalPaid, rem: it.latestRemaining });
+    // L1: per-unit within category; L2: items[] for this unit
+    if (!cMap[c].uDrill[u]) cMap[c].uDrill[u] = { dist: it.district || '', count: 0, buy: 0, paid: 0, rem: 0, items: [] };
+    cMap[c].uDrill[u].count++;
+    cMap[c].uDrill[u].buy  += it.totalBuy;
+    cMap[c].uDrill[u].paid += it.totalPaid;
+    cMap[c].uDrill[u].rem  += it.latestRemaining;
+    cMap[c].uDrill[u].items.push({ equip: e, buy: it.totalBuy, paid: it.totalPaid, rem: it.latestRemaining });
+  });
+
+  // ── Section B: District rows + drill sub-rows ─────────────────────
+  var dRows = Object.keys(dMap).map(function(d) {
+    return { label: d, dm: dMap[d],
+      units: Object.keys(dMap[d].units).length, cats: Object.keys(dMap[d].cats).length,
+      count: dMap[d].count, buy: dMap[d].buy, paid: dMap[d].paid, rem: dMap[d].rem };
+  }).sort(function(a, b) { return b.rem - a.rem; });
+
+  if (distBody) {
+    if (dRows.length === 0) {
+      distBody.innerHTML = emptyCell;
+    } else {
+      distBody.innerHTML = dRows.map(function(row) {
+        var dm = row.dm;
+
+        // L1 unit sub-rows — each row has a ▶ that opens L2 (equipment list + group breakdown)
+        var uRows = Object.keys(dm.uDrill).sort().map(function(u) {
+          var ud = dm.uDrill[u];
+          var catCnt = Object.keys(ud.cats).length;
+
+          // L2A: equipment list for this unit (name + group + quantities)
+          var l2EquipRows = ud.items.slice().sort(function(a,b){return a.equip.localeCompare(b.equip,'th');}).map(function(it) {
+            return '<tr><td>' + it.equip + '</td><td>' + it.cat + '</td>' +
+              '<td>' + fmt(it.buy) + '</td><td>' + fmt(it.paid) + '</td>' +
+              '<td><strong>' + fmt(it.rem) + '</strong></td></tr>';
+          }).join('');
+          var l2EquipTbl = '<table class="p4-drill2-tbl"><thead><tr>' +
+            '<th style="text-align:left">ชื่ออุปกรณ์</th><th>กลุ่มอุปกรณ์</th>' +
+            '<th>จัดซื้อสะสม (ชิ้น)</th><th>เบิกจ่ายสะสม (ชิ้น)</th><th>คงเหลือล่าสุด (ชิ้น)</th>' +
+            '</tr></thead><tbody>' + l2EquipRows + '</tbody></table>';
+
+          // L2B: group breakdown for this unit (group name + item count + remaining)
+          var l2CatRows = Object.keys(ud.catBrk).sort().map(function(c) {
+            var cb = ud.catBrk[c];
+            return '<tr><td>' + c + '</td><td>' + cb.count + ' รายการ</td>' +
+              '<td><strong>' + fmt(cb.rem) + '</strong></td></tr>';
+          }).join('');
+          var l2CatTbl = '<table class="p4-drill2-tbl"><thead><tr>' +
+            '<th style="text-align:left">กลุ่มอุปกรณ์</th><th>รายการไม่ซ้ำ</th><th>คงเหลือล่าสุด (ชิ้น)</th>' +
+            '</tr></thead><tbody>' + l2CatRows + '</tbody></table>';
+
+          return (
+            '<tr class="p4-drill2-main">' +
+              '<td><button class="p4-summ-drillbtn2" onclick="p4SummToggleDrill2(this)">▶</button> ' + u + '</td>' +
+              '<td>' + ud.count + ' รายการ</td><td>' + catCnt + ' กลุ่ม</td>' +
+              '<td>' + fmt(ud.buy) + ' ชิ้น</td><td>' + fmt(ud.paid) + ' ชิ้น</td>' +
+              '<td><strong>' + fmt(ud.rem) + ' ชิ้น</strong></td>' +
+            '</tr>' +
+            '<tr class="p4-drill2-row" style="display:none"><td colspan="6">' +
+              '<div class="p4-drill2-panel"><div class="p4-drill2-sections">' +
+                '<div><p class="p4-drill2-hdr">รายการอุปกรณ์ไม่ซ้ำ (' + ud.count + ' รายการ)</p>' + l2EquipTbl + '</div>' +
+                '<div><p class="p4-drill2-hdr">กลุ่มอุปกรณ์ (' + catCnt + ' กลุ่ม)</p>' + l2CatTbl + '</div>' +
+              '</div></div>' +
+            '</td></tr>'
+          );
+        }).join('');
+
+        // L1 category sub-rows — each row has a ▶ that opens L2 (equipment list for this category)
+        var cRows2 = Object.keys(dm.cDrill).sort().map(function(c) {
+          var cd = dm.cDrill[c];
+
+          var l2EquipRows = cd.items.slice().sort(function(a,b){return a.equip.localeCompare(b.equip,'th');}).map(function(it) {
+            return '<tr><td>' + it.equip + '</td><td>' + it.unit + '</td>' +
+              '<td>' + fmt(it.buy) + '</td><td>' + fmt(it.paid) + '</td>' +
+              '<td><strong>' + fmt(it.rem) + '</strong></td></tr>';
+          }).join('');
+          var l2EquipTbl = '<table class="p4-drill2-tbl"><thead><tr>' +
+            '<th style="text-align:left">ชื่ออุปกรณ์</th><th>หน่วยบริการ</th>' +
+            '<th>จัดซื้อสะสม (ชิ้น)</th><th>เบิกจ่ายสะสม (ชิ้น)</th><th>คงเหลือล่าสุด (ชิ้น)</th>' +
+            '</tr></thead><tbody>' + l2EquipRows + '</tbody></table>';
+
+          return (
+            '<tr class="p4-drill2-main">' +
+              '<td><button class="p4-summ-drillbtn2" onclick="p4SummToggleDrill2(this)">▶</button> ' + c + '</td>' +
+              '<td>' + cd.count + ' รายการ</td>' +
+              '<td>' + fmt(cd.buy) + ' ชิ้น</td><td>' + fmt(cd.paid) + ' ชิ้น</td>' +
+              '<td><strong>' + fmt(cd.rem) + ' ชิ้น</strong></td>' +
+            '</tr>' +
+            '<tr class="p4-drill2-row" style="display:none"><td colspan="5">' +
+              '<div class="p4-drill2-panel">' +
+                '<p class="p4-drill2-hdr">รายการอุปกรณ์ไม่ซ้ำในกลุ่มนี้ (' + cd.count + ' รายการ)</p>' +
+                l2EquipTbl +
+              '</div>' +
+            '</td></tr>'
+          );
+        }).join('');
+
+        return (
+          '<tr class="p4-summ-main-row">' +
+            '<td><button class="p4-summ-drillbtn" onclick="p4SummToggleDrill(this)">▶</button> ' + row.label + '</td>' +
+            '<td>' + row.units + '</td><td>' + row.cats + '</td><td>' + row.count + '</td>' +
+            '<td>' + fmt(row.buy) + '</td><td>' + fmt(row.paid) + '</td>' +
+            '<td><strong>' + fmt(row.rem) + '</strong></td>' +
+          '</tr>' +
+          '<tr class="p4-drill-row" style="display:none"><td colspan="7">' +
+            '<div class="p4-drill-panel"><div class="p4-drill-sections">' +
+              '<div>' +
+                '<p class="p4-drill-hdr">รายละเอียดหน่วยบริการ</p>' +
+                '<table class="p4-drill-tbl"><thead><tr>' +
+                  '<th style="text-align:left">หน่วยบริการ / ศูนย์ซ่อม</th>' +
+                  '<th>รายการอุปกรณ์ไม่ซ้ำ</th><th>จำนวนกลุ่มอุปกรณ์</th>' +
+                  '<th>จัดซื้อสะสม (ชิ้น)</th><th>เบิกจ่ายสะสม (ชิ้น)</th><th>คงเหลือล่าสุด (ชิ้น)</th>' +
+                '</tr></thead><tbody>' + uRows + '</tbody></table>' +
+              '</div>' +
+              '<div>' +
+                '<p class="p4-drill-hdr">รายละเอียดกลุ่มอุปกรณ์</p>' +
+                '<table class="p4-drill-tbl"><thead><tr>' +
+                  '<th style="text-align:left">กลุ่มอุปกรณ์</th>' +
+                  '<th>รายการอุปกรณ์ไม่ซ้ำ</th>' +
+                  '<th>จัดซื้อสะสม (ชิ้น)</th><th>เบิกจ่ายสะสม (ชิ้น)</th><th>คงเหลือล่าสุด (ชิ้น)</th>' +
+                '</tr></thead><tbody>' + cRows2 + '</tbody></table>' +
+              '</div>' +
+            '</div></div>' +
+          '</td></tr>'
+        );
+      }).join('');
+    }
+  }
+  if (distFoot) {
+    distFoot.innerHTML = '<tr>' +
+      '<td>รวมทั้งหมด</td>' +
+      '<td>' + Object.keys(gUnitSet).length + '</td><td>' + Object.keys(gCatSet).length + '</td>' +
+      '<td>' + items.length + '</td>' +
+      '<td>' + fmt(gBuy) + '</td><td>' + fmt(gPaid) + '</td><td>' + fmt(gRem) + '</td></tr>';
+  }
+
+  // ── Section C: Category rows + drill sub-rows ─────────────────────
+  var cRowsList = Object.keys(cMap).map(function(c) {
+    return { label: c, cm: cMap[c],
+      dists: Object.keys(cMap[c].dists).length, units: Object.keys(cMap[c].units).length,
+      count: cMap[c].count, buy: cMap[c].buy, paid: cMap[c].paid, rem: cMap[c].rem };
+  }).sort(function(a, b) { return b.rem - a.rem; });
+
+  if (catBody) {
+    if (cRowsList.length === 0) {
+      catBody.innerHTML = emptyCell;
+    } else {
+      catBody.innerHTML = cRowsList.map(function(row) {
+        var cm = row.cm;
+
+        // L1 district sub-rows — ▶ opens L2 (equipment list for this category in this district)
+        var dRows2 = Object.keys(cm.dDrill).sort().map(function(d) {
+          var dd = cm.dDrill[d];
+
+          var l2EquipRows = dd.items.slice().sort(function(a,b){return a.equip.localeCompare(b.equip,'th');}).map(function(it) {
+            return '<tr><td>' + it.equip + '</td><td>' + it.unit + '</td>' +
+              '<td>' + fmt(it.buy) + '</td><td>' + fmt(it.paid) + '</td>' +
+              '<td><strong>' + fmt(it.rem) + '</strong></td></tr>';
+          }).join('');
+          var l2EquipTbl = '<table class="p4-drill2-tbl"><thead><tr>' +
+            '<th style="text-align:left">ชื่ออุปกรณ์</th><th>หน่วยบริการ</th>' +
+            '<th>จัดซื้อสะสม (ชิ้น)</th><th>เบิกจ่ายสะสม (ชิ้น)</th><th>คงเหลือล่าสุด (ชิ้น)</th>' +
+            '</tr></thead><tbody>' + l2EquipRows + '</tbody></table>';
+
+          return (
+            '<tr class="p4-drill2-main">' +
+              '<td><button class="p4-summ-drillbtn2" onclick="p4SummToggleDrill2(this)">▶</button> ' + d + '</td>' +
+              '<td>' + Object.keys(dd.units).length + ' หน่วยบริการ</td>' +
+              '<td>' + dd.count + ' รายการ</td>' +
+              '<td>' + fmt(dd.buy) + ' ชิ้น</td><td>' + fmt(dd.paid) + ' ชิ้น</td>' +
+              '<td><strong>' + fmt(dd.rem) + ' ชิ้น</strong></td>' +
+            '</tr>' +
+            '<tr class="p4-drill2-row" style="display:none"><td colspan="6">' +
+              '<div class="p4-drill2-panel">' +
+                '<p class="p4-drill2-hdr">รายการอุปกรณ์ในอำเภอนี้ (' + dd.count + ' รายการ)</p>' +
+                l2EquipTbl +
+              '</div>' +
+            '</td></tr>'
+          );
+        }).join('');
+
+        // L1 unit sub-rows — ▶ opens L2 (equipment list for this category in this unit)
+        var uRows2 = Object.keys(cm.uDrill).sort().map(function(u) {
+          var ud = cm.uDrill[u];
+
+          var l2EquipRows = ud.items.slice().sort(function(a,b){return a.equip.localeCompare(b.equip,'th');}).map(function(it) {
+            return '<tr><td>' + it.equip + '</td>' +
+              '<td>' + fmt(it.buy) + '</td><td>' + fmt(it.paid) + '</td>' +
+              '<td><strong>' + fmt(it.rem) + '</strong></td></tr>';
+          }).join('');
+          var l2EquipTbl = '<table class="p4-drill2-tbl"><thead><tr>' +
+            '<th style="text-align:left">ชื่ออุปกรณ์</th>' +
+            '<th>จัดซื้อสะสม (ชิ้น)</th><th>เบิกจ่ายสะสม (ชิ้น)</th><th>คงเหลือล่าสุด (ชิ้น)</th>' +
+            '</tr></thead><tbody>' + l2EquipRows + '</tbody></table>';
+
+          return (
+            '<tr class="p4-drill2-main">' +
+              '<td><button class="p4-summ-drillbtn2" onclick="p4SummToggleDrill2(this)">▶</button> ' + u + '</td>' +
+              '<td>' + (ud.dist || '—') + '</td>' +
+              '<td>' + ud.count + ' รายการ</td>' +
+              '<td>' + fmt(ud.buy) + ' ชิ้น</td><td>' + fmt(ud.paid) + ' ชิ้น</td>' +
+              '<td><strong>' + fmt(ud.rem) + ' ชิ้น</strong></td>' +
+            '</tr>' +
+            '<tr class="p4-drill2-row" style="display:none"><td colspan="6">' +
+              '<div class="p4-drill2-panel">' +
+                '<p class="p4-drill2-hdr">รายการอุปกรณ์ในหน่วยบริการนี้ (' + ud.count + ' รายการ)</p>' +
+                l2EquipTbl +
+              '</div>' +
+            '</td></tr>'
+          );
+        }).join('');
+
+        return (
+          '<tr class="p4-summ-main-row">' +
+            '<td><button class="p4-summ-drillbtn" onclick="p4SummToggleDrill(this)">▶</button> ' + row.label + '</td>' +
+            '<td>' + row.dists + '</td><td>' + row.units + '</td><td>' + row.count + '</td>' +
+            '<td>' + fmt(row.buy) + '</td><td>' + fmt(row.paid) + '</td>' +
+            '<td><strong>' + fmt(row.rem) + '</strong></td>' +
+          '</tr>' +
+          '<tr class="p4-drill-row" style="display:none"><td colspan="7">' +
+            '<div class="p4-drill-panel"><div class="p4-drill-sections">' +
+              '<div>' +
+                '<p class="p4-drill-hdr">รายละเอียดรายอำเภอ</p>' +
+                '<table class="p4-drill-tbl"><thead><tr>' +
+                  '<th style="text-align:left">อำเภอ</th>' +
+                  '<th>หน่วยบริการ</th><th>รายการอุปกรณ์ไม่ซ้ำ</th>' +
+                  '<th>จัดซื้อสะสม (ชิ้น)</th><th>เบิกจ่ายสะสม (ชิ้น)</th><th>คงเหลือล่าสุด (ชิ้น)</th>' +
+                '</tr></thead><tbody>' + dRows2 + '</tbody></table>' +
+              '</div>' +
+              '<div>' +
+                '<p class="p4-drill-hdr">รายละเอียดรายหน่วยบริการ</p>' +
+                '<table class="p4-drill-tbl"><thead><tr>' +
+                  '<th style="text-align:left">หน่วยบริการ</th>' +
+                  '<th>อำเภอ</th><th>รายการอุปกรณ์ไม่ซ้ำ</th>' +
+                  '<th>จัดซื้อสะสม (ชิ้น)</th><th>เบิกจ่ายสะสม (ชิ้น)</th><th>คงเหลือล่าสุด (ชิ้น)</th>' +
+                '</tr></thead><tbody>' + uRows2 + '</tbody></table>' +
+              '</div>' +
+            '</div></div>' +
+          '</td></tr>'
+        );
+      }).join('');
+    }
+  }
+  if (catFoot) {
+    catFoot.innerHTML = '<tr>' +
+      '<td>รวมทั้งหมด</td>' +
+      '<td>' + Object.keys(gDistSet).length + '</td><td>' + Object.keys(gUnitSet).length + '</td>' +
+      '<td>' + items.length + '</td>' +
+      '<td>' + fmt(gBuy) + '</td><td>' + fmt(gPaid) + '</td><td>' + fmt(gRem) + '</td></tr>';
+  }
+}
+
+// Expand/collapse a drill-down detail row in the Summary tab.
+// Clicking a button in one section collapses all other rows in that section first,
+// then opens the clicked row — giving one-at-a-time behaviour per table.
+function p4SummToggleDrill(btn) {
+  var mainRow  = btn.parentNode.parentNode; // button → td → tr
+  var drillRow = mainRow.nextElementSibling;
+  if (!drillRow || !drillRow.classList.contains('p4-drill-row')) return;
+  var isOpen = drillRow.style.display !== 'none';
+  var tbody = mainRow.parentNode;
+  if (tbody) {
+    tbody.querySelectorAll('.p4-drill-row').forEach(function(r) {
+      // Reset any open L2 rows inside this panel before hiding it
+      r.querySelectorAll('.p4-drill2-row').forEach(function(r2) { r2.style.display = 'none'; });
+      r.querySelectorAll('.p4-summ-drillbtn2').forEach(function(b2) { b2.textContent = '▶'; b2.classList.remove('open'); });
+      r.style.display = 'none';
+    });
+    tbody.querySelectorAll('.p4-summ-drillbtn').forEach(function(b) { b.textContent = '▶'; b.classList.remove('open'); });
+  }
+  if (!isOpen) {
+    drillRow.style.display = '';
+    btn.textContent = '▼';
+    btn.classList.add('open');
+  }
+}
+
+// Expand/collapse a second-level (L2) equipment detail row inside a first-level drill panel.
+// One L2 row open at a time per L1 sub-table tbody.
+function p4SummToggleDrill2(btn) {
+  var mainRow  = btn.parentNode.parentNode; // button → td → tr.p4-drill2-main
+  var drillRow = mainRow.nextElementSibling;
+  if (!drillRow || !drillRow.classList.contains('p4-drill2-row')) return;
+  var isOpen = drillRow.style.display !== 'none';
+  var tbody = mainRow.parentNode;
+  if (tbody) {
+    tbody.querySelectorAll('.p4-drill2-row').forEach(function(r)  { r.style.display = 'none'; });
+    tbody.querySelectorAll('.p4-summ-drillbtn2').forEach(function(b) { b.textContent = '▶'; b.classList.remove('open'); });
+  }
+  if (!isOpen) {
+    drillRow.style.display = '';
+    btn.textContent = '▼';
+    btn.classList.add('open');
+  }
 }
 
 // Toggle the yearly-history sub-row that sits immediately after the main equipment row.
@@ -5776,6 +6541,9 @@ window.initProject1 = initProject1;
 window.switchTab2 = switchTab2;
 window.switchTab3 = switchTab3;
 window.switchTab4 = switchTab4;
+window.renderP4Summary    = renderP4Summary;
+window.p4SummToggleDrill  = p4SummToggleDrill;
+window.p4SummToggleDrill2 = p4SummToggleDrill2;
 window.p4OnYearChange = p4OnYearChange;
 window.p4ShowLoading = p4ShowLoading;
 window.p4DismissLoading = p4DismissLoading;
