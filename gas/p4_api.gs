@@ -40,15 +40,15 @@ function doGet(e) {
   try {
     switch (action) {
       case 'devices':
-        result = withCache('p4_devices', forceRefresh, buildDevicesData);
+        result = withCache('p4_devices_v1', forceRefresh, buildDevicesData);
         break;
 
       case 'funding':
-        result = withCache('p4_funding', forceRefresh, buildFundingData);
+        result = withCache('p4_funding_v1', forceRefresh, buildFundingData);
         break;
 
       case 'user_groups':
-        result = withCache('p4_user_groups', forceRefresh, buildUserGroupsData);
+        result = withCache('p4_user_groups_v1', forceRefresh, buildUserGroupsData);
         break;
 
       default:
@@ -259,6 +259,6 @@ function findColIndex(headers, candidates) {
 // ─────────────────────────────────────────────────────────────
 function clearP4Cache() {
   var cache = CacheService.getScriptCache();
-  cache.removeAll(['p4_devices', 'p4_funding', 'p4_user_groups']);
+  cache.removeAll(['p4_devices_v1', 'p4_funding_v1', 'p4_user_groups_v1']);
   Logger.log('P4 cache cleared.');
 }
