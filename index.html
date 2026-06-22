@@ -2081,12 +2081,12 @@ body {
   <p class="accordion-section-title">4 โครงการหลัก · คลิกเพื่อดูรายละเอียด</p>
 
   <!-- ── PROJECT 1 ── -->
-  <div class="acc-item acc-p1" data-keywords="ปรับสภาพบ้าน บ้าน ผู้พิการ ผู้สูงอายุ" id="accItem1">
+  <div class="acc-item acc-p1" data-keywords="ปรับสภาพแวดล้อม ที่อยู่อาศัย คนพิการ ผู้สูงอายุ ผู้ป่วย ภาวะพึ่งพิง" id="accItem1">
     <div class="acc-header" onclick="toggleAcc(1)">
       <div class="acc-icon-wrap">🏠</div>
       <div class="acc-text">
         <span class="acc-number">โครงการที่ 1</span>
-        <h3 class="acc-title">ปรับสภาพบ้านผู้พิการและผู้สูงอายุ<span id="p1NotifDot" class="acc-notif-dot" style="display:none;"></span></h3>
+        <h3 class="acc-title">โครงการปรับสภาพแวดล้อมที่อยู่อาศัยสำหรับคนพิการ ผู้สูงอายุ ผู้ป่วยที่อยู่ในระยะกึ่งเฉียบพลันและผู้ที่มีภาวะพึ่งพิง<span id="p1NotifDot" class="acc-notif-dot" style="display:none;"></span></h3>
       </div>
       <div class="acc-mini-stats">
         <div class="acc-mini-stat">
@@ -2295,7 +2295,7 @@ body {
       <div class="acc-icon-wrap">♿</div>
       <div class="acc-text">
         <span class="acc-number">โครงการที่ 2</span>
-        <h3 class="acc-title">ศูนย์สาธิตและยืมอุปกรณ์</h3>
+        <h3 class="acc-title">ศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้าน</h3>
       </div>
       <div class="acc-mini-stats">
         <div class="acc-mini-stat">
@@ -2418,7 +2418,7 @@ body {
       <div class="acc-icon-wrap">📚</div>
       <div class="acc-text">
         <span class="acc-number">โครงการที่ 3</span>
-        <h3 class="acc-title">พัฒนาศักยภาพเครือข่ายบริการ</h3>
+        <h3 class="acc-title">โครงการพัฒนาเครือข่ายบริการเพื่อฟื้นฟูสมรรถภาพผู้พิการ และผู้สูงอายุที่อยู่ในระยะที่จำเป็นต้องได้รับการฟื้นฟูสมรรถภาพ</h3>
       </div>
       <div class="acc-mini-stats">
         <div class="acc-mini-stat">
@@ -4317,7 +4317,7 @@ window.openModal = function openModal(modalId) {
 
 
 // ═══════════════════════════════════════════════════════════
-// PROJECT 2 - ศูนย์สาธิตและยืมอุปกรณ์ 
+// PROJECT 2 - ศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้าน
 // Real data from CSV: 3,388 items, 26 types, 71 units
 // Columns F (รหัส_อุปกรณ์) & G (รหัส_ครุภัณฑ์) hidden from UI
 // ═══════════════════════════════════════════════════════════
@@ -6039,14 +6039,17 @@ function navigateTo(url) {
 
 
 // ══════════════════════════════════════════════════
-// PROJECT 1 — ปรับสภาพบ้านผู้พิการและผู้สูงอายุ
+// PROJECT 1 — ปรับสภาพแวดล้อมที่อยู่อาศัยสำหรับคนพิการ ผู้สูงอายุ ผู้ป่วยที่อยู่ในระยะกึ่งเฉียบพลันและผู้ที่มีภาวะพึ่งพิง
 // ══════════════════════════════════════════════════
 var project1Records = [];
 
 var p1Charts = {};
 
 // ─── Project 1 API data loader ───────────────────────────────────────────────
-var P1_API_URL = 'https://script.google.com/macros/s/AKfycby6wVpfb5o_AsbvH3tV9kW54RaG5arvFxJ52TA_lkSV7sAzyXKn-VOki7WpA-GEkppf/exec?project=p1&action=dashboard';
+// NOTE: intentionally named P1_DASHBOARD_URL (not P1_API_URL) to avoid being
+// clobbered by the same-named variable in assets/js/api.js which loads after
+// this inline block and points to the old ?tab= endpoint.
+var P1_DASHBOARD_URL = 'https://script.google.com/macros/s/AKfycby6wVpfb5o_AsbvH3tV9kW54RaG5arvFxJ52TA_lkSV7sAzyXKn-VOki7WpA-GEkppf/exec?project=p1&action=dashboard';
 
 function p1ApiRecordToLegacy(r) {
   var dis = r.disabilityTypes;
@@ -6087,7 +6090,7 @@ function loadP1Data() {
     loadingEl.style.display = '';
   }
   if (dashboardEl) dashboardEl.style.display = 'none';
-  fetch(P1_API_URL)
+  fetch(P1_DASHBOARD_URL)
     .then(function(res) {
       if (!res.ok) throw new Error('HTTP ' + res.status);
       return res.json();
