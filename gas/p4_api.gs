@@ -1,264 +1,205 @@
-// ============================================================
-// Project 4 — Equipment Repair Center API (Google Apps Script)
-// ============================================================
-// Deployed as a Web App (Execute as: Me, Access: Anyone).
-//
-// Supported query parameters:
-//   ?action=devices      — equipment device rows
-//   ?action=funding      — budget / funding records
-//   ?action=user_groups  — center configuration (active / inactive)
-//   &refresh=1           — bypass cache and rebuild from sheet
-//
-// Response envelope (same shape for all actions):
-//   {
-//     "data":         [ {...}, ... ],   // array of row objects
-//     "cached":       true | false,
-//     "generated_at": "ISO-8601 string"
-//   }
-//
-// Cache: CacheService.getScriptCache(), 10-minute TTL per action.
-// ============================================================
-
-// ── Sheet name constants (update to match your Google Sheet) ──
-var SHEET_DEVICES    = 'ข้อมูลอุปกรณ์';   // device data sheet
-var SHEET_FUNDING    = 'งบประมาณ';         // budget / funding sheet
-var SHEET_CENTERS    = 'config_centers';    // center config sheet
-
-// Cache settings
-var CACHE_TTL_SECONDS = 10 * 60;           // 10 minutes
-
-// ─────────────────────────────────────────────────────────────
-// Entry point
-// ─────────────────────────────────────────────────────────────
 function doGet(e) {
-  var params       = (e && e.parameter)          || {};
-  var action       = String(params.action        || '').trim();
-  var forceRefresh = (params.refresh === '1' || params.refresh === 'true');
-
-  var result;
+  const action = (e.parameter.action || "devices").toString();
 
   try {
-    switch (action) {
-      case 'devices':
-        result = withCache('p4_devices_v1', forceRefresh, buildDevicesData);
-        break;
+    let result;
 
-      case 'funding':
-        result = withCache('p4_funding_v1', forceRefresh, buildFundingData);
-        break;
-
-      case 'user_groups':
-        result = withCache('p4_user_groups_v1', forceRefresh, buildUserGroupsData);
-        break;
-
-      default:
-        result = {
-          data: [],
-          error: 'Unknown action: "' + action + '". Use devices | funding | user_groups.',
-          cached: false,
-          generated_at: new Date().toISOString()
-        };
+    if (action === "devices") {
+      result = getDevicesData();
+    } else if (action === "user_groups") {
+      result = getUserGroupsData();
+    } else if (action === "funding") {
+      result = getFundingData();
+    } else if (action === "health") {
+      result = {
+        status: "ok",
+        message: "P4 API is running",
+        available_actions: ["devices", "user_groups", "funding", "health"]
+      };
+    } else {
+      result = {
+        status: "error",
+        message: "Unknown action: " + action
+      };
     }
+
+    return jsonOutput(result);
+
   } catch (err) {
-    result = {
-      data: [],
-      error: String(err),
-      cached: false,
-      generated_at: new Date().toISOString()
-    };
-  }
-
-  return ContentService
-    .createTextOutput(JSON.stringify(result))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-// ─────────────────────────────────────────────────────────────
-// Cache wrapper
-//   cacheKey     — unique string key for this action
-//   forceRefresh — when true, skip cache read and rebuild data
-//   buildFn      — zero-argument function that returns {data:[...]}
-// ─────────────────────────────────────────────────────────────
-function withCache(cacheKey, forceRefresh, buildFn) {
-  var cache = CacheService.getScriptCache();
-
-  // ── Try reading from cache ──
-  if (!forceRefresh) {
-    var hit = cache.get(cacheKey);
-    if (hit) {
-      try {
-        var parsed = JSON.parse(hit);
-        parsed.cached = true;           // flag so callers know this came from cache
-        return parsed;
-      } catch (e) {
-        // Cache entry is corrupt (e.g. truncated) — fall through to rebuild
-      }
-    }
-  }
-
-  // ── Build fresh data from sheet ──
-  var fresh = buildFn();
-  fresh.cached       = false;
-  fresh.generated_at = new Date().toISOString();
-
-  // ── Store in cache ──
-  // CacheService has a per-value hard limit of 100 KB.
-  // If the payload is too large the put() call throws; we catch it and
-  // serve the data uncached rather than failing the whole request.
-  try {
-    var serialized = JSON.stringify(fresh);
-    if (serialized.length <= 100000) {
-      cache.put(cacheKey, serialized, CACHE_TTL_SECONDS);
-    }
-    // If > 100 KB, silently skip caching and let each request hit the sheet.
-    // Consider splitting large sheets into smaller named ranges if this occurs.
-  } catch (e) {
-    // cache.put() failed — data is still returned uncached
-  }
-
-  return fresh;
-}
-
-// ─────────────────────────────────────────────────────────────
-// Data builders — each returns { data: [ rowObjects ] }
-// ─────────────────────────────────────────────────────────────
-
-// Reads every non-blank data row from SHEET_DEVICES.
-// Column headers become object keys, preserving exact Thai names so the
-// frontend normalizer (p4NormalizeDevices) can map them directly.
-function buildDevicesData() {
-  var rows = sheetToObjects(SHEET_DEVICES);
-
-  // Optionally filter rows to active centers only.
-  // If config_centers is unavailable or empty, all rows are returned.
-  var activeCenters = getActiveCenterNames();
-  if (activeCenters !== null) {
-    rows = rows.filter(function(row) {
-      // Match against the Thai "หน่วยงาน" column (and English alias)
-      var centerName = String(
-        row['หน่วยงาน_ที่ตั้งศูนย์ซ่อม'] || row['center_name'] || ''
-      ).trim();
-      return activeCenters[centerName] === true;
+    return jsonOutput({
+      status: "error",
+      message: err.message,
+      stack: err.stack
     });
   }
-
-  return { data: rows };
 }
 
-// Reads budget / funding rows from SHEET_FUNDING.
-function buildFundingData() {
-  var rows = sheetToObjects(SHEET_FUNDING);
-  return { data: rows };
+function getDevicesData() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const configSheet = ss.getSheetByName("config_centers");
+
+  if (!configSheet) {
+    throw new Error("Missing sheet: config_centers");
+  }
+
+  const configs = sheetToObjects(configSheet)
+    .filter(row =>
+      String(row.active).toUpperCase() === "TRUE" &&
+      String(row.type || "").trim() === "repair_center"
+    );
+
+  const allRows = [];
+
+  configs.forEach(center => {
+    const tabName = String(center.tab_name || "").trim();
+    const sheet = ss.getSheetByName(tabName);
+
+    if (!sheet) {
+      allRows.push({
+        source_error: true,
+        center_name: center.center_name,
+        tab_name: tabName,
+        district: center.district,
+        message: "Sheet not found"
+      });
+      return;
+    }
+
+    const rows = sheetToObjects(sheet);
+
+    rows.forEach(row => {
+      const itemName = pick(row, ["รายการ", "รายการ_อุปกรณ์", "ชื่อรายการ"]);
+      if (!itemName) return;
+
+      allRows.push({
+        center_name: center.center_name,
+        tab_name: tabName,
+        district: center.district,
+
+        category: pick(row, ["กลุ่ม", "กลุ่ม_อุปกรณ์ที่พร้อมให้บริการ"]),
+        item: itemName,
+        unit: pick(row, ["หน่วย", "อุปกรณ์_หน่วย"]),
+
+        buy66: num(pick(row, ["จำนวนที่ซื้อ ปี 66", "จำนวนที่ซื้อ ปี66", "จัดซื้อ_ปี66"])),
+        paid66: num(pick(row, ["จำนวนเบิกจ่าย ปี 66", "จำนวนเบิกจ่าย ปี66", "เบิกจ่าย_ปี66"])),
+        balance66: num(pick(row, ["คงเหลือ ปี 66", "คงเหลือ ปี66", "ยอดสุทธิ_ปี66"])),
+
+        buy67: num(pick(row, ["จำนวนที่ซื้อ ปี 67", "จำนวนที่ซื้อ ปี67", "จัดซื้อ_ปี67"])),
+        paid67: num(pick(row, ["จำนวนเบิกจ่าย ปี 67", "จำนวนเบิกจ่าย ปี67", "เบิกจ่าย_ปี67"])),
+        balance67: num(pick(row, ["คงเหลือ ปี 67", "คงเหลือ ปี67", "คงเหลือ ปี 67 (ก่อนเบิกจ่าย)", "ยอดสุทธิ_ปี67"])),
+
+        buy68: num(pick(row, ["จำนวนที่ซื้อ ปี 68", "จำนวนที่ซื้อ ปี68", "จำนวนที่ซื้อ ปี 68 ระยะ 1", "จำนวนที่ซื้อ ปี68 ระยะ1", "จำนวนที่ซื้อ ปี 68 ระยะ 2", "จำนวนที่ซื้อ ปี68 ระยะ2", "จัดซื้อ_ปี68"])),
+        balance68_before: num(pick(row, ["คงเหลือ ปี 68 (ก่อนเบิกจ่าย)", "คงเหลือ ปี68 (ก่อนเบิกจ่าย)", "รวมก่อนเบิก_ปี68_ระยะ1(ห้ามแก้ไข)"])),
+        paid68: num(pick(row, ["จำนวนเบิกจ่าย ปี 68", "จำนวนเบิกจ่าย ปี68", "จำนวนเบิกจ่าย ปี 68 ระยะ 1", "จำนวนเบิกจ่าย ปี68 ระยะ1", "จำนวนเบิกจ่าย ปี 68 ระยะ 2", "จำนวนเบิกจ่าย ปี68 ระยะ2", "เบิกจ่าย_ปี68"])),
+        balance68: num(pick(row, ["คงเหลือ ปี 68 (หลังเบิกจ่าย)", "คงเหลือ ปี68 (หลังเบิกจ่าย)", "ยอดสุทธิ_ปี68(ห้ามแก้ไข)", "ยอดคงเหลือ_ปี68_ระยะ1(ห้ามแก้ไข)"])),
+
+        buy69: num(pick(row, ["จำนวนที่ซื้อ ปี 69", "จำนวนที่ซื้อ ปี69", "จัดซื้อ_ปี69"])),
+        balance69_before: num(pick(row, ["คงเหลือ ปี 69 (ก่อนเบิกจ่าย)", "คงเหลือ ปี69 (ก่อนเบิกจ่าย)"])),
+        paid69: num(pick(row, ["จำนวนเบิกจ่าย ปี 69", "จำนวนเบิกจ่าย ปี69", "เบิกจ่าย_ปี69"])),
+        balance69: num(pick(row, ["คงเหลือ ปี 69 (หลังเบิกจ่าย)", "คงเหลือ ปี69 (หลังเบิกจ่าย)", "ยอดสุทธิ_ปี69(ห้ามแก้ไข)"]))
+      });
+    });
+  });
+
+  return {
+    status: "ok",
+    action: "devices",
+    count: allRows.length,
+    data: allRows
+  };
 }
 
-// Reads center configuration from SHEET_CENTERS and returns all rows.
-// Callers can inspect the "active" column to determine center status.
-function buildUserGroupsData() {
-  var ss    = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(SHEET_CENTERS);
-  if (!sheet) return { data: [] };
+function getUserGroupsData() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("กลุ่มผู้ใช้บริการ");
 
-  var rows = sheetToObjects(SHEET_CENTERS);
-  return { data: rows };
-}
-
-// ─────────────────────────────────────────────────────────────
-// Helpers
-// ─────────────────────────────────────────────────────────────
-
-// Converts a named sheet into an array of plain objects using the first
-// row as column headers. Blank rows (all cells empty) are skipped.
-function sheetToObjects(sheetName) {
-  var ss    = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(sheetName);
   if (!sheet) {
-    throw new Error('Sheet not found: "' + sheetName + '"');
+    throw new Error("Missing sheet: กลุ่มผู้ใช้บริการ");
   }
 
-  var values = sheet.getDataRange().getValues();
-  if (values.length < 2) return [];
+  const rows = sheetToObjects(sheet).map(row => ({
+    district: pick(row, ["อำเภอ"]),
+    center_name: pick(row, ["หน่วยงานที่ตั้งศูนย์ซ่อม", "หน่วยงาน_ที่ตั้งศูนย์ซ่อม"]),
+    category: pick(row, ["กลุ่มอุปกรณ์ที่พร้อมให้บริการ", "กลุ่ม_อุปกรณ์ที่พร้อมให้บริการ"])
+  }));
 
-  var headers = values[0].map(function(h) { return String(h).trim(); });
-  var rows    = [];
+  return {
+    status: "ok",
+    action: "user_groups",
+    count: rows.length,
+    data: rows
+  };
+}
 
-  for (var i = 1; i < values.length; i++) {
-    var row     = values[i];
-    var allBlank = true;
+function getFundingData() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("งบประมาณสนับสนุน");
 
-    // Quick blank-row check before building the object
-    for (var c = 0; c < row.length; c++) {
-      if (row[c] !== '' && row[c] !== null && row[c] !== undefined) {
-        allBlank = false;
-        break;
+  if (!sheet) {
+    throw new Error("Missing sheet: งบประมาณสนับสนุน");
+  }
+
+  const rows = sheetToObjects(sheet).map(row => ({
+    budget_year: pick(row, ["ปีงบประมาณ", "ปี_งบประมาณ"]),
+    agency: pick(row, ["หน่วยงาน", "ชื่อ_หน่วยงาน"]),
+    submit_date: pick(row, ["วันที่ส่งโครงการฯ", "วันที่_ส่งโครงการฯ"]),
+    approve_date: pick(row, ["วันที่อนุมัติ", "วันที่_อนุมัติ"]),
+    mou_date: pick(row, ["วันที่ทำ MOU", "วันที่_ทำMOU"]),
+    check_date: pick(row, ["วันที่รับเช็ค", "วันที่_รับเช็ค"]),
+    report_date: pick(row, ["วันที่ส่งรายงานผล", "วันที่_ส่งรายงานผล"]),
+    budget: num(pick(row, ["จำนวนเงิน", "งบประมาณ_จำนวนเงิน", "งบประมาณ"])),
+    remark: pick(row, ["หมายเหตุ"])
+  }));
+
+  return {
+    status: "ok",
+    action: "funding",
+    count: rows.length,
+    data: rows
+  };
+}
+
+function sheetToObjects(sheet) {
+  const values = sheet.getDataRange().getValues();
+
+  if (!values || values.length < 2) {
+    return [];
+  }
+
+  const headers = values[0].map(h => String(h).trim());
+
+  return values.slice(1).map(row => {
+    const obj = {};
+    headers.forEach((header, index) => {
+      if (header) {
+        obj[header] = row[index];
       }
+    });
+    return obj;
+  });
+}
+
+function pick(row, keys) {
+  for (const key of keys) {
+    if (row[key] !== undefined && row[key] !== null && row[key] !== "") {
+      return row[key];
     }
-    if (allBlank) continue;
-
-    var obj = {};
-    for (var j = 0; j < headers.length; j++) {
-      if (!headers[j]) continue;             // skip columns with no header
-      var val = row[j];
-      // Convert Date objects to ISO strings so JSON.stringify produces consistent output
-      if (val instanceof Date) {
-        obj[headers[j]] = Utilities.formatDate(val, 'Asia/Bangkok', 'dd/MM/yyyy');
-      } else {
-        obj[headers[j]] = (val !== null && val !== undefined) ? val : '';
-      }
-    }
-    rows.push(obj);
   }
-
-  return rows;
+  return "";
 }
 
-// Returns a lookup object { centerName: true } for active centers, or
-// null if the config sheet does not exist (so the caller returns all rows).
-function getActiveCenterNames() {
-  var ss    = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(SHEET_CENTERS);
-  if (!sheet) return null;
+function num(value) {
+  if (value === "" || value === null || value === undefined) return 0;
+  if (typeof value === "number") return value;
 
-  var values = sheet.getDataRange().getValues();
-  if (values.length < 2) return null;
+  const cleaned = String(value).replace(/,/g, "").trim();
+  const n = Number(cleaned);
 
-  var headers = values[0].map(function(h) { return String(h).trim().toLowerCase(); });
-  // Locate the "name" column and "active" column (accepts common Thai/English variants)
-  var nameIdx   = findColIndex(headers, ['center_name', 'ชื่อ_หน่วยงาน', 'ชื่อหน่วยงาน', 'name']);
-  var activeIdx = findColIndex(headers, ['active', 'สถานะ', 'เปิดใช้งาน', 'ใช้งาน']);
-
-  // If the sheet exists but has no recognizable active column, treat all as active
-  if (nameIdx === -1) return null;
-  if (activeIdx === -1) return null;
-
-  var lookup = {};
-  for (var i = 1; i < values.length; i++) {
-    var centerName = String(values[i][nameIdx] || '').trim();
-    var isActive   = values[i][activeIdx];
-    // Accepts TRUE (boolean), "true", "yes", "1", "active", "ใช้งาน" etc.
-    var active = (isActive === true ||
-                  String(isActive).toLowerCase() === 'true' ||
-                  String(isActive).toLowerCase() === 'yes'  ||
-                  String(isActive) === '1');
-    if (centerName && active) lookup[centerName] = true;
-  }
-  return lookup;
+  return isNaN(n) ? 0 : n;
 }
 
-// Finds the first matching column index from a list of candidate names.
-function findColIndex(headers, candidates) {
-  for (var i = 0; i < candidates.length; i++) {
-    var idx = headers.indexOf(candidates[i]);
-    if (idx !== -1) return idx;
-  }
-  return -1;
-}
-
-// ─────────────────────────────────────────────────────────────
-// Manual cache invalidation helper
-// Run this function from the Apps Script editor to clear all P4 caches immediately.
-// ─────────────────────────────────────────────────────────────
-function clearP4Cache() {
-  var cache = CacheService.getScriptCache();
-  cache.removeAll(['p4_devices_v1', 'p4_funding_v1', 'p4_user_groups_v1']);
-  Logger.log('P4 cache cleared.');
+function jsonOutput(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 }
