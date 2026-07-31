@@ -164,40 +164,55 @@ input[type="password"]:focus {
     <p class="login-subtitle">กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</p>
   </div>
 
-  <form id="loginForm" onsubmit="handleLogin(event)">
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input type="text" id="username" placeholder="Enter username" autocomplete="username" required>
+  <div id="g_id_onload"
+       data-client_id="164611973399-6s9mkjc5ign5eor8ko2nvg3mhvhapa58.apps.googleusercontent.com"
+       data-callback="handleGoogleCredential">
+  </div>
+  <div style="display:flex;justify-content:center;margin-top:0.5rem;">
+    <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="signin_with"
+         data-shape="rectangular"
+         data-logo_alignment="left">
     </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" required>
-    </div>
-    <button type="submit" class="login-btn">Login →</button>
-    <div class="error-msg" id="errorMsg">Incorrect username or password. Please try again.</div>
-  </form>
+  </div>
+  <div class="error-msg" id="errorMsg"></div>
 
   <div class="divider"></div>
   <a href="index.html" class="back-link">← Back to Dashboard</a>
 </div>
 
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-const CREDENTIALS = { username: 'admin', password: 'rayong2024' };
+const USERS_API_URL = 'https://script.google.com/macros/s/AKfycbxUrn_I2gWfq592V18zeMgamm9KSzMGtPXSdzElEmQXfYAevsSREBco1kGggc4xTT6R/exec';
 
-function handleLogin(e) {
-  e.preventDefault();
-  const u = document.getElementById('username').value.trim();
-  const p = document.getElementById('password').value;
+function handleGoogleCredential(response) {
   const err = document.getElementById('errorMsg');
+  err.style.display = 'none';
 
-  if (u === CREDENTIALS.username && p === CREDENTIALS.password) {
-    err.style.display = 'none';
-    window.location.href = 'staff-hub.html';
-  } else {
-    err.style.display = 'block';
-    document.getElementById('password').value = '';
-    document.getElementById('password').focus();
-  }
+  fetch(USERS_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ id_token: response.credential })
+  })
+    .then(function(res) { return res.json(); })
+    .then(function(json) {
+      if (json.ok) {
+        sessionStorage.setItem('rf_user', JSON.stringify(json));
+        window.location.href = 'staff-hub.html';
+      } else {
+        err.textContent = json.error === 'email not registered'
+          ? 'บัญชีนี้ยังไม่ได้ลงทะเบียน กรุณาติดต่อผู้ดูแลระบบ'
+          : 'เข้าสู่ระบบไม่สำเร็จ: ' + json.error;
+        err.style.display = 'block';
+      }
+    })
+    .catch(function(e) {
+      err.textContent = 'เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่';
+      err.style.display = 'block';
+    });
 }
 </script>
 
