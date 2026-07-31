@@ -2318,12 +2318,12 @@ body {
         <div style="margin-bottom:1.25rem;">
           <h6 class="section-header" style="margin-top:0.5rem;">📈 สถิติภาพรวม</h6>
           <div class="summary-cards">
-            <div class="summary-card" style="border-top:3px solid #1e40af;"><span class="summary-card-value" style="color:#1e40af;">3,388</span><span class="summary-card-label">ชิ้นทั้งหมด</span></div>
-            <div class="summary-card" style="border-top:3px solid #10b981;"><span class="summary-card-value" style="color:#10b981;">1,457</span><span class="summary-card-label">พร้อมให้บริการ</span></div>
-            <div class="summary-card" style="border-top:3px solid #f59e0b;"><span class="summary-card-value" style="color:#f59e0b;">1,910</span><span class="summary-card-label">กำลังใช้งาน</span></div>
-            <div class="summary-card" style="border-top:3px solid #ef4444;"><span class="summary-card-value" style="color:#ef4444;">21</span><span class="summary-card-label">ชำรุด</span></div>
-            <div class="summary-card" style="border-top:3px solid #8b5cf6;"><span class="summary-card-value" style="color:#8b5cf6;">26</span><span class="summary-card-label">ประเภทอุปกรณ์</span></div>
-            <div class="summary-card" style="border-top:3px solid #06b6d4;"><span class="summary-card-value" style="color:#06b6d4;">71</span><span class="summary-card-label">หน่วยบริการ</span></div>
+            <div class="summary-card" style="border-top:3px solid #1e40af;"><span class="summary-card-value" style="color:#1e40af;" id="p2StatTotal">—</span><span class="summary-card-label">ชิ้นทั้งหมด</span></div>
+            <div class="summary-card" style="border-top:3px solid #10b981;"><span class="summary-card-value" style="color:#10b981;" id="p2StatReady">—</span><span class="summary-card-label">พร้อมให้บริการ</span></div>
+            <div class="summary-card" style="border-top:3px solid #f59e0b;"><span class="summary-card-value" style="color:#f59e0b;" id="p2StatInuse">—</span><span class="summary-card-label">กำลังใช้งาน</span></div>
+            <div class="summary-card" style="border-top:3px solid #ef4444;"><span class="summary-card-value" style="color:#ef4444;" id="p2StatBroken">—</span><span class="summary-card-label">ชำรุด</span></div>
+            <div class="summary-card" style="border-top:3px solid #8b5cf6;"><span class="summary-card-value" style="color:#8b5cf6;" id="p2StatTypes">—</span><span class="summary-card-label">ประเภทอุปกรณ์</span></div>
+            <div class="summary-card" style="border-top:3px solid #06b6d4;"><span class="summary-card-value" style="color:#06b6d4;" id="p2StatUnits">—</span><span class="summary-card-label">หน่วยบริการ</span></div>
           </div>
         </div>
         <div class="tabs-container">
@@ -2441,12 +2441,12 @@ body {
         <div style="margin-bottom:1.25rem;">
           <h6 class="section-header">📈 ตัวชี้วัดสำคัญ</h6>
           <div class="summary-cards">
-            <div class="summary-card" style="border-top:3px solid #3b82f6;"><span class="summary-card-value" style="color:#3b82f6;">30</span><span class="summary-card-label">โครงการ</span></div>
-            <div class="summary-card" style="border-top:3px solid #10b981;"><span class="summary-card-value" style="color:#10b981;">1.92M</span><span class="summary-card-label">งบประมาณรวม (บาท)</span></div>
-            <div class="summary-card" style="border-top:3px solid #f59e0b;"><span class="summary-card-value" style="color:#f59e0b;">5</span><span class="summary-card-label">ปีงบประมาณ</span></div>
-            <div class="summary-card" style="border-top:3px solid #8b5cf6;"><span class="summary-card-value" style="color:#8b5cf6;">7</span><span class="summary-card-label">อำเภอ</span></div>
-            <div class="summary-card" style="border-top:3px solid #06b6d4;"><span class="summary-card-value" style="color:#06b6d4;">21</span><span class="summary-card-label">หน่วยบริการ</span></div>
-            <div class="summary-card" style="border-top:3px solid #ef4444;"><span class="summary-card-value" style="color:#ef4444;">20</span><span class="summary-card-label">เสร็จสิ้น</span></div>
+            <div class="summary-card" style="border-top:3px solid #3b82f6;"><span class="summary-card-value" style="color:#3b82f6;" id="p3ModalTotal">—</span><span class="summary-card-label">โครงการ</span></div>
+            <div class="summary-card" style="border-top:3px solid #10b981;"><span class="summary-card-value" style="color:#10b981;" id="p3ModalBudget">—</span><span class="summary-card-label">งบประมาณรวม (บาท)</span></div>
+            <div class="summary-card" style="border-top:3px solid #f59e0b;"><span class="summary-card-value" style="color:#f59e0b;" id="p3ModalYears">—</span><span class="summary-card-label">ปีงบประมาณ</span></div>
+            <div class="summary-card" style="border-top:3px solid #8b5cf6;"><span class="summary-card-value" style="color:#8b5cf6;" id="p3ModalDistricts">—</span><span class="summary-card-label">อำเภอ</span></div>
+            <div class="summary-card" style="border-top:3px solid #06b6d4;"><span class="summary-card-value" style="color:#06b6d4;" id="p3ModalUnits">—</span><span class="summary-card-label">หน่วยบริการ</span></div>
+            <div class="summary-card" style="border-top:3px solid #ef4444;"><span class="summary-card-value" style="color:#ef4444;" id="p3ModalDone">—</span><span class="summary-card-label">เสร็จสิ้น</span></div>
           </div>
         </div>
         <div class="tabs-container">
@@ -4687,6 +4687,18 @@ function _renderP2UI() {
   var ht = document.getElementById('p2HeaderTypes');
   if (ht) ht.textContent = p2GroupData.length;
 
+  // "สถิติภาพรวม" summary cards — computed live from p2GroupData (was hardcoded before)
+  var totalReady  = p2GroupData.reduce(function(s, g){ return s + g.ready;  }, 0);
+  var totalInuse  = p2GroupData.reduce(function(s, g){ return s + g.in_use; }, 0);
+  var totalBroken = p2GroupData.reduce(function(s, g){ return s + g.broken; }, 0);
+  function setP2El(id, v) { var e = document.getElementById(id); if (e) e.textContent = v; }
+  setP2El('p2StatTotal',  totalItems.toLocaleString());
+  setP2El('p2StatReady',  totalReady.toLocaleString());
+  setP2El('p2StatInuse',  totalInuse.toLocaleString());
+  setP2El('p2StatBroken', totalBroken.toLocaleString());
+  setP2El('p2StatTypes',  p2GroupData.length);
+  setP2El('p2StatUnits',  p2UnitsList.length);
+
   // ── Populate unit filter ──
   var unitSel = document.getElementById("p2UnitFilter");
   if (unitSel) {
@@ -5990,11 +6002,30 @@ function initP3(){
     var o=document.createElement("option");o.value=y;o.textContent="ปีงบ "+y;ysel.appendChild(o);
   });
 
-  var districts=["วังจันทร์","เมือง","แกลง","เขาชะเมา","บ้านค่าย","บ้านฉาง","ปลวกแดง"];
+  var distSet={};
+  var yearSet={};
+  var unitSet={};
+  p3Records.forEach(function(r){
+    if(r.d) distSet[r.d]=true;
+    if(r.y) yearSet[r.y]=true;
+    if(r.u) unitSet[r.u]=true;
+  });
+  var districts=Object.keys(distSet).sort(function(a,b){return a.localeCompare(b,'th');});
   var dsel=document.getElementById("p3DistrictFilter");
   if(dsel)districts.forEach(function(d){
     var o=document.createElement("option");o.value=d;o.textContent=d;dsel.appendChild(o);
   });
+
+  // KPI summary cards — computed live from p3Records (was hardcoded before)
+  var totalBud   = p3Records.reduce(function(s,r){ return s+(r.b||0); }, 0);
+  var doneCount  = p3Records.filter(function(r){ return r.s==="เสร็จเรียบร้อย"; }).length;
+  function setEl(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; }
+  setEl('p3ModalTotal',     p3Records.length);
+  setEl('p3ModalBudget',    (totalBud/1000000).toFixed(2)+'M');
+  setEl('p3ModalYears',     Object.keys(yearSet).length);
+  setEl('p3ModalDistricts', districts.length);
+  setEl('p3ModalUnits',     Object.keys(unitSet).length);
+  setEl('p3ModalDone',      doneCount);
 
   buildP3DistrictTable();
   loadP3List();
