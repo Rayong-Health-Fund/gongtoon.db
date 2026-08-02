@@ -6352,7 +6352,13 @@ function loadP1Data() {
     loadingEl.style.display = '';
   }
   if (dashboardEl) dashboardEl.style.display = 'none';
-  fetch(P1_DASHBOARD_URL)
+  var p1Token = '';
+  try {
+    var rfUser = JSON.parse(sessionStorage.getItem('rf_user') || 'null');
+    if (rfUser && rfUser.token) p1Token = rfUser.token;
+  } catch (e) {}
+  var p1FetchUrl = P1_DASHBOARD_URL + (p1Token ? '&token=' + encodeURIComponent(p1Token) : '');
+  fetch(p1FetchUrl)
     .then(function(res) {
       if (!res.ok) throw new Error('HTTP ' + res.status);
       return res.json();
@@ -6361,6 +6367,9 @@ function loadP1Data() {
       if (!json.ok) throw new Error(json.error || 'API returned ok:false');
       var recs = Array.isArray(json.records) ? json.records : [];
       project1Records    = recs.map(p1ApiRecordToLegacy);
+      window.p1ServerSummary = json.summary || null;
+      window.p1ServerFilters = json.filters || null;
+      window.p1ChartData     = json.charts  || null;
       window.p1DataLoaded  = true;
       window.p1DataLoading = false;
       var badge = document.getElementById('p1-live-status');
@@ -6368,7 +6377,7 @@ function loadP1Data() {
         var d = json.updatedAt ? json.updatedAt.substring(0, 10) : new Date().toISOString().substring(0, 10);
         badge.innerHTML = '<span style="display:inline-block;font-size:0.72rem;'
           + 'background:#d1fae5;color:#065f46;padding:2px 10px;border-radius:6px;margin-bottom:0.5rem;">'
-          + '● ข้อมูลสด: ' + project1Records.length + ' รายการ · อัปเดต ' + d + '</span>';
+          + '● ข้อมูลสด: ' + ((json.summary && json.summary.totalRecords) || 0) + ' รายการ · อัปเดต ' + d + '</span>';
       }
       initProject1();
     })
@@ -6410,10 +6419,11 @@ function initProject1() {
   if (loading) loading.style.display = 'none';
   if (dashboard) { dashboard.style.display = 'block'; p1FadeIn(dashboard); }
 
-  // Populate year filter (derived from actual data, latest first)
-  var yearSet = {};
-  project1Records.forEach(function(r){ if(r.y) yearSet[r.y]=true; });
-  var years = Object.keys(yearSet).sort(function(a,b){ return b.localeCompare(a); });
+  var srvFilters = window.p1ServerFilters || {};
+
+  // Populate year filter (server-computed, latest first — works even
+  // when individual records aren't loaded for the public view)
+  var years = (srvFilters.years || []).slice().sort(function(a,b){ return b.localeCompare(a); });
   var ySel = document.getElementById("p1YearFilter");
   if (ySel) years.forEach(function(y){
     var o = document.createElement("option"); o.value = y; o.textContent = "ปีงบ " + y;
@@ -6421,22 +6431,22 @@ function initProject1() {
   });
 
   // Populate district filter
-  var distSet = {};
-  project1Records.forEach(function(r){ if(r.d) distSet[r.d]=true; });
-  var districts = Object.keys(distSet).sort(function(a,b){ return a.localeCompare(b,'th'); });
+  var districts = (srvFilters.districts || []).slice().sort(function(a,b){ return a.localeCompare(b,'th'); });
   var dSel = document.getElementById("p1DistrictFilter");
   if (dSel) districts.forEach(function(d){
     var o = document.createElement("option"); o.value = d; o.textContent = d;
     dSel.appendChild(o);
   });
 
-  // Calculate KPI stats
-  var p1Total  = project1Records.length;
-  var p1Done   = project1Records.filter(function(r){ return r.s && r.s.indexOf('แล้วเสร็จ') > -1; }).length;
-  var p1Pend   = Math.max(0, p1Total - p1Done);
-  var totalBud = project1Records.reduce(function(s,r){ return s+(r.b||0); }, 0);
-  var distCount = Object.keys(distSet).length;
-  var avgBud    = p1Total > 0 ? Math.round(totalBud / p1Total) : 0;
+  // KPI stats — always from the server summary, so the public
+  // (not-logged-in) view shows real aggregates even without records
+  var srv = window.p1ServerSummary || {};
+  var p1Total   = srv.totalRecords || 0;
+  var p1Done    = srv.completed || 0;
+  var p1Pend    = srv.inProgress || 0;
+  var totalBud  = srv.totalBudget || 0;
+  var distCount = srv.districtCount || 0;
+  var avgBud    = srv.averageBudgetPerRecord || 0;
 
   // Update inline KPI cards
   function setEl(id, v) { var e=document.getElementById(id); if(e) e.textContent=v; }
@@ -6476,15 +6486,10 @@ function renderP1YearChart() {
   destroyChart("year");
   var ctx = document.getElementById("p1ChartYear");
   if (!ctx) return;
-  var yearBudget = {}, yearCount = {};
-  project1Records.forEach(function(r) {
-    var y = r.y || '—';
-    yearBudget[y] = (yearBudget[y] || 0) + (r.b || 0);
-    yearCount[y]  = (yearCount[y]  || 0) + 1;
-  });
-  var years   = Object.keys(yearBudget).sort(function(a, b){ return a.localeCompare(b); });
-  var budgets = years.map(function(y){ return yearBudget[y]; });
-  var counts  = years.map(function(y){ return yearCount[y]; });
+  var byYear = (window.p1ChartData || {}).byYear || {};
+  var years   = Object.keys(byYear).sort(function(a, b){ return a.localeCompare(b); });
+  var budgets = years.map(function(y){ return byYear[y].budget; });
+  var counts  = years.map(function(y){ return byYear[y].count; });
   p1Charts["year"] = new Chart(ctx, {
     type: "bar",
     data: {
@@ -6516,9 +6521,8 @@ function renderP1DistrictChart() {
   destroyChart("district");
   var ctx = document.getElementById("p1ChartDistrict");
   if (!ctx) return;
-  var distCount = {};
-  project1Records.forEach(function(r) { if (r.d) distCount[r.d] = (distCount[r.d] || 0) + 1; });
-  var total  = project1Records.length;
+  var distCount = (window.p1ChartData || {}).byDistrict || {};
+  var total  = Object.keys(distCount).reduce(function(s,d){ return s+distCount[d]; }, 0);
   var labels = Object.keys(distCount).sort(function(a, b){ return distCount[b] - distCount[a]; });
   var data   = labels.map(function(d){ return distCount[d]; });
   var colors = ["#1e40af","#10b981","#f59e0b","#8b5cf6","#ef4444","#06b6d4","#ec4899","#84cc16","#f97316","#14b8a6"];
@@ -6539,9 +6543,8 @@ function renderP1TypeChart() {
   var ctx = document.getElementById("p1ChartType");
   if (!ctx) return;
   var types     = ["ผู้สูงอายุ","ผู้สูงอายุ/ผู้พิการ","ผู้พิการ"];
-  var total     = project1Records.length;
-  var typeCount = {};
-  project1Records.forEach(function(r){ if (r.t) typeCount[r.t] = (typeCount[r.t] || 0) + 1; });
+  var typeCount = (window.p1ChartData || {}).byType || {};
+  var total     = Object.keys(typeCount).reduce(function(s,t){ return s+typeCount[t]; }, 0);
   var data = types.map(function(t){ return typeCount[t] || 0; });
   p1Charts["type"] = new Chart(ctx, {
     type: "pie",
@@ -6563,10 +6566,7 @@ function renderP1DisabilityChart() {
   destroyChart("disability");
   var ctx = document.getElementById("p1ChartDisability");
   if (!ctx) return;
-  var disCounts = {};
-  project1Records.forEach(function(r) {
-    (r.x || []).forEach(function(dis) { if (dis) disCounts[dis] = (disCounts[dis] || 0) + 1; });
-  });
+  var disCounts = (window.p1ChartData || {}).byDisability || {};
   var labels = Object.keys(disCounts).sort(function(a, b){ return disCounts[b] - disCounts[a]; });
   var data   = labels.map(function(l){ return disCounts[l]; });
   var colors = ["#1e40af","#10b981","#f59e0b","#8b5cf6","#ef4444","#06b6d4","#ec4899","#84cc16","#f97316","#14b8a6"];
@@ -6595,15 +6595,7 @@ function renderP1AgeChart() {
   var ctx = document.getElementById("p1ChartAge");
   if (!ctx) return;
   var buckets = ["อายุ <20 ปี","20-39 ปี","40-59 ปี","60-79 ปี","80+ ปี"];
-  var counts  = [0, 0, 0, 0, 0];
-  project1Records.forEach(function(r) {
-    var a = r.a || 0;
-    if      (a < 20) counts[0]++;
-    else if (a < 40) counts[1]++;
-    else if (a < 60) counts[2]++;
-    else if (a < 80) counts[3]++;
-    else             counts[4]++;
-  });
+  var counts  = (window.p1ChartData || {}).byAge || [0, 0, 0, 0, 0];
   p1Charts["age"] = new Chart(ctx, {
     type: "bar",
     data: {

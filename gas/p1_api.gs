@@ -1,56 +1,76 @@
 const P1_API_MASTER_SHEET = 'P1_Master_data';
+const USERS_SHEET_ID = '1YMj6y9jIA63gh_y1LGYzJ0wcSI1eE9ssmE5vUrv1tzY';
 
 function doGet(e) {
   const params = e && e.parameter ? e.parameter : {};
   const project = String(params.project || '').toLowerCase();
   const action = String(params.action || 'dashboard').toLowerCase();
+  const session = validateSession_(params.token);
 
   if (project !== 'p1') {
-    return jsonOutput_({
-      ok: false,
-      error: 'รองรับเฉพาะ project=p1 ในไฟล์นี้'
-    });
+    return jsonOutput_({ ok: false, error: 'รองรับเฉพาะ project=p1 ในไฟล์นี้' });
   }
 
   if (action === 'dashboard') {
-    return jsonOutput_(getP1DashboardData_());
+    return jsonOutput_(getP1DashboardData_(session));
   }
 
   if (action === 'records') {
-    return jsonOutput_({
-      ok: true,
-      project: 'P1',
-      records: getP1Records_()
-    });
+    if (!session) {
+      return jsonOutput_({ ok: false, error: 'ต้องเข้าสู่ระบบก่อนดูข้อมูลรายบุคคล' });
+    }
+    return jsonOutput_({ ok: true, project: 'P1', records: getP1Records_() });
   }
 
   if (action === 'summary') {
     const records = getP1Records_();
-    return jsonOutput_({
-      ok: true,
-      project: 'P1',
-      summary: buildP1Summary_(records)
-    });
+    return jsonOutput_({ ok: true, project: 'P1', summary: buildP1Summary_(records) });
   }
 
-  return jsonOutput_({
-    ok: false,
-    error: 'ไม่รู้จัก action: ' + action
-  });
+  return jsonOutput_({ ok: false, error: 'ไม่รู้จัก action: ' + action });
 }
 
-function getP1DashboardData_() {
+function validateSession_(token) {
+  if (!token) return null;
+
+  const ss = SpreadsheetApp.openById(USERS_SHEET_ID);
+  const sheet = ss.getSheetByName('sessions');
+  if (!sheet) return null;
+
+  const values = sheet.getDataRange().getValues();
+  const now = Date.now();
+
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    if (row[0] === token) {
+      const expiresAt = new Date(row[4]).getTime();
+      if (expiresAt > now) {
+        return { email: row[1], role: row[2], district: row[3] };
+      }
+      return null;
+    }
+  }
+  return null;
+}
+
+function getP1DashboardData_(session) {
   const records = getP1Records_();
 
-  return {
+  const result = {
     ok: true,
     project: 'P1',
     projectName: 'โครงการปรับสภาพแวดล้อมที่อยู่อาศัยสำหรับคนพิการ ผู้สูงอายุ ผู้ป่วยที่อยู่ในระยะกึ่งเฉียบพลันและผู้ที่มีภาวะพึ่งพิง',
     updatedAt: new Date().toISOString(),
     summary: buildP1Summary_(records),
     filters: buildP1Filters_(records),
-    records: records
+    charts: buildP1ChartAggregates_(records)
   };
+
+  if (session) {
+    result.records = records;
+  }
+
+  return result;
 }
 
 function getP1Records_() {
@@ -71,10 +91,7 @@ function getP1Records_() {
     .filter(row => row.some(cell => String(cell).trim() !== ''))
     .map(row => {
       const obj = {};
-
-      headers.forEach((header, index) => {
-        obj[header] = row[index] || '';
-      });
+      headers.forEach((header, index) => { obj[header] = row[index] || ''; });
 
       return {
         recordId: obj.record_id,
@@ -82,23 +99,19 @@ function getP1Records_() {
         sourceYearLabel: obj.source_year_label,
         budgetYearStart: toNumber_(obj.budget_year_start),
         budgetYearEnd: toNumber_(obj.budget_year_end),
-
         agency: obj.agency,
         personName: obj.person_name,
         age: toNumber_(obj.age),
         statusGroup: obj.status_group,
         isElderly: toBoolean_(obj.is_elderly),
         isDisabled: toBoolean_(obj.is_disabled),
-
         disabilityCodes: splitText_(obj.disability_codes),
         disabilityTypes: splitText_(obj.disability_types),
         rawTypeText: obj.raw_type_text,
-
         addressText: obj.address_text,
         subdistrict: obj.subdistrict,
         district: obj.district,
         province: obj.province,
-
         budget: toNumber_(obj.budget),
         projectStatus: obj.project_status,
         approvedDate: obj.approved_date,
@@ -128,6 +141,34 @@ function buildP1Summary_(records) {
   };
 }
 
+function buildP1ChartAggregates_(records) {
+  const byYear = {};
+  const byDistrict = {};
+  const byType = {};
+  const byDisability = {};
+  const byAge = [0, 0, 0, 0, 0];
+
+  records.forEach(r => {
+    const year = r.sourceYearLabel || r.budgetYearStart || '—';
+    if (!byYear[year]) byYear[year] = { budget: 0, count: 0 };
+    byYear[year].budget += Number(r.budget) || 0;
+    byYear[year].count += 1;
+
+    if (r.district) byDistrict[r.district] = (byDistrict[r.district] || 0) + 1;
+    if (r.statusGroup) byType[r.statusGroup] = (byType[r.statusGroup] || 0) + 1;
+    (r.disabilityTypes || []).forEach(d => { if (d) byDisability[d] = (byDisability[d] || 0) + 1; });
+
+    const age = Number(r.age) || 0;
+    if (age < 20) byAge[0]++;
+    else if (age < 40) byAge[1]++;
+    else if (age < 60) byAge[2]++;
+    else if (age < 80) byAge[3]++;
+    else byAge[4]++;
+  });
+
+  return { byYear: byYear, byDistrict: byDistrict, byType: byType, byDisability: byDisability, byAge: byAge };
+}
+
 function buildP1Filters_(records) {
   return {
     years: unique_(records.map(r => r.sourceYearLabel).filter(Boolean)),
@@ -141,9 +182,7 @@ function buildP1Filters_(records) {
 }
 
 function jsonOutput_(data) {
-  return ContentService
-    .createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
 }
 
 function unique_(arr) {
@@ -151,10 +190,7 @@ function unique_(arr) {
 }
 
 function splitText_(value) {
-  return String(value || '')
-    .split(',')
-    .map(v => v.trim())
-    .filter(Boolean);
+  return String(value || '').split(',').map(v => v.trim()).filter(Boolean);
 }
 
 function toNumber_(value) {
