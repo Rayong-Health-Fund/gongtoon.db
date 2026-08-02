@@ -358,41 +358,12 @@ body {
             </select>
             <div class="invalid-msg">กรุณาเลือกสถานะอุปกรณ์</div>
           </div>
-          <div class="col-md-4">
-            <label class="form-label">รหัส_อุปกรณ์</label>
-            <input type="text" class="form-control" id="f_equipcode" placeholder="เช่น Equip_23_00001">
-            <div class="field-note">🔒 รหัสที่ระบบกำหนด (ถ้ามี)</div>
-          </div>
-          <div class="col-md-4">
-            <label class="form-label">รหัส_ครุภัณฑ์</label>
-            <input type="text" class="form-control" id="f_assetcode" placeholder="เช่น RA-2566-001">
-          </div>
-          <div class="col-md-4">
-            <label class="form-label">สภาพอุปกรณ์ล่าสุด</label>
-            <select class="form-select" id="f_condition">
-              <option value="">-- เลือกสภาพ --</option>
-              <option value="ดี">ดี</option>
-              <option value="พอใช้">พอใช้</option>
-              <option value="ชำรุดเล็กน้อย">ชำรุดเล็กน้อย</option>
-              <option value="ชำรุดมาก">ชำรุดมาก</option>
-              <option value="ใช้การไม่ได้">ใช้การไม่ได้</option>
-            </select>
-          </div>
         </div>
 
-        <!-- SECTION 3: Borrower -->
-        <div class="section-header">👤 ข้อมูลผู้ยืม</div>
-        <div class="row g-3 mb-4">
-          <div class="col-md-6">
-            <label class="form-label">ชื่อนามสกุลผู้ยืม</label>
-            <input type="text" class="form-control" id="f_borrower" placeholder="เช่น นายสมชาย ใจดี">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">หมายเลขบัตรประชาชน</label>
-            <input type="text" class="form-control" id="f_idcard" placeholder="13 หลัก" maxlength="13" pattern="[0-9]{13}">
-            <div class="field-note">💳 ตัวเลข 13 หลัก ไม่มีขีด</div>
-          </div>
-        </div>
+        <!-- NOTE: no borrower name / ID card fields here — individual
+             borrower records belong to the receiving agency, not the
+             Fund. The Fund only tracks aggregate equipment counts per
+             agency (see P2_MASTER_EQUIPMENT_LOAN). -->
 
         <!-- BUTTONS -->
         <div class="d-flex gap-3 align-items-center flex-wrap">
@@ -431,11 +402,6 @@ body {
             <th>รายการอุปกรณ์</th>
             <th>ปีงบประมาณ</th>
             <th>สถานะอุปกรณ์</th>
-            <th>รหัสอุปกรณ์</th>
-            <th>รหัสครุภัณฑ์</th>
-            <th>ผู้ยืม</th>
-            <th>บัตรประชาชน</th>
-            <th>สภาพล่าสุด</th>
           </tr>
         </thead>
         <tbody id="previewTableBody"></tbody>
@@ -488,21 +454,12 @@ function collectData() {
     equipment:   document.getElementById('f_equipment').value,
     budgetyear:  document.getElementById('f_budgetyear').value.trim(),
     equipstatus: document.getElementById('f_equipstatus').value,
-    equipcode:   document.getElementById('f_equipcode').value.trim(),
-    assetcode:   document.getElementById('f_assetcode').value.trim(),
-    borrower:    document.getElementById('f_borrower').value.trim(),
-    idcard:      document.getElementById('f_idcard').value.trim(),
-    condition:   document.getElementById('f_condition').value,
   };
 }
 
 function statusBadge(s) {
   const map = { 'ใช้งานอยู่':'badge-success','ชำรุด':'badge-danger','รอซ่อม':'badge-warning','สูญหาย':'badge-danger','ส่งคืนแล้ว':'badge-info' };
   return `<span class="badge-status ${map[s]||'badge-gray'}">${s||'–'}</span>`;
-}
-function condBadge(s) {
-  const map = { 'ดี':'badge-success','พอใช้':'badge-info','ชำรุดเล็กน้อย':'badge-warning','ชำรุดมาก':'badge-danger','ใช้การไม่ได้':'badge-danger' };
-  return s ? `<span class="badge-status ${map[s]||'badge-gray'}">${s}</span>` : '–';
 }
 function dash(v) { return v || '<span style="color:#94a3b8">–</span>'; }
 
@@ -516,11 +473,6 @@ function renderRow(e, num, isNew) {
     <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis">${e.equipment}</td>
     <td style="text-align:center">${e.budgetyear}</td>
     <td>${statusBadge(e.equipstatus)}</td>
-    <td style="font-family:monospace;font-size:0.75rem">${dash(e.equipcode)}</td>
-    <td>${dash(e.assetcode)}</td>
-    <td>${dash(e.borrower)}</td>
-    <td style="font-family:monospace;font-size:0.75rem">${dash(e.idcard)}</td>
-    <td>${condBadge(e.condition)}</td>
   `;
   return tr;
 }
