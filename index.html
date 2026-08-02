@@ -2315,6 +2315,9 @@ body {
           <span style="font-size:1.4rem;">📊</span>
           <div><strong>สรุปข้อมูล:</strong> 3,388 ชิ้น, 26 ประเภท, 71 หน่วยบริการ, 8 อำเภอ</div>
         </div>
+        <button onclick="p2QuickFindAvailable()" style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-bottom:1.1rem;padding:0.7rem 1rem;background:#ecfdf5;border:1.5px solid #10b981;border-radius:10px;color:#065f46;font-weight:700;font-size:0.9rem;font-family:inherit;cursor:pointer;">
+          🔍 ต้องการยืมอุปกรณ์? ดูรายการที่ "พร้อมให้บริการ" ตอนนี้ →
+        </button>
         <div style="margin-bottom:1.25rem;">
           <h6 class="section-header" style="margin-top:0.5rem;">📈 สถิติภาพรวม</h6>
           <div class="summary-cards">
@@ -4513,6 +4516,15 @@ function buildP2DatasetsFromApi(opts) {
 }
 
 var p2ActiveGroup = null;
+
+function p2QuickFindAvailable() {
+  switchTab2('inventory', document.querySelector('#accBody2 .tab-btn'));
+  var statusSel = document.getElementById('p2StatusFilter');
+  if (statusSel) statusSel.value = 'พร้อม';
+  filterP2Cards();
+  var el = document.getElementById('tab2-inventory');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 function switchTab2(tabName, btnEl) {
   // Fix: pass button element instead of using event.target
@@ -6924,6 +6936,7 @@ window.loadP1List = loadP1List;
 window.initProject1 = initProject1;
 window.loadP1Data   = loadP1Data;
 window.switchTab2 = switchTab2;
+window.p2QuickFindAvailable = p2QuickFindAvailable;
 window.switchTab3 = switchTab3;
 window.loadP3Data = loadP3Data;
 window.switchTab4 = switchTab4;
