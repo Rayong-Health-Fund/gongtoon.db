@@ -294,15 +294,10 @@ textarea.form-control { resize: vertical; min-height: 80px; }
             <div class="invalid-msg">กรุณากรอกจำนวนเงิน</div>
           </div>
           <div class="col-md-4" style="display:flex;flex-direction:column;justify-content:flex-end">
-            <label class="form-label">สถานะ_รายงานผล <span class="req">*</span></label>
-            <select class="form-select" id="f_reportstatus" required>
-              <option value="">-- เลือกสถานะ --</option>
-              <option value="เสร็จเรียบร้อย">เสร็จเรียบร้อย</option>
-              <option value="อยู่ระหว่างดำเนินการ">อยู่ระหว่างดำเนินการ</option>
-              <option value="ยังไม่รายงานผล">ยังไม่รายงานผล</option>
-              <option value="ยกเลิก">ยกเลิก</option>
-            </select>
-            <div class="invalid-msg">กรุณาเลือกสถานะรายงานผล</div>
+            <label class="form-label">สถานะ_รายงานผล</label>
+            <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:var(--text-gray);">
+              🕒 กองทุนฯ เป็นผู้พิจารณาและอัปเดตสถานะภายหลัง
+            </div>
           </div>
           <div class="col-12">
             <label class="form-label">ชื่อ_โครงการ <span class="req">*</span></label>
@@ -350,7 +345,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
             <th>หน่วยบริการ</th>
             <th>จำนวนเงิน</th>
             <th>ชื่อโครงการ</th>
-            <th>สถานะรายงานผล</th>
+            <th>สถานะ (รอกองทุนฯ พิจารณา)</th>
           </tr>
         </thead>
         <tbody id="previewTableBody"></tbody>
@@ -367,7 +362,6 @@ const REQUIRED = [
   { id: 'f_amphoe',       msg: 'กรุณาเลือกอำเภอ' },
   { id: 'f_unit',         msg: 'กรุณากรอกชื่อหน่วยบริการ' },
   { id: 'f_amount',       msg: 'กรุณากรอกจำนวนเงิน' },
-  { id: 'f_reportstatus', msg: 'กรุณาเลือกสถานะรายงานผล' },
   { id: 'f_projname',     msg: 'กรุณากรอกชื่อโครงการ' },
 ];
 
@@ -404,7 +398,7 @@ function collectData() {
     unit:         document.getElementById('f_unit').value.trim(),
     amount:       parseFloat(document.getElementById('f_amount').value) || 0,
     projname:     document.getElementById('f_projname').value.trim(),
-    reportstatus: document.getElementById('f_reportstatus').value,
+    reportstatus: 'ยังไม่รายงานผล', // Fund decides/updates status later, not the submitter
   };
 }
 
