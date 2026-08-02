@@ -205,7 +205,7 @@ function migrateP2Funding_(ss) {
         getYearValue_(row, headerMap, 2568),
         getYearValue_(row, headerMap, 2569),
         getYearValue_(row, headerMap, 2570),
-        toNumber_(getByHeaders_(row, headerMap, ['รวมงบประมาณที่สนับสนุน', 'รวมงบประมาณที่สนับสนุน (บาท)', 'รวมงบประมาณที่สนับสนุน(บาท)'])),
+        toNumber_(getByHeaders_(row, headerMap, ['รวมงบที่สนับสนุน', 'รวมงบประมาณที่สนับสนุน', 'รวมงบประมาณที่สนับสนุน (บาท)', 'รวมงบประมาณที่สนับสนุน(บาท)'])),
         now
       ]);
     }
@@ -353,6 +353,7 @@ function getByHeaders_(row, headerMap, possibleHeaders) {
 }
 
 function getYearValue_(row, headerMap, year) {
+  const shortYear = String(year).slice(-2);
   const possibleHeaders = [
     `ปีงบประมาณ ${year}`,
     `ปีงบประมาณ${year}`,
@@ -362,7 +363,12 @@ function getYearValue_(row, headerMap, year) {
     `งบ ปี ${year}`,
     `งบ ${year}`,
     `ปี ${year}`,
-    `${year}`
+    `${year}`,
+    // Some raw sheets (e.g. งบ อ.xxx funding tabs) use a 2-digit year
+    // instead of the full 4-digit ${year}, e.g. "งบ ปี 64" for 2564.
+    `งบ ปี ${shortYear}`,
+    `งบปี ${shortYear}`,
+    `ปี ${shortYear}`
   ];
 
   return toNumber_(getByHeaders_(row, headerMap, possibleHeaders));
