@@ -6702,7 +6702,23 @@ function renderP1Page() {
   }
 
   var noRes = document.getElementById("p1ListNoResults");
-  if (noRes) noRes.style.display = filtered.length===0 ? "block" : "none";
+  if (noRes) {
+    noRes.style.display = filtered.length===0 ? "block" : "none";
+    if (filtered.length===0) {
+      var hasToken = false;
+      try {
+        var rfUser = JSON.parse(sessionStorage.getItem('rf_user') || 'null');
+        hasToken = !!(rfUser && rfUser.token);
+      } catch (e) {}
+      if (!hasToken) {
+        noRes.innerHTML = '<div class="no-results-icon">🔒</div>'
+          + '<p class="no-results-text">รายชื่อผู้รับผลประโยชน์รายบุคคลต้องเข้าสู่ระบบก่อนจึงจะดูได้ (ข้อมูลส่วนบุคคล)</p>'
+          + '<a href="login.html" style="display:inline-block;margin-top:0.5rem;font-size:0.85rem;color:#1e40af;font-weight:600;">เข้าสู่ระบบสำหรับเจ้าหน้าที่ →</a>';
+      } else {
+        noRes.innerHTML = '<div class="no-results-icon">🔍</div><p class="no-results-text">ไม่พบข้อมูล</p>';
+      }
+    }
+  }
 
   // Pagination
   renderP1Pagination(totalPages);
