@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สรุปผู้บริหาร – กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Sarabun', sans-serif;
+  background: #f1f5f9;
+  color: #0f172a;
+  min-height: 100vh;
+}
+.topbar {
+  background: #0f172a;
+  color: #fff;
+  padding: 0.9rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.topbar h1 { font-size: 1.05rem; font-weight: 700; }
+.topbar .sub { font-size: 0.78rem; color: #94a3b8; }
+.topbar a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.08);
+}
+.topbar a:hover { background: rgba(255,255,255,0.16); }
+.container { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+.gate {
+  max-width: 460px;
+  margin: 4rem auto;
+  background: #fff;
+  border-radius: 14px;
+  padding: 2.25rem 2rem;
+  text-align: center;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+}
+.gate .icon { font-size: 2.4rem; margin-bottom: 0.75rem; }
+.gate h2 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+.gate p { font-size: 0.9rem; color: #64748b; margin-bottom: 1.25rem; }
+.gate a {
+  display: inline-block;
+  background: #1e40af;
+  color: #fff;
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.9rem;
+  margin: 1.5rem 0;
+}
+.kpi-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem;
+  border-top: 3px solid #1e40af;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.kpi-value { font-size: 1.5rem; font-weight: 800; color: #1e40af; }
+.kpi-label { font-size: 0.8rem; color: #64748b; margin-top: 0.2rem; }
+.section-title { font-size: 1rem; font-weight: 700; margin: 1.75rem 0 0.75rem; }
+.project-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.project-table th, .project-table td {
+  padding: 0.7rem 1rem;
+  text-align: left;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #eef2f7;
+}
+.project-table th { background: #f8fafc; color: #475569; font-weight: 700; }
+.chart-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  height: 320px;
+}
+.status-msg { text-align: center; padding: 3rem 1rem; color: #64748b; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1>📊 สรุปผู้บริหาร</h1>
+    <div class="sub">กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</div>
+  </div>
+  <div style="display:flex;gap:0.5rem;">
+    <a href="index.html">← แดชบอร์ดหลัก</a>
+    <a href="staff-hub.html">เมนูเจ้าหน้าที่</a>
+  </div>
+</div>
+
+<div class="container" id="app">
+  <div class="status-msg" id="statusMsg">กำลังตรวจสอบสิทธิ์การเข้าใช้งาน...</div>
+</div>
+
+<script>
+var EXEC_ROLES = ['executive', 'admin'];
+
+var P1_URL = 'https://script.google.com/macros/s/AKfycby6wVpfb5o_AsbvH3tV9kW54RaG5arvFxJ52TA_lkSV7sAzyXKn-VOki7WpA-GEkppf/exec?project=p1&action=dashboard';
+var P2_URL = 'https://script.google.com/macros/s/AKfycbxJe9aB6cQJdA-3iy6vNj1urjMV3QzM67AfNAVxon-3MDUEZz1L_AfPlHNMPtP6gvcgHw/exec?type=funding';
+var P3_URL = 'https://script.google.com/macros/s/AKfycbx8Z0LVi91bFyV_VZAWzmCe4L0DYoayYkBTIl2qntk6qyHyCR9tDBjJas-xbK0TpoNAXg/exec';
+var P4_URL = 'https://script.google.com/macros/s/AKfycbycPZZSlTIBfPDscaGRxGXj06hhpj7rkRfehx_96GjJ694yteIjh5_AdnqCXNLhJFZGIA/exec?action=funding';
+
+function getSession() {
+  try { return JSON.parse(sessionStorage.getItem('rf_user') || 'null'); }
+  catch (e) { return null; }
+}
+
+function showGate(message) {
+  document.getElementById('app').innerHTML =
+    '<div class="gate"><div class="icon">🔒</div>'
+    + '<h2>สำหรับผู้บริหาร/ผู้ดูแลระบบเท่านั้น</h2>'
+    + '<p>' + message + '</p>'
+    + '<a href="login.html">เข้าสู่ระบบ →</a></div>';
+}
+
+function fmtM(n) { return (n / 1000000).toFixed(2) + 'M'; }
+
+function init() {
+  var session = getSession();
+  if (!session || !session.role) {
+    showGate('กรุณาเข้าสู่ระบบด้วยบัญชีที่ได้รับสิทธิ์ผู้บริหาร');
+    return;
+  }
+  if (EXEC_ROLES.indexOf(session.role) === -1) {
+    showGate('บัญชีของคุณ (' + session.role + ') ไม่มีสิทธิ์เข้าดูหน้านี้');
+    return;
+  }
+
+  document.getElementById('statusMsg').textContent = 'กำลังโหลดข้อมูลจากทั้ง 4 โครงการ...';
+
+  Promise.all([
+    fetch(P1_URL).then(function(r){ return r.json(); }).catch(function(){ return null; }),
+    fetch(P2_URL).then(function(r){ return r.json(); }).catch(function(){ return null; }),
+    fetch(P3_URL).then(function(r){ return r.json(); }).catch(function(){ return null; }),
+    fetch(P4_URL).then(function(r){ return r.json(); }).catch(function(){ return null; })
+  ]).then(function(results) {
+    render(session, results[0], results[1], results[2], results[3]);
+  });
+}
+
+function render(session, p1, p2, p3, p4) {
+  var p1Budget = (p1 && p1.summary && p1.summary.totalBudget) || 0;
+  var p1Count  = (p1 && p1.summary && p1.summary.totalRecords) || 0;
+
+  var p2Budget = 0;
+  if (p2 && Array.isArray(p2.data)) {
+    p2.data.forEach(function(row) { p2Budget += Number(row.total_budget) || 0; });
+  }
+
+  var p3Budget = 0, p3Count = 0;
+  if (p3 && Array.isArray(p3.records)) {
+    p3Count = p3.records.length;
+    p3.records.forEach(function(row) { p3Budget += Number(row.b) || 0; });
+  }
+
+  var p4Budget = 0;
+  if (p4 && Array.isArray(p4.data)) {
+    p4.data.forEach(function(row) { p4Budget += Number(row.budget) || 0; });
+  }
+
+  var totalBudget = p1Budget + p2Budget + p3Budget + p4Budget;
+
+  var app = document.getElementById('app');
+  app.innerHTML =
+    '<div style="font-size:0.85rem;color:#64748b;">เข้าสู่ระบบในฐานะ <strong>' + (session.name || session.email) + '</strong> (' + session.role + ')</div>'
+    + '<div class="kpi-grid">'
+    + '<div class="kpi-card" style="border-color:#1e40af;"><div class="kpi-value">฿' + fmtM(totalBudget) + '</div><div class="kpi-label">งบประมาณรวมทุกโครงการ</div></div>'
+    + '<div class="kpi-card" style="border-color:#059669;"><div class="kpi-value">' + p1Count.toLocaleString() + '</div><div class="kpi-label">P1 · หลังที่ปรับสภาพแล้ว</div></div>'
+    + '<div class="kpi-card" style="border-color:#d97706;"><div class="kpi-value">฿' + fmtM(p2Budget) + '</div><div class="kpi-label">P2 · งบสนับสนุนอุปกรณ์</div></div>'
+    + '<div class="kpi-card" style="border-color:#7c3aed;"><div class="kpi-value">' + p3Count.toLocaleString() + '</div><div class="kpi-label">P3 · โครงการที่ดำเนินการ</div></div>'
+    + '</div>'
+    + '<div class="section-title">📊 งบประมาณแยกตามโครงการ</div>'
+    + '<div class="chart-box"><canvas id="budgetChart"></canvas></div>'
+    + '<div class="section-title">📋 สรุปรายโครงการ</div>'
+    + '<table class="project-table"><thead><tr><th>โครงการ</th><th>งบประมาณ</th><th>สัดส่วน</th></tr></thead><tbody>'
+    + projectRow('P1 · ปรับสภาพแวดล้อมที่อยู่อาศัย', p1Budget, totalBudget)
+    + projectRow('P2 · ศูนย์สาธิตและยืมอุปกรณ์', p2Budget, totalBudget)
+    + projectRow('P3 · พัฒนาเครือข่ายบริการ', p3Budget, totalBudget)
+    + projectRow('P4 · ศูนย์ซ่อมบำรุงอุปกรณ์', p4Budget, totalBudget)
+    + '</tbody></table>';
+
+  new Chart(document.getElementById('budgetChart'), {
+    type: 'bar',
+    data: {
+      labels: ['P1 ปรับสภาพบ้าน', 'P2 ยืมอุปกรณ์', 'P3 พัฒนาเครือข่าย', 'P4 ซ่อมบำรุง'],
+      datasets: [{
+        label: 'งบประมาณ (ล้านบาท)',
+        data: [p1Budget, p2Budget, p3Budget, p4Budget].map(function(v){ return +(v/1000000).toFixed(2); }),
+        backgroundColor: ['#1e40af', '#d97706', '#7c3aed', '#059669'],
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { callback: function(v){ return v + 'M'; } } } }
+    }
+  });
+}
+
+function projectRow(name, budget, total) {
+  var pct = total > 0 ? ((budget / total) * 100).toFixed(1) : '0.0';
+  return '<tr><td>' + name + '</td><td>฿' + budget.toLocaleString(undefined,{maximumFractionDigits:0}) + '</td><td>' + pct + '%</td></tr>';
+}
+
+init();
+</script>
+
+</body>
+</html>
