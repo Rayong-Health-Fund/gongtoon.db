@@ -254,7 +254,26 @@ body {
     </a>
 
   </div>
+
+  <div id="execLinkWrap" style="display:none;margin-top:1.5rem;">
+    <a href="executive-dashboard.html" class="form-card" style="border-top:4px solid #0f172a;">
+      <div class="form-card-icon">📊</div>
+      <div class="form-card-label">สำหรับผู้บริหาร</div>
+      <div class="form-card-title">สรุปผู้บริหารข้ามโครงการ</div>
+      <div class="form-card-desc">ภาพรวมงบประมาณและผลดำเนินงานทั้ง 4 โครงการ</div>
+      <div class="form-card-arrow">เปิดหน้าสรุป →</div>
+    </a>
+  </div>
 </main>
+
+<script>
+  try {
+    var rfUser = JSON.parse(sessionStorage.getItem('rf_user') || 'null');
+    if (rfUser && (rfUser.role === 'executive' || rfUser.role === 'admin')) {
+      document.getElementById('execLinkWrap').style.display = 'block';
+    }
+  } catch (e) {}
+</script>
 
 </body>
 </html>
