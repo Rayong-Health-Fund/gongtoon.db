@@ -51,7 +51,7 @@ body {
 .gate p { font-size: 0.9rem; color: #64748b; margin-bottom: 1.25rem; }
 .gate a {
   display: inline-block;
-  background: #1e40af;
+  background: #0f766e;
   color: #fff;
   padding: 0.6rem 1.5rem;
   border-radius: 8px;
@@ -69,10 +69,10 @@ body {
   background: #fff;
   border-radius: 12px;
   padding: 1.1rem 1.2rem;
-  border-top: 3px solid #1e40af;
+  border-top: 3px solid #0f766e;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-.kpi-value { font-size: 1.5rem; font-weight: 800; color: #1e40af; }
+.kpi-value { font-size: 1.5rem; font-weight: 800; color: #0f766e; }
 .kpi-label { font-size: 0.8rem; color: #64748b; margin-top: 0.2rem; }
 .section-title { font-size: 1rem; font-weight: 700; margin: 1.75rem 0 0.75rem; }
 .project-table {
@@ -111,7 +111,7 @@ body {
 .rank-bar-wrap { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0; }
 .rank-bar-label { width: 90px; font-size: 0.78rem; font-weight: 600; flex-shrink: 0; }
 .rank-bar-track { flex: 1; background: #f1f5f9; border-radius: 4px; height: 20px; overflow: hidden; display: flex; }
-.rank-bar-val { font-size: 0.75rem; font-weight: 700; color: #1e40af; width: 90px; text-align: right; flex-shrink: 0; }
+.rank-bar-val { font-size: 0.75rem; font-weight: 700; color: #0f766e; width: 90px; text-align: right; flex-shrink: 0; }
 .user-badge {
   display: flex; align-items: center; gap: 0.5rem;
   background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
@@ -123,7 +123,7 @@ body {
   border-radius: 10px; text-transform: uppercase; letter-spacing: 0.03em;
   white-space: nowrap;
 }
-.role-staff { background:#dbeafe; color:#1e40af; }
+.role-staff { background:#ccfbf1; color:#0f766e; }
 .role-admin, .role-executive { background:#fef3c7; color:#92400e; }
 .user-badge-logout { color: #fca5a5; text-decoration: none; font-size: 0.78rem; font-weight: 700; }
 .user-badge-logout:hover { text-decoration: underline; }
@@ -341,7 +341,7 @@ function render(session, p1, p2, p3, p4, p2Log, p3Log, p4Log) {
   app.innerHTML =
     '<div style="font-size:0.85rem;color:#64748b;">เข้าสู่ระบบในฐานะ <strong>' + (session.name || session.email) + '</strong> (' + session.role + ')</div>'
     + '<div class="kpi-grid">'
-    + '<div class="kpi-card" style="border-color:#1e40af;"><div class="kpi-value">฿' + fmtM(totalBudget) + '</div><div class="kpi-label">งบประมาณรวมทุกโครงการ</div></div>'
+    + '<div class="kpi-card" style="border-color:#0f766e;"><div class="kpi-value">฿' + fmtM(totalBudget) + '</div><div class="kpi-label">งบประมาณรวมทุกโครงการ</div></div>'
     + '<div class="kpi-card" style="border-color:#059669;"><div class="kpi-value">' + p1Count.toLocaleString() + '</div><div class="kpi-label">P1 · หลังที่ปรับสภาพแล้ว</div></div>'
     + '<div class="kpi-card" style="border-color:#d97706;"><div class="kpi-value">฿' + fmtM(p2Budget) + '</div><div class="kpi-label">P2 · งบสนับสนุนอุปกรณ์</div></div>'
     + '<div class="kpi-card" style="border-color:#7c3aed;"><div class="kpi-value">' + p3Records.length.toLocaleString() + '</div><div class="kpi-label">P3 · โครงการที่ดำเนินการ</div></div>'
@@ -358,7 +358,7 @@ function render(session, p1, p2, p3, p4, p2Log, p3Log, p4Log) {
         var pct = maxDistrictTotal > 0 ? Math.max(2, Math.round(row.total / maxDistrictTotal * 100)) : 0;
         return '<div class="rank-bar-wrap">'
           + '<div class="rank-bar-label">' + row.d + '</div>'
-          + '<div class="rank-bar-track"><div style="width:' + pct + '%;background:linear-gradient(90deg,#1e40af,#3b82f6);"></div></div>'
+          + '<div class="rank-bar-track"><div style="width:' + pct + '%;background:linear-gradient(90deg,#0f766e,#14b8a6);"></div></div>'
           + '<div class="rank-bar-val">' + fmtM(row.total) + '</div>'
           + '</div>';
       }).join('') + '</div>'
@@ -375,7 +375,7 @@ function render(session, p1, p2, p3, p4, p2Log, p3Log, p4Log) {
       + '<div class="sub-kpi"><div class="v" style="color:#f59e0b;">' + p1Pending + '</div><div class="l">P1 กำลังดำเนินการ</div></div>'
       + '<div class="sub-kpi"><div class="v" style="color:#d97706;">' + Object.keys(p2Agencies).length + '</div><div class="l">P2 หน่วยงานที่ร่วมโครงการ</div></div>'
       + '<div class="sub-kpi"><div class="v" style="color:#059669;">' + p3Done + '</div><div class="l">P3 เสร็จเรียบร้อย</div></div>'
-      + '<div class="sub-kpi"><div class="v" style="color:#3b82f6;">' + p3Ongoing + '</div><div class="l">P3 อยู่ระหว่างดำเนินการ</div></div>'
+      + '<div class="sub-kpi"><div class="v" style="color:#14b8a6;">' + p3Ongoing + '</div><div class="l">P3 อยู่ระหว่างดำเนินการ</div></div>'
       + '<div class="sub-kpi"><div class="v" style="color:#94a3b8;">' + p3Pending + '</div><div class="l">P3 รอกองทุนฯ พิจารณา</div></div>'
       + '<div class="sub-kpi"><div class="v" style="color:#7c3aed;">' + Object.keys(p4Centers).length + '</div><div class="l">P4 ศูนย์ซ่อมที่มีข้อมูล</div></div>'
       + '<div class="sub-kpi"><div class="v" style="color:#7c3aed;">' + p4Rows.length + '</div><div class="l">P4 รายการอุปกรณ์ทั้งหมด</div></div>'
@@ -397,7 +397,7 @@ function render(session, p1, p2, p3, p4, p2Log, p3Log, p4Log) {
       datasets: [{
         label: 'งบประมาณ (ล้านบาท)',
         data: [p1Budget, p2Budget, p3Budget, p4Budget].map(function(v){ return +(v/1000000).toFixed(2); }),
-        backgroundColor: ['#1e40af', '#d97706', '#7c3aed', '#059669'],
+        backgroundColor: ['#0f766e', '#d97706', '#7c3aed', '#059669'],
         borderRadius: 6
       }]
     },

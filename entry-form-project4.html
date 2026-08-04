@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --primary-blue: #1e40af;
+  --primary-blue: #0f766e;
   --primary-navy: #0f172a;
   --bg-light: #f8fafc;
   --bg-gray: #f1f5f9;
@@ -66,7 +66,7 @@ body {
   border-radius: 10px; text-transform: uppercase; letter-spacing: 0.03em;
   white-space: nowrap;
 }
-.role-staff { background:#dbeafe; color:#1e40af; }
+.role-staff { background:#ccfbf1; color:#0f766e; }
 .role-admin, .role-executive { background:#fef3c7; color:#92400e; }
 .user-badge-logout { color: var(--danger); text-decoration: none; font-size: 0.78rem; font-weight: 700; }
 .user-badge-logout:hover { text-decoration: underline; }
@@ -123,8 +123,8 @@ body {
 /* Year color themes */
 .year-66 { background: #fefce8; border-color: #fde68a; }
 .year-66 .year-badge { background: #d97706; color: white; }
-.year-67 { background: #eff6ff; border-color: #bfdbfe; }
-.year-67 .year-badge { background: #1e40af; color: white; }
+.year-67 { background: #f0fdfa; border-color: #99f6e4; }
+.year-67 .year-badge { background: #0f766e; color: white; }
 .year-68r1 { background: #f0fdf4; border-color: #bbf7d0; }
 .year-68r1 .year-badge { background: #059669; color: white; }
 .year-68r2 { background: #f0fdfa; border-color: #99f6e4; }
@@ -175,7 +175,7 @@ body {
 
 /* SUBMIT / RESET */
 .btn-submit {
-  background: linear-gradient(135deg, var(--primary-blue), #2563eb);
+  background: linear-gradient(135deg, var(--primary-blue), #14b8a6);
   color: white; border: none; padding: 0.75rem 2.5rem; font-size: 1rem; font-weight: 700;
   border-radius: 10px; cursor: pointer; font-family: 'Sarabun', sans-serif;
   transition: all 0.25s; display: inline-flex; align-items: center; gap: 0.6rem;
@@ -269,7 +269,7 @@ body {
   padding: 0.2rem 0.55rem; border-radius: 6px; font-size: 0.68rem;
   font-weight: 700; display: inline-block; white-space: nowrap;
 }
-.badge-info { background:#dbeafe;color:#1e40af; }
+.badge-info { background:#ccfbf1;color:#0f766e; }
 
 /* VALIDATION */
 .req { color: var(--danger); margin-left: 2px; }
@@ -296,7 +296,7 @@ if (!RF_SESSION || !RF_SESSION.token) {
 <nav class="navbar">
   <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
     <a class="navbar-brand" href="staff-hub.html">
-      <div class="navbar-logo">🛠️</div>
+      <div class="navbar-logo" style="background:#fff;padding:3px;"><img src="assets/img/logo.jpg" alt="โลโก้กองทุนหลักประกันสุขภาพจังหวัดระยอง" style="width:100%;height:100%;object-fit:contain;border-radius:6px;display:block;"></div>
       <div>
         <div>กองทุนหลักประกันสุขภาพ</div>
         <div style="font-size:0.75rem;font-weight:400;color:var(--text-gray)">จังหวัดระยอง</div>
@@ -434,7 +434,7 @@ if (!RF_SESSION || !RF_SESSION.token) {
         <div class="year-section year-67">
           <div class="year-section-header">
             <span class="year-badge">ปี 2567</span>
-            <span style="color:#1e3a8a">ข้อมูลจัดซื้อและเบิกจ่าย</span>
+            <span style="color:#115e59">ข้อมูลจัดซื้อและเบิกจ่าย</span>
           </div>
           <div class="row g-3">
             <div class="col-md-4">
@@ -610,7 +610,7 @@ if (!RF_SESSION || !RF_SESSION.token) {
             <th rowspan="2" style="vertical-align:middle">รายการ</th>
             <th rowspan="2" style="vertical-align:middle">หน่วย</th>
             <th class="th-year" colspan="2" style="background:#fef9c3;color:#92400e">ปี 2566</th>
-            <th class="th-year" colspan="2" style="background:#dbeafe;color:#1e40af">ปี 2567</th>
+            <th class="th-year" colspan="2" style="background:#ccfbf1;color:#0f766e">ปี 2567</th>
             <th class="th-year" colspan="2" style="background:#d1fae5;color:#065f46">ปี 2568 ร1</th>
             <th class="th-year" colspan="2" style="background:#ccfbf1;color:#0f766e">ปี 2568 ร2</th>
             <th class="th-year" colspan="2" style="background:#ede9fe;color:#5b21b6">ปี 2569</th>
@@ -618,8 +618,8 @@ if (!RF_SESSION || !RF_SESSION.token) {
           <tr>
             <th style="background:#fef9c3;color:#92400e">ซื้อ</th>
             <th style="background:#fef9c3;color:#92400e">สุทธิ</th>
-            <th style="background:#dbeafe;color:#1e40af">ซื้อ</th>
-            <th style="background:#dbeafe;color:#1e40af">สุทธิ</th>
+            <th style="background:#ccfbf1;color:#0f766e">ซื้อ</th>
+            <th style="background:#ccfbf1;color:#0f766e">สุทธิ</th>
             <th style="background:#d1fae5;color:#065f46">ซื้อ</th>
             <th style="background:#d1fae5;color:#065f46">สุทธิ</th>
             <th style="background:#ccfbf1;color:#0f766e">ซื้อ</th>
