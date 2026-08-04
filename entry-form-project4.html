@@ -54,6 +54,22 @@ body {
   display: inline-flex; align-items: center; gap: 0.4rem;
 }
 .nav-back-btn:hover { background: var(--border-light); color: var(--primary-navy); }
+.nav-right { display: flex; align-items: center; gap: 0.75rem; }
+.user-badge {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: var(--bg-gray); border: 1.5px solid var(--border-light);
+  padding: 0.3rem 0.7rem; border-radius: 20px;
+  font-size: 0.8rem; font-weight: 600; color: var(--text-dark);
+}
+.user-badge-role {
+  font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.5rem;
+  border-radius: 10px; text-transform: uppercase; letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.role-staff { background:#dbeafe; color:#1e40af; }
+.role-admin, .role-executive { background:#fef3c7; color:#92400e; }
+.user-badge-logout { color: var(--danger); text-decoration: none; font-size: 0.78rem; font-weight: 700; }
+.user-badge-logout:hover { text-decoration: underline; }
 
 /* HERO */
 .hero {
@@ -134,6 +150,16 @@ body {
   outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(30,64,175,0.1);
 }
 .form-control::placeholder { color: #94a3b8; }
+.file-input-note { font-size: 0.72rem; color: var(--text-gray); margin-top: 0.3rem; }
+.file-preview-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
+.file-chip {
+  display: flex; align-items: center; gap: 0.4rem;
+  background: var(--bg-gray); border: 1px solid var(--border-light);
+  border-radius: 8px; padding: 0.3rem 0.6rem; font-size: 0.75rem; max-width: 170px;
+}
+.file-chip img { width: 28px; height: 28px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+.file-chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-chip-invalid { border-color: var(--danger); background: #fef2f2; color: var(--danger); }
 
 /* READONLY CALC FIELD */
 .calc-field {
@@ -257,6 +283,16 @@ body {
 </head>
 <body>
 
+<script>
+// ── LOGIN GATE ──────────────────────────────────────────────────────────
+// Must run before anything else: entry forms are staff-only.
+var RF_SESSION = null;
+try { RF_SESSION = JSON.parse(localStorage.getItem('rf_user') || 'null'); } catch (e) {}
+if (!RF_SESSION || !RF_SESSION.token) {
+  window.location.replace('login.html');
+}
+</script>
+
 <nav class="navbar">
   <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
     <a class="navbar-brand" href="staff-hub.html">
@@ -266,7 +302,15 @@ body {
         <div style="font-size:0.75rem;font-weight:400;color:var(--text-gray)">จังหวัดระยอง</div>
       </div>
     </a>
-    <a href="staff-hub.html" class="nav-back-btn">← กลับ Staff Hub</a>
+    <div class="nav-right">
+      <div class="user-badge" id="userBadge" style="display:none">
+        <span>👤</span>
+        <span id="userBadgeName"></span>
+        <span class="user-badge-role" id="userBadgeRole"></span>
+        <a href="#" class="user-badge-logout" onclick="rfLogout(); return false;">ออกจากระบบ</a>
+      </div>
+      <a href="staff-hub.html" class="nav-back-btn">← กลับ Staff Hub</a>
+    </div>
   </div>
 </nav>
 
@@ -307,35 +351,59 @@ body {
           </div>
           <div class="col-md-5">
             <label class="form-label">หน่วยงาน_ที่ตั้งศูนย์ซ่อม <span class="req">*</span></label>
-            <input type="text" class="form-control" id="f_agency"
-              placeholder="เช่น องค์การบริหารส่วนตำบลตะพง" required>
-            <div class="invalid-msg">กรุณากรอกชื่อหน่วยงาน</div>
+            <select class="form-select" id="f_agency" required disabled>
+              <option value="">-- เลือกอำเภอก่อน --</option>
+            </select>
+            <div class="field-note">📋 รายชื่อศูนย์ซ่อมที่มีอยู่แล้วในระบบของเขตนี้เท่านั้น</div>
+            <div class="invalid-msg">กรุณาเลือกชื่อหน่วยงาน</div>
           </div>
           <div class="col-md-4">
             <label class="form-label">กลุ่ม_อุปกรณ์ <span class="req">*</span></label>
             <select class="form-select" id="f_equipgroup" required>
               <option value="">-- เลือกกลุ่มอุปกรณ์ --</option>
-              <option>รถวีลแชร์</option>
-              <option>เตียงคนไข้</option>
-              <option>เตียงไฟฟ้า</option>
-              <option>โต๊ะคร่อมเตียง</option>
-              <option>ที่นอน</option>
-              <option>เครื่องผลิตออกซิเจน</option>
-              <option>อื่นๆ</option>
+              <option value="กลุ่มรถวีลแชร์">รถวีลแชร์</option>
+              <option value="กลุ่มเตียงคนไข้">เตียงคนไข้</option>
+              <option value="กลุ่มเตียงไฟฟ้า">เตียงไฟฟ้า</option>
+              <option value="กลุ่มโต๊ะคร่อมเตียง">โต๊ะคร่อมเตียง</option>
+              <option value="กลุ่มที่นอน">ที่นอน</option>
+              <option value="กลุ่มที่นอนลม">ที่นอนลม</option>
+              <option value="กลุ่มเครื่องผลิตออกซิเจน">เครื่องผลิตออกซิเจน</option>
+              <option value="กลุ่มเครื่องผลิตออกซิเจน ขนาด 3 ลิตร/นาที">เครื่องผลิตออกซิเจน ขนาด 3 ลิตร/นาที</option>
+              <option value="กลุ่มเครื่องผลิตออกซิเจน ขนาด 5 ลิตร/นาที">เครื่องผลิตออกซิเจน ขนาด 5 ลิตร/นาที</option>
+              <option value="กลุ่มเครื่องผลิตออกซิเจน ขนาด 10 ลิตร/นาที">เครื่องผลิตออกซิเจน ขนาด 10 ลิตร/นาที</option>
+              <option value="กลุ่มเครื่องดูดเสมหะ">เครื่องดูดเสมหะ</option>
             </select>
             <div class="invalid-msg">กรุณาเลือกกลุ่มอุปกรณ์</div>
           </div>
           <div class="col-md-8">
             <label class="form-label">รายการ_อุปกรณ์ <span class="req">*</span></label>
-            <input type="text" class="form-control" id="f_item"
-              placeholder="เช่น เบาะนั่ง วีลแชร์, ล้อยางดำ ตราม้า 4 นิ้ว" required>
-            <div class="invalid-msg">กรุณากรอกรายการอุปกรณ์</div>
+            <select class="form-select" id="f_item" required disabled>
+              <option value="">-- เลือกหน่วยงานและกลุ่มอุปกรณ์ก่อน --</option>
+            </select>
+            <input type="text" class="form-control mt-2" id="f_itemOther" placeholder="ระบุชื่อรายการอุปกรณ์ใหม่" style="display:none">
+            <div class="invalid-msg">กรุณาเลือกรายการอุปกรณ์</div>
           </div>
           <div class="col-md-4">
             <label class="form-label">อุปกรณ์_หน่วย <span class="req">*</span></label>
-            <input type="text" class="form-control" id="f_unit"
-              placeholder="เช่น ชุด, ชิ้น, ล้อ, ถุง" required>
-            <div class="invalid-msg">กรุณากรอกหน่วย</div>
+            <select class="form-select" id="f_unit" required>
+              <option value="">-- เลือกหน่วย --</option>
+              <option>ชุด</option>
+              <option>ชิ้น</option>
+              <option>ล้อ</option>
+              <option>ถุง</option>
+              <option>ถัง</option>
+              <option>กระป๋อง</option>
+              <option>กระบอก</option>
+              <option>คู่</option>
+              <option>ปี๊ป</option>
+              <option>แผ่น</option>
+              <option>กล่อง</option>
+              <option>กก.</option>
+              <option>อัน</option>
+              <option value="__other__">อื่นๆ (ระบุเอง)</option>
+            </select>
+            <input type="text" class="form-control mt-2" id="f_unitOther" placeholder="ระบุหน่วยที่ต้องการ" style="display:none">
+            <div class="invalid-msg">กรุณาเลือกหน่วย</div>
           </div>
         </div>
 
@@ -487,6 +555,23 @@ body {
           </div>
         </div>
 
+        <!-- SECTION: Attachments — uploaded to Drive via media_api.gs on submit -->
+        <div class="section-header">📷 รูปภาพ/เอกสารประกอบ</div>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label">รูปภาพ/เอกสาร_ก่อนซ่อม</label>
+            <input type="file" class="form-control" id="f_filesBefore" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx">
+            <div class="file-input-note">📎 รูปภาพ / PDF / Word / Excel — ไม่เกิน 5MB ต่อไฟล์</div>
+            <div class="file-preview-list" id="previewBefore"></div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">รูปภาพ/เอกสาร_หลังซ่อม</label>
+            <input type="file" class="form-control" id="f_filesAfter" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx">
+            <div class="file-input-note">📎 รูปภาพ / PDF / Word / Excel — ไม่เกิน 5MB ต่อไฟล์</div>
+            <div class="file-preview-list" id="previewAfter"></div>
+          </div>
+        </div>
+
         <!-- BUTTONS -->
         <div class="d-flex gap-3 align-items-center flex-wrap mt-2">
           <button type="submit" class="btn-submit"><span>✅</span> Submit &amp; เพิ่มข้อมูล</button>
@@ -552,6 +637,240 @@ body {
 <script>
 let entries = [], rowCounter = 0;
 
+var P4_API_BASE = 'https://script.google.com/macros/s/AKfycbycPZZSlTIBfPDscaGRxGXj06hhpj7rkRfehx_96GjJ694yteIjh5_AdnqCXNLhJFZGIA/exec';
+
+function applyDistrictLock() {
+  if (!RF_SESSION || !RF_SESSION.district || RF_SESSION.district === 'ทั้งหมด') return;
+  var amphoeEl = document.getElementById('f_amphoe');
+  if (!amphoeEl) return;
+  amphoeEl.value = RF_SESSION.district;
+  amphoeEl.disabled = true;
+  amphoeEl.style.background = '#f1f5f9';
+}
+applyDistrictLock();
+
+// ── DRAFT AUTO-SAVE (protects against lost data if the API is slow/fails) ──
+var DRAFT_KEY = 'draft_p4';
+function saveFormDraft() {
+  var data = {};
+  document.querySelectorAll('#entryForm input[id], #entryForm select[id], #entryForm textarea[id]').forEach(function(el) {
+    if (el.type === 'file' || el.disabled || el.classList.contains('calc-field')) return;
+    data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  data.__savedAt = Date.now();
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch (e) {}
+}
+function clearFormDraft() {
+  try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+}
+function restoreFormDraftPrompt() {
+  var raw;
+  try { raw = localStorage.getItem(DRAFT_KEY); } catch (e) { return; }
+  if (!raw) return;
+  var data;
+  try { data = JSON.parse(raw); } catch (e) { return; }
+  if (Date.now() - (data.__savedAt || 0) > 24 * 60 * 60 * 1000) { clearFormDraft(); return; }
+  var hasData = Object.keys(data).some(function(k) { return k !== '__savedAt' && data[k]; });
+  if (!hasData) return;
+
+  var banner = document.createElement('div');
+  banner.style.cssText = 'position:sticky;top:0;z-index:1500;background:#fef3c7;border-bottom:2px solid #f59e0b;padding:0.7rem 1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;font-family:inherit;font-size:0.85rem;color:#92400e;flex-wrap:wrap;';
+  banner.innerHTML = '<span>📝 พบข้อมูลที่กรอกค้างไว้จากครั้งก่อน ต้องการกู้คืนหรือไม่?</span>'
+    + '<span><button type="button" id="restoreDraftBtn" style="background:#f59e0b;color:#fff;border:none;padding:0.4rem 1rem;border-radius:6px;font-weight:700;cursor:pointer;font-family:inherit;margin-right:0.5rem;">กู้คืน</button>'
+    + '<button type="button" id="discardDraftBtn" style="background:#fff;color:#92400e;border:1.5px solid #f59e0b;padding:0.4rem 1rem;border-radius:6px;font-weight:700;cursor:pointer;font-family:inherit;">ละทิ้ง</button></span>';
+  document.body.insertBefore(banner, document.body.firstChild);
+
+  document.getElementById('restoreDraftBtn').onclick = function() {
+    Object.keys(data).forEach(function(k) {
+      if (k === '__savedAt') return;
+      var el = document.getElementById(k);
+      if (!el || el.disabled) return;
+      if (el.type === 'checkbox') { el.checked = !!data[k]; }
+      else { el.value = data[k]; }
+    });
+    if (typeof recalc === 'function') recalc();
+    banner.remove();
+  };
+  document.getElementById('discardDraftBtn').onclick = function() {
+    clearFormDraft();
+    banner.remove();
+  };
+}
+document.getElementById('entryForm').addEventListener('input', function() {
+  clearTimeout(window.__draftTimer);
+  window.__draftTimer = setTimeout(saveFormDraft, 600);
+});
+restoreFormDraftPrompt();
+
+// ── AGENCY & ITEM DROPDOWNS (populated from real data — no free typing) ──
+var CENTERS_BY_DISTRICT = {};
+var ITEMS_BY_CENTER_GROUP = {};
+
+function populateAgencyOptions() {
+  var amphoeEl = document.getElementById('f_amphoe');
+  var agencyEl = document.getElementById('f_agency');
+  var district = amphoeEl.value;
+  var list = CENTERS_BY_DISTRICT[district] || [];
+
+  if (!district) {
+    agencyEl.innerHTML = '<option value="">-- เลือกอำเภอก่อน --</option>';
+    agencyEl.disabled = true;
+  } else if (!list.length) {
+    agencyEl.innerHTML = '<option value="">-- ไม่พบศูนย์ซ่อมในเขตนี้ --</option>';
+    agencyEl.disabled = true;
+  } else {
+    agencyEl.innerHTML = '<option value="">-- เลือกหน่วยงาน --</option>' +
+      list.map(function(a) { return '<option>' + a + '</option>'; }).join('');
+    agencyEl.disabled = false;
+  }
+  populateItemOptions();
+}
+
+function populateItemOptions() {
+  var agencyEl = document.getElementById('f_agency');
+  var groupEl = document.getElementById('f_equipgroup');
+  var itemEl = document.getElementById('f_item');
+  var itemOtherEl = document.getElementById('f_itemOther');
+  var key = agencyEl.value + '||' + groupEl.value;
+  var list = ITEMS_BY_CENTER_GROUP[key] || [];
+
+  itemOtherEl.style.display = 'none';
+  itemOtherEl.value = '';
+
+  if (!agencyEl.value || !groupEl.value) {
+    itemEl.innerHTML = '<option value="">-- เลือกหน่วยงานและกลุ่มอุปกรณ์ก่อน --</option>';
+    itemEl.disabled = true;
+    return;
+  }
+  var options = '<option value="">-- เลือกรายการอุปกรณ์ --</option>' +
+    list.map(function(i) { return '<option>' + i + '</option>'; }).join('') +
+    '<option value="__other__">อื่นๆ (รายการใหม่ — ระบุเอง)</option>';
+  itemEl.innerHTML = options;
+  itemEl.disabled = false;
+}
+
+fetch(P4_API_BASE + '?action=directory')
+  .then(function(res) { return res.json(); })
+  .then(function(json) {
+    if (json.status !== 'ok' || !json.data) return;
+    json.data.forEach(function(row) {
+      var d = String(row.district || '').trim();
+      var c = String(row.center_name || '').trim();
+      var g = String(row.category || '').trim();
+      var i = String(row.item || '').trim();
+      if (d && c) {
+        if (!CENTERS_BY_DISTRICT[d]) CENTERS_BY_DISTRICT[d] = [];
+        if (CENTERS_BY_DISTRICT[d].indexOf(c) === -1) CENTERS_BY_DISTRICT[d].push(c);
+      }
+      if (c && g && i) {
+        var key = c + '||' + g;
+        if (!ITEMS_BY_CENTER_GROUP[key]) ITEMS_BY_CENTER_GROUP[key] = [];
+        if (ITEMS_BY_CENTER_GROUP[key].indexOf(i) === -1) ITEMS_BY_CENTER_GROUP[key].push(i);
+      }
+    });
+    Object.keys(CENTERS_BY_DISTRICT).forEach(function(d) { CENTERS_BY_DISTRICT[d].sort(); });
+    Object.keys(ITEMS_BY_CENTER_GROUP).forEach(function(k) { ITEMS_BY_CENTER_GROUP[k].sort(); });
+    populateAgencyOptions();
+  })
+  .catch(function(err) { console.error('[P4 entry] center/item list fetch failed:', err); });
+
+document.getElementById('f_amphoe').addEventListener('change', populateAgencyOptions);
+document.getElementById('f_agency').addEventListener('change', populateItemOptions);
+document.getElementById('f_equipgroup').addEventListener('change', populateItemOptions);
+document.getElementById('f_item').addEventListener('change', function() {
+  document.getElementById('f_itemOther').style.display = this.value === '__other__' ? 'block' : 'none';
+});
+
+function renderUserBadge() {
+  if (!RF_SESSION) return;
+  var badge = document.getElementById('userBadge');
+  if (!badge) return;
+  document.getElementById('userBadgeName').textContent = RF_SESSION.name || RF_SESSION.email;
+  var roleLabels = { staff: 'เจ้าหน้าที่', admin: 'ผู้ดูแลระบบ', executive: 'ผู้บริหาร' };
+  var roleLabel = roleLabels[RF_SESSION.role] || RF_SESSION.role;
+  if (RF_SESSION.district && RF_SESSION.district !== 'ทั้งหมด') roleLabel += ' · ' + RF_SESSION.district;
+  var roleEl = document.getElementById('userBadgeRole');
+  roleEl.textContent = roleLabel;
+  roleEl.className = 'user-badge-role role-' + (RF_SESSION.role || 'staff');
+  badge.style.display = 'flex';
+}
+function rfLogout() {
+  localStorage.removeItem('rf_user');
+  window.location.href = 'login.html';
+}
+document.addEventListener('DOMContentLoaded', renderUserBadge);
+
+// ── FILE ATTACHMENTS (UI/validation only — upload wiring comes in a later step) ──
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_EXT = /\.(jpe?g|png|gif|webp|heic|pdf|docx?|xlsx?)$/i;
+
+function renderFileChip(container, file, ok) {
+  const chip = document.createElement('div');
+  chip.className = 'file-chip' + (ok ? '' : ' file-chip-invalid');
+  if (ok && file.type.startsWith('image/')) {
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    chip.appendChild(img);
+  } else {
+    chip.insertAdjacentHTML('beforeend', `<span>${ok ? '📄' : '⚠️'}</span>`);
+  }
+  const name = document.createElement('span');
+  name.className = 'file-chip-name';
+  name.title = file.name;
+  name.textContent = ok ? file.name : `${file.name} (${!ACCEPTED_EXT.test(file.name) ? 'ชนิดไฟล์ไม่รองรับ' : 'เกิน 5MB'})`;
+  chip.appendChild(name);
+  container.appendChild(chip);
+}
+
+function handleFilePreview(inputEl, previewId) {
+  const container = document.getElementById(previewId);
+  container.innerHTML = '';
+  Array.from(inputEl.files).forEach(file => {
+    const ok = file.size <= MAX_FILE_SIZE && ACCEPTED_EXT.test(file.name);
+    renderFileChip(container, file, ok);
+  });
+}
+
+document.getElementById('f_unit').addEventListener('change', function () {
+  var other = document.getElementById('f_unitOther');
+  other.style.display = this.value === '__other__' ? 'block' : 'none';
+  if (this.value !== '__other__') other.value = '';
+});
+
+document.getElementById('f_filesBefore').addEventListener('change', function () { handleFilePreview(this, 'previewBefore'); });
+document.getElementById('f_filesAfter').addEventListener('change', function () { handleFilePreview(this, 'previewAfter'); });
+
+// ---- Photo upload to Drive (via shared media_api.gs, not this project's own sheet) ----
+var MEDIA_API_URL = 'https://script.google.com/macros/s/AKfycbz47_iPVrnJQHmf88w0Y4OnkSlR4qRvlEqs_nIxjeRaEnt5MvuVdWhUXceZxRpNlKmp/exec';
+var MEDIA_CONTEXT = 'p4';
+
+function fileToBase64_(file) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function() { resolve(reader.result.split(',')[1]); };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function uploadPhotos_(inputEl, label) {
+  var files = inputEl && inputEl.files ? Array.from(inputEl.files) : [];
+  if (!files.length) return Promise.resolve([]);
+  var token = RF_SESSION && RF_SESSION.token;
+  return Promise.all(files.map(function(file) {
+    return fileToBase64_(file).then(function(data) {
+      return fetch(MEDIA_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ token: token, action: 'upload', context: MEDIA_CONTEXT, file_data: data, filename: file.name, mime: file.type })
+      }).then(function(r) { return r.json(); }).then(function(json) {
+        if (!json.ok) throw new Error('อัพโหลด' + label + 'ไม่สำเร็จ: ' + (json.error || ''));
+        return json.url;
+      });
+    });
+  }));
+}
+
 // ── REAL-TIME CALCULATIONS ──────────────────────────────────────────────
 function n(id) { return parseFloat(document.getElementById(id).value) || 0; }
 function setCalc(id, val) { document.getElementById(id).value = val; }
@@ -611,6 +930,25 @@ function validateForm() {
       if (msg) msg.style.display = 'none';
     }
   });
+
+  const unitEl = document.getElementById('f_unit');
+  const unitOtherEl = document.getElementById('f_unitOther');
+  if (unitEl.value === '__other__' && !unitOtherEl.value.trim()) {
+    unitOtherEl.classList.add('is-invalid');
+    valid = false;
+  } else {
+    unitOtherEl.classList.remove('is-invalid');
+  }
+
+  const itemEl = document.getElementById('f_item');
+  const itemOtherEl = document.getElementById('f_itemOther');
+  if (itemEl.value === '__other__' && !itemOtherEl.value.trim()) {
+    itemOtherEl.classList.add('is-invalid');
+    valid = false;
+  } else {
+    itemOtherEl.classList.remove('is-invalid');
+  }
+
   return valid;
 }
 
@@ -627,15 +965,28 @@ function collectData() {
   recalc();
   return {
     amphoe:    document.getElementById('f_amphoe').value,
-    agency:    document.getElementById('f_agency').value.trim(),
+    agency:    document.getElementById('f_agency').value,
     group:     document.getElementById('f_equipgroup').value,
-    item:      document.getElementById('f_item').value.trim(),
-    unit:      document.getElementById('f_unit').value.trim(),
-    buy66:     n('f_buy66'),  net66:  parseFloat(document.getElementById('c_net66').value)  || 0,
-    buy67:     n('f_buy67'),  net67:  parseFloat(document.getElementById('c_net67').value)  || 0,
-    buy68r1:   n('f_buy68r1') + n('f_buyF68r1'), net68r1: parseFloat(document.getElementById('c_net68r1').value) || 0,
-    buy68r2:   n('f_buy68r2') + n('f_buyF68r2'), net68:   parseFloat(document.getElementById('c_net68').value)   || 0,
-    buy69:     n('f_buy69')  + n('f_buyF69'),    net69:   parseFloat(document.getElementById('c_net69').value)   || 0,
+    item:      document.getElementById('f_item').value === '__other__'
+                 ? document.getElementById('f_itemOther').value.trim()
+                 : document.getElementById('f_item').value,
+    unit:      document.getElementById('f_unit').value === '__other__'
+                 ? document.getElementById('f_unitOther').value.trim()
+                 : document.getElementById('f_unit').value,
+    // buy/paid are the real inputs the backend adds onto existing totals.
+    // net/balance are shown live in the preview table only — the backend
+    // never writes them (those columns are calculated/protected on the
+    // real sheet), so they are not part of what gets submitted.
+    buy66:   n('f_buy66'),  paid66:   n('f_out66'),
+    buy67:   n('f_buy67'),  paid67:   n('f_out67'),
+    buy68r1: n('f_buy68r1') + n('f_buyF68r1'), paid68r1: n('f_out68r1') + n('f_outF68r1'),
+    buy68r2: n('f_buy68r2') + n('f_buyF68r2'), paid68r2: n('f_out68r2') + n('f_outF68r2'),
+    buy69:   n('f_buy69')  + n('f_buyF69'),    paid69:   n('f_out69')  + n('f_outF69'),
+    net66:  parseFloat(document.getElementById('c_net66').value)  || 0,
+    net67:  parseFloat(document.getElementById('c_net67').value)  || 0,
+    net68r1: parseFloat(document.getElementById('c_net68r1').value) || 0,
+    net68:  parseFloat(document.getElementById('c_net68').value)  || 0,
+    net69:  parseFloat(document.getElementById('c_net69').value)  || 0,
   };
 }
 
@@ -650,7 +1001,7 @@ function renderRow(e, num, isNew) {
     <td><span class="row-num">${num}</span></td>
     <td>${e.amphoe}</td>
     <td style="font-weight:600;max-width:130px;overflow:hidden;text-overflow:ellipsis">${e.agency}</td>
-    <td><span class="badge-status badge-info">${e.group}</span></td>
+    <td><span class="badge-status badge-info">${e.group.replace(/^กลุ่ม/, '')}</span></td>
     <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis">${e.item}</td>
     <td style="text-align:center">${e.unit}</td>
     <td class="net-cell">${e.buy66}</td>
@@ -702,16 +1053,64 @@ function resetForm() {
   recalc();
   document.querySelectorAll('.form-control:not(.calc-field),.form-select').forEach(el => el.classList.remove('is-invalid'));
   document.querySelectorAll('.invalid-msg').forEach(m => m.style.display = 'none');
+  document.getElementById('previewBefore').innerHTML = '';
+  document.getElementById('previewAfter').innerHTML = '';
+  document.getElementById('f_unitOther').style.display = 'none';
+  document.getElementById('f_itemOther').style.display = 'none';
+  applyDistrictLock();
+  populateAgencyOptions();
+}
+
+function showErrorToast(msg) {
+  const container = document.getElementById('toastContainer');
+  const div = document.createElement('div');
+  div.className = 'toast-item';
+  div.style.background = '#fef2f2';
+  div.style.borderColor = '#fecaca';
+  div.style.color = '#991b1b';
+  div.innerHTML = `<span class="toast-icon">⚠️</span> ${msg}`;
+  container.appendChild(div);
+  setTimeout(() => div.remove(), 4500);
 }
 
 document.getElementById('entryForm').addEventListener('submit', function(e) {
   e.preventDefault();
   if (!validateForm()) return;
+  if (!RF_SESSION || !RF_SESSION.token) { window.location.replace('login.html'); return; }
   const entry = collectData();
-  addToPreview(entry);
-  showToast(entry.item);
-  resetForm();
-  setTimeout(() => document.querySelector('.preview-card').scrollIntoView({ behavior:'smooth', block:'start' }), 150);
+  const submitBtn = document.querySelector('#entryForm button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = '⏳ กำลังอัพโหลดรูป...';
+  Promise.all([
+    uploadPhotos_(document.getElementById('f_filesBefore'), 'รูปก่อนซ่อม'),
+    uploadPhotos_(document.getElementById('f_filesAfter'), 'รูปหลังซ่อม')
+  ]).then(function(results) {
+    entry.photos_before = results[0].join(', ');
+    entry.photos_after = results[1].join(', ');
+    submitBtn.textContent = '⏳ กำลังบันทึก...';
+    return fetch(P4_API_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(Object.assign({ token: RF_SESSION.token }, entry))
+    });
+  })
+    .then(res => res.json())
+    .then(json => {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>✅</span> Submit &amp; เพิ่มข้อมูล';
+      if (!json.ok) { showErrorToast(json.error || 'บันทึกไม่สำเร็จ'); return; }
+      addToPreview(entry);
+      showToast(entry.item);
+      resetForm();
+      clearFormDraft();
+      setTimeout(() => document.querySelector('.preview-card').scrollIntoView({ behavior:'smooth', block:'start' }), 150);
+    })
+    .catch(err => {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>✅</span> Submit &amp; เพิ่มข้อมูล';
+      showErrorToast(err && err.message ? err.message : 'เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่');
+      console.error('[P4 entry] submit failed:', err);
+    });
 });
 
 // Initial calculation

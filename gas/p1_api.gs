@@ -30,6 +30,104 @@ function doGet(e) {
   return jsonOutput_({ ok: false, error: 'ไม่รู้จัก action: ' + action });
 }
 
+function doPost(e) {
+  try {
+    const body = JSON.parse(e.postData.contents);
+    const session = validateSession_(body.token);
+    if (!session) {
+      return jsonOutput_({ ok: false, error: 'กรุณาเข้าสู่ระบบใหม่ (session หมดอายุหรือไม่ถูกต้อง)' });
+    }
+
+    const amphoe = String(body.amphoe || '').trim();
+    if (session.role === 'staff' && session.district !== 'ทั้งหมด' && session.district !== amphoe) {
+      return jsonOutput_({ ok: false, error: 'คุณกรอกข้อมูลได้เฉพาะเขต ' + session.district + ' เท่านั้น' });
+    }
+
+    const required = ['name', 'age', 'status', 'house', 'tambon', 'amphoe', 'budget', 'budgetyear', 'projstatus'];
+    for (let i = 0; i < required.length; i++) {
+      const key = required[i];
+      if (body[key] === undefined || body[key] === null || body[key] === '') {
+        return jsonOutput_({ ok: false, error: 'ข้อมูลไม่ครบ: ' + key });
+      }
+    }
+
+    const disabilities = Array.isArray(body.disabilities) ? body.disabilities : [];
+    const disabilityCodes = disabilities
+      .map(function(d) { const m = String(d).match(/ป\.(\d)/); return m ? 'ป.' + m[1] : null; })
+      .filter(Boolean);
+    const disabilityTypes = disabilities.filter(function(d) { return d !== 'ไม่พิการ'; });
+
+    const now = new Date();
+    const recordId = 'P1-WEB-' + Utilities.formatDate(now, 'Asia/Bangkok', 'yyyyMMdd-HHmmss');
+    const statusText = String(body.status || '');
+
+    const rowObj = {
+      record_id: recordId,
+      source_sheet: 'เว็บไซต์ (Web Form)',
+      source_year_label: String(body.budgetyear || ''),
+      agency: String(body.agency || ''),
+      person_name: String(body.name || ''),
+      age: Number(body.age) || 0,
+      status_group: statusText,
+      is_elderly: statusText.indexOf('ผู้สูงอายุ') > -1 ? 'TRUE' : 'FALSE',
+      is_disabled: statusText.indexOf('ผู้พิการ') > -1 ? 'TRUE' : 'FALSE',
+      disability_codes: disabilityCodes.join(','),
+      disability_types: disabilityTypes.join(','),
+      address_text: String(body.house || ''),
+      subdistrict: String(body.tambon || ''),
+      district: amphoe,
+      province: 'ระยอง',
+      budget: Number(body.budget) || 0,
+      project_status: String(body.projstatus || ''),
+      approved_date: String(body.approvedate || ''),
+      mou_date: String(body.moudate || ''),
+      note: 'กรอกผ่านเว็บโดย ' + session.email + ' เมื่อ ' + Utilities.formatDate(now, 'Asia/Bangkok', 'dd/MM/yyyy HH:mm')
+    };
+
+    appendP1Row_(rowObj);
+    try { CacheService.getScriptCache().remove(P1_RECORDS_CACHE_KEY); } catch (e) {}
+
+    logP1Submission_(SpreadsheetApp.getActiveSpreadsheet(), {
+      recordId: recordId,
+      name: rowObj.person_name,
+      amphoe: amphoe,
+      byEmail: session.email,
+      photosBefore: String(body.photos_before || ''),
+      photosAfter: String(body.photos_after || '')
+    });
+
+    return jsonOutput_({ ok: true, recordId: recordId });
+  } catch (err) {
+    return jsonOutput_({ ok: false, error: String(err) });
+  }
+}
+
+// Appends a new row matching whatever column order P1_Master_data
+// actually has (read from its own header row), so this never assumes
+// a fixed layout and never touches any existing row.
+function appendP1Row_(rowObj) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(P1_API_MASTER_SHEET);
+  if (!sheet) throw new Error('ไม่พบชีท ' + P1_API_MASTER_SHEET);
+
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
+    .map(function(h) { return String(h).trim(); });
+  const newRow = headers.map(function(h) { return Object.prototype.hasOwnProperty.call(rowObj, h) ? rowObj[h] : ''; });
+  sheet.appendRow(newRow);
+}
+
+// Photo URLs go in their own log sheet, never appended as new columns
+// on P1_Master_data itself — this keeps the real production sheet's
+// structure untouched, same as how P2/P3/P4 already log their own
+// submission events separately from the raw data sheets.
+function logP1Submission_(ss, info) {
+  const sheet = ss.getSheetByName('P1_Update_Log') || ss.insertSheet('P1_Update_Log');
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['timestamp', 'record_id', 'name', 'amphoe', 'submitted_by', 'photos_before', 'photos_after']);
+  }
+  sheet.appendRow([new Date(), info.recordId, info.name, info.amphoe, info.byEmail, info.photosBefore || '', info.photosAfter || '']);
+}
+
 function validateSession_(token) {
   if (!token) return null;
 
@@ -73,7 +171,22 @@ function getP1DashboardData_(session) {
   return result;
 }
 
+// getP1Records_ occasionally took long enough on the live spreadsheet
+// to hit Apps Script's execution limit outright (same class of failure
+// already fixed for P2/P3/P4) — visible as a silent blank section on
+// the site since the fetch just failed with no records and no message.
+// Cached for the same reason. The cache lives server-side only (never
+// exposed to unauthenticated callers directly — doGet still gates
+// `records` on a valid session same as before), so caching the raw
+// personal-data records here is safe.
+const P1_RECORDS_CACHE_KEY = 'p1_records_v1';
+const P1_RECORDS_CACHE_TTL = 300; // seconds
+
 function getP1Records_() {
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get(P1_RECORDS_CACHE_KEY);
+  if (cached) return JSON.parse(cached);
+
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(P1_API_MASTER_SHEET);
 
@@ -87,7 +200,7 @@ function getP1Records_() {
   const headers = values[0].map(h => String(h).trim());
   const rows = values.slice(1);
 
-  return rows
+  const records = rows
     .filter(row => row.some(cell => String(cell).trim() !== ''))
     .map(row => {
       const obj = {};
@@ -119,6 +232,9 @@ function getP1Records_() {
         note: obj.note
       };
     });
+
+  try { cache.put(P1_RECORDS_CACHE_KEY, JSON.stringify(records), P1_RECORDS_CACHE_TTL); } catch (e) {}
+  return records;
 }
 
 function buildP1Summary_(records) {

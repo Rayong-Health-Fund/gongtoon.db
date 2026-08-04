@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกี่ยวกับกองทุน – กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+.navbar {
+  background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.navbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; color: #0f172a; text-decoration: none; }
+.navbar-logo { width: 38px; height: 38px; background: #1e40af; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: white; }
+.nav-back-btn { background: #f1f5f9; border: 1.5px solid #e2e8f0; color: #1e293b; padding: 0.35rem 0.9rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+
+.hero { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); color: white; padding: 2.5rem 1.5rem; text-align: center; }
+.hero-title { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.4rem; }
+.hero-subtitle { font-size: 0.95rem; opacity: 0.85; }
+
+.container { max-width: 780px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+.toc { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+.toc a {
+  background: #fff; border: 1.5px solid #e2e8f0; color: #1e40af; text-decoration: none;
+  font-size: 0.82rem; font-weight: 600; padding: 0.4rem 0.9rem; border-radius: 20px;
+}
+
+.section { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 1.75rem; margin-bottom: 1.5rem; scroll-margin-top: 80px; }
+.section-title { font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+.section-body { font-size: 0.92rem; line-height: 1.8; color: #334155; }
+
+.placeholder {
+  background: #fffbeb; border: 1.5px dashed #fcd34d; border-radius: 10px;
+  padding: 1rem 1.25rem; color: #92400e; font-size: 0.85rem; line-height: 1.7;
+}
+.placeholder strong { display: block; margin-bottom: 0.3rem; }
+
+.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+.contact-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.88rem; }
+.contact-item a { color: #1e40af; text-decoration: none; font-weight: 600; }
+
+.fact-box {
+  background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 10px;
+  padding: 0.85rem 1.1rem; font-size: 0.85rem; color: #1e3a8a; margin-bottom: 1rem; line-height: 1.8;
+}
+.vision-box {
+  background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 10px;
+  padding: 1rem 1.25rem; font-size: 0.92rem; color: #14532d; font-weight: 700; margin-bottom: 1.25rem; line-height: 1.7;
+}
+.subhead { font-size: 0.88rem; font-weight: 700; color: #0f172a; margin: 1.1rem 0 0.5rem; }
+.mission-list { padding-left: 1.25rem; line-height: 1.9; }
+.strategy-item {
+  border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 0.6rem; overflow: hidden;
+}
+.strategy-item summary {
+  padding: 0.7rem 1rem; font-weight: 700; font-size: 0.87rem; cursor: pointer;
+  background: #f8fafc; color: #0f172a;
+}
+.strategy-item summary:hover { background: #f1f5f9; }
+.strategy-item .strategy-body { padding: 0.75rem 1.1rem 1rem; font-size: 0.84rem; line-height: 1.85; color: #334155; }
+.strategy-item .strategy-body ul { padding-left: 1.1rem; margin-top: 0.3rem; }
+
+.gov-topbar {
+  background: #0f172a; color: #cbd5e1; font-size: 0.75rem;
+  padding: 0.35rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+}
+.gov-a11y { display: flex; align-items: center; gap: 0.4rem; }
+.gov-a11y span { opacity: 0.85; margin-right: 0.15rem; }
+.gov-a11y button {
+  background: transparent; border: 1px solid #475569; color: #e2e8f0;
+  border-radius: 4px; cursor: pointer; font-family: Sarabun, sans-serif;
+  padding: 0.05rem 0.45rem; font-weight: 700; line-height: 1.5;
+}
+.gov-a11y button:hover { background: #1e293b; }
+.gov-a11y button.active { background: #1e40af; border-color: #1e40af; color: #fff; }
+body.gov-contrast { background: #000 !important; color: #fff !important; }
+body.gov-contrast .navbar, body.gov-contrast .section, body.gov-contrast footer.site-footer {
+  background: #000 !important; color: #fff !important; border-color: #ffe066 !important;
+}
+body.gov-contrast a { color: #ffe066 !important; }
+body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid #ffe066; }
+.footer-sitemap a { color: #cbd5e1; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="gov-topbar">
+  <div id="govTopbarDate"></div>
+  <div class="gov-a11y">
+    <span>ขนาดตัวอักษร:</span>
+    <button type="button" onclick="govSetFontSize(-1)" title="ลดขนาดตัวอักษร">A-</button>
+    <button type="button" onclick="govSetFontSize(0)" title="ขนาดปกติ">A</button>
+    <button type="button" onclick="govSetFontSize(1)" title="เพิ่มขนาดตัวอักษร">A+</button>
+    <button type="button" id="govContrastBtn" onclick="govToggleContrast()" title="โหมดตัดกันสูง">◐ ตัดกันสูง</button>
+  </div>
+</div>
+
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">
+    <div class="navbar-logo">🏥</div>
+    <span>กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</span>
+  </a>
+  <a href="index.html" class="nav-back-btn">← กลับหน้าหลัก</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-title">ℹ️ เกี่ยวกับกองทุน</div>
+  <div class="hero-subtitle">กองทุนฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพ จังหวัดระยอง</div>
+</div>
+
+<div class="container">
+
+  <div class="toc">
+    <a href="#history">📜 ประวัติความเป็นมา</a>
+    <a href="#mission">🎯 วิสัยทัศน์ พันธกิจ ยุทธศาสตร์</a>
+    <a href="#structure">🏛️ โครงสร้างการบริหาร</a>
+    <a href="#projects">📋 โครงการที่ดำเนินการ</a>
+    <a href="#contact">📞 ติดต่อกองทุนฯ</a>
+  </div>
+
+  <div class="section" id="history">
+    <div class="section-title">📜 ประวัติความเป็นมา</div>
+    <div class="section-body">
+      <div class="fact-box">
+        📅 ลงนามข้อตกลงเลขที่ <strong>56/B/03021</strong> เมื่อวันที่ <strong>28 มิถุนายน 2556</strong><br>
+        🤝 ระหว่าง <strong>องค์การบริหารส่วนจังหวัดระยอง</strong> กับ <strong>สำนักงานหลักประกันสุขภาพแห่งชาติ (สปสช.)</strong>
+      </div>
+      <p>
+        องค์การบริหารส่วนจังหวัดระยอง ได้เล็งเห็นถึงปัญหาด้านการฟื้นฟูสมรรถภาพและคุณภาพชีวิตที่ดี
+        ในการเข้าถึงระบบหลักประกันสุขภาพของคนพิการ ผู้สูงอายุ ผู้ป่วยที่อยู่ในระยะกึ่งเฉียบพลัน
+        และผู้ที่มีภาวะพึ่งพิง เพื่อสนับสนุนส่งเสริมระบบบริการฟื้นฟูสมรรถภาพ เพื่อให้ผู้ที่มีสิทธิได้รับการฟื้นฟูสมรรถภาพ
+        เข้าถึงบริการฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพและการดำรงชีวิตได้อย่างทั่วถึงและมีประสิทธิภาพมากยิ่งขึ้น
+        จึงได้ลงนามข้อตกลงการดำเนินงานและบริหารจัดการกองทุนฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพ ระดับจังหวัด
+        ข้อตกลงเลขที่ 56/B/03021 เมื่อวันที่ 28 มิถุนายน 2556
+        ระหว่างองค์การบริหารส่วนจังหวัดระยองกับสำนักงานหลักประกันสุขภาพแห่งชาติ
+      </p>
+      <div class="placeholder" style="margin-top:1rem;">
+        <strong>⚠️ ส่วนที่ยังไม่มีข้อมูล — จะอัพเดทเพิ่มเติมในอนาคต</strong>
+        รายละเอียดอื่น ๆ นอกเหนือจากที่มีนี้ (เช่น เหตุการณ์สำคัญระหว่างทาง) รอข้อมูลเพิ่มเติมจากกองทุนฯ
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="mission">
+    <div class="section-title">🎯 วิสัยทัศน์ พันธกิจ ยุทธศาสตร์</div>
+    <div class="section-body">
+      <div class="vision-box">
+        🎯 วิสัยทัศน์<br>
+        “เป็นผู้นำในการบริหารจัดการกองทุนฟื้นฟูสมรรถภาพระดับจังหวัด ในเขตสุขภาพที่ 6”
+      </div>
+
+      <div class="subhead">พันธกิจ</div>
+      <ul class="mission-list">
+        <li>สร้างกองทุนฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพจังหวัดระยอง ให้เข้มแข็ง ทั้งด้านการงบประมาณ การบริหารจัดการกองทุนฯ และการบริหารองค์กร</li>
+        <li>ส่งเสริมให้มีเครือข่ายระบบฟื้นฟูสมรรถภาพทางการแพทย์ ครอบคลุมทุกอำเภอ และมีการพัฒนาศักยภาพอย่างต่อเนื่องยั่งยืน</li>
+        <li>จัดตั้งศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้าน ระดับจังหวัด</li>
+        <li>จัดตั้งศูนย์ซ่อม ดัดแปลงและจัดทำเฉพาะอุปกรณ์เครื่องช่วยความพิการ ระดับจังหวัด</li>
+        <li>ส่งเสริมและพัฒนาคุณภาพชีวิตของกลุ่มเป้าหมายให้ดียิ่งขึ้น</li>
+      </ul>
+
+      <div class="subhead">ยุทธศาสตร์</div>
+      <details class="strategy-item">
+        <summary>ยุทธศาสตร์ที่ 1 — สนับสนุนส่งเสริมระบบบริการฟื้นฟูสมรรถภาพและอุปกรณ์เครื่องช่วยความพิการ</summary>
+        <div class="strategy-body">
+          <strong>กลยุทธ์ที่ 1</strong> — สนับสนุนส่งเสริมให้กับหน่วยบริการ สำหรับจัดบริการให้แก่ผู้มีสิทธิได้รับการฟื้นฟูสมรรถภาพและอุปกรณ์เครื่องช่วยความพิการ ทั้งนี้ ตามรายการ หลักเกณฑ์ วิธีการ และเงื่อนไขที่สำนักงานหลักประกันสุขภาพแห่งชาติ กำหนด
+        </div>
+      </details>
+      <details class="strategy-item">
+        <summary>ยุทธศาสตร์ที่ 2 — พัฒนาระบบบริการ และการฟื้นฟูสมรรถภาพ</summary>
+        <div class="strategy-body">
+          <strong>กลยุทธ์ที่ 1</strong> — สนับสนุนส่งเสริมให้กับองค์กรปกครองส่วนท้องถิ่น หน่วยงานสาธารณสุข หน่วยงานอื่น สำหรับจัดตั้งศูนย์ซ่อมบำรุง ดัดแปลงและจัดทำเฉพาะอุปกรณ์เครื่องช่วยความพิการ และจัดทำใหม่ เพื่อให้เหมาะกับสภาพความพิการ<br><br>
+          <strong>กลยุทธ์ที่ 2</strong> — สนับสนุนส่งเสริมให้กับหน่วยบริการ หน่วยงานสาธารณสุข หน่วยงานอื่น สำหรับจัดตั้งศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้านในระดับชุมชน เพื่อจัดบริการและหาอุปกรณ์เครื่องช่วยความพิการให้กับกลุ่มเป้าหมายได้อย่างทั่วถึง<br><br>
+          <strong>กลยุทธ์ที่ 3</strong> — สนับสนุนส่งเสริมให้กับองค์กรปกครองส่วนท้องถิ่น หน่วยงานสาธารณสุข หน่วยงานอื่น สำหรับพัฒนารูปแบบการดูแลช่วยเหลือและฟื้นฟูสมรรถภาพในชุมชน ได้แก่
+          <ul>
+            <li>ส่งเสริมพัฒนาองค์ความรู้ของอาสาสมัครสาธารณสุขประจำหมู่บ้าน ญาติ ผู้ดูแล ฯลฯ ให้สามารถดูแลฟื้นฟูสมรรถภาพในชุมชนได้</li>
+            <li>ส่งเสริมการสร้างความเข้มแข็งของภาคีเครือข่าย สำหรับจัดบริการฟื้นฟูสมรรถภาพเชิงรุกในพื้นที่กับกลุ่มเป้าหมาย</li>
+            <li>เชื่อมโยงฐานข้อมูลคลังอุปกรณ์เครื่องช่วยความพิการของหน่วยบริการอย่างมีประสิทธิภาพ</li>
+            <li>บูรณาการร่วมกับภาคีเครือข่ายสำหรับจัดหาและให้บริการยืมอุปกรณ์เครื่องช่วยความพิการที่บ้านกับกลุ่มเป้าหมายภายใต้หลักเกณฑ์ของกองทุนฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพจังหวัดระยองกำหนด</li>
+          </ul>
+        </div>
+      </details>
+      <details class="strategy-item">
+        <summary>ยุทธศาสตร์ที่ 3 — การจัดสภาพแวดล้อมที่อยู่อาศัย</summary>
+        <div class="strategy-body">
+          <strong>กลยุทธ์ที่ 1</strong> — สนับสนุนส่งเสริมให้กับองค์กรปกครองส่วนท้องถิ่น สำหรับจัดสภาพแวดล้อมที่อยู่อาศัยหรือบริการขั้นพื้นฐาน เพื่อให้ผู้มีสิทธิได้รับการฟื้นฟูสมรรถภาพ สามารถดำรงชีวิตประจำวันได้ดียิ่งขึ้น<br><br>
+          <strong>กลยุทธ์ที่ 2</strong> — บูรณาการร่วมกับภาคีเครือข่ายสำหรับปรับสภาพแวดล้อมที่อยู่อาศัยของคนพิการ ผู้สูงอายุ ผู้ป่วยที่อยู่ในระยะกึ่งเฉียบพลัน และผู้ที่มีภาวะพึ่งพิง เพื่อให้เหมาะสมกับสภาพความพิการ และการใช้ชีวิตประจำวัน
+        </div>
+      </details>
+      <details class="strategy-item">
+        <summary>ยุทธศาสตร์ที่ 4 — พัฒนาระบบการประชาสัมพันธ์</summary>
+        <div class="strategy-body">
+          <strong>กลยุทธ์ที่ 1</strong> — จัดทำสื่อประชาสัมพันธ์กองทุนฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพจังหวัดระยอง ได้แก่ แผ่นพับ วารสาร แผ่นวิดิทัศน์ เพื่อให้ประชาชนเข้าถึงข้อมูลข่าวสาร ผลงาน และกิจกรรมของกองทุนฟื้นฟูฯ<br><br>
+          <strong>กลยุทธ์ที่ 2</strong> — ส่งเสริมการเผยแพร่ประชาสัมพันธ์ข้อมูลข่าวสาร และช่องทางการขอรับการสนับสนุนงบประมาณกองทุนฯ ผ่านสื่อโซเชียล เพื่อเป็นจุดเชื่อมโยงระหว่างกองทุนฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพจังหวัดระยองกับประชาชน
+        </div>
+      </details>
+      <details class="strategy-item">
+        <summary>ยุทธศาสตร์ที่ 5 — พัฒนากองทุนฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพจังหวัดระยอง</summary>
+        <div class="strategy-body">
+          <strong>กลยุทธ์ที่ 1</strong> — พัฒนาศักยภาพคณะกรรมการ คณะอนุกรรมการ คณะทำงาน และเจ้าหน้าที่ผู้เกี่ยวข้อง ให้มีความรู้ ความเข้าใจในระบบการบริหารจัดการกองทุนฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพจังหวัดระยอง รวมถึงข้อระเบียบและกฎหมายที่เกี่ยวข้อง<br><br>
+          <strong>กลยุทธ์ที่ 2</strong> — พัฒนารูปแบบแนวทางการบริหารจัดการกองทุนฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพจังหวัดระยอง ให้มีประสิทธิภาพ
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section" id="structure">
+    <div class="section-title">🏛️ โครงสร้างการบริหาร</div>
+    <div class="section-body">
+      <div class="placeholder">
+        <strong>⚠️ ยังไม่มีเนื้อหา — รอข้อมูลจริงจากกองทุนฯ</strong>
+        เช่น: คณะกรรมการบริหารกองทุนฯ (รายชื่อ/ตำแหน่ง หากต้องการเปิดเผย), หน่วยงานกำกับดูแล, ที่มาของงบประมาณกองทุนฯ
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="projects">
+    <div class="section-title">📋 โครงการที่ดำเนินการ</div>
+    <div class="section-body">
+      กองทุนฯ ดำเนินการสนับสนุนงบประมาณใน 4 โครงการหลัก ดูรายละเอียดและข้อมูลสดได้ที่<a href="index.html" style="color:#1e40af;font-weight:700;"> หน้าแดชบอร์ดหลัก →</a>
+      <ul style="margin-top:0.75rem;padding-left:1.25rem;line-height:2;">
+        <li><strong>โครงการที่ 1</strong> — ปรับสภาพแวดล้อมที่อยู่อาศัยสำหรับคนพิการ ผู้สูงอายุ และผู้ป่วยที่ต้องได้รับการดูแลเป็นพิเศษ</li>
+        <li><strong>โครงการที่ 2</strong> — ศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้าน</li>
+        <li><strong>โครงการที่ 3</strong> — พัฒนาเครือข่ายบริการเพื่อฟื้นฟูสมรรถภาพผู้พิการและผู้สูงอายุ</li>
+        <li><strong>โครงการที่ 4</strong> — ศูนย์ซ่อมบำรุงอุปกรณ์เครื่องช่วยความพิการ</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section" id="contact">
+    <div class="section-title">📞 ติดต่อกองทุนฯ</div>
+    <div class="section-body">
+      <div class="contact-item">📍 140 ม.2 ถ.สุขุมวิท ต.เนินพระ อ.เมือง จ.ระยอง 21000</div>
+      <div class="contact-grid">
+        <div class="contact-item">📞 <a href="tel:038617430">038-617-430 ต่อ 203</a></div>
+        <div class="contact-item">📱 <a href="tel:0958180720">095-818-0720</a></div>
+        <div class="contact-item">💬 <a href="tel:0958190720">Line: 095-819-0720</a></div>
+        <div class="contact-item">👥 <a href="https://shorturl.asia/W9nz0" target="_blank">Facebook Page</a></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer" style="background:#0f172a;color:#cbd5e1;padding:1.75rem 1.5rem;margin-top:1rem;">
+  <div style="max-width:780px;margin:0 auto;">
+    <div style="display:flex;flex-wrap:wrap;gap:0.4rem 1.25rem;font-size:0.8rem;" class="footer-sitemap">
+      <a href="index.html">หน้าหลัก</a>
+      <a href="about.html">เกี่ยวกับกองทุน</a>
+      <a href="news.html">ข่าวประชาสัมพันธ์</a>
+      <a href="login.html">สำหรับเจ้าหน้าที่</a>
+    </div>
+    <div style="margin-top:0.85rem;padding-top:0.85rem;border-top:1px solid rgba(255,255,255,0.12);font-size:0.75rem;opacity:0.85;">
+      © 2568 กองทุนฟื้นฟูสมรรถภาพจังหวัดระยอง · ปรับปรุงล่าสุด <span id="footerLastUpdated"></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  var d = new Date();
+  var dEl = document.getElementById('govTopbarDate');
+  if (dEl) dEl.textContent = 'วันที่ ' + d.toLocaleDateString('th-TH', { day:'numeric', month:'long', year:'numeric' });
+  var fEl = document.getElementById('footerLastUpdated');
+  if (fEl) fEl.textContent = d.toLocaleDateString('th-TH', { day:'numeric', month:'long', year:'numeric' });
+  try {
+    var fs = localStorage.getItem('gov_font_size');
+    if (fs) document.documentElement.style.fontSize = fs + 'px';
+    if (localStorage.getItem('gov_contrast') === '1') {
+      document.body.classList.add('gov-contrast');
+      var btn = document.getElementById('govContrastBtn');
+      if (btn) btn.classList.add('active');
+    }
+  } catch (e) {}
+})();
+function govSetFontSize(delta) {
+  var base = 16;
+  try { base = parseInt(localStorage.getItem('gov_font_size'), 10) || 16; } catch (e) {}
+  var next = delta === 0 ? 16 : Math.max(14, Math.min(20, base + delta));
+  document.documentElement.style.fontSize = next + 'px';
+  try { localStorage.setItem('gov_font_size', next); } catch (e) {}
+}
+function govToggleContrast() {
+  var on = document.body.classList.toggle('gov-contrast');
+  document.getElementById('govContrastBtn').classList.toggle('active', on);
+  try { localStorage.setItem('gov_contrast', on ? '1' : '0'); } catch (e) {}
+}
+</script>
+</body>
+</html>

@@ -88,6 +88,24 @@ body {
   background: var(--border-light);
   color: var(--primary-navy);
 }
+.nav-right { display: flex; align-items: center; gap: 0.75rem; }
+.user-badge {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: var(--bg-gray); border: 1.5px solid var(--border-light);
+  padding: 0.3rem 0.7rem; border-radius: 20px;
+  font-size: 0.8rem; font-weight: 600; color: var(--text-dark);
+}
+.user-badge-role {
+  font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.5rem;
+  border-radius: 10px; text-transform: uppercase; letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.role-staff { background:#dbeafe; color:#1e40af; }
+.role-admin, .role-executive { background:#fef3c7; color:#92400e; }
+.user-badge-logout {
+  color: var(--danger); text-decoration: none; font-size: 0.78rem; font-weight: 700;
+}
+.user-badge-logout:hover { text-decoration: underline; }
 
 /* HERO */
 .hero {
@@ -169,6 +187,16 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+.file-input-note { font-size: 0.72rem; color: var(--text-gray); margin-top: 0.3rem; }
+.file-preview-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
+.file-chip {
+  display: flex; align-items: center; gap: 0.4rem;
+  background: var(--bg-gray); border: 1px solid var(--border-light);
+  border-radius: 8px; padding: 0.3rem 0.6rem; font-size: 0.75rem; max-width: 170px;
+}
+.file-chip img { width: 28px; height: 28px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+.file-chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-chip-invalid { border-color: var(--danger); background: #fef2f2; color: var(--danger); }
 
 /* FORM CONTROLS */
 .form-label {
@@ -532,6 +560,35 @@ body {
 </head>
 <body>
 
+<script>
+// ── LOGIN GATE ──────────────────────────────────────────────────────────
+// Must run before anything else: entry forms are staff-only.
+var RF_SESSION = null;
+try { RF_SESSION = JSON.parse(localStorage.getItem('rf_user') || 'null'); } catch (e) {}
+if (!RF_SESSION || !RF_SESSION.token) {
+  window.location.replace('login.html');
+}
+
+function renderUserBadge() {
+  if (!RF_SESSION) return;
+  var badge = document.getElementById('userBadge');
+  if (!badge) return;
+  document.getElementById('userBadgeName').textContent = RF_SESSION.name || RF_SESSION.email;
+  var roleLabels = { staff: 'เจ้าหน้าที่', admin: 'ผู้ดูแลระบบ', executive: 'ผู้บริหาร' };
+  var roleLabel = roleLabels[RF_SESSION.role] || RF_SESSION.role;
+  if (RF_SESSION.district && RF_SESSION.district !== 'ทั้งหมด') roleLabel += ' · ' + RF_SESSION.district;
+  var roleEl = document.getElementById('userBadgeRole');
+  roleEl.textContent = roleLabel;
+  roleEl.className = 'user-badge-role role-' + (RF_SESSION.role || 'staff');
+  badge.style.display = 'flex';
+}
+function rfLogout() {
+  localStorage.removeItem('rf_user');
+  window.location.href = 'login.html';
+}
+document.addEventListener('DOMContentLoaded', renderUserBadge);
+</script>
+
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
@@ -542,7 +599,15 @@ body {
         <div style="font-size:0.75rem;font-weight:400;color:var(--text-gray)">จังหวัดระยอง</div>
       </div>
     </a>
-    <a href="index.html" class="nav-back-btn">← กลับหน้าหลัก</a>
+    <div class="nav-right">
+      <div class="user-badge" id="userBadge" style="display:none">
+        <span>👤</span>
+        <span id="userBadgeName"></span>
+        <span class="user-badge-role" id="userBadgeRole"></span>
+        <a href="#" class="user-badge-logout" onclick="rfLogout(); return false;">ออกจากระบบ</a>
+      </div>
+      <a href="index.html" class="nav-back-btn">← กลับหน้าหลัก</a>
+    </div>
   </div>
 </nav>
 
@@ -658,8 +723,18 @@ body {
           </div>
           <div class="col-md-4">
             <label class="form-label">อำเภอ <span class="req">*</span></label>
-            <input type="text" class="form-control" id="f_amphoe" name="amphoe" placeholder="เช่น แกลง" required>
-            <div class="invalid-msg">กรุณากรอกอำเภอ</div>
+            <select class="form-select" id="f_amphoe" name="amphoe" required>
+              <option value="">-- เลือกอำเภอ --</option>
+              <option>เมืองระยอง</option>
+              <option>บ้านฉาง</option>
+              <option>แกลง</option>
+              <option>วังจันทร์</option>
+              <option>บ้านค่าย</option>
+              <option>ปลวกแดง</option>
+              <option>เขาชะเมา</option>
+              <option>นิคมพัฒนา</option>
+            </select>
+            <div class="invalid-msg">กรุณาเลือกอำเภอ</div>
           </div>
         </div>
 
@@ -697,6 +772,23 @@ body {
           <div class="col-md-6">
             <label class="form-label">วันที่ทำ MOU</label>
             <input type="date" class="form-control" id="f_moudate" name="moudate">
+          </div>
+        </div>
+
+        <!-- SECTION: Attachments — uploaded to Drive via media_api.gs on submit -->
+        <div class="section-header">📷 รูปภาพ/เอกสารประกอบ</div>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label">รูปภาพ/เอกสาร_ก่อนปรับสภาพ</label>
+            <input type="file" class="form-control" id="f_filesBefore" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx">
+            <div class="file-input-note">📎 รูปภาพ / PDF / Word / Excel — ไม่เกิน 5MB ต่อไฟล์</div>
+            <div class="file-preview-list" id="previewBefore"></div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">รูปภาพ/เอกสาร_หลังปรับสภาพ</label>
+            <input type="file" class="form-control" id="f_filesAfter" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx">
+            <div class="file-input-note">📎 รูปภาพ / PDF / Word / Excel — ไม่เกิน 5MB ต่อไฟล์</div>
+            <div class="file-preview-list" id="previewAfter"></div>
           </div>
         </div>
 
@@ -768,6 +860,73 @@ body {
 // ── STATE ──────────────────────────────────────────────────────────────
 let entries = [];
 let rowCounter = 0;
+
+var P1_API_BASE = 'https://script.google.com/macros/s/AKfycby6wVpfb5o_AsbvH3tV9kW54RaG5arvFxJ52TA_lkSV7sAzyXKn-VOki7WpA-GEkppf/exec';
+
+// ── DISTRICT LOCK ──────────────────────────────────────────────────────
+// Staff can only submit records for their own district. Admin/executive
+// accounts have district "ทั้งหมด" (all) and keep the field editable.
+function applyDistrictLock() {
+  if (!RF_SESSION || !RF_SESSION.district || RF_SESSION.district === 'ทั้งหมด') return;
+  var amphoeEl = document.getElementById('f_amphoe');
+  if (!amphoeEl) return;
+  amphoeEl.value = RF_SESSION.district;
+  amphoeEl.disabled = true;
+  amphoeEl.style.background = '#f1f5f9';
+}
+applyDistrictLock();
+
+// ── DRAFT AUTO-SAVE (protects against lost data if the API is slow/fails) ──
+var DRAFT_KEY = 'draft_p1';
+function saveFormDraft() {
+  var data = {};
+  document.querySelectorAll('#entryForm input[id], #entryForm select[id], #entryForm textarea[id]').forEach(function(el) {
+    if (el.type === 'file' || el.disabled) return;
+    data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  data.__savedAt = Date.now();
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch (e) {}
+}
+function clearFormDraft() {
+  try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+}
+function restoreFormDraftPrompt() {
+  var raw;
+  try { raw = localStorage.getItem(DRAFT_KEY); } catch (e) { return; }
+  if (!raw) return;
+  var data;
+  try { data = JSON.parse(raw); } catch (e) { return; }
+  if (Date.now() - (data.__savedAt || 0) > 24 * 60 * 60 * 1000) { clearFormDraft(); return; }
+  var hasData = Object.keys(data).some(function(k) { return k !== '__savedAt' && data[k]; });
+  if (!hasData) return;
+
+  var banner = document.createElement('div');
+  banner.style.cssText = 'position:sticky;top:0;z-index:1500;background:#fef3c7;border-bottom:2px solid #f59e0b;padding:0.7rem 1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;font-family:inherit;font-size:0.85rem;color:#92400e;flex-wrap:wrap;';
+  banner.innerHTML = '<span>📝 พบข้อมูลที่กรอกค้างไว้จากครั้งก่อน ต้องการกู้คืนหรือไม่?</span>'
+    + '<span><button type="button" id="restoreDraftBtn" style="background:#f59e0b;color:#fff;border:none;padding:0.4rem 1rem;border-radius:6px;font-weight:700;cursor:pointer;font-family:inherit;margin-right:0.5rem;">กู้คืน</button>'
+    + '<button type="button" id="discardDraftBtn" style="background:#fff;color:#92400e;border:1.5px solid #f59e0b;padding:0.4rem 1rem;border-radius:6px;font-weight:700;cursor:pointer;font-family:inherit;">ละทิ้ง</button></span>';
+  document.body.insertBefore(banner, document.body.firstChild);
+
+  document.getElementById('restoreDraftBtn').onclick = function() {
+    Object.keys(data).forEach(function(k) {
+      if (k === '__savedAt') return;
+      var el = document.getElementById(k);
+      if (!el || el.disabled) return;
+      if (el.type === 'checkbox') { el.checked = !!data[k]; }
+      else { el.value = data[k]; }
+    });
+    banner.remove();
+  };
+  document.getElementById('discardDraftBtn').onclick = function() {
+    clearFormDraft();
+    banner.remove();
+  };
+}
+document.getElementById('entryForm').addEventListener('input', function() {
+  clearTimeout(window.__draftTimer);
+  window.__draftTimer = setTimeout(saveFormDraft, 600);
+});
+restoreFormDraftPrompt();
 
 // ── DISABILITY TOGGLE (visual only — checkbox handles value) ───────────
 function toggleCheck(label) {
@@ -975,22 +1134,132 @@ function resetForm() {
   document.querySelectorAll('.disability-check-item').forEach(l => l.classList.remove('checked-active'));
   document.querySelectorAll('.form-control, .form-select').forEach(el => el.classList.remove('is-invalid'));
   document.querySelectorAll('.invalid-msg').forEach(m => m.style.display = 'none');
+  document.getElementById('previewBefore').innerHTML = '';
+  document.getElementById('previewAfter').innerHTML = '';
+  applyDistrictLock();
+}
+
+// ── ATTACHMENTS (ก่อน/หลังปรับสภาพ) ──────────────────────────────────────
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_EXT = /\.(jpe?g|png|gif|webp|heic|pdf|docx?|xlsx?)$/i;
+
+function renderFileChip(container, file, ok) {
+  const chip = document.createElement('div');
+  chip.className = 'file-chip' + (ok ? '' : ' file-chip-invalid');
+  if (ok && file.type.startsWith('image/')) {
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    chip.appendChild(img);
+  } else {
+    chip.insertAdjacentHTML('beforeend', `<span>${ok ? '📄' : '⚠️'}</span>`);
+  }
+  const name = document.createElement('span');
+  name.className = 'file-chip-name';
+  name.title = file.name;
+  name.textContent = ok ? file.name : `${file.name} (${!ACCEPTED_EXT.test(file.name) ? 'ชนิดไฟล์ไม่รองรับ' : 'เกิน 5MB'})`;
+  chip.appendChild(name);
+  container.appendChild(chip);
+}
+
+function handleFilePreview(inputEl, previewId) {
+  const container = document.getElementById(previewId);
+  container.innerHTML = '';
+  Array.from(inputEl.files).forEach(file => {
+    const ok = file.size <= MAX_FILE_SIZE && ACCEPTED_EXT.test(file.name);
+    renderFileChip(container, file, ok);
+  });
+}
+
+document.getElementById('f_filesBefore').addEventListener('change', function () { handleFilePreview(this, 'previewBefore'); });
+document.getElementById('f_filesAfter').addEventListener('change', function () { handleFilePreview(this, 'previewAfter'); });
+
+// ---- Photo upload to Drive (via shared media_api.gs, not this project's own sheet) ----
+var MEDIA_API_URL = 'https://script.google.com/macros/s/AKfycbz47_iPVrnJQHmf88w0Y4OnkSlR4qRvlEqs_nIxjeRaEnt5MvuVdWhUXceZxRpNlKmp/exec';
+var MEDIA_CONTEXT = 'p1';
+
+function fileToBase64_(file) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function() { resolve(reader.result.split(',')[1]); };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function uploadPhotos_(inputEl, label) {
+  var files = inputEl && inputEl.files ? Array.from(inputEl.files) : [];
+  if (!files.length) return Promise.resolve([]);
+  var token = RF_SESSION && RF_SESSION.token;
+  return Promise.all(files.map(function(file) {
+    return fileToBase64_(file).then(function(data) {
+      return fetch(MEDIA_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ token: token, action: 'upload', context: MEDIA_CONTEXT, file_data: data, filename: file.name, mime: file.type })
+      }).then(function(r) { return r.json(); }).then(function(json) {
+        if (!json.ok) throw new Error('อัพโหลด' + label + 'ไม่สำเร็จ: ' + (json.error || ''));
+        return json.url;
+      });
+    });
+  }));
 }
 
 // ── FORM SUBMIT ────────────────────────────────────────────────────────
+function showErrorToast(msg) {
+  const container = document.getElementById('toastContainer');
+  const div = document.createElement('div');
+  div.className = 'toast-item';
+  div.style.background = '#fef2f2';
+  div.style.borderColor = '#fecaca';
+  div.style.color = '#991b1b';
+  div.innerHTML = `<span class="toast-icon">⚠️</span> ${msg}`;
+  container.appendChild(div);
+  setTimeout(() => div.remove(), 4500);
+}
+
 document.getElementById('entryForm').addEventListener('submit', function(e) {
   e.preventDefault();
   if (!validateForm()) return;
+  if (!RF_SESSION || !RF_SESSION.token) { window.location.replace('login.html'); return; }
 
   const entry = collectFormData();
-  addToPreview(entry);
-  showToast(entry.name);
-  resetForm();
+  const submitBtn = document.querySelector('#entryForm button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = '⏳ กำลังอัพโหลดรูป...';
 
-  // Scroll to preview
-  setTimeout(() => {
-    document.querySelector('.preview-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 150);
+  Promise.all([
+    uploadPhotos_(document.getElementById('f_filesBefore'), 'รูปก่อนปรับสภาพ'),
+    uploadPhotos_(document.getElementById('f_filesAfter'), 'รูปหลังปรับสภาพ')
+  ]).then(function(results) {
+    entry.photos_before = results[0].join(', ');
+    entry.photos_after = results[1].join(', ');
+    submitBtn.textContent = '⏳ กำลังบันทึก...';
+    return fetch(P1_API_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(Object.assign({ token: RF_SESSION.token }, entry))
+    });
+  })
+    .then(res => res.json())
+    .then(json => {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>✅</span> Submit &amp; เพิ่มข้อมูล';
+      if (!json.ok) { showErrorToast(json.error || 'บันทึกไม่สำเร็จ'); return; }
+
+      addToPreview(entry);
+      showToast(entry.name);
+      resetForm();
+      clearFormDraft();
+      setTimeout(() => {
+        document.querySelector('.preview-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
+    })
+    .catch(err => {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>✅</span> Submit &amp; เพิ่มข้อมูล';
+      showErrorToast(err && err.message ? err.message : 'เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่');
+      console.error('[P1 entry] submit failed:', err);
+    });
 });
 </script>
 

@@ -98,6 +98,35 @@ body {
   height: 320px;
 }
 .status-msg { text-align: center; padding: 3rem 1rem; color: #64748b; font-size: 0.9rem; }
+.sub-kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin: 0.5rem 0 1.5rem; }
+.sub-kpi { background: #f8fafc; border-radius: 8px; padding: 0.6rem 0.8rem; text-align: center; }
+.sub-kpi .v { font-size: 1.05rem; font-weight: 800; }
+.sub-kpi .l { font-size: 0.7rem; color: #64748b; margin-top: 0.1rem; }
+.activity-list { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; }
+.activity-item { padding: 0.7rem 1rem; border-bottom: 1px solid #eef2f7; display: flex; justify-content: space-between; gap: 1rem; font-size: 0.82rem; }
+.activity-item:last-child { border-bottom: none; }
+.activity-text { color: #1e293b; }
+.activity-meta { color: #94a3b8; font-size: 0.72rem; white-space: nowrap; text-align: right; }
+.activity-empty { padding: 2rem; text-align: center; color: #94a3b8; font-size: 0.85rem; }
+.rank-bar-wrap { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0; }
+.rank-bar-label { width: 90px; font-size: 0.78rem; font-weight: 600; flex-shrink: 0; }
+.rank-bar-track { flex: 1; background: #f1f5f9; border-radius: 4px; height: 20px; overflow: hidden; display: flex; }
+.rank-bar-val { font-size: 0.75rem; font-weight: 700; color: #1e40af; width: 90px; text-align: right; flex-shrink: 0; }
+.user-badge {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  padding: 0.3rem 0.7rem; border-radius: 20px;
+  font-size: 0.8rem; font-weight: 600; color: #fff;
+}
+.user-badge-role {
+  font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.5rem;
+  border-radius: 10px; text-transform: uppercase; letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.role-staff { background:#dbeafe; color:#1e40af; }
+.role-admin, .role-executive { background:#fef3c7; color:#92400e; }
+.user-badge-logout { color: #fca5a5; text-decoration: none; font-size: 0.78rem; font-weight: 700; }
+.user-badge-logout:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -107,7 +136,13 @@ body {
     <h1>📊 สรุปผู้บริหาร</h1>
     <div class="sub">กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</div>
   </div>
-  <div style="display:flex;gap:0.5rem;">
+  <div style="display:flex;gap:0.5rem;align-items:center;">
+    <div class="user-badge" id="userBadge" style="display:none">
+      <span>👤</span>
+      <span id="userBadgeName"></span>
+      <span class="user-badge-role" id="userBadgeRole"></span>
+      <a href="#" class="user-badge-logout" onclick="rfLogout(); return false;">ออกจากระบบ</a>
+    </div>
     <a href="index.html">← แดชบอร์ดหลัก</a>
     <a href="staff-hub.html">เมนูเจ้าหน้าที่</a>
   </div>
@@ -120,13 +155,13 @@ body {
 <script>
 var EXEC_ROLES = ['executive', 'admin'];
 
-var P1_URL = 'https://script.google.com/macros/s/AKfycby6wVpfb5o_AsbvH3tV9kW54RaG5arvFxJ52TA_lkSV7sAzyXKn-VOki7WpA-GEkppf/exec?project=p1&action=dashboard';
-var P2_URL = 'https://script.google.com/macros/s/AKfycbxJe9aB6cQJdA-3iy6vNj1urjMV3QzM67AfNAVxon-3MDUEZz1L_AfPlHNMPtP6gvcgHw/exec?type=funding';
-var P3_URL = 'https://script.google.com/macros/s/AKfycbx8Z0LVi91bFyV_VZAWzmCe4L0DYoayYkBTIl2qntk6qyHyCR9tDBjJas-xbK0TpoNAXg/exec';
-var P4_URL = 'https://script.google.com/macros/s/AKfycbycPZZSlTIBfPDscaGRxGXj06hhpj7rkRfehx_96GjJ694yteIjh5_AdnqCXNLhJFZGIA/exec?action=funding';
+var P1_BASE = 'https://script.google.com/macros/s/AKfycby6wVpfb5o_AsbvH3tV9kW54RaG5arvFxJ52TA_lkSV7sAzyXKn-VOki7WpA-GEkppf/exec';
+var P2_BASE = 'https://script.google.com/macros/s/AKfycbxJe9aB6cQJdA-3iy6vNj1urjMV3QzM67AfNAVxon-3MDUEZz1L_AfPlHNMPtP6gvcgHw/exec';
+var P3_BASE = 'https://script.google.com/macros/s/AKfycbx8Z0LVi91bFyV_VZAWzmCe4L0DYoayYkBTIl2qntk6qyHyCR9tDBjJas-xbK0TpoNAXg/exec';
+var P4_BASE = 'https://script.google.com/macros/s/AKfycbycPZZSlTIBfPDscaGRxGXj06hhpj7rkRfehx_96GjJ694yteIjh5_AdnqCXNLhJFZGIA/exec';
 
 function getSession() {
-  try { return JSON.parse(sessionStorage.getItem('rf_user') || 'null'); }
+  try { return JSON.parse(localStorage.getItem('rf_user') || 'null'); }
   catch (e) { return null; }
 }
 
@@ -140,6 +175,23 @@ function showGate(message) {
 
 function fmtM(n) { return (n / 1000000).toFixed(2) + 'M'; }
 
+function renderUserBadge(session) {
+  var badge = document.getElementById('userBadge');
+  if (!badge) return;
+  document.getElementById('userBadgeName').textContent = session.name || session.email;
+  var roleLabels = { staff: 'เจ้าหน้าที่', admin: 'ผู้ดูแลระบบ', executive: 'ผู้บริหาร' };
+  var roleLabel = roleLabels[session.role] || session.role;
+  if (session.district && session.district !== 'ทั้งหมด') roleLabel += ' · ' + session.district;
+  var roleEl = document.getElementById('userBadgeRole');
+  roleEl.textContent = roleLabel;
+  roleEl.className = 'user-badge-role role-' + (session.role || 'staff');
+  badge.style.display = 'flex';
+}
+function rfLogout() {
+  localStorage.removeItem('rf_user');
+  window.location.href = 'login.html';
+}
+
 function init() {
   var session = getSession();
   if (!session || !session.role) {
@@ -151,39 +203,139 @@ function init() {
     return;
   }
 
+  renderUserBadge(session);
   document.getElementById('statusMsg').textContent = 'กำลังโหลดข้อมูลจากทั้ง 4 โครงการ...';
 
+  var tok = encodeURIComponent(session.token || '');
+  var p1Url  = P1_BASE + '?project=p1&action=dashboard&token=' + tok;
+  var p2Url  = P2_BASE + '?type=funding';
+  var p3Url  = P3_BASE + '?action=records';
+  var p4Url  = P4_BASE + '?action=devices';
+  var p2LogUrl = P2_BASE + '?type=activity_log&token=' + tok;
+  var p3LogUrl = P3_BASE + '?action=activity_log&token=' + tok;
+  var p4LogUrl = P4_BASE + '?action=activity_log&token=' + tok;
+
+  // The underlying Apps Script endpoints occasionally take 20-40s (Google's
+  // own latency, not something this page controls) and time out outright —
+  // when that happens it's usually just that one call, not all four, so a
+  // single retry on failure recovers most of these without the visitor
+  // needing to do anything.
+  function safeFetch(url, label) {
+    function attempt(triesLeft) {
+      return fetch(url).then(function(r){ return r.json(); }).catch(function(err) {
+        if (triesLeft > 0) return attempt(triesLeft - 1);
+        console.error('[Exec Dashboard] load failed:', label, err);
+        return { __failed: label };
+      });
+    }
+    return attempt(1);
+  }
+
   Promise.all([
-    fetch(P1_URL).then(function(r){ return r.json(); }).catch(function(){ return null; }),
-    fetch(P2_URL).then(function(r){ return r.json(); }).catch(function(){ return null; }),
-    fetch(P3_URL).then(function(r){ return r.json(); }).catch(function(){ return null; }),
-    fetch(P4_URL).then(function(r){ return r.json(); }).catch(function(){ return null; })
+    safeFetch(p1Url, 'P1'), safeFetch(p2Url, 'P2'), safeFetch(p3Url, 'P3'), safeFetch(p4Url, 'P4'),
+    safeFetch(p2LogUrl, 'P2 log'), safeFetch(p3LogUrl, 'P3 log'), safeFetch(p4LogUrl, 'P4 log')
   ]).then(function(results) {
-    render(session, results[0], results[1], results[2], results[3]);
+    var failed = results.filter(function(r){ return r && r.__failed; }).map(function(r){ return r.__failed; });
+    render(session, results[0], results[1], results[2], results[3], results[4], results[5], results[6]);
+    if (failed.length) showFailureBanner(failed);
   });
 }
 
-function render(session, p1, p2, p3, p4) {
-  var p1Budget = (p1 && p1.summary && p1.summary.totalBudget) || 0;
-  var p1Count  = (p1 && p1.summary && p1.summary.totalRecords) || 0;
+function showFailureBanner(failedLabels) {
+  var banner = document.createElement('div');
+  banner.style.cssText = 'background:#fef3c7;border:1px solid #fde68a;color:#92400e;padding:0.75rem 1rem;border-radius:8px;margin-bottom:1rem;font-size:0.85rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;';
+  banner.innerHTML = '<span>⚠️ โหลดข้อมูลไม่สำเร็จบางส่วน: ' + failedLabels.join(', ') + ' (เซิร์ฟเวอร์ตอบช้ากว่าปกติ ตัวเลขที่เกี่ยวข้องอาจแสดงเป็น 0)</span>'
+    + '<button onclick="window.location.reload()" style="background:#92400e;color:#fff;border:none;padding:0.4rem 1rem;border-radius:6px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;">โหลดใหม่</button>';
+  document.getElementById('app').insertAdjacentElement('afterbegin', banner);
+}
 
-  var p2Budget = 0;
-  if (p2 && Array.isArray(p2.data)) {
-    p2.data.forEach(function(row) { p2Budget += Number(row.total_budget) || 0; });
-  }
+function fmtBaht(n) { return '฿' + Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 0 }); }
 
-  var p3Budget = 0, p3Count = 0;
-  if (p3 && Array.isArray(p3.records)) {
-    p3Count = p3.records.length;
-    p3.records.forEach(function(row) { p3Budget += Number(row.b) || 0; });
-  }
+function projectRow(name, budget, total) {
+  var pct = total > 0 ? ((budget / total) * 100).toFixed(1) : '0.0';
+  return '<tr><td>' + name + '</td><td>' + fmtBaht(budget) + '</td><td>' + pct + '%</td></tr>';
+}
 
-  var p4Budget = 0;
-  if (p4 && Array.isArray(p4.data)) {
-    p4.data.forEach(function(row) { p4Budget += Number(row.budget) || 0; });
-  }
+function timeAgoTh(ts) {
+  var d = new Date(ts);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleString('th-TH', { day: 'numeric', month: 'short', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+}
+
+function render(session, p1, p2, p3, p4, p2Log, p3Log, p4Log) {
+  var p1Summary = (p1 && p1.summary) || {};
+  var p1Budget  = Number(p1Summary.totalBudget) || 0;
+  var p1Count   = Number(p1Summary.totalRecords) || 0;
+  var p1Done    = Number(p1Summary.completed) || 0;
+  var p1Pending = Number(p1Summary.inProgress) || 0;
+  var p1Records = (p1 && Array.isArray(p1.records)) ? p1.records : [];
+
+  var p2Rows   = (p2 && Array.isArray(p2.data)) ? p2.data : [];
+  var p2Budget = p2Rows.reduce(function(s, r){ return s + (Number(r.total_budget) || 0); }, 0);
+  var p2Agencies = {};
+  p2Rows.forEach(function(r){ if (r.agency) p2Agencies[r.agency] = true; });
+
+  var p3Records = (p3 && Array.isArray(p3.records)) ? p3.records : [];
+  var p3Budget  = p3Records.reduce(function(s, r){ return s + (Number(r.b) || 0); }, 0);
+  var p3Done    = p3Records.filter(function(r){ return r.s === 'เสร็จเรียบร้อย'; }).length;
+  var p3Ongoing = p3Records.filter(function(r){ return r.s === 'อยู่ระหว่างดำเนินการ'; }).length;
+  var p3Pending = p3Records.filter(function(r){ return r.s === 'ยังไม่รายงานผล'; }).length;
+
+  var p4Rows = (p4 && Array.isArray(p4.data)) ? p4.data : [];
+  function p4RowSpend(r) { return (Number(r.buy66)||0) + (Number(r.buy67)||0) + (Number(r.buy68)||0) + (Number(r.buy69)||0); }
+  var p4Budget = p4Rows.reduce(function(s, r){ return s + p4RowSpend(r); }, 0);
+  var p4Centers = {};
+  p4Rows.forEach(function(r){ if (r.center_name) p4Centers[r.center_name] = true; });
 
   var totalBudget = p1Budget + p2Budget + p3Budget + p4Budget;
+
+  // ── Year-over-year: P2/P3/P4 align on clean 4-digit years; P1 excluded
+  // (its budget-year field is often a range like "2558-2560", not a single
+  // year, so forcing it onto the same axis would misrepresent it).
+  var years = {};
+  function addYear(y, proj, amt) {
+    y = String(y);
+    if (!years[y]) years[y] = { p2: 0, p3: 0, p4: 0 };
+    years[y][proj] += amt;
+  }
+  [2564,2565,2566,2567,2568,2569,2570].forEach(function(y) {
+    p2Rows.forEach(function(r){ addYear(y, 'p2', Number(r['budget_' + y]) || 0); });
+  });
+  p3Records.forEach(function(r){ if (r.y) addYear(r.y, 'p3', Number(r.b) || 0); });
+  p4Rows.forEach(function(r){
+    ['66','67','68','69'].forEach(function(yy){ addYear('25' + yy, 'p4', Number(r['buy' + yy]) || 0); });
+  });
+  var yearKeys = Object.keys(years).sort().filter(function(y){
+    var v = years[y]; return (v.p2 + v.p3 + v.p4) > 0;
+  });
+
+  // ── District ranking across all 4 projects ──
+  var districts = {};
+  function addDistrict(d, proj, amt) {
+    d = String(d || '').trim();
+    if (!d) return;
+    if (!districts[d]) districts[d] = { p1: 0, p2: 0, p3: 0, p4: 0 };
+    districts[d][proj] += amt;
+  }
+  p1Records.forEach(function(r){ addDistrict(r.district, 'p1', Number(r.budget) || 0); });
+  p2Rows.forEach(function(r){ addDistrict(r.district, 'p2', Number(r.total_budget) || 0); });
+  p3Records.forEach(function(r){ addDistrict(r.d, 'p3', Number(r.b) || 0); });
+  p4Rows.forEach(function(r){ addDistrict(r.district, 'p4', p4RowSpend(r)); });
+  var districtList = Object.keys(districts).map(function(d) {
+    var v = districts[d];
+    return { d: d, p1: v.p1, p2: v.p2, p3: v.p3, p4: v.p4, total: v.p1 + v.p2 + v.p3 + v.p4 };
+  }).sort(function(a, b){ return b.total - a.total; });
+  var maxDistrictTotal = districtList.length ? districtList[0].total : 0;
+
+  // ── Recent activity feed (P2/P3/P4 update logs merged) ──
+  var activity = [];
+  function pushLog(log, projLabel) {
+    var arr = (log && (log.data || log.activity)) || [];
+    arr.forEach(function(e){ activity.push({ ts: e.ts, text: '[' + projLabel + '] ' + e.text, by: e.by }); });
+  }
+  pushLog(p2Log, 'P2'); pushLog(p3Log, 'P3'); pushLog(p4Log, 'P4');
+  activity.sort(function(a, b){ return new Date(b.ts) - new Date(a.ts); });
+  activity = activity.slice(0, 20);
 
   var app = document.getElementById('app');
   app.innerHTML =
@@ -192,17 +344,51 @@ function render(session, p1, p2, p3, p4) {
     + '<div class="kpi-card" style="border-color:#1e40af;"><div class="kpi-value">฿' + fmtM(totalBudget) + '</div><div class="kpi-label">งบประมาณรวมทุกโครงการ</div></div>'
     + '<div class="kpi-card" style="border-color:#059669;"><div class="kpi-value">' + p1Count.toLocaleString() + '</div><div class="kpi-label">P1 · หลังที่ปรับสภาพแล้ว</div></div>'
     + '<div class="kpi-card" style="border-color:#d97706;"><div class="kpi-value">฿' + fmtM(p2Budget) + '</div><div class="kpi-label">P2 · งบสนับสนุนอุปกรณ์</div></div>'
-    + '<div class="kpi-card" style="border-color:#7c3aed;"><div class="kpi-value">' + p3Count.toLocaleString() + '</div><div class="kpi-label">P3 · โครงการที่ดำเนินการ</div></div>'
+    + '<div class="kpi-card" style="border-color:#7c3aed;"><div class="kpi-value">' + p3Records.length.toLocaleString() + '</div><div class="kpi-label">P3 · โครงการที่ดำเนินการ</div></div>'
     + '</div>'
+
     + '<div class="section-title">📊 งบประมาณแยกตามโครงการ</div>'
     + '<div class="chart-box"><canvas id="budgetChart"></canvas></div>'
-    + '<div class="section-title">📋 สรุปรายโครงการ</div>'
+
+    + (yearKeys.length ? '<div class="section-title">📅 เปรียบเทียบงบประมาณรายปี (P2/P3/P4)</div>'
+      + '<div class="chart-box"><canvas id="yearChart"></canvas></div>' : '')
+
+    + '<div class="section-title">🗺️ อันดับอำเภอตามงบประมาณรวม (ทุกโครงการ)</div>'
+    + '<div class="chart-box" style="height:auto;padding:1rem 1.2rem;">' + districtList.map(function(row){
+        var pct = maxDistrictTotal > 0 ? Math.max(2, Math.round(row.total / maxDistrictTotal * 100)) : 0;
+        return '<div class="rank-bar-wrap">'
+          + '<div class="rank-bar-label">' + row.d + '</div>'
+          + '<div class="rank-bar-track"><div style="width:' + pct + '%;background:linear-gradient(90deg,#1e40af,#3b82f6);"></div></div>'
+          + '<div class="rank-bar-val">' + fmtM(row.total) + '</div>'
+          + '</div>';
+      }).join('') + '</div>'
+
+    + '<div class="section-title">📋 สรุปรายโครงการโดยละเอียด</div>'
     + '<table class="project-table"><thead><tr><th>โครงการ</th><th>งบประมาณ</th><th>สัดส่วน</th></tr></thead><tbody>'
     + projectRow('P1 · ปรับสภาพแวดล้อมที่อยู่อาศัย', p1Budget, totalBudget)
     + projectRow('P2 · ศูนย์สาธิตและยืมอุปกรณ์', p2Budget, totalBudget)
     + projectRow('P3 · พัฒนาเครือข่ายบริการ', p3Budget, totalBudget)
     + projectRow('P4 · ศูนย์ซ่อมบำรุงอุปกรณ์', p4Budget, totalBudget)
-    + '</tbody></table>';
+    + '</tbody></table>'
+    + '<div class="sub-kpi-grid">'
+      + '<div class="sub-kpi"><div class="v" style="color:#059669;">' + p1Done + '</div><div class="l">P1 เสร็จแล้ว</div></div>'
+      + '<div class="sub-kpi"><div class="v" style="color:#f59e0b;">' + p1Pending + '</div><div class="l">P1 กำลังดำเนินการ</div></div>'
+      + '<div class="sub-kpi"><div class="v" style="color:#d97706;">' + Object.keys(p2Agencies).length + '</div><div class="l">P2 หน่วยงานที่ร่วมโครงการ</div></div>'
+      + '<div class="sub-kpi"><div class="v" style="color:#059669;">' + p3Done + '</div><div class="l">P3 เสร็จเรียบร้อย</div></div>'
+      + '<div class="sub-kpi"><div class="v" style="color:#3b82f6;">' + p3Ongoing + '</div><div class="l">P3 อยู่ระหว่างดำเนินการ</div></div>'
+      + '<div class="sub-kpi"><div class="v" style="color:#94a3b8;">' + p3Pending + '</div><div class="l">P3 รอกองทุนฯ พิจารณา</div></div>'
+      + '<div class="sub-kpi"><div class="v" style="color:#7c3aed;">' + Object.keys(p4Centers).length + '</div><div class="l">P4 ศูนย์ซ่อมที่มีข้อมูล</div></div>'
+      + '<div class="sub-kpi"><div class="v" style="color:#7c3aed;">' + p4Rows.length + '</div><div class="l">P4 รายการอุปกรณ์ทั้งหมด</div></div>'
+    + '</div>'
+
+    + '<div class="section-title">🕒 ประวัติการเปลี่ยนแปลงล่าสุด</div>'
+    + '<div class="activity-list">' + (activity.length
+        ? activity.map(function(a){
+            return '<div class="activity-item"><div class="activity-text">' + a.text + '</div>'
+              + '<div class="activity-meta">' + (a.by || '') + '<br>' + timeAgoTh(a.ts) + '</div></div>';
+          }).join('')
+        : '<div class="activity-empty">ยังไม่มีประวัติการเปลี่ยนแปลง หรือยังไม่มีสิทธิ์ดู (ต้องเป็น admin/executive)</div>'
+      ) + '</div>';
 
   new Chart(document.getElementById('budgetChart'), {
     type: 'bar',
@@ -222,11 +408,29 @@ function render(session, p1, p2, p3, p4) {
       scales: { y: { beginAtZero: true, ticks: { callback: function(v){ return v + 'M'; } } } }
     }
   });
-}
 
-function projectRow(name, budget, total) {
-  var pct = total > 0 ? ((budget / total) * 100).toFixed(1) : '0.0';
-  return '<tr><td>' + name + '</td><td>฿' + budget.toLocaleString(undefined,{maximumFractionDigits:0}) + '</td><td>' + pct + '%</td></tr>';
+  if (yearKeys.length) {
+    new Chart(document.getElementById('yearChart'), {
+      type: 'bar',
+      data: {
+        labels: yearKeys.map(function(y){ return 'ปี ' + y; }),
+        datasets: [
+          { label: 'P2', data: yearKeys.map(function(y){ return +(years[y].p2/1000000).toFixed(2); }), backgroundColor: '#d97706', borderRadius: 4 },
+          { label: 'P3', data: yearKeys.map(function(y){ return +(years[y].p3/1000000).toFixed(2); }), backgroundColor: '#7c3aed', borderRadius: 4 },
+          { label: 'P4', data: yearKeys.map(function(y){ return +(years[y].p4/1000000).toFixed(2); }), backgroundColor: '#059669', borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          x: { stacked: false },
+          y: { beginAtZero: true, ticks: { callback: function(v){ return v + 'M'; } } }
+        }
+      }
+    });
+  }
 }
 
 init();

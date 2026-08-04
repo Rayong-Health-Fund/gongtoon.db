@@ -200,7 +200,7 @@ function handleGoogleCredential(response) {
     .then(function(res) { return res.json(); })
     .then(function(json) {
       if (json.ok) {
-        sessionStorage.setItem('rf_user', JSON.stringify(json));
+        localStorage.setItem('rf_user', JSON.stringify(json));
         window.location.href = 'staff-hub.html';
       } else {
         err.textContent = json.error === 'email not registered'

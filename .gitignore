@@ -1,0 +1,10 @@
+# Raw data exports and backups — never commit to this PUBLIC repo.
+# These commonly contain real personal/health data (names, addresses,
+# disability status of citizens) exported from the live Google Sheets.
+*.xlsx
+*.xls
+*.csv
+_archive/
+
+# Local tooling
+.claude/settings.local.json

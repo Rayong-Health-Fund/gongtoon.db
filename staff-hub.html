@@ -71,6 +71,19 @@ body {
 }
 
 .logout-btn:hover { background: #e2e8f0; color: #1e293b; }
+.user-badge {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #f1f5f9; border: 1.5px solid #e2e8f0;
+  padding: 0.3rem 0.7rem; border-radius: 20px;
+  font-size: 0.8rem; font-weight: 600; color: #1e293b;
+}
+.user-badge-role {
+  font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.5rem;
+  border-radius: 10px; text-transform: uppercase; letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.role-staff { background:#dbeafe; color:#1e40af; }
+.role-admin, .role-executive { background:#fef3c7; color:#92400e; }
 
 /* MAIN */
 .main {
@@ -209,7 +222,14 @@ body {
     <div class="navbar-logo">🏥</div>
     <span>กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</span>
   </a>
-  <a href="login.html" class="logout-btn">🔒 Logout</a>
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <div class="user-badge" id="userBadge" style="display:none">
+      <span>👤</span>
+      <span id="userBadgeName"></span>
+      <span class="user-badge-role" id="userBadgeRole"></span>
+    </div>
+    <a href="login.html" class="logout-btn" id="authBtn" onclick="return handleAuthClick();">🔒 Logout</a>
+  </div>
 </nav>
 
 <main class="main">
@@ -264,15 +284,49 @@ body {
       <div class="form-card-arrow">เปิดหน้าสรุป →</div>
     </a>
   </div>
+
+  <div id="newsLinkWrap" style="display:none;margin-top:1rem;">
+    <a href="news-editor.html" class="form-card" style="border-top:4px solid #d97706;">
+      <div class="form-card-icon">📰</div>
+      <div class="form-card-label">สำหรับกองทุนฯ</div>
+      <div class="form-card-title">จัดการข่าวประชาสัมพันธ์</div>
+      <div class="form-card-desc">เพิ่ม/แก้ไข/ลบข่าวที่แสดงในหน้าเว็บสาธารณะ</div>
+      <div class="form-card-arrow">เปิดหน้าจัดการ →</div>
+    </a>
+  </div>
 </main>
 
 <script>
-  try {
-    var rfUser = JSON.parse(sessionStorage.getItem('rf_user') || 'null');
-    if (rfUser && (rfUser.role === 'executive' || rfUser.role === 'admin')) {
-      document.getElementById('execLinkWrap').style.display = 'block';
+  var rfUser = null;
+  try { rfUser = JSON.parse(localStorage.getItem('rf_user') || 'null'); } catch (e) {}
+
+  if (rfUser && (rfUser.role === 'executive' || rfUser.role === 'admin')) {
+    document.getElementById('execLinkWrap').style.display = 'block';
+  }
+  if (rfUser && rfUser.role === 'admin') {
+    document.getElementById('newsLinkWrap').style.display = 'block';
+  }
+
+  if (rfUser && rfUser.token) {
+    document.getElementById('userBadgeName').textContent = rfUser.name || rfUser.email;
+    var roleLabels = { staff: 'เจ้าหน้าที่', admin: 'ผู้ดูแลระบบ', executive: 'ผู้บริหาร' };
+    var roleLabel = roleLabels[rfUser.role] || rfUser.role;
+    if (rfUser.district && rfUser.district !== 'ทั้งหมด') roleLabel += ' · ' + rfUser.district;
+    var roleEl = document.getElementById('userBadgeRole');
+    roleEl.textContent = roleLabel;
+    roleEl.className = 'user-badge-role role-' + (rfUser.role || 'staff');
+    document.getElementById('userBadge').style.display = 'flex';
+    document.getElementById('authBtn').textContent = '🔒 ออกจากระบบ';
+  } else {
+    document.getElementById('authBtn').textContent = '→ เข้าสู่ระบบ';
+  }
+
+  function handleAuthClick() {
+    if (rfUser && rfUser.token) {
+      localStorage.removeItem('rf_user');
     }
-  } catch (e) {}
+    return true; // let the <a href="login.html"> navigation proceed
+  }
 </script>
 
 </body>
