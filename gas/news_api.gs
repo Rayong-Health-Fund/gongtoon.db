@@ -21,6 +21,33 @@ const NEWS_HEADERS = [
 const NEWS_IMAGE_FOLDER_NAME = 'RayongFund_News_Images';
 const NEWS_IMAGE_MAX_BYTES = 5 * 1024 * 1024; // 5MB, same limit used elsewhere on the site
 
+const GALLERY_SHEET_NAME = 'gallery';
+const GALLERY_HEADERS = ['id', 'image_url', 'caption', 'category', 'sort_order', 'status', 'created_at', 'created_by'];
+const GALLERY_IMAGE_FOLDER_NAME = 'RayongFund_Gallery_Images';
+const GALLERY_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+
+// Same safe-migration pattern as ensureNewsSheetSetup_ — creates the tab
+// if missing, or appends any headers not yet there, never touches
+// existing columns/rows.
+function ensureGallerySheetSetup_() {
+  const ss = SpreadsheetApp.openById(USERS_SHEET_ID);
+  let sheet = ss.getSheetByName(GALLERY_SHEET_NAME);
+  if (!sheet) sheet = ss.insertSheet(GALLERY_SHEET_NAME);
+
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(GALLERY_HEADERS);
+    sheet.setFrozenRows(1);
+  } else {
+    const existing = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
+      .map(function(h) { return String(h).trim(); });
+    const missing = GALLERY_HEADERS.filter(function(h) { return existing.indexOf(h) === -1; });
+    missing.forEach(function(h) {
+      sheet.getRange(1, sheet.getLastColumn() + 1).setValue(h);
+    });
+  }
+  return sheet;
+}
+
 // Safe to re-run: creates the tab if missing, or adds any headers that
 // aren't there yet (e.g. publish_date/expire_date/pinned added later)
 // without touching existing columns/rows.
@@ -59,7 +86,8 @@ function doGet(e) {
 
     if (action === 'setup') {
       ensureNewsSheetSetup_();
-      return jsonOutput_({ ok: true, message: 'พร้อมใช้งานแท็บ "news" แล้ว — เปิดไฟล์ news.html ได้เลย' });
+      ensureGallerySheetSetup_();
+      return jsonOutput_({ ok: true, message: 'พร้อมใช้งานแท็บ "news" และ "gallery" แล้ว — เปิดไฟล์ news.html ได้เลย' });
     }
 
     if (action === 'list_all') {
@@ -68,6 +96,19 @@ function doGet(e) {
         return jsonOutput_({ ok: false, error: 'เฉพาะกองทุนฯ (admin) เท่านั้นที่ดูข่าวทั้งหมด (รวมฉบับร่าง) ได้' });
       }
       return jsonOutput_({ ok: true, news: getAllNews_() });
+    }
+
+    if (action === 'gallery_list') {
+      // Public — published gallery images only.
+      return jsonOutput_({ ok: true, gallery: getAllGalleryItems_().filter(function(g) { return g.status === 'published'; }) });
+    }
+
+    if (action === 'gallery_list_all') {
+      const session = validateSession_(params.token);
+      if (!session || session.role !== 'admin') {
+        return jsonOutput_({ ok: false, error: 'เฉพาะกองทุนฯ (admin) เท่านั้นที่ดูอัลบั้มภาพทั้งหมดได้' });
+      }
+      return jsonOutput_({ ok: true, gallery: getAllGalleryItems_() });
     }
 
     // Default: public list — published, and not past its expire_date (if set).
@@ -96,6 +137,9 @@ function doPost(e) {
     if (action === 'create') return handleNewsCreate_(session, body);
     if (action === 'update') return handleNewsUpdate_(session, body);
     if (action === 'delete') return handleNewsDelete_(session, body);
+    if (action === 'gallery_create') return handleGalleryCreate_(session, body);
+    if (action === 'gallery_update') return handleGalleryUpdate_(session, body);
+    if (action === 'gallery_delete') return handleGalleryDelete_(session, body);
     return jsonOutput_({ ok: false, error: 'ไม่รู้จัก action: ' + action });
   } catch (err) {
     return jsonOutput_({ ok: false, error: String(err) });
@@ -283,6 +327,137 @@ function getAllNews_() {
     var dateA = a.publish_date || a.created_at;
     var dateB = b.publish_date || b.created_at;
     return new Date(dateB) - new Date(dateA);
+  });
+  return items;
+}
+
+function uploadGalleryImage_(base64Data, filename, mimeType) {
+  if (!base64Data) return '';
+  const approxBytes = base64Data.length * 0.75;
+  if (approxBytes > GALLERY_IMAGE_MAX_BYTES) {
+    throw new Error('ไฟล์รูปใหญ่เกินไป (จำกัด 5MB ต่อไฟล์)');
+  }
+  if (mimeType && mimeType.indexOf('image/') !== 0) {
+    throw new Error('ไฟล์ที่แนบต้องเป็นรูปภาพเท่านั้น');
+  }
+
+  const folders = DriveApp.getFoldersByName(GALLERY_IMAGE_FOLDER_NAME);
+  const folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(GALLERY_IMAGE_FOLDER_NAME);
+
+  const bytes = Utilities.base64Decode(base64Data);
+  const blob = Utilities.newBlob(bytes, mimeType || 'image/jpeg', filename || 'gallery-image');
+  const file = folder.createFile(blob);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+  return 'https://drive.google.com/uc?export=view&id=' + file.getId();
+}
+
+function handleGalleryCreate_(session, body) {
+  if (!body.image_data) {
+    return jsonOutput_({ ok: false, error: 'กรุณาแนบรูปภาพ' });
+  }
+
+  let imageUrl;
+  try {
+    imageUrl = uploadGalleryImage_(body.image_data, body.image_filename, body.image_mime);
+  } catch (imgErr) {
+    return jsonOutput_({ ok: false, error: String(imgErr) });
+  }
+
+  const sheet = ensureGallerySheetSetup_();
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
+    .map(function(h) { return String(h).trim(); });
+
+  const now = new Date();
+  const id = 'gal-' + Utilities.formatDate(now, 'Asia/Bangkok', 'yyyyMMdd-HHmmss');
+
+  const rowObj = {
+    id: id,
+    image_url: imageUrl,
+    caption: String(body.caption || '').trim(),
+    category: String(body.category || '').trim(),
+    sort_order: Number(body.sort_order) || 0,
+    status: 'published',
+    created_at: now,
+    created_by: session.email
+  };
+
+  const newRow = headers.map(function(h) {
+    return Object.prototype.hasOwnProperty.call(rowObj, h) ? rowObj[h] : '';
+  });
+  sheet.appendRow(newRow);
+
+  return jsonOutput_({ ok: true, id: id, image_url: imageUrl });
+}
+
+function handleGalleryUpdate_(session, body) {
+  const id = String(body.id || '').trim();
+  if (!id) return jsonOutput_({ ok: false, error: 'ไม่พบ id ของรูปภาพ' });
+
+  const sheet = ensureGallerySheetSetup_();
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0].map(function(h) { return String(h).trim(); });
+  const idCol = headers.indexOf('id');
+
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][idCol]) === id) {
+      const row = i + 1;
+      if (body.caption !== undefined) sheet.getRange(row, headers.indexOf('caption') + 1).setValue(String(body.caption).trim());
+      if (body.category !== undefined) sheet.getRange(row, headers.indexOf('category') + 1).setValue(String(body.category).trim());
+      if (body.sort_order !== undefined) sheet.getRange(row, headers.indexOf('sort_order') + 1).setValue(Number(body.sort_order) || 0);
+      return jsonOutput_({ ok: true, id: id });
+    }
+  }
+  return jsonOutput_({ ok: false, error: 'ไม่พบรูปภาพที่ id นี้' });
+}
+
+function handleGalleryDelete_(session, body) {
+  const id = String(body.id || '').trim();
+  if (!id) return jsonOutput_({ ok: false, error: 'ไม่พบ id ของรูปภาพ' });
+
+  const sheet = ensureGallerySheetSetup_();
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0].map(function(h) { return String(h).trim(); });
+  const idCol = headers.indexOf('id');
+  const statusCol = headers.indexOf('status');
+
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][idCol]) === id) {
+      // Soft delete only — never destructively remove rows.
+      sheet.getRange(i + 1, statusCol + 1).setValue('deleted');
+      return jsonOutput_({ ok: true, id: id });
+    }
+  }
+  return jsonOutput_({ ok: false, error: 'ไม่พบรูปภาพที่ id นี้' });
+}
+
+function getAllGalleryItems_() {
+  const sheet = ensureGallerySheetSetup_();
+  const values = sheet.getDataRange().getValues();
+  if (values.length < 2) return [];
+
+  const headers = values[0].map(function(h) { return String(h).trim(); });
+  const colIndex = {};
+  headers.forEach(function(h, i) { colIndex[h] = i; });
+
+  const items = [];
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    const status = String(row[colIndex['status']] || 'published').trim();
+    if (status === 'deleted') continue;
+    items.push({
+      id: row[colIndex['id']],
+      image_url: row[colIndex['image_url']],
+      caption: row[colIndex['caption']],
+      category: row[colIndex['category']],
+      sort_order: colIndex['sort_order'] !== undefined ? (Number(row[colIndex['sort_order']]) || 0) : 0,
+      status: status || 'published',
+      created_at: row[colIndex['created_at']]
+    });
+  }
+  items.sort(function(a, b) {
+    if (a.sort_order !== b.sort_order) return a.sort_order - b.sort_order;
+    return new Date(b.created_at) - new Date(a.created_at);
   });
   return items;
 }

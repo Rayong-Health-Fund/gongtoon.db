@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ขอสมัครใช้งาน – กองทุนหลักประกันสุขภาพ จังหวัดระยอง</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(30,64,175,0.18) 0%, transparent 45%),
+    radial-gradient(ellipse at 80% 80%, rgba(99,102,241,0.14) 0%, transparent 45%),
+    #0f172a;
+  padding: 1.5rem;
+}
+
+.login-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+  padding: 2.5rem 2.5rem 2rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+.lock-icon {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; margin: 0 auto 1.25rem;
+  box-shadow: 0 4px 16px rgba(30,64,175,0.35);
+}
+
+.login-title { font-size: 1.45rem; font-weight: 800; color: #0f172a; text-align: center; margin-bottom: 0.25rem; }
+.login-subtitle { font-size: 0.9rem; color: #64748b; text-align: center; margin-bottom: 1.75rem; }
+
+.form-group { margin-bottom: 1rem; }
+label { display: block; font-size: 0.88rem; font-weight: 600; color: #1e293b; margin-bottom: 0.35rem; }
+input[type="text"], select {
+  width: 100%; padding: 0.65rem 0.9rem; border: 1.5px solid #cbd5e1; border-radius: 8px;
+  font-family: 'Sarabun', sans-serif; font-size: 1rem; color: #1e293b; background: #f8fafc;
+  transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+}
+input[type="text"]:focus, select:focus { border-color: #1e40af; box-shadow: 0 0 0 3px rgba(30,64,175,0.12); background: #fff; }
+
+.login-btn {
+  width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #1e40af, #2563eb);
+  color: #fff; border: none; border-radius: 8px; font-family: 'Sarabun', sans-serif;
+  font-size: 1.05rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.login-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+.login-btn:active { transform: translateY(0); }
+
+.error-msg, .success-msg {
+  display: none; border-radius: 7px; padding: 0.65rem 0.85rem; font-size: 0.88rem; font-weight: 600;
+  margin-top: 0.75rem; text-align: center;
+}
+.error-msg { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+.success-msg { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+
+.back-link { display: block; text-align: center; margin-top: 1.25rem; color: #64748b; font-size: 0.88rem; text-decoration: none; }
+.back-link:hover { color: #1e40af; }
+.divider { height: 1px; background: #e2e8f0; margin: 1.5rem 0 1rem; }
+.verified-email { text-align: center; font-size: 0.85rem; color: #166534; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 0.5rem; margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <div style="text-align:center;">
+    <div class="lock-icon">📝</div>
+    <h1 class="login-title">ขอสมัครใช้งาน</h1>
+    <p class="login-subtitle">กองทุนหลักประกันสุขภาพ จังหวัดระยอง</p>
+  </div>
+
+  <div id="stepSignIn">
+    <div id="g_id_onload"
+         data-client_id="164611973399-6s9mkjc5ign5eor8ko2nvg3mhvhapa58.apps.googleusercontent.com"
+         data-callback="handleGoogleCredential">
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:0.5rem;">
+      <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
+    </div>
+    <p style="text-align:center;font-size:0.78rem;color:#94a3b8;margin-top:1rem;">ยืนยันตัวตนด้วยอีเมล Google ก่อนกรอกข้อมูลเพิ่มเติม</p>
+  </div>
+
+  <div id="stepForm" style="display:none;">
+    <div class="verified-email" id="verifiedEmailBox"></div>
+    <div class="form-group">
+      <label>ชื่อ-นามสกุล <span style="color:#ef4444;">*</span></label>
+      <input type="text" id="fName" placeholder="ชื่อ นามสกุล">
+    </div>
+    <div class="form-group">
+      <label>หน่วยงาน <span style="color:#ef4444;">*</span></label>
+      <input type="text" id="fAgency" placeholder="เช่น รพ.สต.เนินพระ, อบต.ตะพง">
+    </div>
+    <div class="form-group">
+      <label>อำเภอที่สังกัด <span style="color:#ef4444;">*</span></label>
+      <select id="fDistrict">
+        <option value="">-- เลือกอำเภอ --</option>
+        <option>เมืองระยอง</option>
+        <option>บ้านฉาง</option>
+        <option>แกลง</option>
+        <option>วังจันทร์</option>
+        <option>บ้านค่าย</option>
+        <option>ปลวกแดง</option>
+        <option>เขาชะเมา</option>
+        <option>นิคมพัฒนา</option>
+      </select>
+    </div>
+    <button class="login-btn" onclick="submitRegistration()">ส่งคำขอสมัคร</button>
+  </div>
+
+  <div id="stepDone" style="display:none;text-align:center;">
+    <div style="font-size:2.2rem;margin-bottom:0.5rem;">✅</div>
+    <p style="font-size:0.95rem;font-weight:700;color:#166534;">ส่งคำขอสมัครแล้ว</p>
+    <p style="font-size:0.85rem;color:#64748b;margin-top:0.4rem;">รอกองทุนฯ ตรวจสอบและอนุมัติ เมื่ออนุมัติแล้วจะเข้าสู่ระบบได้ทันที</p>
+  </div>
+
+  <div class="error-msg" id="errorMsg"></div>
+
+  <div class="divider"></div>
+  <a href="login.html" class="back-link">มีบัญชีอยู่แล้ว? เข้าสู่ระบบ →</a>
+  <a href="index.html" class="back-link">← กลับหน้าหลัก</a>
+</div>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+const USERS_API_URL = 'https://script.google.com/macros/s/AKfycbxUrn_I2gWfq592V18zeMgamm9KSzMGtPXSdzElEmQXfYAevsSREBco1kGggc4xTT6R/exec';
+var verifiedIdToken = null;
+
+function handleGoogleCredential(response) {
+  verifiedIdToken = response.credential;
+  var payload = parseJwt_(response.credential);
+  document.getElementById('verifiedEmailBox').textContent = '✓ ยืนยันอีเมลแล้ว: ' + (payload.email || '');
+  document.getElementById('stepSignIn').style.display = 'none';
+  document.getElementById('stepForm').style.display = 'block';
+}
+
+function parseJwt_(token) {
+  try {
+    var base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join('')));
+  } catch (e) { return {}; }
+}
+
+function submitRegistration() {
+  var err = document.getElementById('errorMsg');
+  err.style.display = 'none';
+
+  var name = document.getElementById('fName').value.trim();
+  var agency = document.getElementById('fAgency').value.trim();
+  var district = document.getElementById('fDistrict').value;
+
+  if (!name || !agency || !district) {
+    err.textContent = 'กรุณากรอกข้อมูลให้ครบทุกช่อง';
+    err.style.display = 'block';
+    return;
+  }
+
+  fetch(USERS_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action: 'register', id_token: verifiedIdToken, name: name, agency: agency, district: district })
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (!json.ok) {
+        err.textContent = json.error || 'ส่งคำขอไม่สำเร็จ';
+        err.style.display = 'block';
+        return;
+      }
+      document.getElementById('stepForm').style.display = 'none';
+      document.getElementById('stepDone').style.display = 'block';
+    })
+    .catch(function() {
+      err.textContent = 'เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่';
+      err.style.display = 'block';
+    });
+}
+</script>
+
+</body>
+</html>

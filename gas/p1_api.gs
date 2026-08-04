@@ -27,7 +27,51 @@ function doGet(e) {
     return jsonOutput_({ ok: true, project: 'P1', summary: buildP1Summary_(records) });
   }
 
+  if (action === 'district_summary') {
+    // Public — no session required. Only district-level aggregates
+    // (count/budget/completion %) go out here, never names, addresses,
+    // subdistrict, or disability type — those stay behind login since a
+    // small subdistrict + a disability-type count can re-identify someone.
+    const records = getP1Records_();
+    return jsonOutput_({ ok: true, project: 'P1', districts: buildP1PublicDistrictSummary_(records) });
+  }
+
   return jsonOutput_({ ok: false, error: 'ไม่รู้จัก action: ' + action });
+}
+
+// Raw data has the provincial-capital district written a few different
+// ways ("เมือง" from older rows, "เมืองระอง" — a typo missing ย — from at
+// least one row, "เมืองระยอง" from the web form's own dropdown). All three
+// are the same district and must merge into one, or every count/summary
+// that groups by district silently splits into fragments.
+function normalizeP1District_(d) {
+  const s = String(d || '').trim();
+  if (s === 'เมือง' || s === 'เมืองระอง' || s === 'เมืองระยอง') return 'เมืองระยอง';
+  return s;
+}
+
+function buildP1PublicDistrictSummary_(records) {
+  const byDistrict = {};
+  records.forEach(function(r) {
+    const d = String(r.district || '').trim();
+    if (!d) return;
+    if (!byDistrict[d]) byDistrict[d] = { district: d, count: 0, totalBudget: 0, done: 0 };
+    const dd = byDistrict[d];
+    dd.count++;
+    dd.totalBudget += (Number(r.budget) || 0);
+    if (r.projectStatus === 'แล้วเสร็จ') dd.done++;
+  });
+
+  return Object.keys(byDistrict).map(function(d) {
+    const dd = byDistrict[d];
+    return {
+      district: dd.district,
+      count: dd.count,
+      totalBudget: dd.totalBudget,
+      avgBudget: dd.count > 0 ? Math.round(dd.totalBudget / dd.count) : 0,
+      donePct: dd.count > 0 ? Math.round((dd.done / dd.count) * 100) : 0
+    };
+  }).sort(function(a, b) { return b.count - a.count; });
 }
 
 function doPost(e) {
@@ -223,7 +267,7 @@ function getP1Records_() {
         rawTypeText: obj.raw_type_text,
         addressText: obj.address_text,
         subdistrict: obj.subdistrict,
-        district: obj.district,
+        district: normalizeP1District_(obj.district),
         province: obj.province,
         budget: toNumber_(obj.budget),
         projectStatus: obj.project_status,

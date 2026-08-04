@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</title>
+<title>กองทุนหลักประกันสุขภาพ จังหวัดระยอง</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -1167,6 +1167,43 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
 }
 
 /* ═══════════════════════════════════════════════════
+   PHOTO GALLERY CAROUSEL
+═══════════════════════════════════════════════════ */
+.gallery-carousel-section { max-width: 1100px; margin: 1.5rem auto 0; padding: 0 1.5rem; }
+.gallery-carousel-title {
+  font-size: 1rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.75rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.gallery-carousel {
+  position: relative; border-radius: 16px; overflow: hidden; background: #0f172a;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12); aspect-ratio: 16/6; min-height: 220px;
+}
+.gallery-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease; }
+.gallery-slide.active { opacity: 1; }
+.gallery-slide img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.gallery-slide-caption {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 1.25rem 1.5rem; color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+  font-size: 0.9rem; font-weight: 600;
+}
+.gallery-nav-btn {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+  background: rgba(255,255,255,0.85); border: none; border-radius: 50%;
+  width: 36px; height: 36px; cursor: pointer; font-size: 1.1rem; color: #0f172a;
+  display: flex; align-items: center; justify-content: center;
+}
+.gallery-nav-btn:hover { background: #fff; }
+.gallery-nav-prev { left: 0.75rem; }
+.gallery-nav-next { right: 0.75rem; }
+.gallery-dots { position: absolute; bottom: 0.6rem; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: 0.4rem; }
+.gallery-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; border: none; padding: 0; }
+.gallery-dot.active { background: #fff; }
+@media (max-width: 640px) {
+  .gallery-carousel { aspect-ratio: 4/3; }
+  .gallery-nav-btn { width: 30px; height: 30px; font-size: 0.95rem; }
+}
+
+/* ═══════════════════════════════════════════════════
    STICKY TOTAL BUDGET BAR
 ═══════════════════════════════════════════════════ */
 .budget-sticky-bar {
@@ -2169,6 +2206,83 @@ function indexLogout() {
   localStorage.removeItem('rf_user');
   window.location.href = 'login.html';
 }
+
+// ═══════════════════════════════════════════
+// PHOTO GALLERY CAROUSEL — pulls from the same admin-managed
+// gallery tab as news_api.gs (see news-editor.html "🖼️ อัลบั้มภาพ" tab).
+// Whole section stays hidden until at least one photo is published.
+// ═══════════════════════════════════════════
+var GALLERY_API_URL = 'https://script.google.com/macros/s/AKfycbzRxsboi-rH2oS669v3xFesNpYcS1ndvHhjGRxfGq4UaVwYMEgPjz6WmLScSS1WVVSeGQ/exec';
+var galleryItems = [];
+var galleryIndex = 0;
+var galleryTimer = null;
+
+function loadGalleryCarousel() {
+  fetch(GALLERY_API_URL + '?action=gallery_list')
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (!json.ok || !json.gallery || !json.gallery.length) return;
+      galleryItems = json.gallery;
+      galleryIndex = 0;
+      renderGalleryCarousel();
+      document.getElementById('galleryCarouselSection').style.display = 'block';
+      startGalleryAutoplay();
+    })
+    .catch(function() { /* gallery is a nice-to-have; fail silently */ });
+}
+
+function galleryEsc_(s) {
+  var d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+function renderGalleryCarousel() {
+  var carousel = document.getElementById('galleryCarousel');
+  var slidesHtml = galleryItems.map(function(g, i) {
+    return '<div class="gallery-slide' + (i === galleryIndex ? ' active' : '') + '" data-idx="' + i + '">'
+      + '<img src="' + galleryEsc_(g.image_url) + '" alt="">'
+      + (g.caption ? '<div class="gallery-slide-caption">' + galleryEsc_(g.caption) + '</div>' : '')
+      + '</div>';
+  }).join('');
+  var navHtml = galleryItems.length > 1
+    ? '<button class="gallery-nav-btn gallery-nav-prev" onclick="galleryPrev()">‹</button>'
+      + '<button class="gallery-nav-btn gallery-nav-next" onclick="galleryNext()">›</button>'
+      + '<div class="gallery-dots" id="galleryDots"></div>'
+    : '';
+  carousel.innerHTML = slidesHtml + navHtml;
+  renderGalleryDots();
+}
+
+function renderGalleryDots() {
+  var dotsEl = document.getElementById('galleryDots');
+  if (!dotsEl) return;
+  dotsEl.innerHTML = galleryItems.map(function(g, i) {
+    return '<button class="gallery-dot' + (i === galleryIndex ? ' active' : '') + '" onclick="galleryGoTo(' + i + ')"></button>';
+  }).join('');
+}
+
+function galleryGoTo(i) {
+  galleryIndex = ((i % galleryItems.length) + galleryItems.length) % galleryItems.length;
+  document.querySelectorAll('#galleryCarousel .gallery-slide').forEach(function(el, idx) {
+    el.classList.toggle('active', idx === galleryIndex);
+  });
+  renderGalleryDots();
+  restartGalleryAutoplay();
+}
+function galleryNext() { galleryGoTo(galleryIndex + 1); }
+function galleryPrev() { galleryGoTo(galleryIndex - 1); }
+
+function startGalleryAutoplay() {
+  if (galleryItems.length < 2) return;
+  galleryTimer = setInterval(function() { galleryGoTo(galleryIndex + 1); }, 5000);
+}
+function restartGalleryAutoplay() {
+  if (galleryTimer) clearInterval(galleryTimer);
+  startGalleryAutoplay();
+}
+
+loadGalleryCarousel();
 function govToggleDropdown(e, toggleEl) {
   if (window.matchMedia && window.matchMedia('(hover: hover)').matches) return true;
   e.preventDefault();
@@ -2212,6 +2326,12 @@ document.addEventListener('click', function(e) {
       </div>
     </div>
   </div>
+</div>
+
+<!-- ░░ PHOTO GALLERY CAROUSEL ░░ -->
+<div class="gallery-carousel-section" id="galleryCarouselSection" style="display:none;">
+  <div class="gallery-carousel-title">📸 ภาพกิจกรรมของกองทุนฯ</div>
+  <div class="gallery-carousel" id="galleryCarousel"></div>
 </div>
 
 <!-- ░░ SEARCH ░░ -->
@@ -7159,8 +7279,79 @@ function renderP1Pagination(totalPages) {
 function buildP1DistrictDrilldown() {
   var container = document.getElementById('p1-district-drilldown');
   if (!container || container.dataset.built === '1') return;
-  container.dataset.built = '1';
 
+  // Logged-in staff already have full records loaded (from action=records)
+  // — show the detailed tambon-level breakdown. Anonymous visitors never
+  // get project1Records populated (action=records requires a session), so
+  // fall back to a district-only public aggregate instead of nothing.
+  if (project1Records && project1Records.length) {
+    container.dataset.built = '1';
+    renderP1DistrictDetailed_(container);
+    return;
+  }
+
+  var rfUserCheck = null;
+  try { rfUserCheck = JSON.parse(localStorage.getItem('rf_user') || 'null'); } catch (e) {}
+  if (rfUserCheck && rfUserCheck.token) {
+    // Logged in but records genuinely haven't loaded yet/are empty — keep
+    // the old behavior (plain "no data" message), don't show the public
+    // fallback to someone who's supposed to see the detailed view.
+    container.dataset.built = '1';
+    container.innerHTML = '<p style="color:var(--text-gray);text-align:center;padding:2rem;">ไม่พบข้อมูล</p>';
+    return;
+  }
+
+  container.innerHTML = '<p style="color:var(--text-gray);text-align:center;padding:1.5rem;font-size:0.85rem;">กำลังโหลดสรุปข้อมูลระดับอำเภอ...</p>';
+  fetchP1DistrictSummary_(container, 1);
+}
+
+// GAS occasionally returns a transient error on a single request even
+// when the endpoint itself is fine (same class of flakiness already
+// worked around elsewhere on this site) — one retry recovers most of these.
+function fetchP1DistrictSummary_(container, retriesLeft) {
+  fetch(P1_DASHBOARD_URL.replace('&action=dashboard', '') + '&action=district_summary')
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (!json.ok || !json.districts || !json.districts.length) {
+        container.dataset.built = '1';
+        container.innerHTML = '<p style="color:var(--text-gray);text-align:center;padding:2rem;">ไม่พบข้อมูล</p>';
+        return;
+      }
+      container.dataset.built = '1';
+      renderP1DistrictPublicSummary_(container, json.districts);
+    })
+    .catch(function() {
+      if (retriesLeft > 0) { fetchP1DistrictSummary_(container, retriesLeft - 1); return; }
+      container.dataset.built = '1';
+      container.innerHTML = '<p style="color:var(--text-gray);text-align:center;padding:2rem;">โหลดสรุปข้อมูลระดับอำเภอไม่สำเร็จ</p>';
+    });
+}
+
+// Public view — district-level only (count, total/avg budget, % done).
+// No subdistrict, no disability-type breakdown, no names: those stay
+// behind login (see [[feedback_pdpa_personal_data]]).
+function renderP1DistrictPublicSummary_(container, districts) {
+  var html = '<p style="font-size:0.78rem;color:var(--text-gray);margin-bottom:0.75rem;">'
+    + '📊 สรุปภาพรวมระดับอำเภอ (ข้อมูลรวม ไม่ระบุตัวบุคคล) — '
+    + '<a href="login.html" style="color:#1e40af;font-weight:600;">เจ้าหน้าที่เข้าสู่ระบบ</a> เพื่อดูรายละเอียดระดับตำบล</p>';
+  html += '<div class="table-responsive"><table class="table-custom" style="font-size:0.82rem;">'
+    + '<thead><tr><th>อำเภอ</th><th style="text-align:center;">จำนวนหลัง</th>'
+    + '<th style="text-align:right;">งบประมาณรวม</th><th style="text-align:right;">งบประมาณเฉลี่ย</th>'
+    + '<th style="text-align:center;">% เสร็จสิ้น</th></tr></thead><tbody>';
+  districts.forEach(function(d) {
+    html += '<tr>'
+      + '<td style="font-weight:600;">📍 อ.' + d.district + '</td>'
+      + '<td style="text-align:center;font-weight:700;color:#1e40af;">' + d.count + '</td>'
+      + '<td style="text-align:right;color:#059669;">฿' + d.totalBudget.toLocaleString() + '</td>'
+      + '<td style="text-align:right;color:#0369a1;">฿' + d.avgBudget.toLocaleString() + '</td>'
+      + '<td style="text-align:center;">' + d.donePct + '%</td>'
+      + '</tr>';
+  });
+  html += '</tbody></table></div>';
+  container.innerHTML = html;
+}
+
+function renderP1DistrictDetailed_(container) {
   // Aggregate from live project1Records
   var distData = {};
   project1Records.forEach(function(r) {
@@ -7233,24 +7424,7 @@ function buildP1DistrictDrilldown() {
       '</div>';
   });
 
-  if (html) {
-    container.innerHTML = html;
-    return;
-  }
-
-  var hasToken = false;
-  try {
-    var rfUser = JSON.parse(localStorage.getItem('rf_user') || 'null');
-    hasToken = !!(rfUser && rfUser.token);
-  } catch (e) {}
-
-  container.innerHTML = hasToken
-    ? '<p style="color:var(--text-gray);text-align:center;padding:2rem;">ไม่พบข้อมูล</p>'
-    : '<div style="text-align:center;padding:2rem 1rem;">'
-      + '<div style="font-size:2rem;margin-bottom:0.5rem;">🔒</div>'
-      + '<p style="color:var(--text-gray);font-size:0.88rem;">สรุปข้อมูลระดับตำบลต้องเข้าสู่ระบบก่อนจึงจะดูได้ (ใช้ข้อมูลรายบุคคลในการคำนวณ)</p>'
-      + '<a href="login.html" style="display:inline-block;margin-top:0.5rem;font-size:0.85rem;color:#1e40af;font-weight:600;">เข้าสู่ระบบสำหรับเจ้าหน้าที่ →</a>'
-      + '</div>';
+  container.innerHTML = html || '<p style="color:var(--text-gray);text-align:center;padding:2rem;">ไม่พบข้อมูล</p>';
 }
 
 function toggleP1District(headerEl) {
@@ -7349,7 +7523,7 @@ window.navigateTo = navigateTo;
     <div class="footer-brand">
       <div class="footer-logo">🏥</div>
       <div>
-        <div class="footer-org">กองทุนฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพ</div>
+        <div class="footer-org">กองทุนหลักประกันสุขภาพ</div>
         <div class="footer-org-sub">จังหวัดระยอง</div>
       </div>
     </div>
@@ -7389,7 +7563,7 @@ window.navigateTo = navigateTo;
       <a href="news.html">ข่าวประชาสัมพันธ์</a>
       <a href="login.html">สำหรับเจ้าหน้าที่</a>
     </div>
-    <div class="footer-copy">© 2568 กองทุนฟื้นฟูสมรรถภาพจังหวัดระยอง · ปรับปรุงล่าสุด <span id="footerLastUpdated"></span></div>
+    <div class="footer-copy">© 2568 กองทุนหลักประกันสุขภาพจังหวัดระยอง · ปรับปรุงล่าสุด <span id="footerLastUpdated"></span></div>
   </div>
 </footer>
 <script>
@@ -7406,7 +7580,7 @@ window.navigateTo = navigateTo;
 <!-- FLOATING CONTACT BUTTON — same info as the footer, reachable without scrolling -->
 <div id="fabContact" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:2000;">
   <div id="contactPopover" style="display:none;position:absolute;bottom:64px;right:0;width:270px;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:1.1rem;font-family:Sarabun,sans-serif;">
-    <div style="font-weight:800;font-size:0.95rem;color:#0f172a;margin-bottom:0.15rem;">กองทุนฟื้นฟูสมรรถภาพฯ</div>
+    <div style="font-weight:800;font-size:0.95rem;color:#0f172a;margin-bottom:0.15rem;">กองทุนหลักประกันสุขภาพฯ</div>
     <div style="font-size:0.78rem;color:#64748b;margin-bottom:0.75rem;">จังหวัดระยอง</div>
     <div style="display:flex;gap:0.5rem;align-items:flex-start;margin-bottom:0.6rem;font-size:0.82rem;color:#334155;">
       <span>📍</span><span>140 ม.2 ถ.สุขุมวิท ต.เนินพระ อ.เมือง จ.ระยอง 21000</span>

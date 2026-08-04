@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>จัดการข่าว – กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</title>
+<title>จัดการข่าว – กองทุนหลักประกันสุขภาพ จังหวัดระยอง</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -67,6 +67,9 @@ var editingId = null;
 var MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 var pendingImage = null; // { data, mime, filename } — base64, no data: prefix
 var removeImageFlag = false;
+var allGallery = [];
+var pendingGalleryImage = null;
+var activeTab = 'news';
 
 function onImageSelected(inputEl) {
   var file = inputEl.files && inputEl.files[0];
@@ -100,6 +103,29 @@ function removeImage() {
   document.getElementById('imagePreview').src = '';
 }
 
+function onGalleryImageSelected(inputEl) {
+  var file = inputEl.files && inputEl.files[0];
+  if (!file) return;
+  if (file.size > MAX_IMAGE_BYTES) {
+    alert('ไฟล์รูปใหญ่เกินไป (จำกัด 5MB)');
+    inputEl.value = '';
+    return;
+  }
+  if (file.type.indexOf('image/') !== 0) {
+    alert('กรุณาเลือกไฟล์รูปภาพเท่านั้น');
+    inputEl.value = '';
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function() {
+    var base64 = reader.result.split(',')[1];
+    pendingGalleryImage = { data: base64, mime: file.type, filename: file.name };
+    document.getElementById('galleryImagePreview').src = reader.result;
+    document.getElementById('galleryImagePreviewWrap').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
 function getSession() {
   try { return JSON.parse(localStorage.getItem('rf_user') || 'null'); }
   catch (e) { return null; }
@@ -125,11 +151,27 @@ function init() {
   renderApp();
   document.getElementById('fPublishDate').value = todayDateInputValue();
   loadNews();
+  loadGallery();
+}
+
+function switchEditorTab(tab) {
+  activeTab = tab;
+  document.getElementById('tabNewsBtn').style.cssText = tab === 'news'
+    ? 'background:#1e40af;color:#fff;border-color:#1e40af;' : '';
+  document.getElementById('tabGalleryBtn').style.cssText = tab === 'gallery'
+    ? 'background:#1e40af;color:#fff;border-color:#1e40af;' : '';
+  document.getElementById('newsTabContent').style.display = tab === 'news' ? 'block' : 'none';
+  document.getElementById('galleryTabContent').style.display = tab === 'gallery' ? 'block' : 'none';
 }
 
 function renderApp() {
   document.getElementById('app').innerHTML =
-    '<div class="form-card">'
+    '<div style="display:flex;gap:0.6rem;margin-bottom:1.25rem;">'
+    + '<button id="tabNewsBtn" class="btn-secondary" style="background:#1e40af;color:#fff;border-color:#1e40af;" onclick="switchEditorTab(\'news\')">📰 ข่าว</button>'
+    + '<button id="tabGalleryBtn" class="btn-secondary" onclick="switchEditorTab(\'gallery\')">🖼️ อัลบั้มภาพ</button>'
+    + '</div>'
+    + '<div id="newsTabContent">'
+    + '<div class="form-card">'
     + '<h3 id="formTitle" style="margin-bottom:1rem;">✏️ เพิ่มข่าวใหม่</h3>'
     + '<label class="form-label">หัวข้อข่าว <span style="color:#ef4444;">*</span></label>'
     + '<input type="text" class="form-control" id="fTitle" placeholder="เช่น กองทุนฯ เปิดรับสมัครโครงการ...">'
@@ -166,7 +208,31 @@ function renderApp() {
     + '</div>'
     + '</div>'
     + '<h3 style="margin-bottom:1rem;">📋 ข่าวทั้งหมด</h3>'
-    + '<div id="newsList"><div class="status-msg">กำลังโหลด...</div></div>';
+    + '<div id="newsList"><div class="status-msg">กำลังโหลด...</div></div>'
+    + '</div>'
+    + '<div id="galleryTabContent" style="display:none;">'
+    + '<div class="form-card">'
+    + '<h3 style="margin-bottom:1rem;">🖼️ เพิ่มรูปในอัลบั้ม</h3>'
+    + '<div class="form-row">'
+      + '<div>'
+        + '<label class="form-label">รูปภาพ <span style="color:#ef4444;">*</span> <span style="color:#94a3b8;font-weight:400;">(ไม่เกิน 5MB)</span></label>'
+        + '<input type="file" class="form-control" id="fGalleryImage" accept="image/*" onchange="onGalleryImageSelected(this)">'
+        + '<div id="galleryImagePreviewWrap" style="display:none;margin-top:0.5rem;">'
+          + '<img id="galleryImagePreview" style="max-width:160px;max-height:120px;border-radius:8px;border:1.5px solid #e2e8f0;display:block;">'
+        + '</div>'
+      + '</div>'
+      + '<div>'
+        + '<label class="form-label">คำอธิบายภาพ</label>'
+        + '<input type="text" class="form-control" id="fGalleryCaption" placeholder="เช่น มอบอุปกรณ์ให้ผู้พิการ ต.เนินพระ">'
+        + '<label class="form-label">หมวดหมู่ <span style="color:#94a3b8;font-weight:400;">(ไม่บังคับ)</span></label>'
+        + '<input type="text" class="form-control" id="fGalleryCategory" placeholder="เช่น กิจกรรม, โครงการ 1, โครงการ 2">'
+      + '</div>'
+    + '</div>'
+    + '<button class="btn-primary" onclick="submitGallery()">เพิ่มรูปในอัลบั้ม</button>'
+    + '</div>'
+    + '<h3 style="margin-bottom:1rem;">📸 รูปทั้งหมดในอัลบั้ม</h3>'
+    + '<div id="galleryList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0.75rem;"><div class="status-msg">กำลังโหลด...</div></div>'
+    + '</div>';
 }
 
 function loadNews() {
@@ -312,6 +378,81 @@ function deleteNews(id) {
     .then(function(json) {
       if (!json.ok) { alert('ลบไม่สำเร็จ: ' + json.error); return; }
       loadNews();
+    })
+    .catch(function(err) { alert('เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่'); console.error(err); });
+}
+
+function loadGallery() {
+  fetch(NEWS_API_URL + '?action=gallery_list_all&token=' + encodeURIComponent(session.token))
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (!json.ok) throw new Error(json.error || 'load failed');
+      allGallery = json.gallery || [];
+      renderGalleryList();
+    })
+    .catch(function(err) {
+      document.getElementById('galleryList').innerHTML = '<div class="status-msg">⚠️ โหลดไม่สำเร็จ: ' + esc(String(err)) + '</div>';
+    });
+}
+
+function renderGalleryList() {
+  var container = document.getElementById('galleryList');
+  if (!allGallery.length) {
+    container.innerHTML = '<div class="status-msg">ยังไม่มีรูปในอัลบั้ม</div>';
+    return;
+  }
+  container.innerHTML = allGallery.map(function(g) {
+    return '<div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,0.06);">'
+      + '<img src="' + esc(g.image_url) + '" style="width:100%;height:120px;object-fit:cover;display:block;">'
+      + '<div style="padding:0.6rem;">'
+        + '<div style="font-size:0.78rem;font-weight:600;margin-bottom:0.2rem;">' + esc(g.caption || '(ไม่มีคำอธิบาย)') + '</div>'
+        + (g.category ? '<div style="font-size:0.68rem;color:#94a3b8;margin-bottom:0.4rem;">' + esc(g.category) + '</div>' : '')
+        + '<button class="icon-btn" style="color:#ef4444;width:100%;" onclick="deleteGalleryItem(\'' + g.id + '\')">🗑️ ลบ</button>'
+      + '</div>'
+    + '</div>';
+  }).join('');
+}
+
+function submitGallery() {
+  if (!pendingGalleryImage) { alert('กรุณาเลือกรูปภาพ'); return; }
+  var payload = {
+    token: session.token,
+    action: 'gallery_create',
+    caption: document.getElementById('fGalleryCaption').value.trim(),
+    category: document.getElementById('fGalleryCategory').value.trim(),
+    image_data: pendingGalleryImage.data,
+    image_mime: pendingGalleryImage.mime,
+    image_filename: pendingGalleryImage.filename
+  };
+  fetch(NEWS_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (!json.ok) { alert('บันทึกไม่สำเร็จ: ' + json.error); return; }
+      pendingGalleryImage = null;
+      document.getElementById('fGalleryImage').value = '';
+      document.getElementById('fGalleryCaption').value = '';
+      document.getElementById('fGalleryCategory').value = '';
+      document.getElementById('galleryImagePreviewWrap').style.display = 'none';
+      loadGallery();
+    })
+    .catch(function(err) { alert('เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่'); console.error(err); });
+}
+
+function deleteGalleryItem(id) {
+  if (!confirm('ยืนยันลบรูปนี้ออกจากอัลบั้ม?')) return;
+  fetch(NEWS_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ token: session.token, action: 'gallery_delete', id: id })
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (!json.ok) { alert('ลบไม่สำเร็จ: ' + json.error); return; }
+      loadGallery();
     })
     .catch(function(err) { alert('เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่'); console.error(err); });
 }

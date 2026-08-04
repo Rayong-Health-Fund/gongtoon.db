@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Staff Hub – กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</title>
+<title>Staff Hub – กองทุนหลักประกันสุขภาพ จังหวัดระยอง</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -220,7 +220,7 @@ body {
 <nav class="navbar">
   <a href="index.html" class="navbar-brand">
     <div class="navbar-logo">🏥</div>
-    <span>กองทุนฟื้นฟูสมรรถภาพ จังหวัดระยอง</span>
+    <span>กองทุนหลักประกันสุขภาพ จังหวัดระยอง</span>
   </a>
   <div style="display:flex;align-items:center;gap:0.75rem;">
     <div class="user-badge" id="userBadge" style="display:none">
@@ -294,6 +294,16 @@ body {
       <div class="form-card-arrow">เปิดหน้าจัดการ →</div>
     </a>
   </div>
+
+  <div id="requestsLinkWrap" style="display:none;margin-top:1rem;">
+    <a href="user-requests.html" class="form-card" style="border-top:4px solid #7c3aed;">
+      <div class="form-card-icon">👥</div>
+      <div class="form-card-label">สำหรับกองทุนฯ</div>
+      <div class="form-card-title">คำขอสมัครใช้งาน</div>
+      <div class="form-card-desc">อนุมัติ/ปฏิเสธคำขอสมัครใช้งานจากเจ้าหน้าที่ใหม่</div>
+      <div class="form-card-arrow">เปิดหน้าจัดการ →</div>
+    </a>
+  </div>
 </main>
 
 <script>
@@ -305,6 +315,7 @@ body {
   }
   if (rfUser && rfUser.role === 'admin') {
     document.getElementById('newsLinkWrap').style.display = 'block';
+    document.getElementById('requestsLinkWrap').style.display = 'block';
   }
 
   if (rfUser && rfUser.token) {
