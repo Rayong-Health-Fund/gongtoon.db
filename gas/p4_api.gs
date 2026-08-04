@@ -322,10 +322,13 @@ function doGet(e) {
       result = getP4Directory_();
     } else if (action === "activity_log") {
       const session = validateSession_(e.parameter.token);
-      if (!session || (session.role !== 'admin' && session.role !== 'executive')) {
-        result = { status: "error", message: 'เฉพาะกองทุนฯ/ผู้บริหารเท่านั้นที่ดูประวัติการเปลี่ยนแปลงได้' };
+      if (!session) {
+        result = { status: "error", message: 'กรุณาเข้าสู่ระบบก่อน' };
       } else {
-        result = { status: "ok", action: "activity_log", data: getP4ActivityLog_() };
+        const log = getP4ActivityLog_();
+        const isPrivileged = session.role === 'admin' || session.role === 'executive';
+        const data = isPrivileged ? log : log.filter(function(item) { return item.by === session.email; });
+        result = { status: "ok", action: "activity_log", data: data };
       }
     } else if (action === "user_groups") {
       result = getUserGroupsData();

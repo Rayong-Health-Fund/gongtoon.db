@@ -123,6 +123,34 @@ body {
   color: #64748b;
 }
 
+/* PROFILE CARD */
+.profile-card {
+  display: flex; align-items: center; gap: 1rem;
+  background: #fff; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  border: 1.5px solid #e2e8f0; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
+}
+.profile-avatar {
+  width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg,#1e40af,#3b82f6);
+  color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;
+}
+.profile-name { font-size: 1.1rem; font-weight: 800; color: #0f172a; }
+.profile-meta { font-size: 0.82rem; color: #64748b; margin-top: 0.15rem; }
+
+/* ACTIVITY FEED */
+.activity-section { margin-bottom: 1.5rem; }
+.activity-section h3 { font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem; }
+.activity-item {
+  display: flex; align-items: center; gap: 0.6rem; background: #fff;
+  border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.6rem 0.9rem; margin-bottom: 0.5rem; font-size: 0.83rem;
+}
+.activity-proj {
+  flex-shrink: 0; font-size: 0.68rem; font-weight: 800; background: #eff6ff; color: #1e40af;
+  padding: 0.15rem 0.5rem; border-radius: 8px;
+}
+.activity-text { flex: 1; color: #334155; }
+.activity-ts { flex-shrink: 0; font-size: 0.72rem; color: #94a3b8; }
+.status-msg { text-align: center; padding: 1.25rem; color: #94a3b8; font-size: 0.85rem; }
+
 /* FORM CARDS */
 .forms-grid {
   display: grid;
@@ -239,6 +267,19 @@ body {
     <p class="hub-subtitle">เลือกโครงการที่ต้องการกรอกข้อมูล</p>
   </div>
 
+  <div class="profile-card" id="profileCard" style="display:none;">
+    <div class="profile-avatar">👤</div>
+    <div>
+      <div class="profile-name" id="profileName"></div>
+      <div class="profile-meta" id="profileMeta"></div>
+    </div>
+  </div>
+
+  <div class="activity-section">
+    <h3>🕘 กิจกรรมล่าสุดของฉัน</h3>
+    <div id="myActivityList"><div class="status-msg">กำลังโหลด...</div></div>
+  </div>
+
   <div class="forms-grid">
 
     <a href="entry-form.html" class="form-card p1">
@@ -304,6 +345,16 @@ body {
       <div class="form-card-arrow">เปิดหน้าจัดการ →</div>
     </a>
   </div>
+
+  <div id="inboxLinkWrap" style="display:none;margin-top:1rem;">
+    <a href="admin-inbox.html" class="form-card" style="border-top:4px solid #dc2626;">
+      <div class="form-card-icon">📥</div>
+      <div class="form-card-label">สำหรับกองทุนฯ</div>
+      <div class="form-card-title">รายการใหม่ที่ต้องตรวจสอบ</div>
+      <div class="form-card-desc">ข้อมูลใหม่จากทุกโครงการ (P1-P4) ในที่เดียว</div>
+      <div class="form-card-arrow">เปิดหน้าตรวจสอบ →</div>
+    </a>
+  </div>
 </main>
 
 <script>
@@ -316,11 +367,13 @@ body {
   if (rfUser && rfUser.role === 'admin') {
     document.getElementById('newsLinkWrap').style.display = 'block';
     document.getElementById('requestsLinkWrap').style.display = 'block';
+    document.getElementById('inboxLinkWrap').style.display = 'block';
   }
+
+  var roleLabels = { staff: 'เจ้าหน้าที่', admin: 'ผู้ดูแลระบบ', executive: 'ผู้บริหาร' };
 
   if (rfUser && rfUser.token) {
     document.getElementById('userBadgeName').textContent = rfUser.name || rfUser.email;
-    var roleLabels = { staff: 'เจ้าหน้าที่', admin: 'ผู้ดูแลระบบ', executive: 'ผู้บริหาร' };
     var roleLabel = roleLabels[rfUser.role] || rfUser.role;
     if (rfUser.district && rfUser.district !== 'ทั้งหมด') roleLabel += ' · ' + rfUser.district;
     var roleEl = document.getElementById('userBadgeRole');
@@ -328,8 +381,16 @@ body {
     roleEl.className = 'user-badge-role role-' + (rfUser.role || 'staff');
     document.getElementById('userBadge').style.display = 'flex';
     document.getElementById('authBtn').textContent = '🔒 ออกจากระบบ';
+
+    document.getElementById('profileName').textContent = rfUser.name || rfUser.email;
+    document.getElementById('profileMeta').textContent = (roleLabels[rfUser.role] || rfUser.role)
+      + (rfUser.district && rfUser.district !== 'ทั้งหมด' ? ' · อ.' + rfUser.district : '') + ' · ' + rfUser.email;
+    document.getElementById('profileCard').style.display = 'flex';
+
+    loadMyActivity();
   } else {
     document.getElementById('authBtn').textContent = '→ เข้าสู่ระบบ';
+    document.getElementById('myActivityList').innerHTML = '<div class="status-msg">เข้าสู่ระบบเพื่อดูกิจกรรมของคุณ</div>';
   }
 
   function handleAuthClick() {
@@ -337,6 +398,58 @@ body {
       localStorage.removeItem('rf_user');
     }
     return true; // let the <a href="login.html"> navigation proceed
+  }
+
+  // ── MY ACTIVITY (across P1-P4) ──────────────────────────────────────
+  var P1_ACT_URL = 'https://script.google.com/macros/s/AKfycby6wVpfb5o_AsbvH3tV9kW54RaG5arvFxJ52TA_lkSV7sAzyXKn-VOki7WpA-GEkppf/exec';
+  var P2_ACT_URL = 'https://script.google.com/macros/s/AKfycbxJe9aB6cQJdA-3iy6vNj1urjMV3QzM67AfNAVxon-3MDUEZz1L_AfPlHNMPtP6gvcgHw/exec';
+  var P3_ACT_URL = 'https://script.google.com/macros/s/AKfycbx8Z0LVi91bFyV_VZAWzmCe4L0DYoayYkBTIl2qntk6qyHyCR9tDBjJas-xbK0TpoNAXg/exec';
+  var P4_ACT_URL = 'https://script.google.com/macros/s/AKfycbycPZZSlTIBfPDscaGRxGXj06hhpj7rkRfehx_96GjJ694yteIjh5_AdnqCXNLhJFZGIA/exec';
+
+  function escHtml_(s) {
+    var d = document.createElement('div');
+    d.textContent = s || '';
+    return d.innerHTML;
+  }
+  function fmtActivityDate_(v) {
+    var d = new Date(v);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }) + ' '
+      + d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function loadMyActivity() {
+    var t = encodeURIComponent(rfUser.token);
+    Promise.all([
+      fetch(P1_ACT_URL + '?project=p1&action=activity_log&token=' + t).then(function(r){return r.json();})
+        .then(function(j){ return (j.ok ? j.activity : []).map(function(x){ return Object.assign({ proj: 'P1' }, x); }); })
+        .catch(function(){ return []; }),
+      fetch(P2_ACT_URL + '?type=activity_log&token=' + t).then(function(r){return r.json();})
+        .then(function(j){ return (!j.error ? j.data : []).map(function(x){ return Object.assign({ proj: 'P2' }, x); }); })
+        .catch(function(){ return []; }),
+      fetch(P3_ACT_URL + '?action=activity_log&token=' + t).then(function(r){return r.json();})
+        .then(function(j){ return (j.ok ? j.activity : []).map(function(x){ return Object.assign({ proj: 'P3' }, x); }); })
+        .catch(function(){ return []; }),
+      fetch(P4_ACT_URL + '?action=activity_log&token=' + t).then(function(r){return r.json();})
+        .then(function(j){ return (j.status === 'ok' ? j.data : []).map(function(x){ return Object.assign({ proj: 'P4' }, x); }); })
+        .catch(function(){ return []; })
+    ]).then(function(results) {
+      var all = [].concat.apply([], results);
+      all.sort(function(a, b) { return new Date(b.ts) - new Date(a.ts); });
+      renderMyActivity(all.slice(0, 10));
+    });
+  }
+
+  function renderMyActivity(items) {
+    var el = document.getElementById('myActivityList');
+    if (!items.length) { el.innerHTML = '<div class="status-msg">ยังไม่มีกิจกรรม — ลองกรอกฟอร์มด้านล่างดูได้เลย</div>'; return; }
+    el.innerHTML = items.map(function(it) {
+      return '<div class="activity-item">'
+        + '<span class="activity-proj">' + it.proj + '</span>'
+        + '<span class="activity-text">' + escHtml_(it.text) + '</span>'
+        + '<span class="activity-ts">' + fmtActivityDate_(it.ts) + '</span>'
+        + '</div>';
+    }).join('');
   }
 </script>
 

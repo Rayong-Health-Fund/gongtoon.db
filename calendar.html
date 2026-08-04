@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ปฏิทินกิจกรรม – กองทุนหลักประกันสุขภาพ จังหวัดระยอง</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+.navbar {
+  background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.navbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; color: #0f172a; text-decoration: none; }
+.navbar-logo { width: 38px; height: 38px; background: #059669; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: white; }
+.nav-back-btn { background: #f1f5f9; border: 1.5px solid #e2e8f0; color: #1e293b; padding: 0.35rem 0.9rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+
+.hero { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); color: white; padding: 2.5rem 1.5rem; text-align: center; }
+.hero-title { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.4rem; }
+.hero-subtitle { font-size: 0.95rem; opacity: 0.85; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 4rem; display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.5rem; }
+@media (max-width: 720px) { .container { grid-template-columns: 1fr; } }
+
+.cal-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 1.25rem; }
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.cal-header button { background: #f1f5f9; border: 1.5px solid #e2e8f0; border-radius: 8px; width: 32px; height: 32px; cursor: pointer; font-size: 1rem; }
+.cal-month-label { font-weight: 800; font-size: 1rem; color: #0f172a; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-dow { text-align: center; font-size: 0.7rem; font-weight: 700; color: #94a3b8; padding: 0.3rem 0; }
+.cal-day {
+  aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border-radius: 8px; font-size: 0.8rem; color: #334155; position: relative; cursor: default;
+}
+.cal-day.empty { visibility: hidden; }
+.cal-day.today { background: #eff6ff; font-weight: 800; color: #1e40af; border: 1.5px solid #93c5fd; }
+.cal-day.has-event { background: #f0fdf4; font-weight: 700; color: #065f46; cursor: pointer; }
+.cal-day.has-event::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #10b981; position: absolute; bottom: 4px; }
+
+.upcoming-title { font-size: 1rem; font-weight: 800; margin-bottom: 0.9rem; color: #0f172a; }
+.event-item {
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 0.6rem;
+}
+.event-date-badge {
+  display: inline-block; background: #f0fdf4; color: #065f46; font-size: 0.7rem; font-weight: 700;
+  padding: 0.15rem 0.55rem; border-radius: 8px; margin-bottom: 0.4rem;
+}
+.event-title { font-size: 0.88rem; font-weight: 700; color: #0f172a; }
+.event-meta { font-size: 0.76rem; color: #64748b; margin-top: 0.25rem; }
+.event-desc { font-size: 0.8rem; color: #475569; margin-top: 0.4rem; line-height: 1.6; }
+.status-msg { text-align: center; padding: 1.5rem; color: #94a3b8; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">
+    <div class="navbar-logo">📅</div>
+    <span>กองทุนหลักประกันสุขภาพ จังหวัดระยอง</span>
+  </a>
+  <a href="index.html" class="nav-back-btn">← กลับหน้าหลัก</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-title">📅 ปฏิทินกิจกรรม</div>
+  <div class="hero-subtitle">กิจกรรมที่กำลังจะเกิดขึ้นของกองทุนฯ</div>
+</div>
+
+<div class="container">
+  <div class="cal-card">
+    <div class="cal-header">
+      <button onclick="changeMonth(-1)">‹</button>
+      <div class="cal-month-label" id="calMonthLabel"></div>
+      <button onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <div>
+    <div class="upcoming-title">🔜 กิจกรรมที่กำลังจะมาถึง</div>
+    <div id="upcomingList"><div class="status-msg">กำลังโหลด...</div></div>
+  </div>
+</div>
+
+<script>
+var EVENTS_API_URL = 'https://script.google.com/macros/s/AKfycbzRxsboi-rH2oS669v3xFesNpYcS1ndvHhjGRxfGq4UaVwYMEgPjz6WmLScSS1WVVSeGQ/exec';
+var allEvents = [];
+var calYear, calMonth; // calMonth: 0-11
+
+function esc(s) {
+  var d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+function fmtDate(v) {
+  var d = new Date(v);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+function ymd_(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function load() {
+  fetch(EVENTS_API_URL + '?action=events_list')
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (!json.ok) throw new Error(json.error || 'load failed');
+      allEvents = json.events || [];
+      renderCalendar();
+      renderUpcoming();
+    })
+    .catch(function(err) {
+      document.getElementById('upcomingList').innerHTML = '<div class="status-msg">⚠️ โหลดไม่สำเร็จ กรุณาลองใหม่</div>';
+      console.error('[Calendar] load failed:', err);
+    });
+}
+
+function eventsOnDate_(dateStr) {
+  return allEvents.filter(function(ev) {
+    var start = String(ev.event_date || '').slice(0, 10);
+    var end = String(ev.end_date || ev.event_date || '').slice(0, 10);
+    return dateStr >= start && dateStr <= end;
+  });
+}
+
+function changeMonth(delta) {
+  calMonth += delta;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  var monthNames = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  document.getElementById('calMonthLabel').textContent = monthNames[calMonth] + ' ' + (calYear + 543);
+
+  var dows = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+  var grid = document.getElementById('calGrid');
+  var html = dows.map(function(d) { return '<div class="cal-dow">' + d + '</div>'; }).join('');
+
+  var firstDay = new Date(calYear, calMonth, 1);
+  var startOffset = firstDay.getDay();
+  var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  var todayStr = ymd_(new Date());
+
+  for (var i = 0; i < startOffset; i++) html += '<div class="cal-day empty"></div>';
+  for (var day = 1; day <= daysInMonth; day++) {
+    var dateStr = ymd_(new Date(calYear, calMonth, day));
+    var hasEvent = eventsOnDate_(dateStr).length > 0;
+    var cls = 'cal-day' + (dateStr === todayStr ? ' today' : '') + (hasEvent ? ' has-event' : '');
+    html += '<div class="' + cls + '" title="' + (hasEvent ? esc(eventsOnDate_(dateStr).map(function(e){return e.title;}).join(', ')) : '') + '">' + day + '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function renderUpcoming() {
+  var todayStr = ymd_(new Date());
+  var upcoming = allEvents.filter(function(ev) {
+    var end = String(ev.end_date || ev.event_date || '').slice(0, 10);
+    return end >= todayStr;
+  });
+  var el = document.getElementById('upcomingList');
+  if (!upcoming.length) { el.innerHTML = '<div class="status-msg">ยังไม่มีกิจกรรมที่กำลังจะมาถึง</div>'; return; }
+  el.innerHTML = upcoming.map(function(ev) {
+    var dateLabel = fmtDate(ev.event_date) + (ev.end_date && ev.end_date !== ev.event_date ? ' – ' + fmtDate(ev.end_date) : '');
+    return '<div class="event-item">'
+      + '<span class="event-date-badge">🗓️ ' + dateLabel + '</span>'
+      + '<div class="event-title">' + esc(ev.title) + '</div>'
+      + (ev.location ? '<div class="event-meta">📍 ' + esc(ev.location) + '</div>' : '')
+      + (ev.description ? '<div class="event-desc">' + esc(ev.description) + '</div>' : '')
+      + '</div>';
+  }).join('');
+}
+
+(function() {
+  var now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+})();
+load();
+</script>
+</body>
+</html>

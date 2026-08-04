@@ -36,7 +36,34 @@ function doGet(e) {
     return jsonOutput_({ ok: true, project: 'P1', districts: buildP1PublicDistrictSummary_(records) });
   }
 
+  if (action === 'activity_log') {
+    if (!session) {
+      return jsonOutput_({ ok: false, error: 'กรุณาเข้าสู่ระบบก่อน' });
+    }
+    const log = getP1ActivityLog_();
+    const isPrivileged = session.role === 'admin' || session.role === 'executive';
+    const activity = isPrivileged ? log : log.filter(function(item) { return item.by === session.email; });
+    return jsonOutput_({ ok: true, project: 'P1', activity: activity });
+  }
+
   return jsonOutput_({ ok: false, error: 'ไม่รู้จัก action: ' + action });
+}
+
+function getP1ActivityLog_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('P1_Update_Log');
+  if (!sheet || sheet.getLastRow() < 2) return [];
+
+  const values = sheet.getRange(2, 1, sheet.getLastRow() - 1, 5).getValues();
+  const entries = values.map(function(row) {
+    return {
+      ts: row[0], type: 'new_case',
+      text: 'เพิ่มข้อมูลปรับสภาพบ้าน: ' + row[2] + ' (อ.' + row[3] + ')',
+      by: row[4]
+    };
+  });
+  entries.sort(function(a, b) { return new Date(b.ts) - new Date(a.ts); });
+  return entries.slice(0, 30);
 }
 
 // Raw data has the provincial-capital district written a few different

@@ -75,7 +75,7 @@ function showGate(message) {
   document.getElementById('app').innerHTML =
     '<div class="gate"><div class="icon">🔒</div><h2>เฉพาะกองทุนฯ (admin) เท่านั้น</h2>'
     + '<p style="color:#64748b;margin:0.5rem 0 1.25rem;">' + message + '</p>'
-    + '<a href="login.html">เข้าสู่ระบบ →</a></div>';
+    + '<a href="login.html?next=' + encodeURIComponent(window.location.pathname + window.location.search) + '">เข้าสู่ระบบ →</a></div>';
 }
 
 function fmtDate(v) {

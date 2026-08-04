@@ -20,10 +20,13 @@ function doGet(e) {
 
     if (action === 'activity_log') {
       const session = validateSession_(params.token);
-      if (!session || (session.role !== 'admin' && session.role !== 'executive')) {
-        return jsonOutput_({ ok: false, error: 'เฉพาะกองทุนฯ/ผู้บริหารเท่านั้นที่ดูประวัติการเปลี่ยนแปลงได้' });
+      if (!session) {
+        return jsonOutput_({ ok: false, error: 'กรุณาเข้าสู่ระบบก่อน' });
       }
-      return jsonOutput_({ ok: true, project: 'P3', activity: getP3ActivityLog_() });
+      const log = getP3ActivityLog_();
+      const isPrivileged = session.role === 'admin' || session.role === 'executive';
+      const activity = isPrivileged ? log : log.filter(function(item) { return item.by === session.email; });
+      return jsonOutput_({ ok: true, project: 'P3', activity: activity });
     }
 
     const records = getP3Records_();

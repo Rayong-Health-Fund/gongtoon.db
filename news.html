@@ -131,15 +131,19 @@ function esc(s) {
 }
 
 // Returns { kind: 'video'|'post', src } for a recognized YouTube/Facebook
-// link, or null. Plain Facebook post/photo links (not /videos/) use the
-// Post Plugin instead of the Video Plugin — pasting any public FB link
-// (post or video) is enough, no Graph API/access token needed.
+// link, or null. Plain Facebook post/photo links use the Post Plugin
+// instead of the Video Plugin — pasting any public FB link (post, reel,
+// or video share link) is enough, no Graph API/access token needed.
+// Facebook's embed plugins are known to be unreliable for short
+// "/share/..." links even with the right plugin, so the caller always
+// renders a plain "open on Facebook" link alongside the embed attempt
+// too — never rely on the embed alone.
 function toVideoEmbedUrl(url) {
   if (!url) return null;
   var yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]+)/);
   if (yt) return { kind: 'video', src: 'https://www.youtube.com/embed/' + yt[1] };
   if (/facebook\.com|fb\.watch/.test(url)) {
-    var isVideo = /\/videos\/|fb\.watch|[?&]v=/.test(url);
+    var isVideo = /\/videos\/|\/reel\/|\/share\/[rv]\/|fb\.watch|[?&]v=/.test(url);
     var plugin = isVideo ? 'video' : 'post';
     return { kind: isVideo ? 'video' : 'post', src: 'https://www.facebook.com/plugins/' + plugin + '.php?href=' + encodeURIComponent(url) + '&show_text=true' };
   }
@@ -210,8 +214,24 @@ function render() {
   } else {
     filtered.forEach(function(n) {
       var embed = toVideoEmbedUrl(n.video_url);
+      var imgs = n.image_urls || [];
+      var bannerHtml = '';
+      if (imgs.length === 1) {
+        bannerHtml = '<img src="' + esc(imgs[0]) + '" alt="" style="width:100%;max-height:280px;object-fit:cover;cursor:pointer;" onclick="toggleNewsBody(\'' + n.id + '\')">';
+      } else if (imgs.length > 1) {
+        bannerHtml = '<div style="display:flex;gap:4px;overflow-x:auto;cursor:pointer;" onclick="toggleNewsBody(\'' + n.id + '\')">'
+          + imgs.map(function(u) { return '<img src="' + esc(u) + '" alt="" style="height:180px;flex:0 0 auto;object-fit:cover;">'; }).join('')
+          + '</div>';
+      }
+      // Facebook's embed plugins frequently fail to render short
+      // "/share/..." links even with the correct plugin — always show a
+      // working "open on Facebook" link alongside any embed attempt so
+      // there's never a dead end, not just when the link is unrecognized.
+      var fallbackLinkHtml = n.video_url
+        ? '<div style="margin-top:0.5rem;"><a href="' + esc(n.video_url) + '" target="_blank" style="color:#1e40af;font-weight:600;font-size:0.82rem;">🔗 เปิดลิงก์ต้นฉบับ →</a></div>'
+        : '';
       html += '<div class="news-card">'
-        + (n.image_url ? '<img src="' + esc(n.image_url) + '" alt="" style="width:100%;max-height:280px;object-fit:cover;cursor:pointer;" onclick="toggleNewsBody(\'' + n.id + '\')">' : '')
+        + bannerHtml
         + '<div class="news-card-header" onclick="toggleNewsBody(\'' + n.id + '\')">'
         + (n.pinned ? '<span class="news-card-cat" style="background:#fef3c7;color:#92400e;">📌 ปักหมุด</span>' : '')
         + (n.category ? '<span class="news-card-cat">' + esc(n.category) + '</span>' : '')
@@ -222,7 +242,7 @@ function render() {
           + esc(n.body)
           + (embed && embed.kind === 'video' ? '<div style="position:relative;padding-top:56.25%;margin-top:1rem;border-radius:10px;overflow:hidden;"><iframe src="' + embed.src + '" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe></div>' : '')
           + (embed && embed.kind === 'post' ? '<div style="margin-top:1rem;border-radius:10px;overflow:hidden;max-width:100%;"><iframe src="' + embed.src + '" style="width:100%;height:500px;border:0;" scrolling="no"></iframe></div>' : '')
-          + (n.video_url && !embed ? '<div style="margin-top:0.75rem;"><a href="' + esc(n.video_url) + '" target="_blank" style="color:#1e40af;font-weight:600;">🔗 เปิดลิงก์ →</a></div>' : '')
+          + fallbackLinkHtml
         + '</div>'
         + '<div class="news-card-toggle" id="toggle-' + n.id + '" onclick="toggleNewsBody(\'' + n.id + '\')">อ่านเพิ่มเติม ▾</div>'
         + '</div>';
@@ -241,6 +261,7 @@ load();
       <a href="index.html">หน้าหลัก</a>
       <a href="about.html">เกี่ยวกับกองทุน</a>
       <a href="news.html">ข่าวประชาสัมพันธ์</a>
+      <a href="calendar.html">ปฏิทินกิจกรรม</a>
       <a href="login.html">สำหรับเจ้าหน้าที่</a>
     </div>
     <div style="margin-top:0.85rem;padding-top:0.85rem;border-top:1px solid rgba(255,255,255,0.12);font-size:0.75rem;opacity:0.85;">

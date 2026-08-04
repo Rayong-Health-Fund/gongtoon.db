@@ -279,7 +279,7 @@ body {
 var RF_SESSION = null;
 try { RF_SESSION = JSON.parse(localStorage.getItem('rf_user') || 'null'); } catch (e) {}
 if (!RF_SESSION || !RF_SESSION.token) {
-  window.location.replace('login.html');
+  window.location.replace('login.html?next=' + encodeURIComponent(window.location.pathname + window.location.search));
 }
 
 function renderUserBadge() {
@@ -786,7 +786,7 @@ function showErrorToast(msg) {
 document.getElementById('entryForm').addEventListener('submit', function(e) {
   e.preventDefault();
   if (!validateForm()) return;
-  if (!RF_SESSION || !RF_SESSION.token) { window.location.replace('login.html'); return; }
+  if (!RF_SESSION || !RF_SESSION.token) { window.location.replace('login.html?next=' + encodeURIComponent(window.location.pathname + window.location.search)); return; }
   const entry = collectData();
   const submitBtn = document.querySelector('#entryForm button[type="submit"]');
   submitBtn.disabled = true;

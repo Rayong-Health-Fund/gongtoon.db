@@ -15,7 +15,7 @@ const NEWS_SHEET_NAME = 'news';
 const NEWS_HEADERS = [
   'id', 'title', 'body', 'category', 'status',
   'publish_date', 'expire_date', 'pinned',
-  'image_url', 'video_url',
+  'image_urls', 'video_url',
   'created_at', 'updated_at', 'created_by'
 ];
 const NEWS_IMAGE_FOLDER_NAME = 'RayongFund_News_Images';
@@ -25,6 +25,9 @@ const GALLERY_SHEET_NAME = 'gallery';
 const GALLERY_HEADERS = ['id', 'image_url', 'caption', 'category', 'sort_order', 'status', 'created_at', 'created_by'];
 const GALLERY_IMAGE_FOLDER_NAME = 'RayongFund_Gallery_Images';
 const GALLERY_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+
+const EVENTS_SHEET_NAME = 'events';
+const EVENTS_HEADERS = ['id', 'title', 'description', 'event_date', 'end_date', 'location', 'status', 'created_at', 'created_by'];
 
 // Same safe-migration pattern as ensureNewsSheetSetup_ — creates the tab
 // if missing, or appends any headers not yet there, never touches
@@ -87,7 +90,8 @@ function doGet(e) {
     if (action === 'setup') {
       ensureNewsSheetSetup_();
       ensureGallerySheetSetup_();
-      return jsonOutput_({ ok: true, message: 'พร้อมใช้งานแท็บ "news" และ "gallery" แล้ว — เปิดไฟล์ news.html ได้เลย' });
+      ensureEventsSheetSetup_();
+      return jsonOutput_({ ok: true, message: 'พร้อมใช้งานแท็บ "news", "gallery" และ "events" แล้ว — เปิดไฟล์ news.html ได้เลย' });
     }
 
     if (action === 'list_all') {
@@ -109,6 +113,19 @@ function doGet(e) {
         return jsonOutput_({ ok: false, error: 'เฉพาะกองทุนฯ (admin) เท่านั้นที่ดูอัลบั้มภาพทั้งหมดได้' });
       }
       return jsonOutput_({ ok: true, gallery: getAllGalleryItems_() });
+    }
+
+    if (action === 'events_list') {
+      // Public — published events only, sorted soonest-first.
+      return jsonOutput_({ ok: true, events: getAllEvents_().filter(function(ev) { return ev.status === 'published'; }) });
+    }
+
+    if (action === 'events_list_all') {
+      const session = validateSession_(params.token);
+      if (!session || session.role !== 'admin') {
+        return jsonOutput_({ ok: false, error: 'เฉพาะกองทุนฯ (admin) เท่านั้นที่ดูกิจกรรมทั้งหมดได้' });
+      }
+      return jsonOutput_({ ok: true, events: getAllEvents_() });
     }
 
     // Default: public list — published, and not past its expire_date (if set).
@@ -140,6 +157,9 @@ function doPost(e) {
     if (action === 'gallery_create') return handleGalleryCreate_(session, body);
     if (action === 'gallery_update') return handleGalleryUpdate_(session, body);
     if (action === 'gallery_delete') return handleGalleryDelete_(session, body);
+    if (action === 'event_create') return handleEventCreate_(session, body);
+    if (action === 'event_update') return handleEventUpdate_(session, body);
+    if (action === 'event_delete') return handleEventDelete_(session, body);
     return jsonOutput_({ ok: false, error: 'ไม่รู้จัก action: ' + action });
   } catch (err) {
     return jsonOutput_({ ok: false, error: String(err) });
@@ -191,10 +211,11 @@ function handleNewsCreate_(session, body) {
   // be used instead of "whenever it happened to be typed in".
   const publishDate = String(body.publish_date || '').trim() || Utilities.formatDate(now, 'Asia/Bangkok', 'yyyy-MM-dd');
 
-  let imageUrl = '';
-  if (body.image_data) {
+  const images = Array.isArray(body.images) ? body.images : [];
+  const imageUrls = [];
+  for (let i = 0; i < images.length; i++) {
     try {
-      imageUrl = uploadNewsImage_(body.image_data, body.image_filename, body.image_mime);
+      imageUrls.push(uploadNewsImage_(images[i].data, images[i].filename, images[i].mime));
     } catch (imgErr) {
       return jsonOutput_({ ok: false, error: String(imgErr) });
     }
@@ -209,7 +230,7 @@ function handleNewsCreate_(session, body) {
     publish_date: publishDate,
     expire_date: String(body.expire_date || '').trim(),
     pinned: body.pinned ? 'TRUE' : 'FALSE',
-    image_url: imageUrl,
+    image_urls: imageUrls.join(','),
     video_url: String(body.video_url || '').trim(),
     created_at: now,
     updated_at: now,
@@ -221,7 +242,7 @@ function handleNewsCreate_(session, body) {
   });
   sheet.appendRow(newRow);
 
-  return jsonOutput_({ ok: true, id: id, image_url: imageUrl });
+  return jsonOutput_({ ok: true, id: id, image_urls: imageUrls });
 }
 
 function handleNewsUpdate_(session, body) {
@@ -245,16 +266,23 @@ function handleNewsUpdate_(session, body) {
       if (body.pinned !== undefined && headers.indexOf('pinned') !== -1) sheet.getRange(row, headers.indexOf('pinned') + 1).setValue(body.pinned ? 'TRUE' : 'FALSE');
       if (body.video_url !== undefined && headers.indexOf('video_url') !== -1) sheet.getRange(row, headers.indexOf('video_url') + 1).setValue(String(body.video_url).trim());
 
-      if (body.image_data && headers.indexOf('image_url') !== -1) {
-        let newImageUrl;
-        try {
-          newImageUrl = uploadNewsImage_(body.image_data, body.image_filename, body.image_mime);
-        } catch (imgErr) {
-          return jsonOutput_({ ok: false, error: String(imgErr) });
+      // Images: client sends the full desired final set as
+      // keep_image_urls (existing URLs the admin left in place) plus
+      // images (any newly-selected files) — we upload the new ones and
+      // write keep+new as the final image_urls. Field is only touched
+      // if the client actually sent one of these two keys.
+      if ((body.keep_image_urls !== undefined || Array.isArray(body.images)) && headers.indexOf('image_urls') !== -1) {
+        const keep = Array.isArray(body.keep_image_urls) ? body.keep_image_urls : [];
+        const newImages = Array.isArray(body.images) ? body.images : [];
+        const uploaded = [];
+        for (let k = 0; k < newImages.length; k++) {
+          try {
+            uploaded.push(uploadNewsImage_(newImages[k].data, newImages[k].filename, newImages[k].mime));
+          } catch (imgErr) {
+            return jsonOutput_({ ok: false, error: String(imgErr) });
+          }
         }
-        sheet.getRange(row, headers.indexOf('image_url') + 1).setValue(newImageUrl);
-      } else if (body.remove_image && headers.indexOf('image_url') !== -1) {
-        sheet.getRange(row, headers.indexOf('image_url') + 1).setValue('');
+        sheet.getRange(row, headers.indexOf('image_urls') + 1).setValue(keep.concat(uploaded).join(','));
       }
 
       sheet.getRange(row, headers.indexOf('updated_at') + 1).setValue(new Date());
@@ -315,7 +343,9 @@ function getAllNews_() {
       publish_date: colIndex['publish_date'] !== undefined ? row[colIndex['publish_date']] : '',
       expire_date: colIndex['expire_date'] !== undefined ? row[colIndex['expire_date']] : '',
       pinned: colIndex['pinned'] !== undefined ? String(row[colIndex['pinned']]).toUpperCase() === 'TRUE' : false,
-      image_url: colIndex['image_url'] !== undefined ? row[colIndex['image_url']] : '',
+      image_urls: colIndex['image_urls'] !== undefined
+        ? String(row[colIndex['image_urls']] || '').split(',').map(function(s) { return s.trim(); }).filter(Boolean)
+        : [],
       video_url: colIndex['video_url'] !== undefined ? row[colIndex['video_url']] : '',
       created_at: row[colIndex['created_at']],
       updated_at: row[colIndex['updated_at']],
@@ -459,6 +489,123 @@ function getAllGalleryItems_() {
     if (a.sort_order !== b.sort_order) return a.sort_order - b.sort_order;
     return new Date(b.created_at) - new Date(a.created_at);
   });
+  return items;
+}
+
+function ensureEventsSheetSetup_() {
+  const ss = SpreadsheetApp.openById(USERS_SHEET_ID);
+  let sheet = ss.getSheetByName(EVENTS_SHEET_NAME);
+  if (!sheet) sheet = ss.insertSheet(EVENTS_SHEET_NAME);
+
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(EVENTS_HEADERS);
+    sheet.setFrozenRows(1);
+  } else {
+    const existing = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
+      .map(function(h) { return String(h).trim(); });
+    const missing = EVENTS_HEADERS.filter(function(h) { return existing.indexOf(h) === -1; });
+    missing.forEach(function(h) {
+      sheet.getRange(1, sheet.getLastColumn() + 1).setValue(h);
+    });
+  }
+  return sheet;
+}
+
+function handleEventCreate_(session, body) {
+  const title = String(body.title || '').trim();
+  const eventDate = String(body.event_date || '').trim();
+  if (!title || !eventDate) {
+    return jsonOutput_({ ok: false, error: 'กรุณากรอกชื่อกิจกรรมและวันที่' });
+  }
+
+  const sheet = ensureEventsSheetSetup_();
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
+    .map(function(h) { return String(h).trim(); });
+
+  const now = new Date();
+  const id = 'evt-' + Utilities.formatDate(now, 'Asia/Bangkok', 'yyyyMMdd-HHmmss');
+  const rowObj = {
+    id: id, title: title,
+    description: String(body.description || '').trim(),
+    event_date: eventDate,
+    end_date: String(body.end_date || '').trim(),
+    location: String(body.location || '').trim(),
+    status: 'published', created_at: now, created_by: session.email
+  };
+  const newRow = headers.map(function(h) { return Object.prototype.hasOwnProperty.call(rowObj, h) ? rowObj[h] : ''; });
+  sheet.appendRow(newRow);
+
+  return jsonOutput_({ ok: true, id: id });
+}
+
+function handleEventUpdate_(session, body) {
+  const id = String(body.id || '').trim();
+  if (!id) return jsonOutput_({ ok: false, error: 'ไม่พบ id ของกิจกรรม' });
+
+  const sheet = ensureEventsSheetSetup_();
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0].map(function(h) { return String(h).trim(); });
+  const idCol = headers.indexOf('id');
+
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][idCol]) === id) {
+      const row = i + 1;
+      if (body.title !== undefined) sheet.getRange(row, headers.indexOf('title') + 1).setValue(String(body.title).trim());
+      if (body.description !== undefined) sheet.getRange(row, headers.indexOf('description') + 1).setValue(String(body.description).trim());
+      if (body.event_date !== undefined) sheet.getRange(row, headers.indexOf('event_date') + 1).setValue(String(body.event_date).trim());
+      if (body.end_date !== undefined) sheet.getRange(row, headers.indexOf('end_date') + 1).setValue(String(body.end_date).trim());
+      if (body.location !== undefined) sheet.getRange(row, headers.indexOf('location') + 1).setValue(String(body.location).trim());
+      return jsonOutput_({ ok: true, id: id });
+    }
+  }
+  return jsonOutput_({ ok: false, error: 'ไม่พบกิจกรรมนี้' });
+}
+
+function handleEventDelete_(session, body) {
+  const id = String(body.id || '').trim();
+  if (!id) return jsonOutput_({ ok: false, error: 'ไม่พบ id ของกิจกรรม' });
+
+  const sheet = ensureEventsSheetSetup_();
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0].map(function(h) { return String(h).trim(); });
+  const idCol = headers.indexOf('id');
+  const statusCol = headers.indexOf('status');
+
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][idCol]) === id) {
+      // Soft delete only — never destructively remove rows.
+      sheet.getRange(i + 1, statusCol + 1).setValue('deleted');
+      return jsonOutput_({ ok: true, id: id });
+    }
+  }
+  return jsonOutput_({ ok: false, error: 'ไม่พบกิจกรรมนี้' });
+}
+
+function getAllEvents_() {
+  const sheet = ensureEventsSheetSetup_();
+  const values = sheet.getDataRange().getValues();
+  if (values.length < 2) return [];
+
+  const headers = values[0].map(function(h) { return String(h).trim(); });
+  const colIndex = {};
+  headers.forEach(function(h, i) { colIndex[h] = i; });
+
+  const items = [];
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    const status = String(row[colIndex['status']] || 'published').trim();
+    if (status === 'deleted') continue;
+    items.push({
+      id: row[colIndex['id']],
+      title: row[colIndex['title']],
+      description: row[colIndex['description']],
+      event_date: row[colIndex['event_date']],
+      end_date: row[colIndex['end_date']],
+      location: row[colIndex['location']],
+      status: status
+    });
+  }
+  items.sort(function(a, b) { return new Date(a.event_date) - new Date(b.event_date); });
   return items;
 }
 

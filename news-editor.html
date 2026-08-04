@@ -65,42 +65,60 @@ var session = null;
 var allNews = [];
 var editingId = null;
 var MAX_IMAGE_BYTES = 5 * 1024 * 1024;
-var pendingImage = null; // { data, mime, filename } — base64, no data: prefix
-var removeImageFlag = false;
+var pendingImages = []; // [{ data, mime, filename, previewSrc }] — new files not yet uploaded
+var existingImageUrls = []; // URLs already saved on this news item (edit mode), minus any removed
 var allGallery = [];
 var pendingGalleryImage = null;
 var activeTab = 'news';
 
 function onImageSelected(inputEl) {
-  var file = inputEl.files && inputEl.files[0];
-  if (!file) return;
-  if (file.size > MAX_IMAGE_BYTES) {
-    alert('ไฟล์รูปใหญ่เกินไป (จำกัด 5MB)');
-    inputEl.value = '';
-    return;
-  }
-  if (file.type.indexOf('image/') !== 0) {
-    alert('กรุณาเลือกไฟล์รูปภาพเท่านั้น');
-    inputEl.value = '';
-    return;
-  }
-  var reader = new FileReader();
-  reader.onload = function() {
-    var base64 = reader.result.split(',')[1];
-    pendingImage = { data: base64, mime: file.type, filename: file.name };
-    removeImageFlag = false;
-    document.getElementById('imagePreview').src = reader.result;
-    document.getElementById('imagePreviewWrap').style.display = 'block';
-  };
-  reader.readAsDataURL(file);
+  var files = inputEl.files ? Array.from(inputEl.files) : [];
+  files.forEach(function(file) {
+    if (file.size > MAX_IMAGE_BYTES) {
+      alert('ไฟล์ "' + file.name + '" ใหญ่เกินไป (จำกัด 5MB)');
+      return;
+    }
+    if (file.type.indexOf('image/') !== 0) {
+      alert('ไฟล์ "' + file.name + '" ไม่ใช่รูปภาพ ข้ามไป');
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function() {
+      pendingImages.push({ data: reader.result.split(',')[1], mime: file.type, filename: file.name, previewSrc: reader.result });
+      renderImagePreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+  inputEl.value = '';
 }
 
-function removeImage() {
-  pendingImage = null;
-  removeImageFlag = true;
-  document.getElementById('fImage').value = '';
-  document.getElementById('imagePreviewWrap').style.display = 'none';
-  document.getElementById('imagePreview').src = '';
+function removeExistingImage(idx) {
+  existingImageUrls.splice(idx, 1);
+  renderImagePreviews();
+}
+
+function removePendingImage(idx) {
+  pendingImages.splice(idx, 1);
+  renderImagePreviews();
+}
+
+function renderImagePreviews() {
+  var wrap = document.getElementById('imagePreviewWrap');
+  var all = existingImageUrls.map(function(url, i) {
+    return { src: url, onRemove: 'removeExistingImage(' + i + ')' };
+  }).concat(pendingImages.map(function(img, i) {
+    return { src: img.previewSrc, onRemove: 'removePendingImage(' + i + ')' };
+  }));
+
+  if (!all.length) { wrap.style.display = 'none'; wrap.innerHTML = ''; return; }
+  wrap.style.display = 'flex';
+  wrap.style.cssText += 'flex-wrap:wrap;gap:0.5rem;';
+  wrap.innerHTML = all.map(function(item) {
+    return '<div style="position:relative;">'
+      + '<img src="' + item.src + '" style="width:90px;height:70px;object-fit:cover;border-radius:8px;border:1.5px solid #e2e8f0;display:block;">'
+      + '<button type="button" onclick="' + item.onRemove + '" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#ef4444;color:#fff;border:none;cursor:pointer;font-size:0.7rem;line-height:1;">✕</button>'
+      + '</div>';
+  }).join('');
 }
 
 function onGalleryImageSelected(inputEl) {
@@ -135,7 +153,7 @@ function showGate(message) {
   document.getElementById('app').innerHTML =
     '<div class="gate"><div class="icon">🔒</div><h2>เฉพาะกองทุนฯ (admin) เท่านั้น</h2>'
     + '<p style="color:#64748b;margin:0.5rem 0 1.25rem;">' + message + '</p>'
-    + '<a href="login.html">เข้าสู่ระบบ →</a></div>';
+    + '<a href="login.html?next=' + encodeURIComponent(window.location.pathname + window.location.search) + '">เข้าสู่ระบบ →</a></div>';
 }
 
 function esc(s) {
@@ -152,6 +170,7 @@ function init() {
   document.getElementById('fPublishDate').value = todayDateInputValue();
   loadNews();
   loadGallery();
+  loadEvents();
 }
 
 function switchEditorTab(tab) {
@@ -160,8 +179,11 @@ function switchEditorTab(tab) {
     ? 'background:#1e40af;color:#fff;border-color:#1e40af;' : '';
   document.getElementById('tabGalleryBtn').style.cssText = tab === 'gallery'
     ? 'background:#1e40af;color:#fff;border-color:#1e40af;' : '';
+  document.getElementById('tabEventsBtn').style.cssText = tab === 'events'
+    ? 'background:#1e40af;color:#fff;border-color:#1e40af;' : '';
   document.getElementById('newsTabContent').style.display = tab === 'news' ? 'block' : 'none';
   document.getElementById('galleryTabContent').style.display = tab === 'gallery' ? 'block' : 'none';
+  document.getElementById('eventsTabContent').style.display = tab === 'events' ? 'block' : 'none';
 }
 
 function renderApp() {
@@ -169,6 +191,7 @@ function renderApp() {
     '<div style="display:flex;gap:0.6rem;margin-bottom:1.25rem;">'
     + '<button id="tabNewsBtn" class="btn-secondary" style="background:#1e40af;color:#fff;border-color:#1e40af;" onclick="switchEditorTab(\'news\')">📰 ข่าว</button>'
     + '<button id="tabGalleryBtn" class="btn-secondary" onclick="switchEditorTab(\'gallery\')">🖼️ อัลบั้มภาพ</button>'
+    + '<button id="tabEventsBtn" class="btn-secondary" onclick="switchEditorTab(\'events\')">📅 ปฏิทินกิจกรรม</button>'
     + '</div>'
     + '<div id="newsTabContent">'
     + '<div class="form-card">'
@@ -187,12 +210,9 @@ function renderApp() {
     + '<textarea class="form-control" id="fBody" placeholder="รายละเอียดข่าว..."></textarea>'
     + '<div class="form-row">'
       + '<div>'
-        + '<label class="form-label">🖼️ รูปภาพประกอบ <span style="color:#94a3b8;font-weight:400;">(ไม่บังคับ, ไม่เกิน 5MB)</span></label>'
-        + '<input type="file" class="form-control" id="fImage" accept="image/*" onchange="onImageSelected(this)">'
-        + '<div id="imagePreviewWrap" style="display:none;margin-top:0.5rem;">'
-          + '<img id="imagePreview" style="max-width:160px;max-height:120px;border-radius:8px;border:1.5px solid #e2e8f0;display:block;">'
-          + '<button type="button" onclick="removeImage()" style="margin-top:0.4rem;background:#fef2f2;color:#ef4444;border:1.5px solid #fecaca;padding:0.25rem 0.7rem;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:inherit;">🗑️ เอารูปออก</button>'
-        + '</div>'
+        + '<label class="form-label">🖼️ รูปภาพประกอบ <span style="color:#94a3b8;font-weight:400;">(เลือกได้หลายรูป ไม่เกิน 5MB ต่อรูป)</span></label>'
+        + '<input type="file" class="form-control" id="fImage" accept="image/*" multiple onchange="onImageSelected(this)">'
+        + '<div id="imagePreviewWrap" style="display:none;margin-top:0.5rem;"></div>'
       + '</div>'
       + '<div>'
         + '<label class="form-label">🔗 ลิงก์ YouTube / Facebook <span style="color:#94a3b8;font-weight:400;">(ไม่บังคับ — วางลิงก์วิดีโอ YouTube หรือคัดลอกลิงก์โพสต์/วิดีโอจาก Facebook มาแปะได้เลย)</span></label>'
@@ -232,6 +252,27 @@ function renderApp() {
     + '</div>'
     + '<h3 style="margin-bottom:1rem;">📸 รูปทั้งหมดในอัลบั้ม</h3>'
     + '<div id="galleryList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0.75rem;"><div class="status-msg">กำลังโหลด...</div></div>'
+    + '</div>'
+    + '<div id="eventsTabContent" style="display:none;">'
+    + '<div class="form-card">'
+    + '<h3 id="eventFormTitle" style="margin-bottom:1rem;">📅 เพิ่มกิจกรรมใหม่</h3>'
+    + '<label class="form-label">ชื่อกิจกรรม <span style="color:#ef4444;">*</span></label>'
+    + '<input type="text" class="form-control" id="fEventTitle" placeholder="เช่น อบรมการดูแลผู้สูงอายุ">'
+    + '<div class="form-row">'
+      + '<div><label class="form-label">วันที่จัดกิจกรรม <span style="color:#ef4444;">*</span></label><input type="date" class="form-control" id="fEventDate"></div>'
+      + '<div><label class="form-label">ถึงวันที่ <span style="color:#94a3b8;font-weight:400;">(ไม่บังคับ)</span></label><input type="date" class="form-control" id="fEventEndDate"></div>'
+    + '</div>'
+    + '<label class="form-label">สถานที่</label>'
+    + '<input type="text" class="form-control" id="fEventLocation" placeholder="เช่น ห้องประชุม อบจ.ระยอง">'
+    + '<label class="form-label">รายละเอียด</label>'
+    + '<textarea class="form-control" id="fEventDesc" placeholder="รายละเอียดกิจกรรม..." style="min-height:100px;"></textarea>'
+    + '<div style="display:flex;gap:0.75rem;">'
+      + '<button class="btn-primary" onclick="submitEvent()">บันทึกกิจกรรม</button>'
+      + '<button class="btn-secondary" id="cancelEventEditBtn" onclick="resetEventForm()" style="display:none;">ยกเลิกแก้ไข</button>'
+    + '</div>'
+    + '</div>'
+    + '<h3 style="margin-bottom:1rem;">📋 กิจกรรมทั้งหมด</h3>'
+    + '<div id="eventsList"><div class="status-msg">กำลังโหลด...</div></div>'
     + '</div>';
 }
 
@@ -297,14 +338,9 @@ function editNews(id) {
   document.getElementById('fPinned').checked = !!n.pinned;
   document.getElementById('fVideoUrl').value = n.video_url || '';
   document.getElementById('fImage').value = '';
-  pendingImage = null;
-  removeImageFlag = false;
-  if (n.image_url) {
-    document.getElementById('imagePreview').src = n.image_url;
-    document.getElementById('imagePreviewWrap').style.display = 'block';
-  } else {
-    document.getElementById('imagePreviewWrap').style.display = 'none';
-  }
+  pendingImages = [];
+  existingImageUrls = (n.image_urls || []).slice();
+  renderImagePreviews();
   document.getElementById('cancelEditBtn').style.display = 'inline-block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -321,9 +357,9 @@ function resetForm() {
   document.getElementById('fPinned').checked = false;
   document.getElementById('fVideoUrl').value = '';
   document.getElementById('fImage').value = '';
-  document.getElementById('imagePreviewWrap').style.display = 'none';
-  pendingImage = null;
-  removeImageFlag = false;
+  pendingImages = [];
+  existingImageUrls = [];
+  renderImagePreviews();
   document.getElementById('cancelEditBtn').style.display = 'none';
 }
 
@@ -345,13 +381,8 @@ function submitNews() {
     video_url: document.getElementById('fVideoUrl').value.trim()
   };
   if (editingId) payload.id = editingId;
-  if (pendingImage) {
-    payload.image_data = pendingImage.data;
-    payload.image_mime = pendingImage.mime;
-    payload.image_filename = pendingImage.filename;
-  } else if (removeImageFlag) {
-    payload.remove_image = true;
-  }
+  payload.images = pendingImages.map(function(img) { return { data: img.data, mime: img.mime, filename: img.filename }; });
+  payload.keep_image_urls = existingImageUrls;
 
   fetch(NEWS_API_URL, {
     method: 'POST',
@@ -453,6 +484,120 @@ function deleteGalleryItem(id) {
     .then(function(json) {
       if (!json.ok) { alert('ลบไม่สำเร็จ: ' + json.error); return; }
       loadGallery();
+    })
+    .catch(function(err) { alert('เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่'); console.error(err); });
+}
+
+var allEvents = [];
+var editingEventId = null;
+
+function loadEvents() {
+  fetch(NEWS_API_URL + '?action=events_list_all&token=' + encodeURIComponent(session.token))
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (!json.ok) throw new Error(json.error || 'load failed');
+      allEvents = json.events || [];
+      renderEventsList();
+    })
+    .catch(function(err) {
+      document.getElementById('eventsList').innerHTML = '<div class="status-msg">⚠️ โหลดไม่สำเร็จ: ' + esc(String(err)) + '</div>';
+    });
+}
+
+function fmtEventDate_(v) {
+  if (!v) return '';
+  var d = new Date(v);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function renderEventsList() {
+  var container = document.getElementById('eventsList');
+  if (!allEvents.length) {
+    container.innerHTML = '<div class="status-msg">ยังไม่มีกิจกรรม</div>';
+    return;
+  }
+  container.innerHTML = allEvents.map(function(ev) {
+    return '<div class="news-row">'
+      + '<div>'
+        + '<div class="news-row-title">' + esc(ev.title) + '</div>'
+        + '<div class="news-row-meta">🗓️ ' + fmtEventDate_(ev.event_date) + (ev.end_date ? ' – ' + fmtEventDate_(ev.end_date) : '')
+          + (ev.location ? ' · 📍 ' + esc(ev.location) : '') + '</div>'
+      + '</div>'
+      + '<div class="row-actions">'
+        + '<button class="icon-btn" onclick="editEvent(\'' + ev.id + '\')">✏️ แก้ไข</button>'
+        + '<button class="icon-btn" style="color:#ef4444;" onclick="deleteEvent(\'' + ev.id + '\')">🗑️ ลบ</button>'
+      + '</div>'
+    + '</div>';
+  }).join('');
+}
+
+function editEvent(id) {
+  var ev = allEvents.filter(function(x){ return x.id === id; })[0];
+  if (!ev) return;
+  editingEventId = id;
+  document.getElementById('eventFormTitle').textContent = '✏️ แก้ไขกิจกรรม';
+  document.getElementById('fEventTitle').value = ev.title || '';
+  document.getElementById('fEventDate').value = toDateInputValue(ev.event_date);
+  document.getElementById('fEventEndDate').value = toDateInputValue(ev.end_date);
+  document.getElementById('fEventLocation').value = ev.location || '';
+  document.getElementById('fEventDesc').value = ev.description || '';
+  document.getElementById('cancelEventEditBtn').style.display = 'inline-block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetEventForm() {
+  editingEventId = null;
+  document.getElementById('eventFormTitle').textContent = '📅 เพิ่มกิจกรรมใหม่';
+  document.getElementById('fEventTitle').value = '';
+  document.getElementById('fEventDate').value = '';
+  document.getElementById('fEventEndDate').value = '';
+  document.getElementById('fEventLocation').value = '';
+  document.getElementById('fEventDesc').value = '';
+  document.getElementById('cancelEventEditBtn').style.display = 'none';
+}
+
+function submitEvent() {
+  var title = document.getElementById('fEventTitle').value.trim();
+  var eventDate = document.getElementById('fEventDate').value;
+  if (!title || !eventDate) { alert('กรุณากรอกชื่อกิจกรรมและวันที่'); return; }
+
+  var payload = {
+    token: session.token,
+    action: editingEventId ? 'event_update' : 'event_create',
+    title: title,
+    event_date: eventDate,
+    end_date: document.getElementById('fEventEndDate').value,
+    location: document.getElementById('fEventLocation').value.trim(),
+    description: document.getElementById('fEventDesc').value.trim()
+  };
+  if (editingEventId) payload.id = editingEventId;
+
+  fetch(NEWS_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (!json.ok) { alert('บันทึกไม่สำเร็จ: ' + json.error); return; }
+      resetEventForm();
+      loadEvents();
+    })
+    .catch(function(err) { alert('เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่'); console.error(err); });
+}
+
+function deleteEvent(id) {
+  if (!confirm('ยืนยันลบกิจกรรมนี้?')) return;
+  fetch(NEWS_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ token: session.token, action: 'event_delete', id: id })
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (!json.ok) { alert('ลบไม่สำเร็จ: ' + json.error); return; }
+      loadEvents();
     })
     .catch(function(err) { alert('เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่'); console.error(err); });
 }

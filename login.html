@@ -189,6 +189,18 @@ input[type="password"]:focus {
 <script>
 const USERS_API_URL = 'https://script.google.com/macros/s/AKfycbxUrn_I2gWfq592V18zeMgamm9KSzMGtPXSdzElEmQXfYAevsSREBco1kGggc4xTT6R/exec';
 
+// Where to send the user after a successful login — whatever page
+// bounced them here (?next=...), or staff-hub.html by default. Only
+// accepts a same-site relative path (starts with a single "/" or a
+// bare filename, never "//" or an absolute URL) to avoid an open
+// redirect via a crafted ?next= value.
+function getNextUrl_() {
+  var next = new URLSearchParams(window.location.search).get('next');
+  if (!next) return 'staff-hub.html';
+  if (/^https?:\/\//i.test(next) || next.indexOf('//') === 0) return 'staff-hub.html';
+  return next;
+}
+
 function handleGoogleCredential(response) {
   const err = document.getElementById('errorMsg');
   err.style.display = 'none';
@@ -202,7 +214,7 @@ function handleGoogleCredential(response) {
     .then(function(json) {
       if (json.ok) {
         localStorage.setItem('rf_user', JSON.stringify(json));
-        window.location.href = 'staff-hub.html';
+        window.location.href = getNextUrl_();
       } else {
         err.textContent = json.error === 'email not registered'
           ? 'บัญชีนี้ยังไม่ได้ลงทะเบียน กรุณาติดต่อผู้ดูแลระบบ'

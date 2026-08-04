@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รายการใหม่ที่ต้องตรวจสอบ – กองทุนหลักประกันสุขภาพ จังหวัดระยอง</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+.navbar {
+  background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.navbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; color: #0f172a; text-decoration: none; }
+.navbar-logo { width: 38px; height: 38px; background: #dc2626; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: white; }
+.nav-back-btn { background: #f1f5f9; border: 1.5px solid #e2e8f0; color: #1e293b; padding: 0.35rem 0.9rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+
+.container { max-width: 800px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+.gate { max-width: 460px; margin: 4rem auto; background: #fff; border-radius: 14px; padding: 2.25rem 2rem; text-align: center; box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+.gate .icon { font-size: 2.4rem; margin-bottom: 0.75rem; }
+.gate a { display: inline-block; background: #1e40af; color: #fff; padding: 0.6rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+
+.status-msg { text-align: center; padding: 2rem; color: #64748b; }
+.pending-banner {
+  display: none; background: #fef3c7; border: 1.5px solid #fde68a; border-radius: 12px;
+  padding: 0.9rem 1.1rem; margin-bottom: 1.5rem; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.pending-banner a { background: #92400e; color: #fff; text-decoration: none; padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; flex-shrink: 0; }
+.filter-row { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.filter-btn {
+  background: #fff; border: 1.5px solid #e2e8f0; color: #64748b; padding: 0.4rem 1rem;
+  border-radius: 20px; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: inherit;
+}
+.filter-btn.active { background: #1e40af; border-color: #1e40af; color: #fff; }
+.activity-item {
+  display: flex; align-items: center; gap: 0.75rem; background: #fff;
+  border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 0.6rem; font-size: 0.85rem;
+}
+.activity-proj { flex-shrink: 0; font-size: 0.7rem; font-weight: 800; background: #eff6ff; color: #1e40af; padding: 0.2rem 0.6rem; border-radius: 8px; }
+.activity-text { flex: 1; color: #334155; }
+.activity-meta { flex-shrink: 0; font-size: 0.72rem; color: #94a3b8; text-align: right; }
+h3 { margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="staff-hub.html" class="navbar-brand">
+    <div class="navbar-logo">📥</div>
+    <span>รายการใหม่ที่ต้องตรวจสอบ</span>
+  </a>
+  <a href="staff-hub.html" class="nav-back-btn">← กลับ Staff Hub</a>
+</nav>
+
+<div class="container" id="app">
+  <div class="status-msg">กำลังตรวจสอบสิทธิ์...</div>
+</div>
+
+<script>
+var USERS_API_URL = 'https://script.google.com/macros/s/AKfycbxUrn_I2gWfq592V18zeMgamm9KSzMGtPXSdzElEmQXfYAevsSREBco1kGggc4xTT6R/exec';
+var P1_ACT_URL = 'https://script.google.com/macros/s/AKfycby6wVpfb5o_AsbvH3tV9kW54RaG5arvFxJ52TA_lkSV7sAzyXKn-VOki7WpA-GEkppf/exec';
+var P2_ACT_URL = 'https://script.google.com/macros/s/AKfycbxJe9aB6cQJdA-3iy6vNj1urjMV3QzM67AfNAVxon-3MDUEZz1L_AfPlHNMPtP6gvcgHw/exec';
+var P3_ACT_URL = 'https://script.google.com/macros/s/AKfycbx8Z0LVi91bFyV_VZAWzmCe4L0DYoayYkBTIl2qntk6qyHyCR9tDBjJas-xbK0TpoNAXg/exec';
+var P4_ACT_URL = 'https://script.google.com/macros/s/AKfycbycPZZSlTIBfPDscaGRxGXj06hhpj7rkRfehx_96GjJ694yteIjh5_AdnqCXNLhJFZGIA/exec';
+
+var session = null;
+var allActivity = [];
+var activeFilter = 'all';
+
+function esc(s) {
+  var d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+function fmtDate(v) {
+  var d = new Date(v);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' }) + ' '
+    + d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+}
+function getSession() {
+  try { return JSON.parse(localStorage.getItem('rf_user') || 'null'); }
+  catch (e) { return null; }
+}
+function showGate(message) {
+  document.getElementById('app').innerHTML =
+    '<div class="gate"><div class="icon">🔒</div><h2>เฉพาะกองทุนฯ (admin) เท่านั้น</h2>'
+    + '<p style="color:#64748b;margin:0.5rem 0 1.25rem;">' + message + '</p>'
+    + '<a href="login.html?next=' + encodeURIComponent(window.location.pathname + window.location.search) + '">เข้าสู่ระบบ →</a></div>';
+}
+
+function init() {
+  session = getSession();
+  if (!session || !session.token) { showGate('กรุณาเข้าสู่ระบบด้วยบัญชีที่ได้รับสิทธิ์กองทุนฯ'); return; }
+  if (session.role !== 'admin') { showGate('บัญชีของคุณ (' + session.role + ') ไม่มีสิทธิ์เข้าหน้านี้'); return; }
+
+  document.getElementById('app').innerHTML =
+    '<div class="pending-banner" id="pendingBanner">'
+      + '<span id="pendingText"></span>'
+      + '<a href="user-requests.html">ไปหน้าจัดการ →</a>'
+    + '</div>'
+    + '<div class="filter-row" id="filterRow">'
+      + '<button class="filter-btn active" data-proj="all" onclick="setFilter(\'all\')">ทั้งหมด</button>'
+      + '<button class="filter-btn" data-proj="P1" onclick="setFilter(\'P1\')">P1</button>'
+      + '<button class="filter-btn" data-proj="P2" onclick="setFilter(\'P2\')">P2</button>'
+      + '<button class="filter-btn" data-proj="P3" onclick="setFilter(\'P3\')">P3</button>'
+      + '<button class="filter-btn" data-proj="P4" onclick="setFilter(\'P4\')">P4</button>'
+    + '</div>'
+    + '<h3>🕘 กิจกรรมล่าสุดทุกโครงการ</h3>'
+    + '<div id="activityList"><div class="status-msg">กำลังโหลด...</div></div>';
+
+  loadPendingRequests();
+  loadActivity();
+}
+
+function loadPendingRequests() {
+  fetch(USERS_API_URL + '?action=list_requests&token=' + encodeURIComponent(session.token))
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (!json.ok) return;
+      var pending = (json.requests || []).filter(function(r) { return r.status === 'pending'; });
+      if (pending.length) {
+        document.getElementById('pendingText').textContent = '👥 มีคำขอสมัครใช้งานรออนุมัติ ' + pending.length + ' รายการ';
+        document.getElementById('pendingBanner').style.display = 'flex';
+      }
+    })
+    .catch(function() {});
+}
+
+function loadActivity() {
+  var t = encodeURIComponent(session.token);
+  Promise.all([
+    fetch(P1_ACT_URL + '?project=p1&action=activity_log&token=' + t).then(function(r){return r.json();})
+      .then(function(j){ return (j.ok ? j.activity : []).map(function(x){ return Object.assign({ proj: 'P1' }, x); }); })
+      .catch(function(){ return []; }),
+    fetch(P2_ACT_URL + '?type=activity_log&token=' + t).then(function(r){return r.json();})
+      .then(function(j){ return (!j.error ? j.data : []).map(function(x){ return Object.assign({ proj: 'P2' }, x); }); })
+      .catch(function(){ return []; }),
+    fetch(P3_ACT_URL + '?action=activity_log&token=' + t).then(function(r){return r.json();})
+      .then(function(j){ return (j.ok ? j.activity : []).map(function(x){ return Object.assign({ proj: 'P3' }, x); }); })
+      .catch(function(){ return []; }),
+    fetch(P4_ACT_URL + '?action=activity_log&token=' + t).then(function(r){return r.json();})
+      .then(function(j){ return (j.status === 'ok' ? j.data : []).map(function(x){ return Object.assign({ proj: 'P4' }, x); }); })
+      .catch(function(){ return []; })
+  ]).then(function(results) {
+    allActivity = [].concat.apply([], results);
+    allActivity.sort(function(a, b) { return new Date(b.ts) - new Date(a.ts); });
+    renderActivity();
+  });
+}
+
+function setFilter(proj) {
+  activeFilter = proj;
+  document.querySelectorAll('.filter-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.proj === proj);
+  });
+  renderActivity();
+}
+
+function renderActivity() {
+  var items = activeFilter === 'all' ? allActivity : allActivity.filter(function(i) { return i.proj === activeFilter; });
+  var el = document.getElementById('activityList');
+  if (!items.length) { el.innerHTML = '<div class="status-msg">ยังไม่มีข้อมูลใหม่</div>'; return; }
+  el.innerHTML = items.slice(0, 50).map(function(it) {
+    return '<div class="activity-item">'
+      + '<span class="activity-proj">' + it.proj + '</span>'
+      + '<span class="activity-text">' + esc(it.text) + '</span>'
+      + '<span class="activity-meta">' + esc(it.by || '') + '<br>' + fmtDate(it.ts) + '</span>'
+      + '</div>';
+  }).join('');
+}
+
+init();
+</script>
+</body>
+</html>

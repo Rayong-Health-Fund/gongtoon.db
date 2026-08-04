@@ -171,10 +171,13 @@ function doGet(e) {
 
   if (type === 'activity_log') {
     const session = validateSession_(e.parameter.token);
-    if (!session || (session.role !== 'admin' && session.role !== 'executive')) {
-      return jsonOutput_({ error: true, message: 'เฉพาะกองทุนฯ/ผู้บริหารเท่านั้นที่ดูประวัติการเปลี่ยนแปลงได้' });
+    if (!session) {
+      return jsonOutput_({ error: true, message: 'กรุณาเข้าสู่ระบบก่อน' });
     }
-    return jsonOutput_({ error: false, type: 'activity_log', data: getP2ActivityLog_(ss) });
+    const log = getP2ActivityLog_(ss);
+    const isPrivileged = session.role === 'admin' || session.role === 'executive';
+    const data = isPrivileged ? log : log.filter(function(item) { return item.by === session.email; });
+    return jsonOutput_({ error: false, type: 'activity_log', data: data });
   }
 
   const routes = {
