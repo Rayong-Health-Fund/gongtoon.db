@@ -69,7 +69,7 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
   <div class="hero-title">📅 ปฏิทินกิจกรรม</div>
   <div class="hero-subtitle">กิจกรรมที่กำลังจะเกิดขึ้นของกองทุนฯ</div>
   <div style="margin-top:1.5rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
-    <a href="calendar-event-editor.html" onclick="if(!getSession()){alert('กรุณาล็อคอินก่อน');return false;}" style="display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,255,255,0.2);color:#fff;padding:0.45rem 1rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;border:1px solid rgba(255,255,255,0.3);">➕ เพิ่มกิจกรรม</a>
+    <button onclick="showAddEventModal()" style="display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,255,255,0.2);color:#fff;padding:0.45rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem;border:1px solid rgba(255,255,255,0.3);cursor:pointer;font-family:inherit;">➕ เพิ่มกิจกรรม</button>
   </div>
 </div>
 
@@ -89,33 +89,71 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
   </div>
 </div>
 
+<!-- Modal เพิ่มกิจกรรม -->
+<div id="addEventModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.5);z-index:9999;align-items:center;justify-content:center;flex-direction:column;">
+  <div style="background:#fff;border-radius:14px;padding:2rem;max-width:500px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);font-family:Sarabun,sans-serif;">
+    <h2 style="font-size:1.2rem;font-weight:800;color:#0f172a;margin-bottom:1rem;">📅 เพิ่มกิจกรรม</h2>
+
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;font-weight:600;font-size:0.9rem;color:#1e293b;margin-bottom:0.35rem;">ชื่อกิจกรรม</label>
+      <input type="text" id="eventTitle" placeholder="เช่น สัมมนา การประชุม" style="width:100%;padding:0.6rem;border:1.5px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:0.9rem;outline:none;">
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+      <div>
+        <label style="display:block;font-weight:600;font-size:0.9rem;color:#1e293b;margin-bottom:0.35rem;">วันเริ่มต้น</label>
+        <input type="date" id="eventStartDate" style="width:100%;padding:0.6rem;border:1.5px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:0.9rem;outline:none;">
+      </div>
+      <div>
+        <label style="display:block;font-weight:600;font-size:0.9rem;color:#1e293b;margin-bottom:0.35rem;">วันสิ้นสุด</label>
+        <input type="date" id="eventEndDate" style="width:100%;padding:0.6rem;border:1.5px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:0.9rem;outline:none;">
+      </div>
+    </div>
+
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;font-weight:600;font-size:0.9rem;color:#1e293b;margin-bottom:0.35rem;">ที่ตั้ง/สถานที่</label>
+      <input type="text" id="eventLocation" placeholder="เช่น ห้อง 101 อาคาร B" style="width:100%;padding:0.6rem;border:1.5px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:0.9rem;outline:none;">
+    </div>
+
+    <div style="margin-bottom:1.5rem;">
+      <label style="display:block;font-weight:600;font-size:0.9rem;color:#1e293b;margin-bottom:0.35rem;">คำอธิบาย</label>
+      <textarea id="eventDescription" placeholder="อธิบายรายละเอียดเพิ่มเติม" style="width:100%;padding:0.6rem;border:1.5px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:0.9rem;outline:none;height:80px;resize:none;"></textarea>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+      <button onclick="closeAddEventModal()" style="background:#f1f5f9;color:#1e293b;padding:0.6rem 1.2rem;border:1.5px solid #cbd5e1;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;">ยกเลิก</button>
+      <button onclick="submitEvent()" style="background:linear-gradient(135deg,#1db584,#0ea5a5);color:#fff;padding:0.6rem 1.2rem;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;">บันทึก</button>
+    </div>
+  </div>
+</div>
+
 <script>
 var EVENTS_API_URL = 'https://script.google.com/macros/s/AKfycbzRxsboi-rH2oS669v3xFesNpYcS1ndvHhjGRxfGq4UaVwYMEgPjz6WmLScSS1WVVSeGQ/exec';
 var allEvents = [];
 var calYear, calMonth; // calMonth: 0-11
 
-// วันหยุดราชการและวันสำคัญศาสนา ปี 2569
+// วันหยุดราชการและวันสำคัญศาสนา ปี 2026 (ค.ศ.) = 2569 (พ.ศ.)
 var HOLIDAYS_2569 = [
-  '2569-01-01', // วันปีใหม่
-  '2569-02-10', // สมาคมสงครามพระยศรี
-  '2569-02-26', // วันมัฆบูชา
-  '2569-04-06', // วันจักรีธรรมการ
-  '2569-04-13', // วันสงกรานต์
-  '2569-04-14', // วันสงกรานต์
-  '2569-04-15', // วันสงกรานต์
-  '2569-04-22', // วันที่ 22 เมษายน
-  '2569-05-01', // วันแรงงาน
-  '2569-05-22', // วันวิสาขบูชา
-  '2569-07-28', // วันเฉลิมพระชนมพรรษาพระนางสยามมาตา
-  '2569-07-30', // วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าอยู่หัว (รัฐพิทักษ์)
-  '2569-07-31', // วันราชสำเร็จ
-  '2569-08-12', // วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าอยู่หัว
-  '2569-10-13', // วันคล้ายวันสวรรคตพระบาทสมเด็จพระปรมินทรมหาภูมิพลอดุลยเดช
-  '2569-10-14', // วันธรรมชาติถือว่าเป็นวันพระราชทานธรรม
-  '2569-10-23', // วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าลูกยาเธอ
-  '2569-12-05', // วันคล้ายวันสวรรคตพระบาทสมเด็จพระปรมินทรมหาภูมิพลอดุลยเดช
-  '2569-12-10', // วันรัฐธรรมนูญ
-  '2569-12-31'  // วันสิ้นปี
+  '2026-01-01', // วันปีใหม่
+  '2026-02-10', // สมาคมสงครามพระยศรี
+  '2026-02-26', // วันมัฆบูชา
+  '2026-04-06', // วันจักรีธรรมการ
+  '2026-04-13', // วันสงกรานต์
+  '2026-04-14', // วันสงกรานต์
+  '2026-04-15', // วันสงกรานต์
+  '2026-04-22', // วันที่ 22 เมษายน
+  '2026-05-01', // วันแรงงาน
+  '2026-05-22', // วันวิสาขบูชา
+  '2026-07-28', // วันเฉลิมพระชนมพรรษาพระนางสยามมาตา
+  '2026-07-30', // วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าอยู่หัว (รัฐพิทักษ์)
+  '2026-07-31', // วันราชสำเร็จ
+  '2026-08-12', // วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าอยู่หัว
+  '2026-10-13', // วันคล้ายวันสวรรคตพระบาทสมเด็จพระปรมินทรมหาภูมิพลอดุลยเดช
+  '2026-10-14', // วันธรรมชาติถือว่าเป็นวันพระราชทานธรรม
+  '2026-10-23', // วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าลูกยาเธอ
+  '2026-12-05', // วันคล้ายวันสวรรคตพระบาทสมเด็จพระปรมินทรมหาภูมิพลอดุลยเดช
+  '2026-12-10', // วันรัฐธรรมนูญ
+  '2026-12-31'  // วันสิ้นปี
 ];
 
 function esc(s) {
@@ -213,6 +251,90 @@ function renderUpcoming() {
       + '</div>';
   }).join('');
 }
+
+// Modal functions
+function showAddEventModal() {
+  var session = getSession();
+  if (!session) {
+    alert('กรุณาล็อคอินก่อน');
+    return;
+  }
+  document.getElementById('addEventModal').style.display = 'flex';
+  // Set default dates
+  var today = new Date();
+  document.getElementById('eventStartDate').valueAsDate = today;
+  document.getElementById('eventEndDate').valueAsDate = today;
+}
+
+function closeAddEventModal() {
+  document.getElementById('addEventModal').style.display = 'none';
+  // Clear form
+  document.getElementById('eventTitle').value = '';
+  document.getElementById('eventLocation').value = '';
+  document.getElementById('eventDescription').value = '';
+}
+
+function submitEvent() {
+  var session = getSession();
+  if (!session) {
+    alert('กรุณาล็อคอินก่อน');
+    return;
+  }
+
+  var title = document.getElementById('eventTitle').value.trim();
+  var startDate = document.getElementById('eventStartDate').value;
+  var endDate = document.getElementById('eventEndDate').value;
+  var location = document.getElementById('eventLocation').value.trim();
+  var description = document.getElementById('eventDescription').value.trim();
+
+  if (!title) {
+    alert('กรุณากรอกชื่อกิจกรรม');
+    return;
+  }
+
+  if (!startDate) {
+    alert('กรุณาเลือกวันเริ่มต้น');
+    return;
+  }
+
+  // ส่ง API request
+  fetch(EVENTS_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({
+      token: session.token,
+      action: 'event_create',
+      title: title,
+      event_date: startDate,
+      end_date: endDate || startDate,
+      location: location,
+      description: description
+    })
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (json.ok) {
+        alert('เพิ่มกิจกรรมสำเร็จ');
+        closeAddEventModal();
+        // Reload calendar
+        load();
+      } else {
+        alert('เพิ่มกิจกรรมไม่สำเร็จ: ' + (json.error || 'ข้อผิดพลาดไม่ทราบ'));
+      }
+    })
+    .catch(function(err) {
+      alert('เชื่อมต่อไม่สำเร็จ: ' + err.message);
+      console.error(err);
+    });
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+  var modal = document.getElementById('addEventModal');
+  if (e.target === modal) {
+    closeAddEventModal();
+  }
+});
 
 (function() {
   var now = new Date();
