@@ -128,7 +128,10 @@
       "Bash(git commit -m 'refactor: simplify landing page & replace header section with cover image *)",
       "Bash(git commit -m 'refactor: improve UX with simplified design & meaningful summaries *)",
       "Bash(git commit -m 'feat: add dynamic budget pills with meaningful statistics *)",
-      "Bash(git commit -m 'feat: add budget totals and data source year labels to budget pills *)"
+      "Bash(git commit -m 'feat: add budget totals and data source year labels to budget pills *)",
+      "Bash(Get-ChildItem -Path \"D:\\\\New Dashboard\" -Recurse -Filter \"*.tsx\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object -First 20 FullName)",
+      "Bash(git commit -m 'fix: combine calendar & contact FAB into single menu with weekly alert badge *)"
     ]
   }
 }

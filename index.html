@@ -4890,7 +4890,8 @@ function searchTable(searchId, tableId) {
   if (!input || !table) return;
 
   var query = input.value.trim();
-  var keywords = query.toLowerCase().split(/\s+/).filter(Boolean);
+  // ใช้ expandSearchQuery() เพื่อรองรับ alias
+  var keywords = query.length > 0 ? expandSearchQuery(query) : [];
   var tbody = table.getElementsByTagName("tbody")[0];
   if (!tbody) return;
 
@@ -4921,8 +4922,8 @@ function searchTable(searchId, tableId) {
       cellText += " " + (cells[j].textContent || cells[j].innerText).toLowerCase();
     }
 
-    // ALL keywords must be present (multi-keyword AND logic)
-    var found = keywords.length === 0 || keywords.every(function(kw){ return cellText.indexOf(kw) > -1; });
+    // ใช้ matchesSearchQuery() เพื่อค้นหา alias
+    var found = keywords.length === 0 || keywords.some(function(kw){ return cellText.indexOf(kw) > -1; });
 
     if (found && hlRegex) {
       for (var j = 0; j < cells.length; j++) {
@@ -6429,8 +6430,8 @@ function exportP4Equipment() {
   var distVal = document.getElementById('p4DistrictSelect') ? document.getElementById('p4DistrictSelect').value : 'all';
   var unitVal = document.getElementById('p4UnitSelect')     ? document.getElementById('p4UnitSelect').value     : 'all';
   var catVal  = document.getElementById('p4CategorySelect') ? document.getElementById('p4CategorySelect').value : 'all';
-  var searchQ = document.getElementById('p4EquipSearch')    ? document.getElementById('p4EquipSearch').value.trim().toLowerCase() : '';
-  var keywords = searchQ ? searchQ.split(/\s+/).filter(Boolean) : [];
+  var searchQ = document.getElementById('p4EquipSearch')    ? document.getElementById('p4EquipSearch').value.trim() : '';
+  var keywords = searchQ ? expandSearchQuery(searchQ) : [];
 
   // Apply same year filter logic as loadP4Data()
   var rows = [];
@@ -6447,13 +6448,13 @@ function exportP4Equipment() {
   if (unitVal !== 'all') rows = rows.filter(function(r) { return r.unit      === unitVal; });
   if (catVal  !== 'all') rows = rows.filter(function(r) { return r.category  === catVal;  });
 
-  // Apply search text (same multi-keyword AND logic as searchTable)
+  // Apply search text รองรับ alias/synonym
   if (keywords.length > 0) {
     rows = rows.filter(function(r) {
       var haystack = [r.district, r.unit, r.category, r.equipment, r.year,
                       String(r.purchased || 0), String(r.used || 0), String(r.remaining || 0)]
                     .join(' ').toLowerCase();
-      return keywords.every(function(kw) { return haystack.indexOf(kw) > -1; });
+      return keywords.some(function(kw) { return haystack.indexOf(kw) > -1; });
     });
   }
 
@@ -8070,43 +8071,85 @@ window.navigateTo = navigateTo;
 })();
 </script>
 
-<!-- FLOATING CONTACT BUTTON — same info as the footer, reachable without scrolling -->
-<div id="fabContact" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:2000;">
-  <div id="contactPopover" style="display:none;position:absolute;bottom:64px;right:0;width:270px;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:1.1rem;font-family:Sarabun,sans-serif;">
-    <div style="font-weight:800;font-size:0.95rem;color:#0f172a;margin-bottom:0.15rem;">กองทุนหลักประกันสุขภาพฯ</div>
-    <div style="font-size:0.78rem;color:#64748b;margin-bottom:0.75rem;">จังหวัดระยอง</div>
-    <div style="display:flex;gap:0.5rem;align-items:flex-start;margin-bottom:0.6rem;font-size:0.82rem;color:#334155;">
-      <span>📍</span><span>140 ม.2 ถ.สุขุมวิท ต.เนินพระ อ.เมือง จ.ระยอง 21000</span>
-    </div>
-    <a href="tel:038617430" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;font-size:0.82rem;color:#0f766e;text-decoration:none;font-weight:600;">📞 038-617-430 ต่อ 203</a>
-    <a href="tel:0958180720" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;font-size:0.82rem;color:#0f766e;text-decoration:none;font-weight:600;">📱 095-818-0720</a>
-    <a href="tel:0958190720" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;font-size:0.82rem;color:#06b025;text-decoration:none;font-weight:600;">💬 Line: 095-819-0720</a>
-    <div style="display:flex;gap:0.6rem;margin-top:0.75rem;padding-top:0.6rem;border-top:1px solid #e2e8f0;">
-      <a href="https://shorturl.asia/W9nz0" target="_blank" style="flex:1;text-align:center;background:#f0fdfa;color:#1877f2;text-decoration:none;font-size:0.78rem;font-weight:700;padding:0.4rem;border-radius:8px;">👥 Facebook</a>
-      <a href="https://maps.app.goo.gl/XLqJxpYksk582T5g6" target="_blank" style="flex:1;text-align:center;background:#fef2f2;color:#ea4335;text-decoration:none;font-size:0.78rem;font-weight:700;padding:0.4rem;border-radius:8px;">🗺️ แผนที่</a>
-    </div>
+<!-- COMBINED FLOATING MENU — ปฏิทิน + ติดต่อ -->
+<div id="combinedFAB" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:2000;">
+  <!-- Menu Dropdown -->
+  <div id="fabMenu" style="display:none;position:absolute;bottom:64px;right:0;width:280px;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);overflow:hidden;font-family:Sarabun,sans-serif;">
+    <div style="background:linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);color:#fff;padding:0.75rem 1rem;font-weight:700;font-size:0.9rem;">เลือกสิ่งที่ต้องการ</div>
+    <button onclick="showCalendarPanel()" style="display:flex;align-items:center;gap:0.75rem;width:100%;padding:0.75rem 1rem;border:none;background:none;color:#334155;font-size:0.9rem;font-family:inherit;font-weight:600;cursor:pointer;text-align:left;border-bottom:1px solid #e2e8f0;transition:all 0.2s;" onmouseover="this.style.background='#f0fdfa'" onmouseout="this.style.background='none'">📅 ดูปฏิทินกิจกรรม</button>
+    <button onclick="showContactPanel()" style="display:flex;align-items:center;gap:0.75rem;width:100%;padding:0.75rem 1rem;border:none;background:none;color:#334155;font-size:0.9rem;font-family:inherit;font-weight:600;cursor:pointer;text-align:left;transition:all 0.2s;" onmouseover="this.style.background='#f0fdfa'" onmouseout="this.style.background='none'">📞 ติดต่อกองทุนฯ</button>
   </div>
-  <button id="contactBtn" onclick="toggleContactPopover()" style="width:56px;height:56px;border-radius:50%;background:#0f766e;color:#fff;border:none;box-shadow:0 6px 20px rgba(15,118,110,0.5);font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;font-weight:bold;" title="ติดต่อกองทุนฯ">📞</button>
+
+  <!-- Alert Badge -->
+  <div id="weeklyAlertBadge" style="display:none;position:absolute;bottom:70px;right:-5px;background:#ef4444;color:#fff;padding:0.35rem 0.6rem;border-radius:20px;font-size:0.7rem;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(239,68,68,0.4);">📌 มีกิจกรรม</div>
+
+  <!-- Main Button -->
+  <button id="combinedBtn" onclick="toggleFabMenu()" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);color:#fff;border:none;box-shadow:0 6px 20px rgba(15,118,110,0.5);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;font-weight:bold;" title="เมนูปฏิทิน & ติดต่อ">⚙️</button>
 </div>
+
+<!-- Contact Panel (Popover) -->
+<div id="contactPanel" style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;width:280px;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);padding:1rem;z-index:2001;font-family:Sarabun,sans-serif;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+    <div style="font-weight:800;font-size:0.95rem;color:#0f172a;">📞 ติดต่อกองทุนฯ</div>
+    <button onclick="closeFabPanels()" style="background:none;border:none;color:#94a3b8;font-size:1.2rem;cursor:pointer;">✕</button>
+  </div>
+  <div style="font-size:0.78rem;color:#64748b;margin-bottom:0.6rem;">กองทุนหลักประกันสุขภาพจังหวัดระยอง</div>
+  <div style="display:flex;gap:0.4rem;align-items:flex-start;margin-bottom:0.5rem;font-size:0.8rem;color:#334155;">
+    <span>📍</span><span>140 ม.2 ถ.สุขุมวิท ต.เนินพระ อ.เมือง จ.ระยอง 21000</span>
+  </div>
+  <a href="tel:038617430" style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.4rem;font-size:0.8rem;color:#0f766e;text-decoration:none;font-weight:600;">📞 038-617-430 ต่อ 203</a>
+  <a href="tel:0958180720" style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.4rem;font-size:0.8rem;color:#0f766e;text-decoration:none;font-weight:600;">📱 095-818-0720</a>
+  <a href="tel:0958190720" style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.6rem;font-size:0.8rem;color:#06b025;text-decoration:none;font-weight:600;">💬 Line: 095-819-0720</a>
+  <div style="display:flex;gap:0.5rem;padding-top:0.6rem;border-top:1px solid #e2e8f0;">
+    <a href="https://shorturl.asia/W9nz0" target="_blank" style="flex:1;text-align:center;background:#f0fdfa;color:#1877f2;text-decoration:none;font-size:0.75rem;font-weight:700;padding:0.35rem;border-radius:6px;">👥 Facebook</a>
+    <a href="https://maps.app.goo.gl/XLqJxpYksk582T5g6" target="_blank" style="flex:1;text-align:center;background:#fef2f2;color:#ea4335;text-decoration:none;font-size:0.75rem;font-weight:700;padding:0.35rem;border-radius:6px;">🗺️ Map</a>
+  </div>
+</div>
+
 <script>
-window.toggleContactPopover = function() {
-  var el = document.getElementById('contactPopover');
-  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+window.toggleFabMenu = function() {
+  var menu = document.getElementById('fabMenu');
+  var contact = document.getElementById('contactPanel');
+  var cal = document.getElementById('calendar-float-widget');
+  if (menu.style.display === 'flex') {
+    menu.style.display = 'none';
+  } else {
+    menu.style.display = 'flex';
+    contact.style.display = 'none';
+    cal.style.display = 'none';
+  }
+};
+window.showContactPanel = function() {
+  document.getElementById('fabMenu').style.display = 'none';
+  document.getElementById('calendar-float-widget').style.display = 'none';
+  document.getElementById('contactPanel').style.display = 'block';
+};
+window.showCalendarPanel = function() {
+  document.getElementById('fabMenu').style.display = 'none';
+  document.getElementById('contactPanel').style.display = 'none';
+  document.getElementById('calendar-float-widget').style.display = 'flex';
+};
+window.closeFabPanels = function() {
+  document.getElementById('fabMenu').style.display = 'none';
+  document.getElementById('contactPanel').style.display = 'none';
+  document.getElementById('calendar-float-widget').style.display = 'none';
 };
 document.addEventListener('click', function(e) {
-  var wrap = document.getElementById('fabContact');
-  if (wrap && !wrap.contains(e.target)) {
-    var popover = document.getElementById('contactPopover');
-    if (popover) popover.style.display = 'none';
+  var fab = document.getElementById('combinedFAB');
+  var cal = document.getElementById('calendar-float-widget');
+  var contact = document.getElementById('contactPanel');
+  if (fab && !fab.contains(e.target) && cal && !cal.contains(e.target) && contact && !contact.contains(e.target)) {
+    closeFabPanels();
   }
 });
 </script>
 
 
+<script src="assets/js/search-alias.js"></script>
 <script src="assets/js/api.js"></script>
 <script src="assets/js/main.js"></script>
 <!-- ░░ FLOATING CALENDAR WIDGET ░░ -->
-<div id="calendar-float-widget" style="position:fixed;right:20px;bottom:20px;width:300px;background:#fff;
+<div id="calendar-float-widget" style="position:fixed;left:20px;bottom:20px;width:300px;background:#fff;
   border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.12);z-index:999;display:none;
   border:1px solid #e2e8f0;overflow:hidden;max-height:80vh;display:flex;flex-direction:column;">
 
@@ -8131,14 +8174,6 @@ document.addEventListener('click', function(e) {
     </div>
   </div>
 </div>
-
-<!-- Show Calendar Button (Fixed FAB) -->
-<button id="cal-show-btn" onclick="document.getElementById('calendar-float-widget').style.display='flex'"
-  style="position:fixed;right:20px;bottom:90px;width:56px;height:56px;border-radius:50%;
-  background:linear-gradient(135deg, #1db584 0%, #0ea5a5 100%);color:#fff;border:none;
-  font-size:1.5rem;cursor:pointer;box-shadow:0 4px 12px rgba(29,181,132,0.4);
-  display:flex;align-items:center;justify-content:center;z-index:998;transition:all 0.2s;"
-  onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">📅</button>
 
 <script>
 // Render floating calendar
@@ -8186,11 +8221,39 @@ function renderCalendarFloat() {
   }).join('');
 }
 
+// ตรวจสอบกิจกรรมในสัปดาห์นี้ และแสดง alert badge
+function checkWeeklyEvents() {
+  var today = new Date();
+  var weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - today.getDay()); // วันอาทิตย์ของสัปดาห์นี้
+  var weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6); // วันเสาร์
+
+  var ymd = function(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  };
+
+  var weekStartStr = ymd(weekStart);
+  var weekEndStr = ymd(weekEnd);
+
+  var weeklyEvents = calEvents.filter(function(ev) {
+    var start = String(ev.event_date || '').slice(0, 10);
+    var end = String(ev.end_date || ev.event_date || '').slice(0, 10);
+    return (start >= weekStartStr && start <= weekEndStr) || (end >= weekStartStr && end <= weekEndStr);
+  });
+
+  var badge = document.getElementById('weeklyAlertBadge');
+  if (badge) {
+    badge.style.display = weeklyEvents.length > 0 ? 'block' : 'none';
+  }
+}
+
 // Attach calendar float listeners
 document.addEventListener('DOMContentLoaded', function() {
   loadCalendarWidget();
   if (calEvents.length > 0) {
     renderCalendarFloat();
+    checkWeeklyEvents();
   }
 });
 </script>

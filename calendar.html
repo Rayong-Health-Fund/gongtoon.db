@@ -38,6 +38,8 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
 .cal-day.today { background: #f0fdfa; font-weight: 800; color: #0f766e; border: 1.5px solid #5eead4; }
 .cal-day.has-event { background: #f0fdf4; font-weight: 700; color: #065f46; cursor: pointer; }
 .cal-day.has-event::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #10b981; position: absolute; bottom: 4px; }
+.cal-day.holiday { background: #fef3c7; font-weight: 700; color: #b45309; }
+.cal-day.holiday.has-event { background: linear-gradient(135deg, #fef3c7 0%, #f0fdf4 100%); }
 
 .upcoming-title { font-size: 1rem; font-weight: 800; margin-bottom: 0.9rem; color: #0f172a; }
 .event-item {
@@ -66,6 +68,9 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
 <div class="hero">
   <div class="hero-title">📅 ปฏิทินกิจกรรม</div>
   <div class="hero-subtitle">กิจกรรมที่กำลังจะเกิดขึ้นของกองทุนฯ</div>
+  <div style="margin-top:1.5rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+    <a href="calendar-event-editor.html" onclick="if(!getSession()){alert('กรุณาล็อคอินก่อน');return false;}" style="display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,255,255,0.2);color:#fff;padding:0.45rem 1rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;border:1px solid rgba(255,255,255,0.3);">➕ เพิ่มกิจกรรม</a>
+  </div>
 </div>
 
 <div class="container">
@@ -89,6 +94,30 @@ var EVENTS_API_URL = 'https://script.google.com/macros/s/AKfycbzRxsboi-rH2oS669v
 var allEvents = [];
 var calYear, calMonth; // calMonth: 0-11
 
+// วันหยุดราชการและวันสำคัญศาสนา ปี 2569
+var HOLIDAYS_2569 = [
+  '2569-01-01', // วันปีใหม่
+  '2569-02-10', // สมาคมสงครามพระยศรี
+  '2569-02-26', // วันมัฆบูชา
+  '2569-04-06', // วันจักรีธรรมการ
+  '2569-04-13', // วันสงกรานต์
+  '2569-04-14', // วันสงกรานต์
+  '2569-04-15', // วันสงกรานต์
+  '2569-04-22', // วันที่ 22 เมษายน
+  '2569-05-01', // วันแรงงาน
+  '2569-05-22', // วันวิสาขบูชา
+  '2569-07-28', // วันเฉลิมพระชนมพรรษาพระนางสยามมาตา
+  '2569-07-30', // วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าอยู่หัว (รัฐพิทักษ์)
+  '2569-07-31', // วันราชสำเร็จ
+  '2569-08-12', // วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าอยู่หัว
+  '2569-10-13', // วันคล้ายวันสวรรคตพระบาทสมเด็จพระปรมินทรมหาภูมิพลอดุลยเดช
+  '2569-10-14', // วันธรรมชาติถือว่าเป็นวันพระราชทานธรรม
+  '2569-10-23', // วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าลูกยาเธอ
+  '2569-12-05', // วันคล้ายวันสวรรคตพระบาทสมเด็จพระปรมินทรมหาภูมิพลอดุลยเดช
+  '2569-12-10', // วันรัฐธรรมนูญ
+  '2569-12-31'  // วันสิ้นปี
+];
+
 function esc(s) {
   var d = document.createElement('div');
   d.textContent = s || '';
@@ -101,6 +130,12 @@ function fmtDate(v) {
 }
 function ymd_(d) {
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function isHoliday(dateStr) {
+  return HOLIDAYS_2569.indexOf(dateStr) >= 0;
+}
+function getSession() {
+  try { return JSON.parse(localStorage.getItem('rf_user') || 'null'); } catch (e) { return null; }
 }
 
 function load() {
@@ -150,8 +185,12 @@ function renderCalendar() {
   for (var day = 1; day <= daysInMonth; day++) {
     var dateStr = ymd_(new Date(calYear, calMonth, day));
     var hasEvent = eventsOnDate_(dateStr).length > 0;
-    var cls = 'cal-day' + (dateStr === todayStr ? ' today' : '') + (hasEvent ? ' has-event' : '');
-    html += '<div class="' + cls + '" title="' + (hasEvent ? esc(eventsOnDate_(dateStr).map(function(e){return e.title;}).join(', ')) : '') + '">' + day + '</div>';
+    var isHol = isHoliday(dateStr);
+    var cls = 'cal-day' + (dateStr === todayStr ? ' today' : '') + (hasEvent ? ' has-event' : '') + (isHol ? ' holiday' : '');
+    var title = '';
+    if (isHol) title = '🏛️ วันหยุดราชการ';
+    if (hasEvent) title += (title ? ' | ' : '') + esc(eventsOnDate_(dateStr).map(function(e){return e.title;}).join(', '));
+    html += '<div class="' + cls + '" title="' + title + '">' + day + '</div>';
   }
   grid.innerHTML = html;
 }
