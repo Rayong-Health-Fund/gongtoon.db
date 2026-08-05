@@ -2541,6 +2541,96 @@ function renderNewsPreview(items) {
 
 loadNewsPreview();
 
+// ─────────────────────────────────────────
+// CALENDAR WIDGET (Mini version on home page)
+// ─────────────────────────────────────────
+var EVENTS_API_URL = 'https://script.google.com/macros/s/AKfycbzRxsboi-rH2oS669v3xFesNpYcS1ndvHhjGRxfGq4UaVwYMEgPjz6WmLScSS1WVVSeGQ/exec';
+var calEvents = [];
+var calYear, calMonth;
+
+function fmtDateTH(v) {
+  var d = new Date(v);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function ymdStr(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function renderCalendarWidget() {
+  var monthNames = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  document.getElementById('cal-month-label').textContent = monthNames[calMonth] + ' ' + (calYear + 543);
+
+  var dows = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+  var grid = document.getElementById('cal-grid-mini');
+  var html = dows.map(function(d) { return '<div style="text-align:center;font-size:0.65rem;font-weight:700;color:#94a3b8;padding:0.2rem 0;">' + d + '</div>'; }).join('');
+
+  var firstDay = new Date(calYear, calMonth, 1);
+  var startOffset = firstDay.getDay();
+  var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  var todayStr = ymdStr(new Date());
+
+  for (var i = 0; i < startOffset; i++) html += '<div></div>';
+  for (var day = 1; day <= daysInMonth; day++) {
+    var dateStr = ymdStr(new Date(calYear, calMonth, day));
+    var hasEvent = calEvents.some(function(e) {
+      var start = String(e.event_date || '').slice(0, 10);
+      var end = String(e.end_date || e.event_date || '').slice(0, 10);
+      return dateStr >= start && dateStr <= end;
+    });
+    var isToday = dateStr === todayStr;
+    var style = 'text-align:center;padding:0.3rem 0;font-size:0.75rem;border-radius:4px;' +
+      (isToday ? 'background:#ccfbf1;color:#0f766e;font-weight:700;' : hasEvent ? 'background:#dbeafe;color:#1e40af;' : 'color:#475569;');
+    html += '<div style="' + style + '">' + day + '</div>';
+  }
+  grid.innerHTML = html;
+
+  renderUpcomingMini();
+}
+
+function renderUpcomingMini() {
+  var todayStr = ymdStr(new Date());
+  var upcoming = calEvents.filter(function(ev) {
+    var end = String(ev.end_date || ev.event_date || '').slice(0, 10);
+    return end >= todayStr;
+  }).slice(0, 3);
+
+  var el = document.getElementById('cal-upcoming');
+  if (!upcoming.length) { el.innerHTML = '<div style="text-align:center;padding:0.5rem;font-size:0.75rem;color:#94a3b8;">ยังไม่มีกิจกรรม</div>'; return; }
+  el.innerHTML = upcoming.map(function(ev) {
+    return '<div style="padding:0.4rem;border-bottom:1px solid #f1f5f9;font-size:0.75rem;">'
+      + '<div style="color:#0f766e;font-weight:600;">' + (ev.title || 'กิจกรรม') + '</div>'
+      + '<div style="color:#94a3b8;font-size:0.7rem;">📅 ' + fmtDateTH(ev.event_date) + '</div>'
+    + '</div>';
+  }).join('');
+}
+
+function loadCalendarWidget() {
+  var widget = document.getElementById('calendar-widget');
+  if (widget) widget.style.display = 'block';
+  fetch(EVENTS_API_URL + '?action=events_list')
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (json.ok && json.events) {
+        calEvents = json.events;
+        renderCalendarWidget();
+      }
+    })
+    .catch(function(err) {
+      console.log('[Calendar] load failed:', err);
+      if (widget) widget.style.display = 'block';
+    });
+}
+
+// Init calendar on page load
+(function() {
+  var now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+})();
+loadCalendarWidget();
+
 function govToggleDropdown(e, toggleEl) {
   e.preventDefault();
   var menu = toggleEl.parentElement.querySelector('.nav-dropdown-menu');
@@ -8015,5 +8105,95 @@ document.addEventListener('click', function(e) {
 
 <script src="assets/js/api.js"></script>
 <script src="assets/js/main.js"></script>
+<!-- ░░ FLOATING CALENDAR WIDGET ░░ -->
+<div id="calendar-float-widget" style="position:fixed;right:20px;bottom:20px;width:300px;background:#fff;
+  border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.12);z-index:999;display:none;
+  border:1px solid #e2e8f0;overflow:hidden;max-height:80vh;display:flex;flex-direction:column;">
+
+  <!-- Header -->
+  <div style="background:linear-gradient(135deg, #1db584 0%, #0ea5a5 100%);color:#fff;padding:1rem;
+    display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-weight:700;font-size:0.95rem;">📅 ปฏิทินกิจกรรม</div>
+    <button onclick="document.getElementById('calendar-float-widget').style.display='none'"
+      style="background:rgba(255,255,255,0.2);border:none;color:#fff;width:32px;height:32px;
+      border-radius:6px;cursor:pointer;font-size:1rem;">✕</button>
+  </div>
+
+  <!-- Content -->
+  <div style="padding:1rem;flex:1;overflow-y:auto;">
+    <div id="cal-float-month" style="font-size:0.85rem;font-weight:700;color:#0f766e;text-align:center;margin-bottom:0.8rem;"></div>
+    <div id="cal-float-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:1rem;"></div>
+    <div style="border-top:1.5px solid #e2e8f0;padding-top:0.8rem;">
+      <div style="font-size:0.8rem;font-weight:600;color:#0f172a;margin-bottom:0.6rem;">🔜 กิจกรรมที่กำลังมาถึง</div>
+      <div id="cal-float-upcoming" style="font-size:0.75rem;color:#475569;">
+        <div style="text-align:center;padding:0.5rem;color:#94a3b8;">กำลังโหลด...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Show Calendar Button (Fixed FAB alternative) -->
+<button id="cal-show-btn" onclick="document.getElementById('calendar-float-widget').style.display='flex'"
+  style="position:fixed;right:20px;bottom:20px;width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg, #1db584 0%, #0ea5a5 100%);color:#fff;border:none;
+  font-size:1.5rem;cursor:pointer;box-shadow:0 4px 12px rgba(29,181,132,0.4);
+  display:flex;align-items:center;justify-content:center;z-index:998;transition:all 0.2s;"
+  onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">📅</button>
+
+<script>
+// Render floating calendar
+function renderCalendarFloat() {
+  var monthNames = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  document.getElementById('cal-float-month').textContent = monthNames[calMonth] + ' ' + (calYear + 543);
+
+  var dows = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+  var grid = document.getElementById('cal-float-grid');
+  var html = dows.map(function(d) { return '<div style="text-align:center;font-size:0.7rem;font-weight:700;color:#94a3b8;padding:0.2rem 0;">' + d + '</div>'; }).join('');
+
+  var firstDay = new Date(calYear, calMonth, 1);
+  var startOffset = firstDay.getDay();
+  var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  var todayStr = ymdStr(new Date());
+
+  for (var i = 0; i < startOffset; i++) html += '<div></div>';
+  for (var day = 1; day <= daysInMonth; day++) {
+    var dateStr = ymdStr(new Date(calYear, calMonth, day));
+    var hasEvent = calEvents.some(function(e) {
+      var start = String(e.event_date || '').slice(0, 10);
+      var end = String(e.end_date || e.event_date || '').slice(0, 10);
+      return dateStr >= start && dateStr <= end;
+    });
+    var isToday = dateStr === todayStr;
+    var style = 'text-align:center;padding:0.35rem 0;font-size:0.8rem;border-radius:4px;' +
+      (isToday ? 'background:#ccfbf1;color:#0f766e;font-weight:700;' : hasEvent ? 'background:#dbeafe;color:#1e40af;' : 'color:#475569;');
+    html += '<div style="' + style + '">' + day + '</div>';
+  }
+  grid.innerHTML = html;
+
+  var todayStr = ymdStr(new Date());
+  var upcoming = calEvents.filter(function(ev) {
+    var end = String(ev.end_date || ev.event_date || '').slice(0, 10);
+    return end >= todayStr;
+  }).slice(0, 5);
+
+  var el = document.getElementById('cal-float-upcoming');
+  if (!upcoming.length) { el.innerHTML = '<div style="text-align:center;padding:0.5rem;color:#94a3b8;font-size:0.75rem;">ยังไม่มีกิจกรรม</div>'; return; }
+  el.innerHTML = upcoming.map(function(ev) {
+    return '<div style="padding:0.5rem;border-bottom:1px solid #f1f5f9;font-size:0.75rem;">'
+      + '<div style="color:#0f766e;font-weight:600;">' + (ev.title || 'กิจกรรม') + '</div>'
+      + '<div style="color:#94a3b8;font-size:0.7rem;">📅 ' + fmtDateTH(ev.event_date) + '</div>'
+    + '</div>';
+  }).join('');
+}
+
+// Attach calendar float listeners
+document.addEventListener('DOMContentLoaded', function() {
+  loadCalendarWidget();
+  if (calEvents.length > 0) {
+    renderCalendarFloat();
+  }
+});
+</script>
+
 </body>
 </html>
