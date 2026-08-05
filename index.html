@@ -56,7 +56,7 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   padding: 0.75rem 0;
   position: sticky;
-  top: 30px;
+  top: 0;
   z-index: 1000;
 }
 
@@ -914,19 +914,34 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
 .footer-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   color: rgba(255,255,255,0.8);
   text-decoration: none;
-  transition: color 0.2s;
+  transition: all 0.3s ease;
   cursor: pointer;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
 }
 .footer-link:hover {
   color: #fff;
-  text-decoration: underline;
+  background: rgba(20, 184, 166, 0.2);
+  transform: translateX(3px);
 }
 .footer-icon {
-  font-size: 0.95rem;
+  font-size: 1.2rem;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+.footer-link:hover .footer-icon {
+  background: rgba(20, 184, 166, 0.4);
+  transform: scale(1.1);
 }
 .footer-copy {
   grid-column: 1 / -1;
@@ -1251,16 +1266,24 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
 }
 .budget-sticky-pill {
   display: flex;
-  align-items: center;
-  gap: 0.35rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
   background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 20px;
-  padding: 3px 10px;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 0.6rem 0.85rem;
   font-size: 0.72rem;
-  color: rgba(255,255,255,0.90);
-  white-space: nowrap;
-  transition: background 0.2s;
+  color: rgba(255,255,255,0.95);
+  white-space: normal;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 120px;
+}
+.budget-sticky-pill:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.3);
+  transform: translateY(-2px);
 }
 .budget-sticky-pill .pill-dot {
   width: 8px; height: 8px;
@@ -2237,13 +2260,6 @@ function govToggleContrast() {
   </div>
 </nav>
 
-<!-- ═══════════════════════════════════════════════════
-     HEADER IMAGE SECTION — ภาพประชาสัมพันธ์กองทุน
-═══════════════════════════════════════════════════ -->
-<div style="width:100%;height:auto;overflow:hidden;background:#f8fafc;">
-  <img src="assets/img/cover.jpg" alt="กองทุนหลักประกันสุขภาพ จังหวัดระยอง"
-    style="width:100%;height:auto;display:block;max-height:500px;object-fit:cover;">
-</div>
 
 <script>
 (function() {
@@ -2409,21 +2425,21 @@ document.addEventListener('click', function(e) {
     </div>
     <div class="budget-sticky-divider"></div>
     <div class="budget-sticky-pills">
-      <div class="budget-sticky-pill">
+      <div class="budget-sticky-pill" style="background:rgba(20,184,166,0.15);border-color:#14b8a6;">
         <span class="pill-dot" style="background:#14b8a6;"></span>
-        P1 · 15.55M
+        <strong style="font-size:0.75rem;">ปรับปรุงที่อยู่</strong><br><span style="font-size:0.7rem;opacity:0.8;">฿15.55M</span>
       </div>
-      <div class="budget-sticky-pill">
+      <div class="budget-sticky-pill" style="background:rgba(245,158,11,0.15);border-color:#f59e0b;">
         <span class="pill-dot" style="background:#f59e0b;"></span>
-        P2 · อุปกรณ์ 3,388 ชิ้น
+        <strong style="font-size:0.75rem;">อุปกรณ์ช่วย</strong><br><span style="font-size:0.7rem;opacity:0.8;">3,388 ชิ้น</span>
       </div>
-      <div class="budget-sticky-pill">
+      <div class="budget-sticky-pill" style="background:rgba(16,185,129,0.15);border-color:#10b981;">
         <span class="pill-dot" style="background:#10b981;"></span>
-        P3 · 1.92M
+        <strong style="font-size:0.75rem;">พัฒนาเครือข่าย</strong><br><span style="font-size:0.7rem;opacity:0.8;">฿1.92M</span>
       </div>
-      <div class="budget-sticky-pill">
+      <div class="budget-sticky-pill" style="background:rgba(139,92,246,0.15);border-color:#8b5cf6;">
         <span class="pill-dot" style="background:#8b5cf6;"></span>
-        P4 · 7.46M
+        <strong style="font-size:0.75rem;">ศูนย์ซ่อม</strong><br><span style="font-size:0.7rem;opacity:0.8;">฿7.46M</span>
       </div>
     </div>
   </div>
