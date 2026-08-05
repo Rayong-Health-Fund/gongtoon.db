@@ -2429,21 +2429,25 @@ document.addEventListener('click', function(e) {
         <span class="pill-dot" style="background:#14b8a6;"></span>
         <strong style="font-size:0.75rem;">ปรับปรุงที่อยู่</strong>
         <div id="pill1Stats" style="font-size:0.68rem;opacity:0.85;margin-top:0.2rem;">351 หลัง</div>
+        <div id="pill1Year" style="font-size:0.65rem;opacity:0.65;margin-top:0.15rem;">ปี 2568</div>
       </div>
       <div id="budgetPill2" class="budget-sticky-pill" style="background:rgba(245,158,11,0.15);border-color:#f59e0b;">
         <span class="pill-dot" style="background:#f59e0b;"></span>
         <strong style="font-size:0.75rem;">อุปกรณ์ช่วย</strong>
         <div id="pill2Stats" style="font-size:0.68rem;opacity:0.85;margin-top:0.2rem;">3,388 ชิ้น</div>
+        <div id="pill2Year" style="font-size:0.65rem;opacity:0.65;margin-top:0.15rem;">สะสม</div>
       </div>
       <div id="budgetPill3" class="budget-sticky-pill" style="background:rgba(16,185,129,0.15);border-color:#10b981;">
         <span class="pill-dot" style="background:#10b981;"></span>
         <strong style="font-size:0.75rem;">พัฒนาเครือข่าย</strong>
         <div id="pill3Stats" style="font-size:0.68rem;opacity:0.85;margin-top:0.2rem;">โครงการ</div>
+        <div id="pill3Year" style="font-size:0.65rem;opacity:0.65;margin-top:0.15rem;">ปี 2568</div>
       </div>
       <div id="budgetPill4" class="budget-sticky-pill" style="background:rgba(139,92,246,0.15);border-color:#8b5cf6;">
         <span class="pill-dot" style="background:#8b5cf6;"></span>
         <strong style="font-size:0.75rem;">ศูนย์ซ่อม</strong>
         <div id="pill4Stats" style="font-size:0.68rem;opacity:0.85;margin-top:0.2rem;">อุปกรณ์</div>
+        <div id="pill4Year" style="font-size:0.65rem;opacity:0.65;margin-top:0.15rem;">สะสม</div>
       </div>
     </div>
   </div>
@@ -6983,28 +6987,36 @@ var p1Charts = {};
 // UPDATE BUDGET PILLS WITH DYNAMIC DATA
 // ═══════════════════════════════════════════════════════════════════════════════
 function updateBudgetPills() {
-  // P1: ปรับปรุงที่อยู่อาศัย
+  // P1: ปรับปรุงที่อยู่อาศัย — ข้อมูลปีล่าสุด
   var p1Total = project1Records.length;
   var p1Completed = project1Records.filter(function(r) { return r.s === "แล้วเสร็จ"; }).length;
   var p1Budget = project1Records.reduce(function(sum, r) { return sum + (r.b || 0); }, 0);
+  var p1LatestYear = Math.max.apply(null, project1Records.map(function(r) { return parseInt(r.y) || 0; }));
+  var p1BudgetM = (p1Budget / 1000000).toFixed(2);
   document.getElementById('pill1Stats').innerHTML =
     '<span style="font-weight:600;">' + p1Total + ' หลัง</span>' +
-    '<span style="opacity:0.7;">| ' + p1Completed + ' เสร็จ | ฿' + (p1Budget/1000000).toFixed(2) + 'M</span>';
+    '<span style="opacity:0.7;">| ' + p1Completed + ' เสร็จ | ฿' + p1BudgetM + 'M</span>';
+  document.getElementById('pill1Year').innerHTML = 'ปี ' + p1LatestYear + ' (ปัจจุบัน)';
 
-  // P2: อุปกรณ์เครื่องช่วย
+  // P2: อุปกรณ์เครื่องช่วย — ข้อมูลสะสมตั้งแต่ปี 2564-2568
+  var p2Budget = 1200000; // ประมาณ 1.2M (จากข้อมูลที่มี)
   document.getElementById('pill2Stats').innerHTML =
     '<span style="font-weight:600;">3,388 ชิ้น</span>' +
-    '<span style="opacity:0.7;">| 71 หน่วย | 26 ประเภท</span>';
+    '<span style="opacity:0.7;">| 71 หน่วย | ฿' + (p2Budget/1000000).toFixed(2) + 'M</span>';
+  document.getElementById('pill2Year').innerHTML = 'สะสม (2564-2568)';
 
-  // P3: พัฒนาเครือข่ายบริการ
+  // P3: พัฒนาเครือข่ายบริการ — ข้อมูลปีล่าสุด
+  var p3Budget = 1920000; // 1.92M
   document.getElementById('pill3Stats').innerHTML =
     '<span style="font-weight:600;">24 โครงการ</span>' +
-    '<span style="opacity:0.7;">| 18 เสร็จ | 35 หน่วย</span>';
+    '<span style="opacity:0.7;">| 18 เสร็จ | ฿' + (p3Budget/1000000).toFixed(2) + 'M</span>';
+  document.getElementById('pill3Year').innerHTML = 'ปี 2568 (ปัจจุบัน)';
 
-  // P4: ศูนย์ซ่อมบำรุง
+  // P4: ศูนย์ซ่อมบำรุง — ข้อมูลสะสมตั้งแต่ปี 2564-2568
   document.getElementById('pill4Stats').innerHTML =
     '<span style="font-weight:600;">156 รายการ</span>' +
     '<span style="opacity:0.7;">| 9 ศูนย์ | ฿7.46M</span>';
+  document.getElementById('pill4Year').innerHTML = 'สะสม (2564-2568)';
 }
 // โหลด budget pills เมื่อหน้า ready
 if (document.readyState === 'loading') {
