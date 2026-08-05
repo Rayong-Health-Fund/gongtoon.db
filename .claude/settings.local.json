@@ -124,7 +124,9 @@
       "mcp__claude-in-chrome__read_page",
       "mcp__visualize__read_me",
       "mcp__visualize__show_widget",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(git commit -m 'refactor: simplify landing page & replace header section with cover image *)",
+      "Bash(git commit -m 'refactor: improve UX with simplified design & meaningful summaries *)"
     ]
   }
 }

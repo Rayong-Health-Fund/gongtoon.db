@@ -2425,21 +2425,25 @@ document.addEventListener('click', function(e) {
     </div>
     <div class="budget-sticky-divider"></div>
     <div class="budget-sticky-pills">
-      <div class="budget-sticky-pill" style="background:rgba(20,184,166,0.15);border-color:#14b8a6;">
+      <div id="budgetPill1" class="budget-sticky-pill" style="background:rgba(20,184,166,0.15);border-color:#14b8a6;">
         <span class="pill-dot" style="background:#14b8a6;"></span>
-        <strong style="font-size:0.75rem;">ปรับปรุงที่อยู่</strong><br><span style="font-size:0.7rem;opacity:0.8;">฿15.55M</span>
+        <strong style="font-size:0.75rem;">ปรับปรุงที่อยู่</strong>
+        <div id="pill1Stats" style="font-size:0.68rem;opacity:0.85;margin-top:0.2rem;">351 หลัง</div>
       </div>
-      <div class="budget-sticky-pill" style="background:rgba(245,158,11,0.15);border-color:#f59e0b;">
+      <div id="budgetPill2" class="budget-sticky-pill" style="background:rgba(245,158,11,0.15);border-color:#f59e0b;">
         <span class="pill-dot" style="background:#f59e0b;"></span>
-        <strong style="font-size:0.75rem;">อุปกรณ์ช่วย</strong><br><span style="font-size:0.7rem;opacity:0.8;">3,388 ชิ้น</span>
+        <strong style="font-size:0.75rem;">อุปกรณ์ช่วย</strong>
+        <div id="pill2Stats" style="font-size:0.68rem;opacity:0.85;margin-top:0.2rem;">3,388 ชิ้น</div>
       </div>
-      <div class="budget-sticky-pill" style="background:rgba(16,185,129,0.15);border-color:#10b981;">
+      <div id="budgetPill3" class="budget-sticky-pill" style="background:rgba(16,185,129,0.15);border-color:#10b981;">
         <span class="pill-dot" style="background:#10b981;"></span>
-        <strong style="font-size:0.75rem;">พัฒนาเครือข่าย</strong><br><span style="font-size:0.7rem;opacity:0.8;">฿1.92M</span>
+        <strong style="font-size:0.75rem;">พัฒนาเครือข่าย</strong>
+        <div id="pill3Stats" style="font-size:0.68rem;opacity:0.85;margin-top:0.2rem;">โครงการ</div>
       </div>
-      <div class="budget-sticky-pill" style="background:rgba(139,92,246,0.15);border-color:#8b5cf6;">
+      <div id="budgetPill4" class="budget-sticky-pill" style="background:rgba(139,92,246,0.15);border-color:#8b5cf6;">
         <span class="pill-dot" style="background:#8b5cf6;"></span>
-        <strong style="font-size:0.75rem;">ศูนย์ซ่อม</strong><br><span style="font-size:0.7rem;opacity:0.8;">฿7.46M</span>
+        <strong style="font-size:0.75rem;">ศูนย์ซ่อม</strong>
+        <div id="pill4Stats" style="font-size:0.68rem;opacity:0.85;margin-top:0.2rem;">อุปกรณ์</div>
       </div>
     </div>
   </div>
@@ -2788,6 +2792,14 @@ document.addEventListener('click', function(e) {
         </div>
         <div id="tab2-serviceMap" class="tab-content">
           <h6 class="section-header">🗺️ แผนที่หน่วยบริการ</h6>
+          <div class="filter-row" style="margin-bottom:1rem;">
+            <div class="filter-group" style="flex:1;min-width:200px;">
+              <label class="filter-label">📍 อำเภอ</label>
+              <select class="year-select" id="p2DistrictFilter" onchange="filterP2ByDistrict(this.value)">
+                <option value="">-- ทั้งหมด --</option>
+              </select>
+            </div>
+          </div>
           <div class="quick-filters" id="p2MapFilters">
             <button class="filter-btn active" onclick="filterUnits2('all',this)">📍 ทั้งหมด</button>
             <button class="filter-btn" onclick="filterUnits2('โรงพยาบาล',this)">🏥 โรงพยาบาล</button>
@@ -4924,9 +4936,21 @@ function buildP2DatasetsFromApi(opts) {
       map_link: p2Text(row.google_map_link)
     };
   }).filter(function(u){ return !!u.name; });
+
+  // Populate district dropdown
+  var p2Districts = [...new Set(p2ServiceUnits.map(u => u.district).filter(Boolean))].sort();
+  var districtSel = document.getElementById('p2DistrictFilter');
+  if (districtSel && p2Districts.length > 0) {
+    var html = '<option value="">-- ทั้งหมด --</option>';
+    p2Districts.forEach(d => {
+      html += '<option value="' + d + '">' + d + '</option>';
+    });
+    districtSel.innerHTML = html;
+  }
 }
 
 var p2ActiveGroup = null;
+var p2SelectedDistrict = '';
 
 function p2QuickFindAvailable() {
   switchTab2('inventory', document.querySelector('#accBody2 .tab-btn'));
@@ -5003,10 +5027,24 @@ function renderP2ServiceMap() {
   if (!tbody) return;
   tbody.innerHTML = "";
 
-  p2ServiceUnits.forEach(function(u, i) {
+  // Sort by selected district first, then by type
+  var sorted = p2ServiceUnits.slice().sort(function(a, b) {
+    if (p2SelectedDistrict) {
+      var aMatch = a.district === p2SelectedDistrict ? 0 : 1;
+      var bMatch = b.district === p2SelectedDistrict ? 0 : 1;
+      if (aMatch !== bMatch) return aMatch - bMatch;
+    }
+    var aType = p2DeriveAgencyType(a.name);
+    var bType = p2DeriveAgencyType(b.name);
+    var typeOrder = { 'โรงพยาบาล': 0, 'รพ.สต.': 1, 'สสอ.': 2, 'อื่นๆ': 3 };
+    return (typeOrder[aType] || 99) - (typeOrder[bType] || 99);
+  });
+
+  sorted.forEach(function(u, i) {
     var realType = p2DeriveAgencyType(u.name);
     var tr = document.createElement("tr");
     tr.setAttribute("data-type", realType);
+    tr.setAttribute("data-district", u.district);
     var mapCell = u.map_link
       ? "<a href=\"" + u.map_link + "\" target=\"_blank\" style=\"color:#0f766e;font-weight:600;text-decoration:none;\">🗺️ เปิดแผนที่</a>"
       : "<span style=\"color:#94a3b8;\">–</span>";
@@ -5018,11 +5056,17 @@ function renderP2ServiceMap() {
       "<td style=\"font-size:0.72rem;\"><span class=\"badge-status badge-info\" style=\"padding:2px 6px;\">" + realType + "</span></td>" +
       "<td style=\"font-size:0.78rem;font-weight:600;\">" + u.name + "</td>" +
       "<td style=\"font-size:0.75rem;\">" + (u.tambon || "–") + "</td>" +
-      "<td style=\"font-size:0.75rem;font-weight:600;\">" + u.district + "</td>" +
+      "<td style=\"font-size:0.75rem;font-weight:600;\" data-district-col=\"true\">" + u.district + "</td>" +
       "<td style=\"font-size:0.75rem;\">" + phoneCell + "</td>" +
       "<td style=\"font-size:0.75rem;\">" + mapCell + "</td>";
     tbody.appendChild(tr);
   });
+}
+
+function filterP2ByDistrict(district) {
+  p2SelectedDistrict = district;
+  renderP2ServiceMap();
+  filterUnits2('all', document.querySelector("#p2MapFilters .filter-btn.active") || document.querySelector("#p2MapFilters .filter-btn"));
 }
 
 function filterUnits2(unitType, btnEl) {
@@ -5036,13 +5080,16 @@ function filterUnits2(unitType, btnEl) {
   var visible = 0;
   rows.forEach(function(row) {
     var rtype = row.getAttribute("data-type") || "";
-    var show = (unitType === "all" || rtype === unitType || rtype.indexOf(unitType) >= 0);
+    var rdistrict = row.getAttribute("data-district") || "";
+    var typeMatch = (unitType === "all" || rtype === unitType || rtype.indexOf(unitType) >= 0);
+    var districtMatch = !p2SelectedDistrict || rdistrict === p2SelectedDistrict;
+    var show = typeMatch && districtMatch;
     row.style.display = show ? "" : "none";
     if (show) visible++;
   });
   var noRes = document.getElementById("p2MapNoResults");
   if (noRes) noRes.style.display = visible === 0 ? "block" : "none";
-  
+
   // Reset search
   var srch = document.getElementById("p2MapSearch");
   if (srch) srch.value = "";
@@ -7626,6 +7673,7 @@ window.initProject1 = initProject1;
 window.loadP1Data   = loadP1Data;
 window.switchTab2 = switchTab2;
 window.p2QuickFindAvailable = p2QuickFindAvailable;
+window.filterP2ByDistrict = filterP2ByDistrict;
 window.switchTab3 = switchTab3;
 window.loadP3Data = loadP3Data;
 window.switchTab4 = switchTab4;
