@@ -258,26 +258,39 @@ function init() {
   var p3LogUrl = P3_BASE + '?action=activity_log&token=' + tok;
   var p4LogUrl = P4_BASE + '?action=activity_log&token=' + tok;
 
-  // The underlying Apps Script endpoints occasionally take 20-40s (Google's
-  // own latency, not something this page controls) and time out outright —
-  // when that happens it's usually just that one call, not all four, so a
-  // single retry on failure recovers most of these without the visitor
-  // needing to do anything.
+  // Fetch with timeout (30 seconds max per request)
   function safeFetch(url, label) {
+    var timeoutId;
+    var timeoutPromise = new Promise(function(_, reject) {
+      timeoutId = setTimeout(function() {
+        reject(new Error('Timeout after 30s'));
+      }, 30000);
+    });
+
     function attempt(triesLeft) {
-      return fetch(url).then(function(r){ return r.json(); }).catch(function(err) {
+      return Promise.race([
+        fetch(url).then(function(r){ return r.json(); }),
+        timeoutPromise
+      ]).catch(function(err) {
         if (triesLeft > 0) return attempt(triesLeft - 1);
         console.error('[Exec Dashboard] load failed:', label, err);
         return { __failed: label };
+      }).finally(function() {
+        clearTimeout(timeoutId);
       });
     }
     return attempt(1);
   }
 
-  Promise.all([
+  // ใช้ Promise.allSettled แทน Promise.all เพื่อให้ render แม้บาง API ล้มเหลว
+  Promise.allSettled([
     safeFetch(p1Url, 'P1'), safeFetch(p2Url, 'P2'), safeFetch(p3Url, 'P3'), safeFetch(p4Url, 'P4'),
     safeFetch(p2LogUrl, 'P2 log'), safeFetch(p3LogUrl, 'P3 log'), safeFetch(p4LogUrl, 'P4 log')
-  ]).then(function(results) {
+  ]).then(function(settledResults) {
+    // แยก fulfilled/rejected
+    var results = settledResults.map(function(result) {
+      return result.status === 'fulfilled' ? result.value : { __failed: 'timeout or error' };
+    });
     var failed = results.filter(function(r){ return r && r.__failed; }).map(function(r){ return r.__failed; });
     render(session, results[0], results[1], results[2], results[3], results[4], results[5], results[6]);
     if (failed.length) showFailureBanner(failed);
