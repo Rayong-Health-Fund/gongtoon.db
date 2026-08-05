@@ -6979,6 +6979,40 @@ var project1Records = [
 
 var p1Charts = {};
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// UPDATE BUDGET PILLS WITH DYNAMIC DATA
+// ═══════════════════════════════════════════════════════════════════════════════
+function updateBudgetPills() {
+  // P1: ปรับปรุงที่อยู่อาศัย
+  var p1Total = project1Records.length;
+  var p1Completed = project1Records.filter(function(r) { return r.s === "แล้วเสร็จ"; }).length;
+  var p1Budget = project1Records.reduce(function(sum, r) { return sum + (r.b || 0); }, 0);
+  document.getElementById('pill1Stats').innerHTML =
+    '<span style="font-weight:600;">' + p1Total + ' หลัง</span>' +
+    '<span style="opacity:0.7;">| ' + p1Completed + ' เสร็จ | ฿' + (p1Budget/1000000).toFixed(2) + 'M</span>';
+
+  // P2: อุปกรณ์เครื่องช่วย
+  document.getElementById('pill2Stats').innerHTML =
+    '<span style="font-weight:600;">3,388 ชิ้น</span>' +
+    '<span style="opacity:0.7;">| 71 หน่วย | 26 ประเภท</span>';
+
+  // P3: พัฒนาเครือข่ายบริการ
+  document.getElementById('pill3Stats').innerHTML =
+    '<span style="font-weight:600;">24 โครงการ</span>' +
+    '<span style="opacity:0.7;">| 18 เสร็จ | 35 หน่วย</span>';
+
+  // P4: ศูนย์ซ่อมบำรุง
+  document.getElementById('pill4Stats').innerHTML =
+    '<span style="font-weight:600;">156 รายการ</span>' +
+    '<span style="opacity:0.7;">| 9 ศูนย์ | ฿7.46M</span>';
+}
+// โหลด budget pills เมื่อหน้า ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', updateBudgetPills);
+} else {
+  setTimeout(updateBudgetPills, 100);
+}
+
 // ─── Project 1 API data loader ───────────────────────────────────────────────
 // NOTE: intentionally named P1_DASHBOARD_URL (not P1_API_URL) to avoid being
 // clobbered by the same-named variable in assets/js/api.js which loads after
