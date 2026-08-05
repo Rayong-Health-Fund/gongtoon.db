@@ -191,9 +191,40 @@ body {
   </div>
 </nav>
 
-<div class="container" id="app">
-  <div class="status-msg" id="statusMsg">กำลังตรวจสอบสิทธิ์การเข้าใช้งาน...</div>
+<div class="container">
+  <!-- Project Tabs -->
+  <div id="projectTabs" style="display:none;margin-bottom:1.5rem;border-bottom:2px solid #e2e8f0;">
+    <button class="proj-tab active" onclick="switchProject('overview')" style="padding:0.75rem 1.5rem;border:none;background:none;cursor:pointer;font-size:0.95rem;font-weight:700;border-bottom:3px solid #0f766e;color:#0f766e;font-family:inherit;">📊 สรุปรวม</button>
+    <button class="proj-tab" onclick="switchProject('p1')" style="padding:0.75rem 1.5rem;border:none;background:none;cursor:pointer;font-size:0.95rem;font-weight:600;color:#64748b;font-family:inherit;">🏠 P1 · ปรับปรุงที่อยู่</button>
+    <button class="proj-tab" onclick="switchProject('p2')" style="padding:0.75rem 1.5rem;border:none;background:none;cursor:pointer;font-size:0.95rem;font-weight:600;color:#64748b;font-family:inherit;">🔧 P2 · ศูนย์อุปกรณ์</button>
+    <button class="proj-tab" onclick="switchProject('p3')" style="padding:0.75rem 1.5rem;border:none;background:none;cursor:pointer;font-size:0.95rem;font-weight:600;color:#64748b;font-family:inherit;">🤝 P3 · เครือข่าย</button>
+    <button class="proj-tab" onclick="switchProject('p4')" style="padding:0.75rem 1.5rem;border:none;background:none;cursor:pointer;font-size:0.95rem;font-weight:600;color:#64748b;font-family:inherit;">🔩 P4 · ศูนย์ซ่อม</button>
+  </div>
+
+  <div id="app">
+    <div class="status-msg" id="statusMsg">กำลังตรวจสอบสิทธิ์การเข้าใช้งาน...</div>
+  </div>
 </div>
+
+<script>
+var currentProject = 'overview';
+function switchProject(proj) {
+  currentProject = proj;
+  // Update tab styling
+  document.querySelectorAll('.proj-tab').forEach(function(tab) {
+    tab.style.borderBottom = 'none';
+    tab.style.color = '#64748b';
+    tab.style.fontWeight = '600';
+  });
+  event.target.style.borderBottom = '3px solid #0f766e';
+  event.target.style.color = '#0f766e';
+  event.target.style.fontWeight = '700';
+  // Re-render with selected project
+  if (window.lastRenderData) {
+    renderDashboard(window.lastRenderData.session, window.lastRenderData.p1, window.lastRenderData.p2, window.lastRenderData.p3, window.lastRenderData.p4, window.lastRenderData.p2Log, window.lastRenderData.p3Log, window.lastRenderData.p4Log, proj);
+  }
+}
+</script>
 
 <script>
 var EXEC_ROLES = ['executive', 'admin'];
@@ -282,18 +313,29 @@ function init() {
     return attempt(1);
   }
 
-  // ใช้ Promise.allSettled แทน Promise.all เพื่อให้ render แม้บาง API ล้มเหลว
-  Promise.allSettled([
-    safeFetch(p1Url, 'P1'), safeFetch(p2Url, 'P2'), safeFetch(p3Url, 'P3'), safeFetch(p4Url, 'P4'),
-    safeFetch(p2LogUrl, 'P2 log'), safeFetch(p3LogUrl, 'P3 log'), safeFetch(p4LogUrl, 'P4 log')
-  ]).then(function(settledResults) {
-    // แยก fulfilled/rejected
-    var results = settledResults.map(function(result) {
-      return result.status === 'fulfilled' ? result.value : { __failed: 'timeout or error' };
+  // ดึงข้อมูล P1 ก่อน (priority สูง) แล้วดึงอื่นๆ ตามหลัง เพื่อหลีกเลี่ยง API overload
+  safeFetch(p1Url, 'P1').then(function(p1Data) {
+    // P1 ได้แล้ว ดึง P2, P3, P4 และ logs ตามหลัง
+    Promise.allSettled([
+      safeFetch(p2Url, 'P2'), safeFetch(p3Url, 'P3'), safeFetch(p4Url, 'P4'),
+      safeFetch(p2LogUrl, 'P2 log'), safeFetch(p3LogUrl, 'P3 log'), safeFetch(p4LogUrl, 'P4 log')
+    ]).then(function(settledResults) {
+      var otherResults = settledResults.map(function(result) {
+        return result.status === 'fulfilled' ? result.value : { __failed: 'timeout or error' };
+      });
+      var p2Data = otherResults[0], p3Data = otherResults[1], p4Data = otherResults[2];
+      var p2LogData = otherResults[3], p3LogData = otherResults[4], p4LogData = otherResults[5];
+      var failed = [p1Data, p2Data, p3Data, p4Data, p2LogData, p3LogData, p4LogData]
+        .filter(function(r){ return r && r.__failed; }).map(function(r){ return r.__failed; });
+      // เก็บข้อมูลไว้สำหรับการ switch project
+      window.lastRenderData = { session: session, p1: p1Data, p2: p2Data, p3: p3Data, p4: p4Data, p2Log: p2LogData, p3Log: p3LogData, p4Log: p4LogData };
+      document.getElementById('projectTabs').style.display = 'flex';
+      renderDashboard(session, p1Data, p2Data, p3Data, p4Data, p2LogData, p3LogData, p4LogData, 'overview');
+      if (failed.length) showFailureBanner(failed);
     });
-    var failed = results.filter(function(r){ return r && r.__failed; }).map(function(r){ return r.__failed; });
-    render(session, results[0], results[1], results[2], results[3], results[4], results[5], results[6]);
-    if (failed.length) showFailureBanner(failed);
+  }).catch(function(err) {
+    console.error('[Exec Dashboard] P1 load failed:', err);
+    showFailureBanner(['P1 - ' + (err.message || 'เชื่อมต่อไม่สำเร็จ')]);
   });
 }
 
@@ -316,6 +358,12 @@ function timeAgoTh(ts) {
   var d = new Date(ts);
   if (isNaN(d.getTime())) return '';
   return d.toLocaleString('th-TH', { day: 'numeric', month: 'short', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+}
+
+// Wrapper to handle project filtering
+function renderDashboard(session, p1, p2, p3, p4, p2Log, p3Log, p4Log, selectedProject) {
+  // For now, render all projects (overview) - can be enhanced to show only selected project
+  render(session, p1, p2, p3, p4, p2Log, p3Log, p4Log);
 }
 
 function render(session, p1, p2, p3, p4, p2Log, p3Log, p4Log) {

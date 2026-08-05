@@ -262,10 +262,13 @@ body {
 </nav>
 
 <main class="main">
-  <div class="hub-header">
-    <span class="hub-badge">Staff Hub</span>
-    <h1 class="hub-title">แบบฟอร์มกรอกข้อมูล</h1>
-    <p class="hub-subtitle">เลือกโครงการที่ต้องการกรอกข้อมูล</p>
+  <div class="hub-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+    <div>
+      <span class="hub-badge">Staff Hub</span>
+      <h1 class="hub-title">แบบฟอร์มกรอกข้อมูล</h1>
+      <p class="hub-subtitle">เลือกโครงการที่ต้องการกรอกข้อมูล</p>
+    </div>
+    <a href="calendar-event-editor.html" id="addEventsBtnHub" style="display:none;background:linear-gradient(135deg, #0f766e, #14b8a6);color:#fff;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;white-space:nowrap;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">📅 เพิ่มกิจกรรม</a>
   </div>
 
   <div class="profile-card" id="profileCard" style="display:none;">
@@ -360,12 +363,29 @@ body {
 
 <script>
   var rfUser = null;
-  try { rfUser = JSON.parse(localStorage.getItem('rf_user') || 'null'); } catch (e) {}
+  try {
+    var stored = localStorage.getItem('rf_user');
+    rfUser = stored ? JSON.parse(stored) : null;
+  } catch (e) {
+    rfUser = null;
+  }
+
+  console.log('[Staff Hub] rfUser:', rfUser ? { email: rfUser.email, role: rfUser.role } : null);
+
+  // Show "Add Events" button for any logged-in user (admin/executive priority)
+  if (rfUser && rfUser.token) {
+    var addBtn = document.getElementById('addEventsBtnHub');
+    if (addBtn) {
+      addBtn.style.display = 'inline-block';
+      console.log('[Staff Hub] Add Events button shown for', rfUser.role || 'staff');
+    }
+  }
 
   if (rfUser && (rfUser.role === 'executive' || rfUser.role === 'admin')) {
     document.getElementById('execLinkWrap').style.display = 'block';
     document.getElementById('execMenuItem').style.display = 'block';
   }
+
   if (rfUser && rfUser.role === 'admin') {
     document.getElementById('newsLinkWrap').style.display = 'block';
     document.getElementById('requestsLinkWrap').style.display = 'block';

@@ -2328,7 +2328,6 @@ function govToggleContrast() {
         </div>
       </div>
       <a href="news.html" style="display:inline-flex;align-items:center;gap:0.35rem;color:#64748b;font-size:0.8rem;font-weight:500;text-decoration:none;padding:0.3rem 0.65rem;border:1px solid #e2e8f0;border-radius:6px;font-family:Sarabun,sans-serif;">📰 ข่าวประชาสัมพันธ์</a>
-      <a href="calendar.html" style="display:inline-flex;align-items:center;gap:0.35rem;color:#64748b;font-size:0.8rem;font-weight:500;text-decoration:none;padding:0.3rem 0.65rem;border:1px solid #e2e8f0;border-radius:6px;font-family:Sarabun,sans-serif;">📅 ปฏิทินกิจกรรม</a>
       <div id="indexUserBadge" class="nav-dropdown" style="display:none;">
         <a href="#" class="nav-dropdown-toggle" onclick="return govToggleDropdown(event, this)" style="display:inline-flex;align-items:center;gap:0.4rem;background:#f1f5f9;border:1.5px solid #e2e8f0;padding:0.3rem 0.7rem;border-radius:20px;font-size:0.8rem;font-weight:600;color:#1e293b;text-decoration:none;">
           👤 <span id="indexUserName"></span>
@@ -8054,7 +8053,6 @@ window.navigateTo = navigateTo;
       <a href="index.html" style="color:#cbd5e1;text-decoration:none;">หน้าหลัก</a>
       <a href="about.html">เกี่ยวกับกองทุน</a>
       <a href="news.html">ข่าวประชาสัมพันธ์</a>
-      <a href="calendar.html">ปฏิทินกิจกรรม</a>
       <a href="login.html">สำหรับเจ้าหน้าที่</a>
     </div>
     <div class="footer-copy">© 2568 กองทุนหลักประกันสุขภาพจังหวัดระยอง · ปรับปรุงล่าสุด <span id="footerLastUpdated"></span></div>
@@ -8076,7 +8074,6 @@ window.navigateTo = navigateTo;
   <!-- Menu Dropdown -->
   <div id="fabMenu" style="display:none;position:absolute;bottom:64px;right:0;width:280px;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);overflow:hidden;font-family:Sarabun,sans-serif;">
     <div style="background:linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);color:#fff;padding:0.75rem 1rem;font-weight:700;font-size:0.9rem;">เลือกสิ่งที่ต้องการ</div>
-    <button onclick="showCalendarPanel()" style="display:flex;align-items:center;gap:0.75rem;width:100%;padding:0.75rem 1rem;border:none;background:none;color:#334155;font-size:0.9rem;font-family:inherit;font-weight:600;cursor:pointer;text-align:left;border-bottom:1px solid #e2e8f0;transition:all 0.2s;" onmouseover="this.style.background='#f0fdfa'" onmouseout="this.style.background='none'">📅 ดูปฏิทินกิจกรรม</button>
     <button onclick="showContactPanel()" style="display:flex;align-items:center;gap:0.75rem;width:100%;padding:0.75rem 1rem;border:none;background:none;color:#334155;font-size:0.9rem;font-family:inherit;font-weight:600;cursor:pointer;text-align:left;transition:all 0.2s;" onmouseover="this.style.background='#f0fdfa'" onmouseout="this.style.background='none'">📞 ติดต่อกองทุนฯ</button>
   </div>
 
@@ -8110,35 +8107,25 @@ window.navigateTo = navigateTo;
 window.toggleFabMenu = function() {
   var menu = document.getElementById('fabMenu');
   var contact = document.getElementById('contactPanel');
-  var cal = document.getElementById('calendar-float-widget');
   if (menu.style.display === 'flex') {
     menu.style.display = 'none';
   } else {
     menu.style.display = 'flex';
     contact.style.display = 'none';
-    cal.style.display = 'none';
   }
 };
 window.showContactPanel = function() {
   document.getElementById('fabMenu').style.display = 'none';
-  document.getElementById('calendar-float-widget').style.display = 'none';
   document.getElementById('contactPanel').style.display = 'block';
-};
-window.showCalendarPanel = function() {
-  document.getElementById('fabMenu').style.display = 'none';
-  document.getElementById('contactPanel').style.display = 'none';
-  document.getElementById('calendar-float-widget').style.display = 'flex';
 };
 window.closeFabPanels = function() {
   document.getElementById('fabMenu').style.display = 'none';
   document.getElementById('contactPanel').style.display = 'none';
-  document.getElementById('calendar-float-widget').style.display = 'none';
 };
 document.addEventListener('click', function(e) {
   var fab = document.getElementById('combinedFAB');
-  var cal = document.getElementById('calendar-float-widget');
   var contact = document.getElementById('contactPanel');
-  if (fab && !fab.contains(e.target) && cal && !cal.contains(e.target) && contact && !contact.contains(e.target)) {
+  if (fab && !fab.contains(e.target) && contact && !contact.contains(e.target)) {
     closeFabPanels();
   }
 });
@@ -8230,6 +8217,76 @@ document.addEventListener('DOMContentLoaded', function() {
     checkWeeklyEvents();
   }
 });
+</script>
+
+<!-- Event Notification Popup -->
+<div id="eventNotification" style="display:none;position:fixed;top:2rem;right:1.5rem;max-width:320px;background:#fff;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.2);padding:1rem;z-index:2500;font-family:Sarabun,sans-serif;border-left:4px solid #10b981;animation:slideIn 0.3s ease-out;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+    <div style="font-weight:700;color:#0f766e;font-size:0.95rem;">📅 มีกิจกรรม</div>
+    <button onclick="document.getElementById('eventNotification').style.display='none';" style="background:none;border:none;color:#94a3b8;font-size:1rem;cursor:pointer;padding:0;">✕</button>
+  </div>
+  <div id="eventNotificationContent" style="font-size:0.85rem;color:#475569;line-height:1.5;"></div>
+</div>
+
+<style>
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+</style>
+
+<script>
+// Load and display upcoming events as notification
+(function() {
+  var EVENTS_API = 'https://script.google.com/macros/s/AKfycbzRxsboi-rH2oS669v3xFesNpYcS1ndvHhjGRxfGq4UaVwYMEgPjz6WmLScSS1WVVSeGQ/exec';
+
+  function showEventNotification() {
+    fetch(EVENTS_API + '?action=events_list')
+      .then(function(r) { return r.json(); })
+      .then(function(json) {
+        if (!json.ok || !json.events || json.events.length === 0) return;
+
+        var todayStr = new Date().toISOString().split('T')[0];
+        var upcomingEvents = json.events.filter(function(ev) {
+          var eventDate = String(ev.event_date || '').slice(0, 10);
+          return eventDate >= todayStr;
+        }).slice(0, 3);
+
+        if (upcomingEvents.length === 0) return;
+
+        var html = '<div>';
+        upcomingEvents.forEach(function(ev) {
+          html += '<div style="margin-bottom:0.5rem;">' +
+                  '<div style="font-weight:600;color:#0f766e;">' + (ev.title || 'กิจกรรม') + '</div>' +
+                  '<div style="font-size:0.75rem;color:#64748b;">' + String(ev.event_date || '').slice(0, 10) + '</div>' +
+                  '</div>';
+        });
+        html += '</div>';
+
+        document.getElementById('eventNotificationContent').innerHTML = html;
+        document.getElementById('eventNotification').style.display = 'block';
+
+        setTimeout(function() {
+          document.getElementById('eventNotification').style.display = 'none';
+        }, 6000);
+      })
+      .catch(function(err) {
+        console.error('Event notification error:', err);
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', showEventNotification);
+  } else {
+    showEventNotification();
+  }
+})();
 </script>
 
 </body>

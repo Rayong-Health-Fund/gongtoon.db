@@ -35,11 +35,11 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
   border-radius: 8px; font-size: 0.8rem; color: #334155; position: relative; cursor: default;
 }
 .cal-day.empty { visibility: hidden; }
+.cal-day.holiday { background: #fef3c7 !important; font-weight: 700; color: #b45309; }
+.cal-day.holiday.has-event { background: linear-gradient(135deg, #fef3c7 0%, #f0fdf4 100%) !important; }
 .cal-day.today { background: #f0fdfa; font-weight: 800; color: #0f766e; border: 1.5px solid #5eead4; }
 .cal-day.has-event { background: #f0fdf4; font-weight: 700; color: #065f46; cursor: pointer; }
 .cal-day.has-event::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #10b981; position: absolute; bottom: 4px; }
-.cal-day.holiday { background: #fef3c7; font-weight: 700; color: #b45309; }
-.cal-day.holiday.has-event { background: linear-gradient(135deg, #fef3c7 0%, #f0fdf4 100%); }
 
 .upcoming-title { font-size: 1rem; font-weight: 800; margin-bottom: 0.9rem; color: #0f172a; }
 .event-item {
@@ -69,7 +69,7 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
   <div class="hero-title">📅 ปฏิทินกิจกรรม</div>
   <div class="hero-subtitle">กิจกรรมที่กำลังจะเกิดขึ้นของกองทุนฯ</div>
   <div style="margin-top:1.5rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
-    <button onclick="showAddEventModal()" style="display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,255,255,0.2);color:#fff;padding:0.45rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem;border:1px solid rgba(255,255,255,0.3);cursor:pointer;font-family:inherit;">➕ เพิ่มกิจกรรม</button>
+    <a href="calendar-event-editor.html" style="display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,255,255,0.2);color:#fff;padding:0.45rem 1rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;border:1px solid rgba(255,255,255,0.3);font-family:inherit;">➕ เพิ่มกิจกรรม</a>
   </div>
 </div>
 
@@ -86,44 +86,6 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
   <div>
     <div class="upcoming-title">🔜 กิจกรรมที่กำลังจะมาถึง</div>
     <div id="upcomingList"><div class="status-msg">กำลังโหลด...</div></div>
-  </div>
-</div>
-
-<!-- Modal เพิ่มกิจกรรม -->
-<div id="addEventModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.5);z-index:9999;align-items:center;justify-content:center;flex-direction:column;">
-  <div style="background:#fff;border-radius:14px;padding:2rem;max-width:500px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);font-family:Sarabun,sans-serif;">
-    <h2 style="font-size:1.2rem;font-weight:800;color:#0f172a;margin-bottom:1rem;">📅 เพิ่มกิจกรรม</h2>
-
-    <div style="margin-bottom:1rem;">
-      <label style="display:block;font-weight:600;font-size:0.9rem;color:#1e293b;margin-bottom:0.35rem;">ชื่อกิจกรรม</label>
-      <input type="text" id="eventTitle" placeholder="เช่น สัมมนา การประชุม" style="width:100%;padding:0.6rem;border:1.5px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:0.9rem;outline:none;">
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-      <div>
-        <label style="display:block;font-weight:600;font-size:0.9rem;color:#1e293b;margin-bottom:0.35rem;">วันเริ่มต้น</label>
-        <input type="date" id="eventStartDate" style="width:100%;padding:0.6rem;border:1.5px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:0.9rem;outline:none;">
-      </div>
-      <div>
-        <label style="display:block;font-weight:600;font-size:0.9rem;color:#1e293b;margin-bottom:0.35rem;">วันสิ้นสุด</label>
-        <input type="date" id="eventEndDate" style="width:100%;padding:0.6rem;border:1.5px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:0.9rem;outline:none;">
-      </div>
-    </div>
-
-    <div style="margin-bottom:1rem;">
-      <label style="display:block;font-weight:600;font-size:0.9rem;color:#1e293b;margin-bottom:0.35rem;">ที่ตั้ง/สถานที่</label>
-      <input type="text" id="eventLocation" placeholder="เช่น ห้อง 101 อาคาร B" style="width:100%;padding:0.6rem;border:1.5px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:0.9rem;outline:none;">
-    </div>
-
-    <div style="margin-bottom:1.5rem;">
-      <label style="display:block;font-weight:600;font-size:0.9rem;color:#1e293b;margin-bottom:0.35rem;">คำอธิบาย</label>
-      <textarea id="eventDescription" placeholder="อธิบายรายละเอียดเพิ่มเติม" style="width:100%;padding:0.6rem;border:1.5px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:0.9rem;outline:none;height:80px;resize:none;"></textarea>
-    </div>
-
-    <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
-      <button onclick="closeAddEventModal()" style="background:#f1f5f9;color:#1e293b;padding:0.6rem 1.2rem;border:1.5px solid #cbd5e1;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;">ยกเลิก</button>
-      <button onclick="submitEvent()" style="background:linear-gradient(135deg,#1db584,#0ea5a5);color:#fff;padding:0.6rem 1.2rem;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;">บันทึก</button>
-    </div>
   </div>
 </div>
 
@@ -177,6 +139,7 @@ function getSession() {
 }
 
 function load() {
+  renderCalendar();
   fetch(EVENTS_API_URL + '?action=events_list')
     .then(function(r) { return r.json(); })
     .then(function(json) {
@@ -251,90 +214,6 @@ function renderUpcoming() {
       + '</div>';
   }).join('');
 }
-
-// Modal functions
-function showAddEventModal() {
-  var session = getSession();
-  if (!session) {
-    alert('กรุณาล็อคอินก่อน');
-    return;
-  }
-  document.getElementById('addEventModal').style.display = 'flex';
-  // Set default dates
-  var today = new Date();
-  document.getElementById('eventStartDate').valueAsDate = today;
-  document.getElementById('eventEndDate').valueAsDate = today;
-}
-
-function closeAddEventModal() {
-  document.getElementById('addEventModal').style.display = 'none';
-  // Clear form
-  document.getElementById('eventTitle').value = '';
-  document.getElementById('eventLocation').value = '';
-  document.getElementById('eventDescription').value = '';
-}
-
-function submitEvent() {
-  var session = getSession();
-  if (!session) {
-    alert('กรุณาล็อคอินก่อน');
-    return;
-  }
-
-  var title = document.getElementById('eventTitle').value.trim();
-  var startDate = document.getElementById('eventStartDate').value;
-  var endDate = document.getElementById('eventEndDate').value;
-  var location = document.getElementById('eventLocation').value.trim();
-  var description = document.getElementById('eventDescription').value.trim();
-
-  if (!title) {
-    alert('กรุณากรอกชื่อกิจกรรม');
-    return;
-  }
-
-  if (!startDate) {
-    alert('กรุณาเลือกวันเริ่มต้น');
-    return;
-  }
-
-  // ส่ง API request
-  fetch(EVENTS_API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({
-      token: session.token,
-      action: 'event_create',
-      title: title,
-      event_date: startDate,
-      end_date: endDate || startDate,
-      location: location,
-      description: description
-    })
-  })
-    .then(function(r) { return r.json(); })
-    .then(function(json) {
-      if (json.ok) {
-        alert('เพิ่มกิจกรรมสำเร็จ');
-        closeAddEventModal();
-        // Reload calendar
-        load();
-      } else {
-        alert('เพิ่มกิจกรรมไม่สำเร็จ: ' + (json.error || 'ข้อผิดพลาดไม่ทราบ'));
-      }
-    })
-    .catch(function(err) {
-      alert('เชื่อมต่อไม่สำเร็จ: ' + err.message);
-      console.error(err);
-    });
-}
-
-// Close modal when clicking outside
-document.addEventListener('click', function(e) {
-  var modal = document.getElementById('addEventModal');
-  if (e.target === modal) {
-    closeAddEventModal();
-  }
-});
 
 (function() {
   var now = new Date();
