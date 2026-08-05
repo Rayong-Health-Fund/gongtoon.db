@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>กองทุนหลักประกันสุขภาพ จังหวัดระยอง</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 /* STABLE DESIGN - NO GLASSMORPHISM */
@@ -26,7 +26,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'Sarabun', sans-serif;
+  font-family: 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background:
     radial-gradient(ellipse at 18% 0%, rgba(255,212,100,0.42) 0%, transparent 38%),
     radial-gradient(ellipse at 5% 48%, rgba(255,168,168,0.38) 0%, transparent 38%),
@@ -37,8 +37,11 @@ body {
   background-attachment: fixed;
   color: var(--text-dark);
   font-size: 18px;
-  line-height: 1.5;
+  line-height: 1.6;
+  letter-spacing: 0.2px;
   padding-bottom: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* SIMPLE COVER IMAGE */
@@ -269,6 +272,55 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
 .badge-bronze-mini {
   background: linear-gradient(135deg, #d97706, #b45309);
   color: #fef3c7;
+}
+
+/* SKELETON SHIMMER ANIMATION */
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* WELCOME SPLASH ANIMATIONS */
+@keyframes bounce-pulse {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.1) translateY(-10px); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* FLOATING CONTACT BUTTON - VIBRANT ANIMATION */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 6px 20px rgba(15,118,110,0.5),
+                0 0 0 0 rgba(15,118,110,0.7);
+  }
+  50% {
+    box-shadow: 0 8px 28px rgba(15,118,110,0.7),
+                0 0 0 12px rgba(15,118,110,0);
+  }
+}
+
+@keyframes scale-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+#contactBtn {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+#contactBtn:hover {
+  animation: pulse-glow 1s ease-in-out infinite, scale-pulse 0.6s ease-in-out infinite;
+  box-shadow: 0 10px 32px rgba(15,118,110,0.8) !important;
+  background: linear-gradient(135deg, #0f766e 0%, #2d9d94 100%) !important;
+  transform: translateY(-3px);
+}
+
+#contactBtn:active {
+  transform: translateY(-1px) scale(0.96);
 }
 
 /* Coming Soon Slots */
@@ -2136,22 +2188,34 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
   position:fixed;inset:0;z-index:5000;display:none;
   background:linear-gradient(135deg, #0f766e 0%, #115e59 100%);
   color:#fff;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-  padding:2rem;font-family:'Sarabun',sans-serif;">
+  padding:2rem;font-family:'Sarabun','Inter',-apple-system,sans-serif;">
 
-  <div style="font-size:3.5rem;margin-bottom:1.5rem;">🏥</div>
+  <div style="font-size:3.5rem;margin-bottom:1.5rem;animation:bounce-pulse 2s ease-in-out infinite;">🏥</div>
 
-  <h1 style="font-size:2.2rem;font-weight:800;margin:0 0 0.5rem 0;line-height:1.2;">กองทุนหลักประกันสุขภาพ จังหวัดระยอง</h1>
+  <h1 style="font-size:2.2rem;font-weight:800;margin:0 0 0.5rem 0;line-height:1.2;letter-spacing:-0.5px;">กองทุนหลักประกันสุขภาพ จังหวัดระยอง</h1>
 
-  <p style="font-size:1.05rem;margin:0 0 2rem 0;opacity:0.9;max-width:450px;line-height:1.6;">
+  <p style="font-size:1.05rem;margin:0 0 0.8rem 0;opacity:0.9;max-width:450px;line-height:1.6;font-weight:300;">
     เพื่อคุณภาพชีวิตที่ดีของคนระยองอย่างยั่งยืน
   </p>
 
+  <div style="font-size:0.85rem;margin:0 0 2rem 0;opacity:0.8;max-width:480px;line-height:1.5;padding:1rem;background:rgba(255,255,255,0.1);border-radius:10px;border:1px solid rgba(255,255,255,0.2);">
+    <div style="margin-bottom:0.5rem;font-weight:600;">ℹ️ ข้อมูลสำคัญ</div>
+    <div>• ที่อยู่: 140 ม.2 ถ.สุขุมวิท ต.เนินพระ อ.เมือง จ.ระยอง 21000</div>
+    <div>• โทร: 038-617-430 ต่อ 203 | Line: 095-819-0720</div>
+    <div>• เว็บไซต์นี้ใช้เพื่อจัดการข้อมูลโครงการและการเข้าถึงข้อมูลส่วนบุคคลต้องล็อกอิน</div>
+  </div>
+
   <button onclick="dismissWelcomeSplash()" style="
     background:#fff;color:#0f766e;border:none;padding:0.8rem 2.5rem;border-radius:8px;
-    font-family:'Sarabun',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;
-    box-shadow:0 6px 20px rgba(0,0,0,0.25);transition:transform 0.2s;cursor:pointer;">
+    font-family:'Sarabun','Inter',-apple-system,sans-serif;font-size:1rem;font-weight:700;cursor:pointer;
+    box-shadow:0 6px 20px rgba(0,0,0,0.25);transition:all 0.3s;cursor:pointer;">
     เข้าสู่เว็บไซต์ →
   </button>
+
+  <div style="margin-top:2rem;font-size:0.8rem;opacity:0.7;display:flex;align-items:center;gap:0.5rem;">
+    <div style="width:6px;height:6px;background:#fff;border-radius:50%;animation:pulse-dot 1.5s ease-in-out infinite;"></div>
+    กำลังเตรียมข้อมูล...
+  </div>
 </div>
 <script>
 (function() {
@@ -3191,7 +3255,13 @@ document.addEventListener('click', function(e) {
         <div id="tab4-centers" class="tab-content">
           <h6 class="section-header">🏥 ศูนย์บริการที่เปิดให้บริการ แยกตามอำเภอ</h6>
           <p style="font-size:0.75rem;color:var(--text-gray);margin-bottom:1rem;">รายชื่อศูนย์ซ่อม/ดัดแปลงอุปกรณ์ที่เปิดให้บริการ และกลุ่มอุปกรณ์ที่แต่ละศูนย์รับซ่อม</p>
-          <div id="p4CentersBody"><p style="padding:1rem;color:var(--text-gray);">⏳ กำลังโหลด...</p></div>
+          <div id="p4CentersBody">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;padding:1rem 0;">
+              <div class="skeleton-card" style="height:120px;background:linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%);background-size:200% 100%;animation:shimmer 2s infinite;border-radius:10px;"></div>
+              <div class="skeleton-card" style="height:120px;background:linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%);background-size:200% 100%;animation:shimmer 2s infinite 0.3s;border-radius:10px;"></div>
+              <div class="skeleton-card" style="height:120px;background:linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%);background-size:200% 100%;animation:shimmer 2s infinite 0.6s;border-radius:10px;"></div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -7842,16 +7912,19 @@ window.navigateTo = navigateTo;
       <a href="https://maps.app.goo.gl/XLqJxpYksk582T5g6" target="_blank" style="flex:1;text-align:center;background:#fef2f2;color:#ea4335;text-decoration:none;font-size:0.78rem;font-weight:700;padding:0.4rem;border-radius:8px;">🗺️ แผนที่</a>
     </div>
   </div>
-  <button onclick="toggleContactPopover()" style="width:56px;height:56px;border-radius:50%;background:#0f766e;color:#fff;border:none;box-shadow:0 4px 16px rgba(30,64,175,0.4);font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="ติดต่อกองทุนฯ">📞</button>
+  <button id="contactBtn" onclick="toggleContactPopover()" style="width:56px;height:56px;border-radius:50%;background:#0f766e;color:#fff;border:none;box-shadow:0 6px 20px rgba(15,118,110,0.5);font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;font-weight:bold;" title="ติดต่อกองทุนฯ">📞</button>
 </div>
 <script>
-function toggleContactPopover() {
+window.toggleContactPopover = function() {
   var el = document.getElementById('contactPopover');
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+};
 document.addEventListener('click', function(e) {
   var wrap = document.getElementById('fabContact');
-  if (wrap && !wrap.contains(e.target)) document.getElementById('contactPopover').style.display = 'none';
+  if (wrap && !wrap.contains(e.target)) {
+    var popover = document.getElementById('contactPopover');
+    if (popover) popover.style.display = 'none';
+  }
 });
 </script>
 
