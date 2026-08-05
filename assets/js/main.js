@@ -139,22 +139,6 @@ function p1RenderError() {
   if (notifDot) notifDot.style.display = 'none';
 }
 
-function renderProject1Dashboard() {
-  Promise.all([
-    fetchProject1Data('all_house'),
-    fetchProject1Data('การตอบแบบฟอร์ม 1')
-  ]).then(function(results) {
-    p1RenderContent(results[0], results[1]);
-  }).catch(function(err) {
-    console.warn('Project 1 fetch error:', err);
-    p1RenderError();
-  });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  renderProject1Dashboard();
-});
-
 // ═══════════════════════════════════════════════════════════════════════════
 // PROJECT 2 — Medical Equipment (ศูนย์สาธิตและยืมอุปกรณ์)
 // ═══════════════════════════════════════════════════════════════════════════
