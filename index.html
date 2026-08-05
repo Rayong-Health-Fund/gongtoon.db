@@ -54,6 +54,23 @@ body {
 }
 
 /* NAVIGATION */
+/* SIDEBAR */
+.sidebar {
+  width: 260px; background: var(--white); border-right: 1.5px solid var(--border-light);
+  display: flex; flex-direction: column; max-height: 100vh; overflow-y: auto;
+  position: fixed; left: 0; top: 0; z-index: 50; transition: transform 0.3s ease;
+}
+.sidebar-header { padding: 1rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+.sidebar-nav { flex: 1; padding: 0; margin: 0; list-style: none; }
+.sidebar-nav-item { border-bottom: 1px solid #f1f5f9; }
+.sidebar-nav-link {
+  display: flex; align-items: center; gap: 0.75rem; padding: 0.9rem 1rem; color: #475569;
+  text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s, color 0.2s;
+}
+.sidebar-nav-link:hover { background: #f0fdfa; color: var(--primary-blue); }
+.sidebar-nav-link.active { background: #ccfbf1; color: var(--primary-blue); border-left: 3px solid var(--primary-blue); padding-left: calc(1rem - 3px); font-weight: 600; }
+.sidebar-toggle { display: none; background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--primary-blue); }
+
 .navbar {
   background: var(--white);
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -103,9 +120,12 @@ body {
 .gov-a11y button.active { background: #0f766e; border-color: #0f766e; color: #fff; }
 
 /* NAV DROPDOWN (เกี่ยวกับกองทุน) */
-.nav-dropdown { position: relative; display: inline-block; }
+.nav-dropdown {
+  position: relative; display: inline-block;
+  padding-bottom: 0.5rem;
+}
 .nav-dropdown-menu {
-  display: none; position: absolute; top: 100%; left: 0; margin-top: 0.4rem;
+  display: none; position: absolute; top: 100%; left: 0; margin-top: 0;
   background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.1); min-width: 210px; padding: 0.4rem; z-index: 1100;
 }
@@ -116,9 +136,7 @@ body {
   font-family: Sarabun, sans-serif;
 }
 .nav-dropdown-menu a:hover { background: #f1f5f9; color: #0f766e; }
-@media (hover: hover) {
-  .nav-dropdown:hover .nav-dropdown-menu { display: block; }
-}
+.nav-dropdown:hover .nav-dropdown-menu { display: block; }
 
 /* HIGH CONTRAST MODE */
 body.gov-contrast { background: #000 !important; color: #fff !important; }
@@ -2179,6 +2197,13 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
   .p4-drill2-tbl { font-size: 0.65rem; }
   .p4-drill2-tbl thead th, .p4-drill2-tbl tbody td { padding: 0.2rem 0.3rem; }
 }
+
+/* RESPONSIVE SIDEBAR */
+@media (max-width: 768px) {
+  .sidebar { position: fixed; left: 0; top: 50px; width: 100%; height: auto; max-height: none; border-right: none; border-bottom: 1.5px solid var(--border-light); transform: translateX(-100%); z-index: 150; }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-toggle { display: block; }
+}
 </style>
 </head>
 <body>
@@ -2283,13 +2308,14 @@ function govToggleContrast() {
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="container-custom" style="display:flex;align-items:center;justify-content:space-between;">
+    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
     <a href="#" class="navbar-brand" onclick="return false;">
       <div class="navbar-logo" style="background:#fff;padding:3px;"><img src="assets/img/logo.jpg" alt="โลโก้กองทุนหลักประกันสุขภาพจังหวัดระยอง" style="width:100%;height:100%;object-fit:contain;border-radius:6px;display:block;"></div>
       <span>กองทุนหลักประกันสุขภาพจังหวัดระยอง</span>
     </a>
     <div style="display:flex;align-items:center;gap:0.5rem;">
       <div class="nav-dropdown">
-        <a href="about.html" class="nav-dropdown-toggle" onclick="return govToggleDropdown(event, this)" style="display:inline-flex;align-items:center;gap:0.35rem;color:#64748b;font-size:0.8rem;font-weight:500;text-decoration:none;padding:0.3rem 0.65rem;border:1px solid #e2e8f0;border-radius:6px;font-family:Sarabun,sans-serif;">ℹ️ เกี่ยวกับกองทุน</a>
+        <a href="#" class="nav-dropdown-toggle" onclick="return govToggleDropdown(event, this)" style="display:inline-flex;align-items:center;gap:0.35rem;color:#64748b;font-size:0.8rem;font-weight:500;text-decoration:none;padding:0.3rem 0.65rem;border:1px solid #e2e8f0;border-radius:6px;font-family:Sarabun,sans-serif;">ℹ️ เกี่ยวกับกองทุน</a>
         <div class="nav-dropdown-menu">
           <a href="about.html#history">📜 ประวัติความเป็นมา</a>
           <a href="about.html#mission">🎯 วิสัยทัศน์ พันธกิจ ยุทธศาสตร์</a>
@@ -2324,8 +2350,56 @@ function govToggleContrast() {
   </div>
 </nav>
 
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar" style="display:none;">
+  <div class="sidebar-header">
+    <span style="font-weight:600;color:#0f172a;">เมนู</span>
+    <button class="sidebar-toggle" id="sidebarCloseBtn" style="display:none;font-size:1.3rem;">✕</button>
+  </div>
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      <a href="index.html" class="sidebar-nav-link active">🏠 หน้าหลัก</a>
+    </li>
+    <li class="sidebar-nav-item">
+      <a href="staff-hub.html" class="sidebar-nav-link">📝 แบบฟอร์มกรอกข้อมูล</a>
+    </li>
+  </ul>
+</aside>
 
 <script>
+// ── SIDEBAR TOGGLE ──
+var sidebar = document.getElementById('sidebar');
+var sidebarToggle = document.getElementById('sidebarToggle');
+var sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+
+if (sidebarToggle) {
+  sidebarToggle.addEventListener('click', function() {
+    sidebar.style.display = sidebar.style.display === 'none' ? 'flex' : 'none';
+    sidebar.classList.toggle('open');
+    if (sidebar.classList.contains('open')) {
+      sidebarCloseBtn.style.display = 'block';
+    }
+  });
+}
+if (sidebarCloseBtn) {
+  sidebarCloseBtn.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    sidebar.style.display = 'none';
+    sidebarCloseBtn.style.display = 'none';
+  });
+}
+
+var sidebarLinks = document.querySelectorAll('.sidebar-nav-link');
+sidebarLinks.forEach(function(link) {
+  link.addEventListener('click', function() {
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('open');
+      sidebar.style.display = 'none';
+      sidebarCloseBtn.style.display = 'none';
+    }
+  });
+});
+
 (function() {
   try {
     var rfu = JSON.parse(localStorage.getItem('rf_user') || 'null');
@@ -2465,7 +2539,6 @@ function renderNewsPreview(items) {
 loadNewsPreview();
 
 function govToggleDropdown(e, toggleEl) {
-  if (window.matchMedia && window.matchMedia('(hover: hover)').matches) return true;
   e.preventDefault();
   var menu = toggleEl.parentElement.querySelector('.nav-dropdown-menu');
   var wasOpen = menu.classList.contains('open');

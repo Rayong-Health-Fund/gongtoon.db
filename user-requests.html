@@ -8,11 +8,22 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+.page-wrapper { display: flex; min-height: 100vh; flex-direction: row; }
 .navbar {
   background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
+  position: sticky; top: 0; z-index: 100; width: 100%; order: -1;
 }
+.sidebar { width: 260px; background: #fff; border-right: 1.5px solid #e2e8f0; display: flex; flex-direction: column; max-height: 100vh; overflow-y: auto; position: fixed; left: 0; top: 0; z-index: 50; transition: transform 0.3s ease; }
+.sidebar-header { padding: 1rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; }
+.sidebar-nav { flex: 1; padding: 0; margin: 0; list-style: none; }
+.sidebar-nav-item { border-bottom: 1px solid #f1f5f9; }
+.sidebar-nav-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.9rem 1rem; color: #475569; text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s, color 0.2s; }
+.sidebar-nav-link:hover { background: #f0fdfa; color: #0f766e; }
+.sidebar-nav-link.active { background: #ccfbf1; color: #0f766e; border-left: 3px solid #0f766e; padding-left: calc(1rem - 3px); font-weight: 600; }
+.sidebar-toggle { display: none; background: none; border: none; cursor: pointer; font-size: 1.5rem; color: #0f766e; }
+.main-wrapper { flex: 1; margin-left: 260px; display: flex; flex-direction: column; }
+@media (max-width: 768px) { .page-wrapper { flex-direction: column; } .navbar { width: 100%; position: fixed; top: 0; left: 0; right: 0; z-index: 200; order: 0; } .sidebar { position: fixed; left: 0; top: 60px; width: 100%; height: auto; max-height: none; border-right: none; border-bottom: 1.5px solid #e2e8f0; transform: translateX(-100%); z-index: 150; } .sidebar.open { transform: translateX(0); } .sidebar-toggle { display: block; } .main-wrapper { margin-left: 0; margin-top: 60px; } .container { margin: 2rem auto; } }
 .navbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; color: #0f172a; text-decoration: none; }
 .navbar-logo { width: 38px; height: 38px; background: #7c3aed; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: white; }
 .nav-back-btn { background: #f1f5f9; border: 1.5px solid #e2e8f0; color: #1e293b; padding: 0.35rem 0.9rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
@@ -43,7 +54,9 @@ h3 { margin-bottom: 1rem; }
 </head>
 <body>
 
+<div class="page-wrapper">
 <nav class="navbar">
+  <button class="sidebar-toggle" id="sidebarToggle">☰</button>
   <a href="staff-hub.html" class="navbar-brand">
     <div class="navbar-logo" style="background:#fff;padding:3px;"><img src="assets/img/logo.jpg" alt="โลโก้กองทุนหลักประกันสุขภาพจังหวัดระยอง" style="width:100%;height:100%;object-fit:contain;border-radius:6px;display:block;"></div>
     <span>คำขอสมัครใช้งาน</span>
@@ -51,9 +64,42 @@ h3 { margin-bottom: 1rem; }
   <a href="staff-hub.html" class="nav-back-btn">← กลับ Staff Hub</a>
 </nav>
 
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span style="font-weight:600;color:#0f172a;">เมนู</span>
+    <button class="sidebar-toggle" id="sidebarCloseBtn" style="display:none;font-size:1.3rem;">✕</button>
+  </div>
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item"><a href="index.html" class="sidebar-nav-link">🏠 หน้าหลัก</a></li>
+    <li class="sidebar-nav-item"><a href="staff-hub.html" class="sidebar-nav-link">📝 แบบฟอร์มกรอกข้อมูล</a></li>
+    <li class="sidebar-nav-item"><a href="news-editor.html" class="sidebar-nav-link">📰 จัดการข่าว</a></li>
+    <li class="sidebar-nav-item"><a href="user-requests.html" class="sidebar-nav-link active">👥 คำขอสมัครใช้งาน</a></li>
+    <li class="sidebar-nav-item"><a href="admin-inbox.html" class="sidebar-nav-link">📥 รายการใหม่</a></li>
+    <li class="sidebar-nav-item" id="execMenuItem" style="display:none;"><a href="executive-dashboard.html" class="sidebar-nav-link">📊 สรุปผู้บริหาร</a></li>
+  </ul>
+</aside>
+
+<div class="main-wrapper">
 <div class="container" id="app">
   <div class="status-msg">กำลังตรวจสอบสิทธิ์...</div>
 </div>
+</div>
+</div>
+
+<script>
+var sidebar = document.getElementById('sidebar');
+var sidebarToggle = document.getElementById('sidebarToggle');
+var sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+if (sidebarToggle) {
+  sidebarToggle.addEventListener('click', function() { sidebar.classList.toggle('open'); if (sidebar.classList.contains('open')) sidebarCloseBtn.style.display = 'block'; });
+}
+if (sidebarCloseBtn) {
+  sidebarCloseBtn.addEventListener('click', function() { sidebar.classList.remove('open'); sidebarCloseBtn.style.display = 'none'; });
+}
+document.querySelectorAll('.sidebar-nav-link').forEach(function(link) {
+  link.addEventListener('click', function() { if (window.innerWidth <= 768) { sidebar.classList.remove('open'); sidebarCloseBtn.style.display = 'none'; } });
+});
+</script>
 
 <script>
 var USERS_API_URL = 'https://script.google.com/macros/s/AKfycbxUrn_I2gWfq592V18zeMgamm9KSzMGtPXSdzElEmQXfYAevsSREBco1kGggc4xTT6R/exec';

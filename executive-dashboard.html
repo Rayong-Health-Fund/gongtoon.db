@@ -127,11 +127,42 @@ body {
 .role-admin, .role-executive { background:#fef3c7; color:#92400e; }
 .user-badge-logout { color: #fca5a5; text-decoration: none; font-size: 0.78rem; font-weight: 700; }
 .user-badge-logout:hover { text-decoration: underline; }
+
+/* SIDEBAR */
+.page-wrapper { display: flex; min-height: 100vh; flex-direction: row; }
+.sidebar { width: 260px; background: #fff; border-right: 1.5px solid #e2e8f0; display: flex; flex-direction: column; max-height: 100vh; overflow-y: auto; position: fixed; left: 0; top: 0; z-index: 50; transition: transform 0.3s ease; }
+.sidebar-header { padding: 1rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; }
+.sidebar-nav { flex: 1; padding: 0; margin: 0; list-style: none; }
+.sidebar-nav-item { border-bottom: 1px solid #f1f5f9; }
+.sidebar-nav-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.9rem 1rem; color: #475569; text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s, color 0.2s; }
+.sidebar-nav-link:hover { background: #f0fdfa; color: #0f766e; }
+.sidebar-nav-link.active { background: #ccfbf1; color: #0f766e; border-left: 3px solid #0f766e; padding-left: calc(1rem - 3px); font-weight: 600; }
+.sidebar-toggle { display: none; background: none; border: none; cursor: pointer; font-size: 1.5rem; color: #0f766e; }
+.topbar { margin-left: 260px; }
+.container { margin-left: 0; }
+@media (max-width: 768px) { .topbar { margin-left: 0; } .sidebar { position: fixed; left: 0; top: 0; width: 100%; height: auto; max-height: none; border-right: none; border-bottom: 1.5px solid #e2e8f0; transform: translateX(-100%); z-index: 150; } .sidebar.open { transform: translateX(0); } .sidebar-toggle { display: block; } }
 </style>
 </head>
 <body>
 
+<div class="page-wrapper">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span style="font-weight:600;color:#0f172a;">เมนู</span>
+    <button class="sidebar-toggle" id="sidebarCloseBtn" style="display:none;font-size:1.3rem;">✕</button>
+  </div>
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item"><a href="index.html" class="sidebar-nav-link">🏠 หน้าหลัก</a></li>
+    <li class="sidebar-nav-item"><a href="staff-hub.html" class="sidebar-nav-link">📝 แบบฟอร์มกรอกข้อมูล</a></li>
+    <li class="sidebar-nav-item"><a href="news-editor.html" class="sidebar-nav-link">📰 จัดการข่าว</a></li>
+    <li class="sidebar-nav-item"><a href="user-requests.html" class="sidebar-nav-link">👥 คำขอสมัครใช้งาน</a></li>
+    <li class="sidebar-nav-item"><a href="admin-inbox.html" class="sidebar-nav-link">📥 รายการใหม่</a></li>
+    <li class="sidebar-nav-item"><a href="executive-dashboard.html" class="sidebar-nav-link active">📊 สรุปผู้บริหาร</a></li>
+  </ul>
+</aside>
+
 <div class="topbar">
+  <button class="sidebar-toggle" id="sidebarToggle">☰</button>
   <div>
     <h1>📊 สรุปผู้บริหาร</h1>
     <div class="sub">กองทุนหลักประกันสุขภาพ จังหวัดระยอง</div>
@@ -436,5 +467,21 @@ function render(session, p1, p2, p3, p4, p2Log, p3Log, p4Log) {
 init();
 </script>
 
+<script>
+var sidebar = document.getElementById('sidebar');
+var sidebarToggle = document.getElementById('sidebarToggle');
+var sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+if (sidebarToggle) {
+  sidebarToggle.addEventListener('click', function() { sidebar.classList.toggle('open'); if (sidebar.classList.contains('open')) sidebarCloseBtn.style.display = 'block'; });
+}
+if (sidebarCloseBtn) {
+  sidebarCloseBtn.addEventListener('click', function() { sidebar.classList.remove('open'); sidebarCloseBtn.style.display = 'none'; });
+}
+document.querySelectorAll('.sidebar-nav-link').forEach(function(link) {
+  link.addEventListener('click', function() { if (window.innerWidth <= 768) { sidebar.classList.remove('open'); sidebarCloseBtn.style.display = 'none'; } });
+});
+</script>
+
+</div>
 </body>
 </html>

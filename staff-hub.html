@@ -161,6 +161,7 @@ body {
 @media (max-width: 560px) {
   .forms-grid { grid-template-columns: 1fr; }
   .hub-title { font-size: 1.5rem; }
+  .main { margin: 1.5rem auto; padding: 0 0.75rem; }
 }
 
 .form-card {
@@ -285,7 +286,7 @@ body {
     <a href="entry-form.html" class="form-card p1">
       <div class="form-card-icon">🏠</div>
       <div class="form-card-label">โครงการที่ 1</div>
-      <div class="form-card-title">ปรับสภาพบ้านคนพิการ / ผู้สูงอายุ</div>
+      <div class="form-card-title">โครงการปรับสภาพแวดล้อมที่อยู่อาศัยสำหรับคนพิการ ผู้สูงอายุ ผู้ป่วยที่อยู่ในระยะกึ่งเฉียบพลันและผู้ที่มีภาวะพึ่งพิง</div>
       <div class="form-card-desc">กรอกข้อมูลการปรับปรุงที่พักอาศัย</div>
       <div class="form-card-arrow">เปิดแบบฟอร์ม →</div>
     </a>
@@ -293,7 +294,7 @@ body {
     <a href="entry-form-project2.html" class="form-card p2">
       <div class="form-card-icon">🩺</div>
       <div class="form-card-label">โครงการที่ 2</div>
-      <div class="form-card-title">อุปกรณ์ทางการแพทย์</div>
+      <div class="form-card-title">ศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้าน</div>
       <div class="form-card-desc">กรอกข้อมูลอุปกรณ์และหน่วยบริการ</div>
       <div class="form-card-arrow">เปิดแบบฟอร์ม →</div>
     </a>
@@ -301,7 +302,7 @@ body {
     <a href="entry-form-project3.html" class="form-card p3">
       <div class="form-card-icon">📋</div>
       <div class="form-card-label">โครงการที่ 3</div>
-      <div class="form-card-title">โครงการฟื้นฟูสมรรถภาพ</div>
+      <div class="form-card-title">โครงการพัฒนาเครือข่ายบริการเพื่อฟื้นฟูสมรรถภาพผู้พิการ และผู้สูงอายุที่อยู่ในระยะที่จำเป็นต้องได้รับการฟื้นฟูสมรรถภาพ</div>
       <div class="form-card-desc">กรอกข้อมูลโครงการและงบประมาณ</div>
       <div class="form-card-arrow">เปิดแบบฟอร์ม →</div>
     </a>
@@ -309,7 +310,7 @@ body {
     <a href="entry-form-project4.html" class="form-card p4">
       <div class="form-card-icon">🛠️</div>
       <div class="form-card-label">โครงการที่ 4</div>
-      <div class="form-card-title">อุปกรณ์เครื่องช่วยความพิการ</div>
+      <div class="form-card-title">ศูนย์ซ่อมบำรุง ดัดแปลงและจัดทำเฉพาะอุปกรณ์เครื่องช่วยความพิการ</div>
       <div class="form-card-desc">กรอกข้อมูลอุปกรณ์ช่วยเหลือผู้พิการ</div>
       <div class="form-card-arrow">เปิดแบบฟอร์ม →</div>
     </a>
@@ -363,11 +364,15 @@ body {
 
   if (rfUser && (rfUser.role === 'executive' || rfUser.role === 'admin')) {
     document.getElementById('execLinkWrap').style.display = 'block';
+    document.getElementById('execMenuItem').style.display = 'block';
   }
   if (rfUser && rfUser.role === 'admin') {
     document.getElementById('newsLinkWrap').style.display = 'block';
     document.getElementById('requestsLinkWrap').style.display = 'block';
     document.getElementById('inboxLinkWrap').style.display = 'block';
+    document.getElementById('newsMenuItem').style.display = 'block';
+    document.getElementById('requestsMenuItem').style.display = 'block';
+    document.getElementById('inboxMenuItem').style.display = 'block';
   }
 
   var roleLabels = { staff: 'เจ้าหน้าที่', admin: 'ผู้ดูแลระบบ', executive: 'ผู้บริหาร' };
