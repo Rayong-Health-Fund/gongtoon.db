@@ -284,21 +284,30 @@ function handleSubmit(e) {
   }
 
   // ส่ง API request
+  var payload = {
+    token: session.token,
+    action: 'event_create',
+    title: title,
+    event_date: startDate,
+    end_date: endDate,
+    location: location,
+    description: description
+  };
+
+  console.log('[Event Editor] Submitting:', payload);
+  showError('กำลังบันทึก...');
+
   fetch(EVENTS_API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({
-      token: session.token,
-      action: 'event_create',
-      title: title,
-      event_date: startDate,
-      end_date: endDate,
-      location: location,
-      description: description
-    })
+    body: JSON.stringify(payload)
   })
-    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      console.log('[Event Editor] Response status:', r.status);
+      return r.json();
+    })
     .then(function(json) {
+      console.log('[Event Editor] Response:', json);
       if (json.ok) {
         showSuccess('✓ เพิ่มกิจกรรมสำเร็จ');
         setTimeout(function() {
@@ -309,8 +318,8 @@ function handleSubmit(e) {
       }
     })
     .catch(function(err) {
+      console.error('[Event Editor] Error:', err);
       showError('เชื่อมต่อไม่สำเร็จ: ' + err.message);
-      console.error(err);
     });
 }
 

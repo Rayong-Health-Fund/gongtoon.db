@@ -146,20 +146,30 @@ function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents);
     const session = validateSession_(body.token);
-    if (!session || session.role !== 'admin') {
-      return jsonOutput_({ ok: false, error: 'เฉพาะกองทุนฯ (admin) เท่านั้นที่จัดการข่าวได้' });
+    if (!session) {
+      return jsonOutput_({ ok: false, error: 'ต้องมี token ที่ถูกต้อง' });
     }
 
     const action = String(body.action || '').toLowerCase();
+
+    // Event actions: อนุญาต admin, staff, executive
+    if (action === 'event_create') return handleEventCreate_(session, body);
+    if (action === 'event_update') return handleEventUpdate_(session, body);
+    if (action === 'event_delete') return handleEventDelete_(session, body);
+    if (action === 'events_list') return handleEventsList_(session, body);
+
+    // News/Gallery actions: admin เท่านั้น
+    if (session.role !== 'admin') {
+      return jsonOutput_({ ok: false, error: 'เฉพาะกองทุนฯ (admin) เท่านั้นที่จัดการข่าวได้' });
+    }
+
     if (action === 'create') return handleNewsCreate_(session, body);
     if (action === 'update') return handleNewsUpdate_(session, body);
     if (action === 'delete') return handleNewsDelete_(session, body);
     if (action === 'gallery_create') return handleGalleryCreate_(session, body);
     if (action === 'gallery_update') return handleGalleryUpdate_(session, body);
     if (action === 'gallery_delete') return handleGalleryDelete_(session, body);
-    if (action === 'event_create') return handleEventCreate_(session, body);
-    if (action === 'event_update') return handleEventUpdate_(session, body);
-    if (action === 'event_delete') return handleEventDelete_(session, body);
+
     return jsonOutput_({ ok: false, error: 'ไม่รู้จัก action: ' + action });
   } catch (err) {
     return jsonOutput_({ ok: false, error: String(err) });
@@ -579,6 +589,11 @@ function handleEventDelete_(session, body) {
     }
   }
   return jsonOutput_({ ok: false, error: 'ไม่พบกิจกรรมนี้' });
+}
+
+function handleEventsList_(session, body) {
+  // Return all events (public API for calendar widget)
+  return jsonOutput_({ ok: true, events: getAllEvents_() });
 }
 
 function getAllEvents_() {
