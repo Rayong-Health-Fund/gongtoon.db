@@ -2241,20 +2241,6 @@ function dismissWelcomeSplash() {
 <!-- SIMPLE COVER IMAGE -->
 <img src="assets/img/cover.jpg" alt="กองทุนหลักประกันสุขภาพ จังหวัดระยอง — เพื่อคุณภาพชีวิตที่ดีของคนระยองอย่างยั่งยืน" class="cover-image">
 
-<!-- PDPA PRIVACY WARNING BANNER -->
-<div style="background:linear-gradient(90deg, #fef2f2 0%, #fee2e2 100%);border-bottom:2px solid #fca5a5;padding:1rem 1.5rem;font-size:0.95rem;color:#7c2d2d;border-radius:0;">
-  <div style="max-width:1200px;margin:0 auto;display:flex;gap:0.75rem;align-items:flex-start;">
-    <span style="font-size:1.2rem;flex-shrink:0;">⚠️</span>
-    <div>
-      <strong style="display:block;margin-bottom:0.3rem;">ประกาศเรื่องการปกป้องข้อมูลส่วนบุคคล (PDPA)</strong>
-      <p style="margin:0;line-height:1.5;opacity:0.9;">
-        เว็บไซต์นี้ใช้จัดการข้อมูลโครงการและผู้รับประโยชน์ ข้อมูลส่วนบุคคลได้รับการปกป้องตามกฎหมาย ในการเข้าถึงข้อมูลส่วนบุคคลต้องล็อกอิน |
-        <a href="about.html#contact" style="color:#c41e3a;text-decoration:underline;font-weight:600;">ติดต่อเพิ่มเติม</a>
-      </p>
-    </div>
-  </div>
-</div>
-
 <!-- GOV TOP UTILITY BAR -->
 <div class="gov-topbar">
   <div class="gov-topbar-date" id="govTopbarDate"></div>
@@ -2586,6 +2572,14 @@ document.addEventListener('click', function(e) {
           <span style="font-size:1.4rem;">🏠</span>
           <div><strong>โครงการนี้คืออะไร:</strong> กองทุนฯ สนับสนุนงบประมาณปรับปรุง/ซ่อมแซมที่อยู่อาศัยให้ปลอดภัยและเหมาะสม สำหรับผู้พิการ ผู้สูงอายุ และผู้ป่วยที่ต้องได้รับการดูแลเป็นพิเศษ <strong>โดยไม่เสียค่าใช้จ่าย</strong> — ตัวเลขด้านล่างคือสรุปผลการดำเนินงานที่ผ่านมา</div>
         </div>
+
+        <!-- PDPA WARNING -->
+        <div style="background:#fee2e2;border-left:4px solid #dc2626;padding:0.9rem;margin-bottom:1rem;border-radius:6px;">
+          <div style="font-size:0.9rem;color:#7c2d2d;line-height:1.5;">
+            <strong style="color:#c41e3a;">⚠️ ประกาศ PDPA:</strong> โครงการนี้จัดการข้อมูลส่วนบุคคลผู้รับประโยชน์ ข้อมูลได้รับการปกป้องตามกฎหมายว่าด้วยการคุ้มครองข้อมูลส่วนบุคคล
+          </div>
+        </div>
+
         <a href="entry-form.html" class="staff-entry-btn">✏️ เจ้าหน้าที่กรอกข้อมูลโครงการนี้ →</a>
 
         <!-- ── Skeleton: shown until accordion first opens ── -->
