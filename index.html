@@ -7343,6 +7343,28 @@ var p1PageSize = 50;
 var p1FilteredRecords = [];
 
 function loadP1List() {
+  // AUTH CHECK: Personal records require login (PDPA protection)
+  var hasToken = false;
+  try {
+    var rfUser = JSON.parse(localStorage.getItem('rf_user') || 'null');
+    hasToken = !!(rfUser && rfUser.token);
+  } catch (e) {}
+
+  var listContainer = document.getElementById("p1-list-container");
+  if (!hasToken && (!project1Records || project1Records.length === 0)) {
+    // No login + no data = show login prompt
+    if (listContainer) {
+      listContainer.innerHTML =
+        '<div style="text-align:center;padding:2rem;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;">' +
+        '<div style="font-size:2rem;margin-bottom:0.5rem;">🔒</div>' +
+        '<p style="font-size:0.95rem;font-weight:600;color:var(--text-dark);margin-bottom:0.5rem;">รายชื่อผู้รับผลประโยชน์รายบุคคล</p>' +
+        '<p style="font-size:0.85rem;color:var(--text-gray);margin-bottom:1rem;">ข้อมูลส่วนบุคคล (ชื่อ ที่อยู่) สำหรับผู้พิการและผู้สูงอายุต้องเข้าสู่ระบบก่อนเท่านั้น</p>' +
+        '<a href="login.html" style="display:inline-block;padding:0.6rem 1.2rem;background:#0f766e;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;font-size:0.9rem;">เข้าสู่ระบบสำหรับเจ้าหน้าที่ →</a>' +
+        '</div>';
+    }
+    return;
+  }
+
   var yearVal    = (document.getElementById("p1YearFilter")||{}).value || "all";
   var distVal    = (document.getElementById("p1DistrictFilter")||{}).value || "all";
   var subdistVal = (document.getElementById("p1SubDistrictFilter")||{}).value || "all";
