@@ -55,8 +55,8 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
 .status-msg { text-align: center; padding: 1.5rem; color: #94a3b8; font-size: 0.85rem; }
 
 /* Legend */
-.calendar-legend { display: flex; gap: 0.8rem; justify-content: center; margin: 0.8rem 0; flex-wrap: wrap; }
-.legend-item { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; }
+.calendar-legend { display: flex; flex-direction: column; gap: 0.4rem; align-items: center; margin: 0.5rem 0; }
+.legend-item { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; }
 .legend-color { width: 14px; height: 14px; border-radius: 3px; }
 .legend-holiday { background: #fef3c7; border: 1px solid #fcd34d; }
 .legend-event { background: #f0fdf4; border: 1px solid #86efac; }
@@ -80,6 +80,14 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
 .day-event-time { font-size: 0.8rem; color: #0f766e; font-weight: 600; }
 .day-event-title { font-size: 0.95rem; font-weight: 700; color: #0f172a; margin: 0.25rem 0; }
 .day-event-meta { font-size: 0.75rem; color: #64748b; }
+
+/* Tooltip */
+.cal-tooltip { position: fixed; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15); padding: 0.75rem 1rem; font-size: 0.85rem;
+  z-index: 9997; max-width: 250px; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+.cal-tooltip.show { opacity: 1; pointer-events: auto; }
+.cal-tooltip-title { font-weight: 700; color: #0f172a; margin-bottom: 0.3rem; }
+.cal-tooltip-subtitle { font-size: 0.75rem; color: #64748b; }
 </style>
 </head>
 <body>
@@ -134,6 +142,12 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
   <button class="day-popup-close" onclick="closeDayPopup()">✕</button>
   <div class="day-popup-title" id="dayPopupTitle"></div>
   <div id="dayPopupEvents"></div>
+</div>
+
+<!-- Tooltip -->
+<div id="calTooltip" class="cal-tooltip">
+  <div class="cal-tooltip-title" id="tooltipTitle"></div>
+  <div class="cal-tooltip-subtitle" id="tooltipContent"></div>
 </div>
 
 <script>
@@ -246,7 +260,8 @@ function renderCalendar() {
     if (hasEvent) title += (title ? ' | ' : '') + esc(dayEvents.map(function(e){return e.title;}).join(', '));
     var eventBadge = hasEvent ? '<span class="event-badge">' + dayEvents.length + '</span>' : '';
     var clickable = hasEvent ? ' style="cursor:pointer;" onclick="showDayEvents(\'' + dateStr + '\')"' : '';
-    html += '<div class="' + cls + '" title="' + title + '"' + clickable + '>' + day + eventBadge + '</div>';
+    var hoverAttrs = (hasEvent || isHol) ? ' onmouseover="showTooltip(event, \'' + dateStr + '\')" onmouseout="hideTooltip()"' : '';
+    html += '<div class="' + cls + '"' + hoverAttrs + ' title="' + title + '"' + clickable + '>' + day + eventBadge + '</div>';
   }
   grid.innerHTML = html;
 }
@@ -320,6 +335,37 @@ function closeDayPopup() {
   document.getElementById('dayPopup').classList.remove('show');
 }
 
+function showTooltip(event, dateStr) {
+  var dayEvents = eventsOnDate_(dateStr);
+  var isHol = isHoliday(dateStr);
+
+  if (!isHol && !dayEvents.length) return;
+
+  var tooltip = document.getElementById('calTooltip');
+  var title = document.getElementById('tooltipTitle');
+  var content = document.getElementById('tooltipContent');
+
+  if (isHol) {
+    title.textContent = getHolidayName(dateStr);
+    content.textContent = '';
+  } else if (dayEvents.length > 0) {
+    title.textContent = '📅 ' + dayEvents.length + ' กิจกรรม';
+    content.textContent = dayEvents.map(function(e) { return e.title; }).join(', ');
+  }
+
+  var rect = event.target.getBoundingClientRect();
+  tooltip.style.left = (rect.left + rect.width / 2) + 'px';
+  tooltip.style.top = (rect.top - 10) + 'px';
+  tooltip.style.transform = 'translate(-50%, -100%)';
+
+  tooltip.classList.add('show');
+}
+
+function hideTooltip() {
+  var tooltip = document.getElementById('calTooltip');
+  tooltip.classList.remove('show');
+}
+
 function editEvent(eventId) {
   if (!eventId) {
     alert('ไม่สามารถแก้ไขได้: ไม่มีรหัสกิจกรรม');
@@ -330,8 +376,15 @@ function editEvent(eventId) {
     alert('กรุณาล็อคอินก่อน');
     return;
   }
-  // Redirect to backend form with event ID
-  window.location.href = 'https://docs.google.com/forms/d/e/1FAIpQLSd4S1W_uKLZ7Z-G6r_u7K_6C9e0-sCNX3w-g0L_F_5ViPVDQ/viewform?entry.123456=' + encodeURIComponent(eventId);
+  // Find the event and pass it to editor
+  var eventToEdit = allEvents.find(function(e) { return String(e.id) === String(eventId); });
+  if (!eventToEdit) {
+    alert('ไม่พบกิจกรรมนี้');
+    return;
+  }
+  // Store event data in sessionStorage and redirect to editor
+  sessionStorage.setItem('eventToEdit', JSON.stringify(eventToEdit));
+  window.location.href = 'calendar-event-editor.html?edit=' + encodeURIComponent(eventId);
 }
 
 function deleteEvent(eventId, dateStr) {
