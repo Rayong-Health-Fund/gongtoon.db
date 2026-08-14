@@ -382,8 +382,8 @@ function editEvent(eventId) {
     alert('ไม่พบกิจกรรมนี้');
     return;
   }
-  // Store event data in sessionStorage and redirect to editor
-  sessionStorage.setItem('eventToEdit', JSON.stringify(eventToEdit));
+  // Store event data in localStorage and redirect to editor
+  localStorage.setItem('eventToEdit', JSON.stringify(eventToEdit));
   window.location.href = 'calendar-event-editor.html?edit=' + encodeURIComponent(eventId);
 }
 

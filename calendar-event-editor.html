@@ -377,7 +377,7 @@ function handleSubmit(e) {
 
 // Handle edit mode or set default start date
 document.addEventListener('DOMContentLoaded', function() {
-  var editEventStr = sessionStorage.getItem('eventToEdit');
+  var editEventStr = localStorage.getItem('eventToEdit');
   if (editEventStr) {
     try {
       var event = JSON.parse(editEventStr);
@@ -402,8 +402,8 @@ document.addEventListener('DOMContentLoaded', function() {
       // Store event ID for update
       window.editingEventId = event.id;
 
-      // Clear sessionStorage
-      sessionStorage.removeItem('eventToEdit');
+      // Clear localStorage
+      localStorage.removeItem('eventToEdit');
       console.log('[Event Editor] Edit mode enabled for event:', event.id);
     } catch (e) {
       console.error('[Event Editor] Failed to parse event data:', e);
