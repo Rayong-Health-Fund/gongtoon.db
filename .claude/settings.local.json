@@ -134,7 +134,11 @@
       "Bash(git commit -m 'fix: combine calendar & contact FAB into single menu with weekly alert badge *)",
       "Bash(git commit -m 'fix: remove left calendar widget, add login loading screen, and fix dashboard timeout issues *)",
       "Bash(git commit -m 'fix: add event modal form and correct holiday dates formatting *)",
-      "Bash(git commit -m 'feat: dashboard improvements - add events management, fix FAB menu, improve executive dashboard *)"
+      "Bash(git commit -m 'feat: dashboard improvements - add events management, fix FAB menu, improve executive dashboard *)",
+      "Bash(git commit -m 'fix: allow event creation for staff/executive, fix API role checks and add debug logging *)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :8099)",
+      "Bash(git commit -m 'feat: enhance event form with time, category, and priority fields *)"
     ]
   }
 }

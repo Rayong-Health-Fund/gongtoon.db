@@ -27,7 +27,7 @@ const GALLERY_IMAGE_FOLDER_NAME = 'RayongFund_Gallery_Images';
 const GALLERY_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
 
 const EVENTS_SHEET_NAME = 'events';
-const EVENTS_HEADERS = ['id', 'title', 'description', 'event_date', 'end_date', 'location', 'status', 'created_at', 'created_by'];
+const EVENTS_HEADERS = ['id', 'title', 'description', 'event_date', 'event_time', 'end_date', 'end_time', 'location', 'category', 'priority', 'status', 'created_at', 'created_by'];
 
 // Same safe-migration pattern as ensureNewsSheetSetup_ — creates the tab
 // if missing, or appends any headers not yet there, never touches
@@ -538,8 +538,12 @@ function handleEventCreate_(session, body) {
     id: id, title: title,
     description: String(body.description || '').trim(),
     event_date: eventDate,
+    event_time: String(body.event_time || '').trim(),
     end_date: String(body.end_date || '').trim(),
+    end_time: String(body.end_time || '').trim(),
     location: String(body.location || '').trim(),
+    category: String(body.category || 'other').trim(),
+    priority: String(body.priority || 'normal').trim(),
     status: 'published', created_at: now, created_by: session.email
   };
   const newRow = headers.map(function(h) { return Object.prototype.hasOwnProperty.call(rowObj, h) ? rowObj[h] : ''; });

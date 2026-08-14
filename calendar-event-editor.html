@@ -92,6 +92,8 @@ label {
 
 input[type="text"],
 input[type="date"],
+input[type="time"],
+select,
 textarea {
   width: 100%;
   padding: 0.65rem 0.9rem;
@@ -107,6 +109,8 @@ textarea {
 
 input[type="text"]:focus,
 input[type="date"]:focus,
+input[type="time"]:focus,
+select:focus,
 textarea:focus {
   border-color: #0f766e;
   background: #fff;
@@ -214,8 +218,41 @@ button {
           <input type="date" id="startDate" name="startDate" required>
         </div>
         <div class="form-group">
+          <label for="startTime">เวลาเริ่มต้น</label>
+          <input type="time" id="startTime" name="startTime">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
           <label for="endDate">วันสิ้นสุด</label>
           <input type="date" id="endDate" name="endDate">
+        </div>
+        <div class="form-group">
+          <label for="endTime">เวลาสิ้นสุด</label>
+          <input type="time" id="endTime" name="endTime">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category">ประเภทกิจกรรม</label>
+          <select id="category" name="category">
+            <option value="">-- เลือก --</option>
+            <option value="meeting">ประชุม</option>
+            <option value="training">ฝึกอบรม</option>
+            <option value="ceremony">พิธีกรรม</option>
+            <option value="inspection">ตรวจสอบ</option>
+            <option value="other">อื่นๆ</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="priority">ความสำคัญ</label>
+          <select id="priority" name="priority">
+            <option value="normal">ปกติ</option>
+            <option value="important">สำคัญ</option>
+            <option value="urgent">ด่วน</option>
+          </select>
         </div>
       </div>
 
@@ -269,8 +306,12 @@ function handleSubmit(e) {
 
   var title = document.getElementById('title').value.trim();
   var startDate = document.getElementById('startDate').value;
+  var startTime = document.getElementById('startTime').value || '';
   var endDate = document.getElementById('endDate').value || startDate;
+  var endTime = document.getElementById('endTime').value || '';
   var location = document.getElementById('location').value.trim();
+  var category = document.getElementById('category').value || 'other';
+  var priority = document.getElementById('priority').value || 'normal';
   var description = document.getElementById('description').value.trim();
 
   if (!title) {
@@ -289,8 +330,12 @@ function handleSubmit(e) {
     action: 'event_create',
     title: title,
     event_date: startDate,
+    event_time: startTime,
     end_date: endDate,
+    end_time: endTime,
     location: location,
+    category: category,
+    priority: priority,
     description: description
   };
 
