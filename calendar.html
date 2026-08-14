@@ -367,6 +367,7 @@ function hideTooltip() {
 }
 
 function editEvent(eventId) {
+  console.log('[Edit] Called with eventId:', eventId);
   if (!eventId) {
     alert('ไม่สามารถแก้ไขได้: ไม่มีรหัสกิจกรรม');
     return;
@@ -378,16 +379,20 @@ function editEvent(eventId) {
   }
   // Find the event and pass it to editor
   var eventToEdit = allEvents.find(function(e) { return String(e.id) === String(eventId); });
+  console.log('[Edit] Found event:', eventToEdit);
   if (!eventToEdit) {
     alert('ไม่พบกิจกรรมนี้');
     return;
   }
   // Store event data in localStorage and redirect to editor
+  console.log('[Edit] Storing to localStorage and redirecting...');
   localStorage.setItem('eventToEdit', JSON.stringify(eventToEdit));
+  alert('⏳ กำลังไปหน้าแก้ไข...');
   window.location.href = 'calendar-event-editor.html?edit=' + encodeURIComponent(eventId);
 }
 
 function deleteEvent(eventId, dateStr) {
+  console.log('[Delete] Called with eventId:', eventId);
   if (!eventId) {
     alert('ไม่สามารถลบได้: ไม่มีรหัสกิจกรรม');
     return;
@@ -397,7 +402,11 @@ function deleteEvent(eventId, dateStr) {
     alert('กรุณาล็อคอินก่อน');
     return;
   }
-  if (!confirm('คุณแน่ใจว่าต้องการลบกิจกรรมนี้?')) return;
+  if (!confirm('คุณแน่ใจว่าต้องการลบกิจกรรมนี้?')) {
+    console.log('[Delete] User cancelled');
+    return;
+  }
+  console.log('[Delete] User confirmed, sending delete request');
 
   var payload = {
     token: session.token,
