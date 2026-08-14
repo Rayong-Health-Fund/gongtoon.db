@@ -53,6 +53,33 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
 .event-meta { font-size: 0.76rem; color: #64748b; margin-top: 0.25rem; }
 .event-desc { font-size: 0.8rem; color: #475569; margin-top: 0.4rem; line-height: 1.6; }
 .status-msg { text-align: center; padding: 1.5rem; color: #94a3b8; font-size: 0.85rem; }
+
+/* Legend */
+.calendar-legend { display: flex; gap: 2rem; justify-content: center; margin: 1.5rem 0; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+.legend-color { width: 20px; height: 20px; border-radius: 6px; }
+.legend-holiday { background: #fef3c7; border: 1px solid #fcd34d; }
+.legend-event { background: #f0fdf4; border: 1px solid #86efac; }
+
+/* Event badge */
+.event-badge { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px;
+  background: #10b981; color: #fff; font-size: 0.65rem; font-weight: 700; border-radius: 50%; position: absolute; top: 1px; right: 1px; }
+
+/* Day popup */
+.day-popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  background: #fff; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 9999;
+  max-width: 400px; width: 90%; max-height: 80vh; overflow-y: auto; padding: 1.5rem; }
+.day-popup.show { display: block; }
+.day-popup-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); z-index: 9998; }
+.day-popup-overlay.show { display: block; }
+.day-popup-title { font-size: 1.1rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem; }
+.day-popup-close { position: absolute; top: 0.75rem; right: 1rem; background: none; border: none;
+  font-size: 1.5rem; cursor: pointer; color: #94a3b8; }
+.day-event-item { background: #f8fafc; border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 6px; }
+.day-event-time { font-size: 0.8rem; color: #0f766e; font-weight: 600; }
+.day-event-title { font-size: 0.95rem; font-weight: 700; color: #0f172a; margin: 0.25rem 0; }
+.day-event-meta { font-size: 0.75rem; color: #64748b; }
 </style>
 </head>
 <body>
@@ -74,6 +101,18 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
 </div>
 
 <div class="container">
+  <!-- Legend -->
+  <div class="calendar-legend">
+    <div class="legend-item">
+      <div class="legend-color legend-holiday"></div>
+      <span>🏛️ วันหยุดราชการ</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color legend-event"></div>
+      <span>📅 กิจกรรม (คลิกดูรายละเอียด)</span>
+    </div>
+  </div>
+
   <div class="cal-card">
     <div class="cal-header">
       <button onclick="changeMonth(-1)">‹</button>
@@ -87,6 +126,14 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
     <div class="upcoming-title">🔜 กิจกรรมที่กำลังจะมาถึง</div>
     <div id="upcomingList"><div class="status-msg">กำลังโหลด...</div></div>
   </div>
+</div>
+
+<!-- Day events popup -->
+<div id="dayPopupOverlay" class="day-popup-overlay" onclick="closeDayPopup()"></div>
+<div id="dayPopup" class="day-popup">
+  <button class="day-popup-close" onclick="closeDayPopup()">✕</button>
+  <div class="day-popup-title" id="dayPopupTitle"></div>
+  <div id="dayPopupEvents"></div>
 </div>
 
 <script>
@@ -185,13 +232,16 @@ function renderCalendar() {
   for (var i = 0; i < startOffset; i++) html += '<div class="cal-day empty"></div>';
   for (var day = 1; day <= daysInMonth; day++) {
     var dateStr = ymd_(new Date(calYear, calMonth, day));
-    var hasEvent = eventsOnDate_(dateStr).length > 0;
+    var dayEvents = eventsOnDate_(dateStr);
+    var hasEvent = dayEvents.length > 0;
     var isHol = isHoliday(dateStr);
     var cls = 'cal-day' + (dateStr === todayStr ? ' today' : '') + (hasEvent ? ' has-event' : '') + (isHol ? ' holiday' : '');
     var title = '';
     if (isHol) title = '🏛️ วันหยุดราชการ';
-    if (hasEvent) title += (title ? ' | ' : '') + esc(eventsOnDate_(dateStr).map(function(e){return e.title;}).join(', '));
-    html += '<div class="' + cls + '" title="' + title + '">' + day + '</div>';
+    if (hasEvent) title += (title ? ' | ' : '') + esc(dayEvents.map(function(e){return e.title;}).join(', '));
+    var eventBadge = hasEvent ? '<span class="event-badge">' + dayEvents.length + '</span>' : '';
+    var clickable = hasEvent ? ' style="cursor:pointer;" onclick="showDayEvents(\'' + dateStr + '\')"' : '';
+    html += '<div class="' + cls + '" title="' + title + '"' + clickable + '>' + day + eventBadge + '</div>';
   }
   grid.innerHTML = html;
 }
@@ -213,6 +263,48 @@ function renderUpcoming() {
       + (ev.description ? '<div class="event-desc">' + esc(ev.description) + '</div>' : '')
       + '</div>';
   }).join('');
+}
+
+function showDayEvents(dateStr) {
+  var dayEvents = eventsOnDate_(dateStr);
+  if (!dayEvents.length) return;
+
+  var date = new Date(dateStr);
+  var dateLabel = date.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  document.getElementById('dayPopupTitle').textContent = '📅 ' + dateLabel;
+  document.getElementById('dayPopupEvents').innerHTML = dayEvents.map(function(ev) {
+    var timeStr = '';
+    if (ev.event_time) {
+      timeStr = ev.event_time;
+      if (ev.end_time && ev.end_time !== ev.event_time) timeStr += ' - ' + ev.end_time;
+      timeStr = '⏰ ' + timeStr;
+    }
+    var categoryStr = ev.category ? '📂 ' + {
+      'meeting': 'ประชุม',
+      'training': 'ฝึกอบรม',
+      'ceremony': 'พิธีกรรม',
+      'inspection': 'ตรวจสอบ',
+      'other': 'อื่นๆ'
+    }[ev.category] : '';
+    var priorityClass = { 'urgent': '#dc2626', 'important': '#f97316', 'normal': '#10b981' }[ev.priority] || '#10b981';
+
+    return '<div class="day-event-item" style="border-left-color:' + priorityClass + ';">'
+      + '<div class="day-event-title">' + esc(ev.title) + '</div>'
+      + (timeStr ? '<div class="day-event-time">' + timeStr + '</div>' : '')
+      + (categoryStr ? '<div class="day-event-meta">' + categoryStr + '</div>' : '')
+      + (ev.location ? '<div class="day-event-meta">📍 ' + esc(ev.location) + '</div>' : '')
+      + (ev.description ? '<div class="day-event-meta">' + esc(ev.description) + '</div>' : '')
+      + '</div>';
+  }).join('');
+
+  document.getElementById('dayPopupOverlay').classList.add('show');
+  document.getElementById('dayPopup').classList.add('show');
+}
+
+function closeDayPopup() {
+  document.getElementById('dayPopupOverlay').classList.remove('show');
+  document.getElementById('dayPopup').classList.remove('show');
 }
 
 (function() {
