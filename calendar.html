@@ -55,9 +55,9 @@ body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; 
 .status-msg { text-align: center; padding: 1.5rem; color: #94a3b8; font-size: 0.85rem; }
 
 /* Legend */
-.calendar-legend { display: flex; gap: 2rem; justify-content: center; margin: 1.5rem 0; flex-wrap: wrap; }
-.legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
-.legend-color { width: 20px; height: 20px; border-radius: 6px; }
+.calendar-legend { display: flex; gap: 0.8rem; justify-content: center; margin: 0.8rem 0; flex-wrap: wrap; }
+.legend-item { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; }
+.legend-color { width: 14px; height: 14px; border-radius: 3px; }
 .legend-holiday { background: #fef3c7; border: 1px solid #fcd34d; }
 .legend-event { background: #f0fdf4; border: 1px solid #86efac; }
 
@@ -143,26 +143,26 @@ var calYear, calMonth; // calMonth: 0-11
 
 // วันหยุดราชการและวันสำคัญศาสนา ปี 2026 (ค.ศ.) = 2569 (พ.ศ.)
 var HOLIDAYS_2569 = {
-  '2026-01-01': 'วันปีใหม่',
-  '2026-02-10': 'สมาคมสงครามพระยศรี',
-  '2026-02-26': 'วันมัฆบูชา',
-  '2026-04-06': 'วันจักรีธรรมการ',
-  '2026-04-13': 'วันสงกรานต์',
-  '2026-04-14': 'วันสงกรานต์',
-  '2026-04-15': 'วันสงกรานต์',
-  '2026-04-22': 'วันที่ 22 เมษายน',
-  '2026-05-01': 'วันแรงงาน',
-  '2026-05-22': 'วันวิสาขบูชา',
-  '2026-07-28': 'วันเฉลิมพระชนมพรรษาพระนางสยามมาตา',
-  '2026-07-30': 'วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าอยู่หัว',
-  '2026-07-31': 'วันราชสำเร็จ',
-  '2026-08-12': 'วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าอยู่หัว',
-  '2026-10-13': 'วันคล้ายวันสวรรคตพระบาทสมเด็จพระปรมินทรมหาภูมิพลอดุลยเดช',
-  '2026-10-14': 'วันธรรมชาติถือว่าเป็นวันพระราชทานธรรม',
-  '2026-10-23': 'วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าลูกยาเธอ',
-  '2026-12-05': 'วันคล้ายวันสวรรคตพระบาทสมเด็จพระปรมินทรมหาภูมิพลอดุลยเดช',
-  '2026-12-10': 'วันรัฐธรรมนูญ',
-  '2026-12-31': 'วันสิ้นปี'
+  '2026-01-01': {name: 'วันปีใหม่', emoji: '🎆'},
+  '2026-02-10': {name: 'สมาคมสงครามพระยศรี', emoji: '🏛️'},
+  '2026-02-26': {name: 'วันมัฆบูชา', emoji: '🙏'},
+  '2026-04-06': {name: 'วันจักรีธรรมการ', emoji: '👑'},
+  '2026-04-13': {name: 'วันสงกรานต์', emoji: '💦'},
+  '2026-04-14': {name: 'วันสงกรานต์', emoji: '💦'},
+  '2026-04-15': {name: 'วันสงกรานต์', emoji: '💦'},
+  '2026-04-22': {name: 'วันที่ 22 เมษายน', emoji: '📌'},
+  '2026-05-01': {name: 'วันแรงงาน', emoji: '👷'},
+  '2026-05-22': {name: 'วันวิสาขบูชา', emoji: '🙏'},
+  '2026-07-28': {name: 'วันเฉลิมพระชนมพรรษาพระนางสยามมาตา', emoji: '👑'},
+  '2026-07-30': {name: 'วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าอยู่หัว', emoji: '👑'},
+  '2026-07-31': {name: 'วันราชสำเร็จ', emoji: '🏛️'},
+  '2026-08-12': {name: 'วันแม่แห่งชาติ (วันเฉลิมพระชนมพรรษา)', emoji: '👑'},
+  '2026-10-13': {name: 'วันคล้ายวันสวรรคตพระบาทสมเด็จพระปรมินทรมหาภูมิพลอดุลยเดช', emoji: '🙏'},
+  '2026-10-14': {name: 'วันธรรมชาติถือว่าเป็นวันพระราชทานธรรม', emoji: '🏛️'},
+  '2026-10-23': {name: 'วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าลูกยาเธอ', emoji: '👑'},
+  '2026-12-05': {name: 'วันคล้ายวันสวรรคตพระบาทสมเด็จพระปรมินทรมหาภูมิพลอดุลยเดช', emoji: '🙏'},
+  '2026-12-10': {name: 'วันรัฐธรรมนูญ', emoji: '📜'},
+  '2026-12-31': {name: 'วันสิ้นปี', emoji: '🎆'}
 };
 
 function esc(s) {
@@ -182,7 +182,9 @@ function isHoliday(dateStr) {
   return HOLIDAYS_2569.hasOwnProperty(dateStr);
 }
 function getHolidayName(dateStr) {
-  return HOLIDAYS_2569[dateStr] || 'วันหยุดราชการ';
+  var holiday = HOLIDAYS_2569[dateStr];
+  if (!holiday) return 'วันหยุดราชการ';
+  return (holiday.emoji || '🏛️') + ' ' + holiday.name;
 }
 function getSession() {
   try { return JSON.parse(localStorage.getItem('rf_user') || 'null'); } catch (e) { return null; }
@@ -240,7 +242,7 @@ function renderCalendar() {
     var isHol = isHoliday(dateStr);
     var cls = 'cal-day' + (dateStr === todayStr ? ' today' : '') + (hasEvent ? ' has-event' : '') + (isHol ? ' holiday' : '');
     var title = '';
-    if (isHol) title = '🏛️ ' + getHolidayName(dateStr);
+    if (isHol) title = getHolidayName(dateStr);
     if (hasEvent) title += (title ? ' | ' : '') + esc(dayEvents.map(function(e){return e.title;}).join(', '));
     var eventBadge = hasEvent ? '<span class="event-badge">' + dayEvents.length + '</span>' : '';
     var clickable = hasEvent ? ' style="cursor:pointer;" onclick="showDayEvents(\'' + dateStr + '\')"' : '';
@@ -274,6 +276,8 @@ function showDayEvents(dateStr) {
 
   var date = new Date(dateStr);
   var dateLabel = date.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+  var session = getSession();
+  var isAdmin = session && (session.role === 'admin' || session.role === 'superadmin');
 
   document.getElementById('dayPopupTitle').textContent = '📅 ' + dateLabel;
   document.getElementById('dayPopupEvents').innerHTML = dayEvents.map(function(ev) {
@@ -291,6 +295,11 @@ function showDayEvents(dateStr) {
       'other': 'อื่นๆ'
     }[ev.category] : '';
     var priorityClass = { 'urgent': '#dc2626', 'important': '#f97316', 'normal': '#10b981' }[ev.priority] || '#10b981';
+    var actionBtns = isAdmin ?
+      '<div style="margin-top:0.5rem;display:flex;gap:0.4rem;font-size:0.75rem;">' +
+      '<button onclick="editEvent(' + (ev.id || 0) + ')" style="background:#0f766e;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;">✎ แก้ไข</button>' +
+      '<button onclick="deleteEvent(' + (ev.id || 0) + ', \'' + dateStr + '\')" style="background:#b91c1c;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;">🗑 ลบ</button>' +
+      '</div>' : '';
 
     return '<div class="day-event-item" style="border-left-color:' + priorityClass + ';">'
       + '<div class="day-event-title">' + esc(ev.title) + '</div>'
@@ -298,6 +307,7 @@ function showDayEvents(dateStr) {
       + (categoryStr ? '<div class="day-event-meta">' + categoryStr + '</div>' : '')
       + (ev.location ? '<div class="day-event-meta">📍 ' + esc(ev.location) + '</div>' : '')
       + (ev.description ? '<div class="day-event-meta">' + esc(ev.description) + '</div>' : '')
+      + actionBtns
       + '</div>';
   }).join('');
 
@@ -308,6 +318,60 @@ function showDayEvents(dateStr) {
 function closeDayPopup() {
   document.getElementById('dayPopupOverlay').classList.remove('show');
   document.getElementById('dayPopup').classList.remove('show');
+}
+
+function editEvent(eventId) {
+  if (!eventId) {
+    alert('ไม่สามารถแก้ไขได้: ไม่มีรหัสกิจกรรม');
+    return;
+  }
+  var session = getSession();
+  if (!session) {
+    alert('กรุณาล็อคอินก่อน');
+    return;
+  }
+  // Redirect to backend form with event ID
+  window.location.href = 'https://docs.google.com/forms/d/e/1FAIpQLSd4S1W_uKLZ7Z-G6r_u7K_6C9e0-sCNX3w-g0L_F_5ViPVDQ/viewform?entry.123456=' + encodeURIComponent(eventId);
+}
+
+function deleteEvent(eventId, dateStr) {
+  if (!eventId) {
+    alert('ไม่สามารถลบได้: ไม่มีรหัสกิจกรรม');
+    return;
+  }
+  var session = getSession();
+  if (!session) {
+    alert('กรุณาล็อคอินก่อน');
+    return;
+  }
+  if (!confirm('คุณแน่ใจว่าต้องการลบกิจกรรมนี้?')) return;
+
+  var payload = {
+    token: session.token,
+    action: 'event_delete',
+    id: eventId
+  };
+
+  console.log('[Calendar] Deleting event:', eventId);
+  fetch(EVENTS_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (json.ok) {
+        alert('✓ ลบกิจกรรมสำเร็จ');
+        closeDayPopup();
+        load();
+      } else {
+        alert('ลบกิจกรรมไม่สำเร็จ: ' + (json.error || 'ข้อผิดพลาด'));
+      }
+    })
+    .catch(function(err) {
+      console.error('[Calendar] Delete failed:', err);
+      alert('เชื่อมต่อไม่สำเร็จ: ' + err.message);
+    });
 }
 
 (function() {

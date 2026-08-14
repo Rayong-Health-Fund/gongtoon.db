@@ -567,8 +567,13 @@ function handleEventUpdate_(session, body) {
       if (body.title !== undefined) sheet.getRange(row, headers.indexOf('title') + 1).setValue(String(body.title).trim());
       if (body.description !== undefined) sheet.getRange(row, headers.indexOf('description') + 1).setValue(String(body.description).trim());
       if (body.event_date !== undefined) sheet.getRange(row, headers.indexOf('event_date') + 1).setValue(String(body.event_date).trim());
+      if (body.event_time !== undefined && headers.indexOf('event_time') !== -1) sheet.getRange(row, headers.indexOf('event_time') + 1).setValue(String(body.event_time).trim());
       if (body.end_date !== undefined) sheet.getRange(row, headers.indexOf('end_date') + 1).setValue(String(body.end_date).trim());
+      if (body.end_time !== undefined && headers.indexOf('end_time') !== -1) sheet.getRange(row, headers.indexOf('end_time') + 1).setValue(String(body.end_time).trim());
       if (body.location !== undefined) sheet.getRange(row, headers.indexOf('location') + 1).setValue(String(body.location).trim());
+      if (body.category !== undefined && headers.indexOf('category') !== -1) sheet.getRange(row, headers.indexOf('category') + 1).setValue(String(body.category).trim());
+      if (body.priority !== undefined && headers.indexOf('priority') !== -1) sheet.getRange(row, headers.indexOf('priority') + 1).setValue(String(body.priority).trim());
+      if (body.status !== undefined && headers.indexOf('status') !== -1) sheet.getRange(row, headers.indexOf('status') + 1).setValue(String(body.status).trim());
       return jsonOutput_({ ok: true, id: id });
     }
   }
@@ -619,8 +624,12 @@ function getAllEvents_() {
       title: row[colIndex['title']],
       description: row[colIndex['description']],
       event_date: row[colIndex['event_date']],
-      end_date: row[colIndex['end_date']],
+      event_time: row[colIndex['event_time']] || '',
+      end_date: row[colIndex['end_date']] || '',
+      end_time: row[colIndex['end_time']] || '',
       location: row[colIndex['location']],
+      category: row[colIndex['category']] || 'other',
+      priority: row[colIndex['priority']] || 'normal',
       status: status
     });
   }
