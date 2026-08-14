@@ -312,8 +312,8 @@ function showDayEvents(dateStr) {
     var priorityClass = { 'urgent': '#dc2626', 'important': '#f97316', 'normal': '#10b981' }[ev.priority] || '#10b981';
     var actionBtns = isAdmin ?
       '<div style="margin-top:0.5rem;display:flex;gap:0.4rem;font-size:0.75rem;">' +
-      '<button onclick="editEvent(' + (ev.id || 0) + ')" style="background:#0f766e;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;">✎ แก้ไข</button>' +
-      '<button onclick="deleteEvent(' + (ev.id || 0) + ', \'' + dateStr + '\')" style="background:#b91c1c;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;">🗑 ลบ</button>' +
+      '<button onclick="editEvent(\'' + (ev.id || '') + '\')" style="background:#0f766e;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;">✎ แก้ไข</button>' +
+      '<button onclick="deleteEvent(\'' + (ev.id || '') + '\', \'' + dateStr + '\')" style="background:#b91c1c;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;">🗑 ลบ</button>' +
       '</div>' : '';
 
     return '<div class="day-event-item" style="border-left-color:' + priorityClass + ';">'
