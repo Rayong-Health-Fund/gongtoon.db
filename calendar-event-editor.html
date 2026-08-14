@@ -325,9 +325,10 @@ function handleSubmit(e) {
   }
 
   // ส่ง API request
+  var isEditMode = Boolean(window.editingEventId);
   var payload = {
     token: session.token,
-    action: 'event_create',
+    action: isEditMode ? 'event_update' : 'event_create',
     title: title,
     event_date: startDate,
     event_time: startTime,
@@ -338,6 +339,10 @@ function handleSubmit(e) {
     priority: priority,
     description: description
   };
+
+  if (isEditMode) {
+    payload.id = window.editingEventId;
+  }
 
   console.log('[Event Editor] Submitting:', payload);
   showError('กำลังบันทึก...');
@@ -354,12 +359,14 @@ function handleSubmit(e) {
     .then(function(json) {
       console.log('[Event Editor] Response:', json);
       if (json.ok) {
-        showSuccess('✓ เพิ่มกิจกรรมสำเร็จ');
+        var msg = isEditMode ? '✓ แก้ไขกิจกรรมสำเร็จ' : '✓ เพิ่มกิจกรรมสำเร็จ';
+        showSuccess(msg);
         setTimeout(function() {
           window.location.href = 'calendar.html';
         }, 1500);
       } else {
-        showError('เพิ่มกิจกรรมไม่สำเร็จ: ' + (json.error || 'ข้อผิดพลาดไม่ทราบ'));
+        var errMsg = isEditMode ? 'แก้ไขกิจกรรมไม่สำเร็จ: ' : 'เพิ่มกิจกรรมไม่สำเร็จ: ';
+        showError(errMsg + (json.error || 'ข้อผิดพลาดไม่ทราบ'));
       }
     })
     .catch(function(err) {
@@ -368,10 +375,44 @@ function handleSubmit(e) {
     });
 }
 
-// Set today as default start date
+// Handle edit mode or set default start date
 document.addEventListener('DOMContentLoaded', function() {
-  var today = new Date().toISOString().split('T')[0];
-  document.getElementById('startDate').value = today;
+  var editEventStr = sessionStorage.getItem('eventToEdit');
+  if (editEventStr) {
+    try {
+      var event = JSON.parse(editEventStr);
+      // Populate form with event data
+      document.getElementById('title').value = event.title || '';
+      document.getElementById('startDate').value = event.event_date || '';
+      document.getElementById('startTime').value = event.event_time || '';
+      document.getElementById('endDate').value = event.end_date || event.event_date || '';
+      document.getElementById('endTime').value = event.end_time || '';
+      document.getElementById('location').value = event.location || '';
+      document.getElementById('category').value = event.category || 'other';
+      document.getElementById('priority').value = event.priority || 'normal';
+      document.getElementById('description').value = event.description || '';
+
+      // Change form title to "แก้ไขกิจกรรม"
+      document.querySelector('.hero-title').textContent = '📝 แก้ไขกิจกรรม';
+      document.querySelector('.hero-subtitle').textContent = 'แก้ไขข้อมูลกิจกรรมของกองทุนฯ';
+
+      // Change submit button text
+      document.querySelector('.btn-submit').textContent = 'บันทึกการแก้ไข';
+
+      // Store event ID for update
+      window.editingEventId = event.id;
+
+      // Clear sessionStorage
+      sessionStorage.removeItem('eventToEdit');
+      console.log('[Event Editor] Edit mode enabled for event:', event.id);
+    } catch (e) {
+      console.error('[Event Editor] Failed to parse event data:', e);
+    }
+  } else {
+    // Set today as default start date for create mode
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById('startDate').value = today;
+  }
 });
 </script>
 
