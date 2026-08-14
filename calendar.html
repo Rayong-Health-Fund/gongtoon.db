@@ -260,7 +260,7 @@ function renderCalendar() {
     if (hasEvent) title += (title ? ' | ' : '') + esc(dayEvents.map(function(e){return e.title;}).join(', '));
     var eventBadge = hasEvent ? '<span class="event-badge">' + dayEvents.length + '</span>' : '';
     var clickable = hasEvent ? ' style="cursor:pointer;" onclick="showDayEvents(\'' + dateStr + '\')"' : '';
-    var hoverAttrs = (hasEvent || isHol) ? ' onmouseover="showTooltip(event, \'' + dateStr + '\')" onmouseout="hideTooltip()"' : '';
+    var hoverAttrs = (hasEvent || isHol) ? ' onmouseover="showTooltip(\'' + dateStr + '\')" onmouseout="hideTooltip()"' : '';
     html += '<div class="' + cls + '"' + hoverAttrs + ' title="' + title + '"' + clickable + '>' + day + eventBadge + '</div>';
   }
   grid.innerHTML = html;
@@ -335,7 +335,7 @@ function closeDayPopup() {
   document.getElementById('dayPopup').classList.remove('show');
 }
 
-function showTooltip(event, dateStr) {
+function showTooltip(dateStr) {
   var dayEvents = eventsOnDate_(dateStr);
   var isHol = isHoliday(dateStr);
 
@@ -353,7 +353,7 @@ function showTooltip(event, dateStr) {
     content.textContent = dayEvents.map(function(e) { return e.title; }).join(', ');
   }
 
-  var rect = event.target.getBoundingClientRect();
+  var rect = event.currentTarget.getBoundingClientRect();
   tooltip.style.left = (rect.left + rect.width / 2) + 'px';
   tooltip.style.top = (rect.top - 10) + 'px';
   tooltip.style.transform = 'translate(-50%, -100%)';
