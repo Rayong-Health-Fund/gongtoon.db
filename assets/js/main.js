@@ -1,6 +1,36 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════════════════
+// SESSION MANAGEMENT — 30 minutes timeout
+// ═══════════════════════════════════════════════════════════════════════════
+function validateSession() {
+  try {
+    var session = JSON.parse(localStorage.getItem('rf_user') || 'null');
+    if (!session || !session.expiresAt) return false;
+    if (Date.now() > session.expiresAt) {
+      localStorage.removeItem('rf_user');
+      return false;
+    }
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Check session on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    if (!validateSession() && window.location.pathname.includes(('staff-hub.html|entry-form|admin-inbox|news-editor|user-requests|executive-dashboard|calendar-event-editor').split('|').join('|'))) {
+      localStorage.removeItem('rf_user');
+      window.location.href = 'login.html?next=' + encodeURIComponent(window.location.pathname + window.location.search);
+    }
+  });
+} else if (!validateSession() && window.location.pathname.includes(('staff-hub.html|entry-form|admin-inbox|news-editor|user-requests|executive-dashboard|calendar-event-editor').split('|').join('|'))) {
+  localStorage.removeItem('rf_user');
+  window.location.href = 'login.html?next=' + encodeURIComponent(window.location.pathname + window.location.search);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // PROJECT 1 — House Adaptation (ปรับสภาพบ้านผู้พิการและผู้สูงอายุ)
 // ═══════════════════════════════════════════════════════════════════════════
 

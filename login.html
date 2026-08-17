@@ -260,6 +260,8 @@ function handleGoogleCredential(response) {
     .then(function(res) { return res.json(); })
     .then(function(json) {
       if (json.ok) {
+        json.loginTime = Date.now();
+        json.expiresAt = Date.now() + (30 * 60 * 1000);
         localStorage.setItem('rf_user', JSON.stringify(json));
         // แสดง "สำเร็จ" ชั่วขณะ ก่อนไป redirect
         document.querySelector('.loading-text').textContent = '✓ ล็อคอินสำเร็จ';
