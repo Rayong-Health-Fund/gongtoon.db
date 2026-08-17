@@ -252,20 +252,6 @@ function render() {
   app.innerHTML = html;
 }
 
-function initializeAddNewsButton() {
-  var session = null;
-  try { session = JSON.parse(localStorage.getItem('rf_user') || 'null'); } catch (e) {}
-  var btn = document.getElementById('addNewsBtn');
-  if (btn) {
-    if (session && session.role === 'admin') {
-      btn.style.display = 'inline-block';
-    } else {
-      btn.style.display = 'none';
-    }
-  }
-}
-
-initializeAddNewsButton();
 load();
 </script>
 

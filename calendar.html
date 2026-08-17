@@ -307,11 +307,7 @@ function showDayEvents(dateStr) {
       'other': 'อื่นๆ'
     }[ev.category] : '';
     var priorityClass = { 'urgent': '#dc2626', 'important': '#f97316', 'normal': '#10b981' }[ev.priority] || '#10b981';
-    var actionBtns = isAdmin ?
-      '<div style="margin-top:0.5rem;display:flex;gap:0.4rem;font-size:0.75rem;">' +
-      '<button onclick="editEvent(\'' + (ev.id || '') + '\')" style="background:#0f766e;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;">✎ แก้ไข</button>' +
-      '<button onclick="deleteEvent(\'' + (ev.id || '') + '\', \'' + dateStr + '\')" style="background:#b91c1c;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;">🗑 ลบ</button>' +
-      '</div>' : '';
+    var actionBtns = '';
 
     return '<div class="day-event-item" style="border-left-color:' + priorityClass + ';">'
       + '<div class="day-event-title">' + esc(ev.title) + '</div>'
@@ -363,81 +359,7 @@ function hideTooltip() {
   tooltip.classList.remove('show');
 }
 
-function editEvent(eventId) {
-  console.log('[Edit] Called with eventId:', eventId);
-  if (!eventId) {
-    alert('ไม่สามารถแก้ไขได้: ไม่มีรหัสกิจกรรม');
-    return;
-  }
-  var session = getSession();
-  if (!session) {
-    alert('กรุณาล็อคอินก่อน');
-    return;
-  }
-  // Find the event and pass it to editor
-  var eventToEdit = allEvents.find(function(e) { return String(e.id) === String(eventId); });
-  console.log('[Edit] Found event:', eventToEdit);
-  if (!eventToEdit) {
-    alert('ไม่พบกิจกรรมนี้');
-    return;
-  }
-  // Store event data in localStorage and redirect to editor
-  console.log('[Edit] Storing to localStorage and redirecting...');
-  localStorage.setItem('eventToEdit', JSON.stringify(eventToEdit));
-  alert('⏳ กำลังไปหน้าแก้ไข...');
-  window.location.href = 'calendar-event-editor.html?edit=' + encodeURIComponent(eventId);
-}
 
-function deleteEvent(eventId, dateStr) {
-  console.log('[Delete] Called with eventId:', eventId);
-  if (!eventId) {
-    alert('ไม่สามารถลบได้: ไม่มีรหัสกิจกรรม');
-    return;
-  }
-  var session = getSession();
-  if (!session) {
-    alert('กรุณาล็อคอินก่อน');
-    return;
-  }
-  if (!confirm('คุณแน่ใจว่าต้องการลบกิจกรรมนี้?')) {
-    console.log('[Delete] User cancelled');
-    return;
-  }
-  console.log('[Delete] User confirmed, sending delete request');
-
-  var payload = {
-    token: session.token,
-    action: 'event_delete',
-    id: String(eventId)
-  };
-
-  console.log('[Calendar] Deleting event:', payload);
-  console.log('[Calendar] API URL:', EVENTS_API_URL);
-
-  fetch(EVENTS_API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(payload)
-  })
-    .then(function(r) {
-      console.log('[Calendar] Response status:', r.status);
-      return r.json();
-    })
-    .then(function(json) {
-      console.log('[Calendar] Response:', json);
-      if (json.ok) {
-        alert('✓ ลบกิจกรรมสำเร็จ');
-        closeDayPopup();
-        setTimeout(function() { load(); }, 500);
-      } else {
-        alert('ลบกิจกรรมไม่สำเร็จ: ' + (json.error || 'ข้อผิดพลาด'));
-      }
-    })
-    .catch(function(err) {
-      console.error('[Calendar] Delete failed:', err);
-      alert('เชื่อมต่อไม่สำเร็จ: ' + err.message);
-    });
-}
 
 (function() {
   var now = new Date();
