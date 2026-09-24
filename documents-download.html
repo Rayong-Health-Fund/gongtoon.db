@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ดาวโหลดเอกสาร - กองทุนหลักประกันสุขภาพ จังหวัดระยอง</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* STABLE DESIGN - SAME AS MAIN SITE */
+:root {
+  --primary-blue: #0f766e;
+  --primary-navy: #0f172a;
+  --bg-light: #f8fafc;
+  --bg-gray: #f1f5f9;
+  --text-dark: #1e293b;
+  --text-gray: #64748b;
+  --border-light: #e2e8f0;
+  --white: #ffffff;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(255,212,100,0.42) 0%, transparent 38%),
+    radial-gradient(ellipse at 5% 48%, rgba(255,168,168,0.38) 0%, transparent 38%),
+    radial-gradient(ellipse at 50% 42%, rgba(210,185,240,0.28) 0%, transparent 42%),
+    radial-gradient(ellipse at 88% 68%, rgba(148,218,255,0.42) 0%, transparent 38%),
+    radial-gradient(ellipse at 65% 92%, rgba(175,228,252,0.35) 0%, transparent 36%),
+    #f8fafc;
+  background-attachment: fixed;
+  color: var(--text-dark);
+  font-size: 18px;
+  line-height: 1.6;
+  letter-spacing: 0.2px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 260px; background: var(--white); border-right: 1.5px solid var(--border-light);
+  display: flex; flex-direction: column; max-height: 100vh; overflow-y: auto;
+  position: fixed; left: 0; top: 0; z-index: 50; transition: transform 0.3s ease;
+}
+.sidebar-header { padding: 1rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+.sidebar-nav { flex: 1; padding: 0; margin: 0; list-style: none; }
+.sidebar-nav-item { border-bottom: 1px solid #f1f5f9; }
+.sidebar-nav-link {
+  display: flex; align-items: center; gap: 0.75rem; padding: 0.9rem 1rem; color: #475569;
+  text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s, color 0.2s;
+}
+.sidebar-nav-link:hover { background: #f0fdfa; color: var(--primary-blue); }
+.sidebar-nav-link.active { background: #ccfbf1; color: var(--primary-blue); border-left: 3px solid var(--primary-blue); padding-left: calc(1rem - 3px); font-weight: 600; }
+.sidebar-toggle { display: none; background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--primary-blue); }
+
+.navbar {
+  background: var(--white);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 0.75rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--primary-navy) !important;
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  width: 40px;
+  height: 40px;
+  background: var(--primary-blue);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+/* GOV TOP UTILITY BAR */
+.gov-topbar {
+  background: #0f172a; color: #cbd5e1; font-size: 0.75rem;
+  padding: 0.35rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+  font-family: Sarabun, sans-serif;
+}
+.gov-topbar-date { opacity: 0.85; }
+.gov-a11y { display: flex; align-items: center; gap: 0.4rem; }
+.gov-a11y span { opacity: 0.85; margin-right: 0.15rem; }
+.gov-a11y button {
+  background: transparent; border: 1px solid #475569; color: #e2e8f0;
+  border-radius: 4px; cursor: pointer; font-family: Sarabun, sans-serif;
+  padding: 0.05rem 0.45rem; font-weight: 700; line-height: 1.5;
+}
+.gov-a11y button:hover { background: #1e293b; }
+.gov-a11y button.active { background: #0f766e; border-color: #0f766e; color: #fff; }
+
+/* HIGH CONTRAST MODE */
+body.gov-contrast { background: #000 !important; color: #fff !important; }
+body.gov-contrast .navbar, body.gov-contrast .section {
+  background: #000 !important; color: #fff !important; border-color: #ffe066 !important;
+}
+body.gov-contrast a { color: #ffe066 !important; }
+
+/* HERO SECTION */
+.hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  color: white;
+  padding: 2.5rem 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero-title {
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  text-align: center;
+  opacity: 0.95;
+}
+
+/* MAIN CONTENT */
+.main-content {
+  margin-left: 260px;
+  padding: 2rem 1.5rem;
+}
+
+.document-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+.document-card {
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.document-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  border-color: var(--primary-blue);
+}
+
+.document-header {
+  background: linear-gradient(135deg, rgba(15,118,110,0.08), rgba(15,118,110,0.04));
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.document-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0f766e, #15b981);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+  color: white;
+}
+
+.document-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.35rem;
+  line-height: 1.3;
+}
+
+.document-meta {
+  font-size: 0.85rem;
+  color: var(--text-gray);
+}
+
+.document-body {
+  padding: 1.5rem;
+}
+
+.document-description {
+  font-size: 0.95rem;
+  color: var(--text-gray);
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+
+.document-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.badge-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  background: #f0fdfa;
+  color: var(--primary-blue);
+  text-transform: uppercase;
+}
+
+.badge-tag.important {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge-tag.new {
+  background: #fecaca;
+  color: #7f1d1d;
+}
+
+.document-download {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.download-btn {
+  flex: 1;
+  background: linear-gradient(135deg, var(--primary-blue), #15b981);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: 'Sarabun', sans-serif;
+}
+
+.download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 118, 110, 0.3);
+  text-decoration: none;
+  color: white;
+}
+
+.file-size {
+  font-size: 0.85rem;
+  color: var(--text-gray);
+  align-self: center;
+}
+
+/* CATEGORY SECTION */
+.category-section {
+  margin-bottom: 3rem;
+}
+
+.category-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.category-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 24px;
+  background: var(--primary-blue);
+  border-radius: 2px;
+}
+
+/* FOOTER */
+.site-footer {
+  background: rgba(15,23,42,0.96);
+  color: rgba(255,255,255,0.85);
+  padding: 1.75rem 0 1.25rem;
+  margin-top: 3rem;
+  font-size: 0.875rem;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem 3rem;
+  align-items: start;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.footer-logo {
+  font-size: 2rem;
+  width: 52px;
+  height: 52px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.footer-org {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.footer-org-sub {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.6);
+  margin-top: 0.15rem;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer-address {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: rgba(255,255,255,0.75);
+}
+
+.footer-contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.footer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+}
+
+.footer-link:hover {
+  color: #fff;
+  background: rgba(20, 184, 166, 0.2);
+  transform: translateX(3px);
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+  body { font-size: 16px; }
+  .main-content { margin-left: 0; padding: 1.5rem 1rem; }
+  .hero-title { font-size: 1.35rem; }
+  .hero-subtitle { font-size: 0.95rem; }
+  .document-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .sidebar {
+    transform: translateX(-100%);
+    width: 240px;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-toggle { display: flex; }
+
+  .category-title {
+    padding-left: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .document-header { flex-direction: column; }
+  .document-icon { width: 48px; height: 48px; font-size: 1.5rem; }
+  .document-title { font-size: 1rem; }
+  .hero-title { font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- GOV TOP BAR -->
+<div class="gov-topbar">
+  <div class="gov-topbar-date">
+    วันที่ <span id="currentDate">17 สิงหาคม 2569</span>
+  </div>
+  <div class="gov-a11y">
+    <span>ขนาดตัวอักษร:</span>
+    <button onclick="adjustFont(-2)">ลด</button>
+    <button class="active" onclick="adjustFont(0)">ปกติ</button>
+    <button onclick="adjustFont(2)">เพิ่ม</button>
+    <button onclick="toggleContrast()">High Contrast</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="navbar-brand" style="gap: 8px;">
+      <div class="navbar-logo">🏥</div>
+      <span style="font-size: 0.85rem;">กองทุนระยอง</span>
+    </a>
+    <button class="sidebar-toggle" id="sidebarCloseBtn">✕</button>
+  </div>
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      <a href="index.html" class="sidebar-nav-link">🏠 หน้าหลัก</a>
+    </li>
+    <li class="sidebar-nav-item">
+      <a href="documents-download.html" class="sidebar-nav-link active">📄 ดาวโหลดเอกสาร</a>
+    </li>
+    <li class="sidebar-nav-item">
+      <a href="staff-hub.html" class="sidebar-nav-link">📝 แบบฟอร์มกรอกข้อมูล</a>
+    </li>
+  </ul>
+</aside>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container-fluid">
+    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+    <a class="navbar-brand" href="index.html" style="margin-left: 0;">
+      <div class="navbar-logo">🏥</div>
+      <span>กองทุนหลักประกันสุขภาพจังหวัดระยอง</span>
+    </a>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <span id="indexUserName" style="font-size: 0.9rem; color: #475569;"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <h1 class="hero-title">📄 ดาวโหลดเอกสารสำคัญ</h1>
+  <p class="hero-subtitle">เอกสารและคู่มือปฏิบัติงาน สำหรับใช้ในหน่วยงาน</p>
+</section>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+  <!-- SECTION: หลักเกณฑ์และเงื่อนไขกองทุนฯ (ลงนาม 17 ส.ค. 2569) -->
+  <section class="category-section">
+    <h2 class="category-title">📋 หลักเกณฑ์และเงื่อนไขกองทุนฯ (ลงนาม 17 ส.ค. 2569)</h2>
+    <div class="document-grid">
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📑</div>
+          <div>
+            <div class="document-title">หลักเกณฑ์ขอรับงบจัดบริการกองทุนหลักประกันสุขภาพจังหวัดระยอง พ.ศ. 2569</div>
+            <div class="document-meta">เอกสารหลัก • ลงนาม 17 ส.ค. 2569</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">เอกสารหลักเกณฑ์และเงื่อนไขการขอรับงบประมาณจากกองทุนหลักประกันสุขภาพจังหวัดระยอง</p>
+          <div class="document-badges">
+            <span class="badge-tag important">เอกสารหลัก</span>
+          </div>
+          <div class="document-download">
+            <a href="documents/pdf/หลักเกณฑ์ขอรับงบจัดบริการกองทุนหลักประกันสุขภาพจังหวัดระยอง%20พ.ศ.%202569.pdf" class="download-btn" download>📥 PDF</a>
+            <span class="file-size">250 KB</span>
+          </div>
+          <div class="document-download">
+            <a href="documents/word/หลักเกณฑ์ขอรับงบจัดบริการกองทุนหลักประกันสุขภาพจังหวัดระยอง%20พ.ศ.%202569.docx" class="download-btn" download>📥 Word</a>
+            <span class="file-size">108 KB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📎</div>
+          <div>
+            <div class="document-title">เอกสารแนบ 1: สร้างเสริม ป้องกัน รักษาปฐมภูมิเชิงรุก</div>
+            <div class="document-meta">เอกสารแนบ 1</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">หลักเกณฑ์สำหรับกิจกรรมสร้างเสริมสุขภาพ ป้องกันโรค และการรักษาระดับปฐมภูมิเชิงรุก</p>
+          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
+          <div class="document-download">
+            <a href="documents/pdf/เอกสารแนบ%201%20สร้างเสริม%20ป้องกัน%20รักษาปฐมภูมิเชิงรุก.pdf" class="download-btn" download>📥 PDF</a>
+            <span class="file-size">146 KB</span>
+          </div>
+          <div class="document-download">
+            <a href="documents/word/เอกสารแนบ%206.1%20สร้างเสริม%20ป้องกัน%20รักษาปฐมภูมิเชิงรุก.docx" class="download-btn" download>📥 Word</a>
+            <span class="file-size">76 KB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📎</div>
+          <div>
+            <div class="document-title">เอกสารแนบ 2: ศูนย์สาธิตและยืมอุปกรณ์ฯ</div>
+            <div class="document-meta">เอกสารแนบ 2</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">หลักเกณฑ์โครงการศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้าน</p>
+          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
+          <div class="document-download">
+            <a href="documents/pdf/เอกสารแนบ%202%20ศูนย์สาธิต.pdf" class="download-btn" download>📥 PDF</a>
+            <span class="file-size">342 KB</span>
+          </div>
+          <div class="document-download">
+            <a href="documents/word/เอกสารแนบ%206.2%20ศูนย์สาธิต.docx" class="download-btn" download>📥 Word</a>
+            <span class="file-size">145 KB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📎</div>
+          <div>
+            <div class="document-title">เอกสารแนบ 3: ศูนย์ซ่อมบำรุงอุปกรณ์ฯ</div>
+            <div class="document-meta">เอกสารแนบ 3</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">หลักเกณฑ์โครงการศูนย์ซ่อมบำรุง ดัดแปลงและจัดทำเฉพาะอุปกรณ์เครื่องช่วยความพิการ</p>
+          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
+          <div class="document-download">
+            <a href="documents/pdf/เอกสารแนบ%203%20ซ่อมบำรุง.pdf" class="download-btn" download>📥 PDF</a>
+            <span class="file-size">204 KB</span>
+          </div>
+          <div class="document-download">
+            <a href="documents/word/เอกสารแนบ%206.3%20ซ่อมบำรุง.docx" class="download-btn" download>📥 Word</a>
+            <span class="file-size">83 KB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📎</div>
+          <div>
+            <div class="document-title">เอกสารแนบ 4: ปรับสภาพแวดล้อมที่อยู่อาศัยฯ</div>
+            <div class="document-meta">เอกสารแนบ 4</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">หลักเกณฑ์โครงการปรับสภาพแวดล้อมที่อยู่อาศัยสำหรับคนพิการ ผู้สูงอายุ และผู้ที่มีภาวะพึ่งพิง</p>
+          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
+          <div class="document-download">
+            <a href="documents/pdf/เอกสารแนบ%204%20ปรับสภาพบ้าน.pdf" class="download-btn" download>📥 PDF</a>
+            <span class="file-size">462 KB</span>
+          </div>
+          <div class="document-download">
+            <a href="documents/word/เอกสารแนบ%206.4%20ปรับสภาพบ้าน.docx" class="download-btn" download>📥 Word</a>
+            <span class="file-size">253 KB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📎</div>
+          <div>
+            <div class="document-title">เอกสารแนบ 5: จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ</div>
+            <div class="document-meta">เอกสารแนบ 5</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">หลักเกณฑ์การจัดตั้งศูนย์พัฒนาและฟื้นฟูคุณภาพชีวิตผู้สูงอายุและคนพิการ</p>
+          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
+          <div class="document-download">
+            <a href="documents/pdf/เอกสารแนบ%205%20จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.pdf" class="download-btn" download>📥 PDF</a>
+            <span class="file-size">520 KB</span>
+          </div>
+          <div class="document-download">
+            <a href="documents/word/เอกสารแนบ%206.5%20จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.docx" class="download-btn" download>📥 Word</a>
+            <span class="file-size">1.0 MB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📎</div>
+          <div>
+            <div class="document-title">เอกสารแนบ 6: พัฒนาศักยภาพเครือข่ายบริการ</div>
+            <div class="document-meta">เอกสารแนบ 6</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">หลักเกณฑ์โครงการพัฒนาศักยภาพเครือข่ายบริการเพื่อฟื้นฟูสมรรถภาพผู้พิการและผู้สูงอายุ</p>
+          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
+          <div class="document-download">
+            <a href="documents/pdf/เอกสารแนบ%206%20พัฒนาศักยภาพ.pdf" class="download-btn" download>📥 PDF</a>
+            <span class="file-size">178 KB</span>
+          </div>
+          <div class="document-download">
+            <a href="documents/word/เอกสารแนบ%206.6%20พัฒนาศักยภาพ.docx" class="download-btn" download>📥 Word</a>
+            <span class="file-size">78 KB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📎</div>
+          <div>
+            <div class="document-title">เอกสารแนบ 7: โรคติดต่อและภัยพิบัติ</div>
+            <div class="document-meta">เอกสารแนบ 7</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">หลักเกณฑ์การดำเนินงานด้านโรคติดต่อและสาธารณภัย</p>
+          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
+          <div class="document-download">
+            <a href="documents/pdf/เอกสารแนบ%207%20โรคติดต่อและภัยพิบัติ.pdf" class="download-btn" download>📥 PDF</a>
+            <span class="file-size">171 KB</span>
+          </div>
+          <div class="document-download">
+            <a href="documents/word/เอกสารแนบ%206.7%20โรคติดต่อและภัยพิบัติ.docx" class="download-btn" download>📥 Word</a>
+            <span class="file-size">75 KB</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">🏥</div>
+      <div>
+        <div class="footer-org">กองทุนหลักประกันสุขภาพ</div>
+        <div class="footer-org-sub">จังหวัดระยอง</div>
+      </div>
+    </div>
+    <div class="footer-info">
+      <div class="footer-address">
+        <span>📍</span>
+        <span>140 ม.2 ถ.สุขุมวิท ต.เนินพระ อ.เมือง จ.ระยอง 21000</span>
+      </div>
+      <div class="footer-contact-row">
+        <a href="tel:038617430" class="footer-link">📞 038-617-430 ต่อ 203</a>
+        <a href="tel:0958180720" class="footer-link">📱 095-818-0720</a>
+        <a href="tel:0958190720" class="footer-link">💬 Line: 095-819-0720</a>
+      </div>
+      <div class="footer-contact-row">
+        <a href="https://shorturl.asia/W9nz0" class="footer-link">👥 Facebook Page</a>
+        <a href="https://maps.app.goo.gl/XLqJxpYksk582T5g6" class="footer-link">🗺️ Google Maps</a>
+      </div>
+    </div>
+  </div>
+  <div style="max-width: 1200px; margin: 1rem auto; padding: 0 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; text-align: center; font-size: 0.8rem; opacity: 0.6;">
+    © 2568 กองทุนหลักประกันสุขภาพจังหวัดระยอง · ปรับปรุงล่าสุด 17 สิงหาคม 2569
+  </div>
+</footer>
+
+<script>
+// ── SIDEBAR TOGGLE ──
+var sidebar = document.getElementById('sidebar');
+var sidebarToggle = document.getElementById('sidebarToggle');
+var sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+
+if (sidebarToggle) {
+  sidebarToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+  });
+}
+if (sidebarCloseBtn) {
+  sidebarCloseBtn.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+  });
+}
+
+var sidebarLinks = document.querySelectorAll('.sidebar-nav-link');
+sidebarLinks.forEach(function(link) {
+  link.addEventListener('click', function() {
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('open');
+    }
+  });
+});
+
+// ── SET CURRENT DATE ──
+var currentDate = new Date();
+var dateStr = new Intl.DateTimeFormat('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }).format(currentDate);
+document.getElementById('currentDate').textContent = dateStr;
+
+// ── FONT SIZE ADJUSTMENT ──
+function adjustFont(delta) {
+  var currentSize = parseFloat(window.getComputedStyle(document.body).fontSize);
+  document.body.style.fontSize = (currentSize + delta) + 'px';
+
+  document.querySelectorAll('.gov-a11y button').forEach(function(btn) {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+}
+
+// ── HIGH CONTRAST MODE ──
+function toggleContrast() {
+  document.body.classList.toggle('gov-contrast');
+  event.target.classList.toggle('active');
+  localStorage.setItem('gov-contrast', document.body.classList.contains('gov-contrast'));
+}
+
+// Restore contrast mode from localStorage
+if (localStorage.getItem('gov-contrast') === 'true') {
+  document.body.classList.add('gov-contrast');
+  document.querySelectorAll('.gov-a11y button:last-child')[0].classList.add('active');
+}
+
+// ── USER LOGIN CHECK ──
+(function() {
+  try {
+    var rfu = JSON.parse(localStorage.getItem('rf_user') || 'null');
+    if (rfu && rfu.token) {
+      document.getElementById('indexUserName').textContent = rfu.name || rfu.email;
+    }
+  } catch (e) {
+    console.error('Error loading user info:', e);
+  }
+})();
+</script>
+
+</body>
+</html>

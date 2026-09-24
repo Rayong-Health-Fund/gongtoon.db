@@ -7792,7 +7792,7 @@ window.navigateTo = navigateTo;
       var d = stamp ? new Date(stamp) : null;
       if (d && !isNaN(d.getTime()) && (!latest || d > latest)) latest = d;
     });
-    el.textContent = (latest || new Date()).toLocaleDateString('th-TH', { day:'numeric', month:'long', year:'numeric' });
+    el.textContent = (latest || new Date()).toLocaleDateString('th-TH', { month:'long', year:'numeric' });
   });
   document.querySelectorAll('.footer-sitemap a').forEach(function(a) {
     if (!a.style.color) a.style.color = '#cbd5e1';
