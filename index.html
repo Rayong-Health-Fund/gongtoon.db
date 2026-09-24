@@ -2230,7 +2230,7 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
     <div style="margin-bottom:0.5rem;font-weight:600;">ℹ️ ข้อมูลสำคัญ</div>
     <div>• ที่อยู่: 140 ม.2 ถ.สุขุมวิท ต.เนินพระ อ.เมือง จ.ระยอง 21000</div>
     <div>• โทร: 038-617-430 ต่อ 203 | Line: 095-819-0720</div>
-    <div>• เว็บไซต์นี้ใช้เพื่อจัดการข้อมูลโครงการและการเข้าถึงข้อมูลส่วนบุคคลต้องล็อกอิน</div>
+    <div>• เว็บไซต์นี้แสดงข้อมูลโครงการของกองทุนฯ ให้ประชาชนเข้าถึงได้โดยไม่ต้องเข้าสู่ระบบ</div>
   </div>
 
   <button onclick="dismissWelcomeSplash()" style="
@@ -2454,96 +2454,6 @@ function restartGalleryAutoplay() {
 
 loadGalleryCarousel();
 
-
-// ─────────────────────────────────────────
-// CALENDAR WIDGET (Mini version on home page)
-// ─────────────────────────────────────────
-var EVENTS_API_URL = 'https://script.google.com/macros/s/AKfycbzRxsboi-rH2oS669v3xFesNpYcS1ndvHhjGRxfGq4UaVwYMEgPjz6WmLScSS1WVVSeGQ/exec';
-var calEvents = [];
-var calYear, calMonth;
-
-function fmtDateTH(v) {
-  var d = new Date(v);
-  if (isNaN(d.getTime())) return '';
-  return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
-}
-
-function ymdStr(d) {
-  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-}
-
-function renderCalendarWidget() {
-  var monthNames = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-  document.getElementById('cal-month-label').textContent = monthNames[calMonth] + ' ' + (calYear + 543);
-
-  var dows = ['อา','จ','อ','พ','พฤ','ศ','ส'];
-  var grid = document.getElementById('cal-grid-mini');
-  var html = dows.map(function(d) { return '<div style="text-align:center;font-size:0.65rem;font-weight:700;color:#94a3b8;padding:0.2rem 0;">' + d + '</div>'; }).join('');
-
-  var firstDay = new Date(calYear, calMonth, 1);
-  var startOffset = firstDay.getDay();
-  var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-  var todayStr = ymdStr(new Date());
-
-  for (var i = 0; i < startOffset; i++) html += '<div></div>';
-  for (var day = 1; day <= daysInMonth; day++) {
-    var dateStr = ymdStr(new Date(calYear, calMonth, day));
-    var hasEvent = calEvents.some(function(e) {
-      var start = String(e.event_date || '').slice(0, 10);
-      var end = String(e.end_date || e.event_date || '').slice(0, 10);
-      return dateStr >= start && dateStr <= end;
-    });
-    var isToday = dateStr === todayStr;
-    var style = 'text-align:center;padding:0.3rem 0;font-size:0.75rem;border-radius:4px;' +
-      (isToday ? 'background:#ccfbf1;color:#0f766e;font-weight:700;' : hasEvent ? 'background:#dbeafe;color:#1e40af;' : 'color:#475569;');
-    html += '<div style="' + style + '">' + day + '</div>';
-  }
-  grid.innerHTML = html;
-
-  renderUpcomingMini();
-}
-
-function renderUpcomingMini() {
-  var todayStr = ymdStr(new Date());
-  var upcoming = calEvents.filter(function(ev) {
-    var end = String(ev.end_date || ev.event_date || '').slice(0, 10);
-    return end >= todayStr;
-  }).slice(0, 3);
-
-  var el = document.getElementById('cal-upcoming');
-  if (!upcoming.length) { el.innerHTML = '<div style="text-align:center;padding:0.5rem;font-size:0.75rem;color:#94a3b8;">ยังไม่มีกิจกรรม</div>'; return; }
-  el.innerHTML = upcoming.map(function(ev) {
-    return '<div style="padding:0.4rem;border-bottom:1px solid #f1f5f9;font-size:0.75rem;">'
-      + '<div style="color:#0f766e;font-weight:600;">' + (ev.title || 'กิจกรรม') + '</div>'
-      + '<div style="color:#94a3b8;font-size:0.7rem;">📅 ' + fmtDateTH(ev.event_date) + '</div>'
-    + '</div>';
-  }).join('');
-}
-
-function loadCalendarWidget() {
-  var widget = document.getElementById('calendar-widget');
-  if (widget) widget.style.display = 'block';
-  fetch(EVENTS_API_URL + '?action=events_list')
-    .then(function(r) { return r.json(); })
-    .then(function(json) {
-      if (json.ok && json.events) {
-        calEvents = json.events;
-        renderCalendarWidget();
-      }
-    })
-    .catch(function(err) {
-      console.log('[Calendar] load failed:', err);
-      if (widget) widget.style.display = 'block';
-    });
-}
-
-// Init calendar on page load
-(function() {
-  var now = new Date();
-  calYear = now.getFullYear();
-  calMonth = now.getMonth();
-})();
-loadCalendarWidget();
 
 function govToggleDropdown(e, toggleEl) {
   e.preventDefault();
@@ -7847,7 +7757,7 @@ window.navigateTo = navigateTo;
 })();
 </script>
 
-<!-- COMBINED FLOATING MENU — ปฏิทิน + ติดต่อ -->
+<!-- FLOATING CONTACT MENU -->
 <div id="combinedFAB" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:2000;">
   <!-- Menu Dropdown -->
   <div id="fabMenu" style="display:none;position:absolute;bottom:64px;right:0;width:280px;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);overflow:hidden;font-family:Sarabun,sans-serif;">
@@ -7855,11 +7765,8 @@ window.navigateTo = navigateTo;
     <button onclick="showContactPanel()" style="display:flex;align-items:center;gap:0.75rem;width:100%;padding:0.75rem 1rem;border:none;background:none;color:#334155;font-size:0.9rem;font-family:inherit;font-weight:600;cursor:pointer;text-align:left;transition:all 0.2s;" onmouseover="this.style.background='#f0fdfa'" onmouseout="this.style.background='none'">📞 ติดต่อกองทุนฯ</button>
   </div>
 
-  <!-- Alert Badge -->
-  <div id="weeklyAlertBadge" style="display:none;position:absolute;bottom:70px;right:-5px;background:#ef4444;color:#fff;padding:0.35rem 0.6rem;border-radius:20px;font-size:0.7rem;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(239,68,68,0.4);">📌 มีกิจกรรม</div>
-
   <!-- Main Button -->
-  <button id="combinedBtn" onclick="toggleFabMenu()" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);color:#fff;border:none;box-shadow:0 6px 20px rgba(15,118,110,0.5);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;font-weight:bold;" title="เมนูปฏิทิน & ติดต่อ">⚙️</button>
+  <button id="combinedBtn" onclick="toggleFabMenu()" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);color:#fff;border:none;box-shadow:0 6px 20px rgba(15,118,110,0.5);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;font-weight:bold;" title="ติดต่อกองทุนฯ">⚙️</button>
 </div>
 
 <!-- Contact Panel (Popover) -->
@@ -7912,159 +7819,6 @@ document.addEventListener('click', function(e) {
 
 <script src="assets/js/search-alias.js"></script>
 <script src="assets/js/main.js"></script>
-
-<script>
-// Render floating calendar
-function renderCalendarFloat() {
-  var monthNames = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-  document.getElementById('cal-float-month').textContent = monthNames[calMonth] + ' ' + (calYear + 543);
-
-  var dows = ['อา','จ','อ','พ','พฤ','ศ','ส'];
-  var grid = document.getElementById('cal-float-grid');
-  var html = dows.map(function(d) { return '<div style="text-align:center;font-size:0.7rem;font-weight:700;color:#94a3b8;padding:0.2rem 0;">' + d + '</div>'; }).join('');
-
-  var firstDay = new Date(calYear, calMonth, 1);
-  var startOffset = firstDay.getDay();
-  var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-  var todayStr = ymdStr(new Date());
-
-  for (var i = 0; i < startOffset; i++) html += '<div></div>';
-  for (var day = 1; day <= daysInMonth; day++) {
-    var dateStr = ymdStr(new Date(calYear, calMonth, day));
-    var hasEvent = calEvents.some(function(e) {
-      var start = String(e.event_date || '').slice(0, 10);
-      var end = String(e.end_date || e.event_date || '').slice(0, 10);
-      return dateStr >= start && dateStr <= end;
-    });
-    var isToday = dateStr === todayStr;
-    var style = 'text-align:center;padding:0.35rem 0;font-size:0.8rem;border-radius:4px;' +
-      (isToday ? 'background:#ccfbf1;color:#0f766e;font-weight:700;' : hasEvent ? 'background:#dbeafe;color:#1e40af;' : 'color:#475569;');
-    html += '<div style="' + style + '">' + day + '</div>';
-  }
-  grid.innerHTML = html;
-
-  var todayStr = ymdStr(new Date());
-  var upcoming = calEvents.filter(function(ev) {
-    var end = String(ev.end_date || ev.event_date || '').slice(0, 10);
-    return end >= todayStr;
-  }).slice(0, 5);
-
-  var el = document.getElementById('cal-float-upcoming');
-  if (!upcoming.length) { el.innerHTML = '<div style="text-align:center;padding:0.5rem;color:#94a3b8;font-size:0.75rem;">ยังไม่มีกิจกรรม</div>'; return; }
-  el.innerHTML = upcoming.map(function(ev) {
-    return '<div style="padding:0.5rem;border-bottom:1px solid #f1f5f9;font-size:0.75rem;">'
-      + '<div style="color:#0f766e;font-weight:600;">' + (ev.title || 'กิจกรรม') + '</div>'
-      + '<div style="color:#94a3b8;font-size:0.7rem;">📅 ' + fmtDateTH(ev.event_date) + '</div>'
-    + '</div>';
-  }).join('');
-}
-
-// ตรวจสอบกิจกรรมในสัปดาห์นี้ และแสดง alert badge
-function checkWeeklyEvents() {
-  var today = new Date();
-  var weekStart = new Date(today);
-  weekStart.setDate(today.getDate() - today.getDay()); // วันอาทิตย์ของสัปดาห์นี้
-  var weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekStart.getDate() + 6); // วันเสาร์
-
-  var ymd = function(d) {
-    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-  };
-
-  var weekStartStr = ymd(weekStart);
-  var weekEndStr = ymd(weekEnd);
-
-  var weeklyEvents = calEvents.filter(function(ev) {
-    var start = String(ev.event_date || '').slice(0, 10);
-    var end = String(ev.end_date || ev.event_date || '').slice(0, 10);
-    return (start >= weekStartStr && start <= weekEndStr) || (end >= weekStartStr && end <= weekEndStr);
-  });
-
-  var badge = document.getElementById('weeklyAlertBadge');
-  if (badge) {
-    badge.style.display = weeklyEvents.length > 0 ? 'block' : 'none';
-  }
-}
-
-// Attach calendar float listeners
-document.addEventListener('DOMContentLoaded', function() {
-  loadCalendarWidget();
-  if (calEvents.length > 0) {
-    renderCalendarFloat();
-    checkWeeklyEvents();
-  }
-});
-</script>
-
-<!-- Event Notification Popup -->
-<div id="eventNotification" style="display:none;position:fixed;top:2rem;right:1.5rem;max-width:320px;background:#fff;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.2);padding:1rem;z-index:2500;font-family:Sarabun,sans-serif;border-left:4px solid #10b981;animation:slideIn 0.3s ease-out;">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
-    <div style="font-weight:700;color:#0f766e;font-size:0.95rem;">📅 มีกิจกรรม</div>
-    <button onclick="document.getElementById('eventNotification').style.display='none';" style="background:none;border:none;color:#94a3b8;font-size:1rem;cursor:pointer;padding:0;">✕</button>
-  </div>
-  <div id="eventNotificationContent" style="font-size:0.85rem;color:#475569;line-height:1.5;"></div>
-</div>
-
-<style>
-@keyframes slideIn {
-  from {
-    transform: translateX(400px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-</style>
-
-<script>
-// Load and display upcoming events as notification
-(function() {
-  var EVENTS_API = 'https://script.google.com/macros/s/AKfycbzRxsboi-rH2oS669v3xFesNpYcS1ndvHhjGRxfGq4UaVwYMEgPjz6WmLScSS1WVVSeGQ/exec';
-
-  function showEventNotification() {
-    fetch(EVENTS_API + '?action=events_list')
-      .then(function(r) { return r.json(); })
-      .then(function(json) {
-        if (!json.ok || !json.events || json.events.length === 0) return;
-
-        var todayStr = new Date().toISOString().split('T')[0];
-        var upcomingEvents = json.events.filter(function(ev) {
-          var eventDate = String(ev.event_date || '').slice(0, 10);
-          return eventDate >= todayStr;
-        }).slice(0, 3);
-
-        if (upcomingEvents.length === 0) return;
-
-        var html = '<div>';
-        upcomingEvents.forEach(function(ev) {
-          html += '<div style="margin-bottom:0.5rem;">' +
-                  '<div style="font-weight:600;color:#0f766e;">' + (ev.title || 'กิจกรรม') + '</div>' +
-                  '<div style="font-size:0.75rem;color:#64748b;">' + String(ev.event_date || '').slice(0, 10) + '</div>' +
-                  '</div>';
-        });
-        html += '</div>';
-
-        document.getElementById('eventNotificationContent').innerHTML = html;
-        document.getElementById('eventNotification').style.display = 'block';
-
-        setTimeout(function() {
-          document.getElementById('eventNotification').style.display = 'none';
-        }, 6000);
-      })
-      .catch(function(err) {
-        console.error('Event notification error:', err);
-      });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', showEventNotification);
-  } else {
-    showEventNotification();
-  }
-})();
-</script>
 
 </body>
 </html>
