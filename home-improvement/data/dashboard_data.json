@@ -1,0 +1,4840 @@
+{
+  "ok": true,
+  "project": "P1",
+  "projectName": "โครงการปรับสภาพแวดล้อมที่อยู่อาศัยสำหรับคนพิการ ผู้สูงอายุ ผู้ป่วยที่อยู่ในระยะกึ่งเฉียบพลันและผู้ที่มีภาวะพึ่งพิง",
+  "updatedAt": "2026-09-24T06:48:30.014Z",
+  "summary": {
+    "totalRecords": 351,
+    "completed": 342,
+    "inProgress": 9,
+    "totalBudget": 15888965.170000002,
+    "districtCount": 8,
+    "agencyCount": 9,
+    "averageBudgetPerRecord": 45268
+  },
+  "filters": {
+    "years": [
+      "2558-2560",
+      "2561",
+      "2562",
+      "2563",
+      "2564",
+      "2565",
+      "2566",
+      "2567",
+      "2568",
+      "2569"
+    ],
+    "districts": [
+      "แกลง",
+      "นิคมพัฒนา",
+      "บ้านค่าย",
+      "บ้านฉาง",
+      "เขาชะเมา",
+      "เมือง",
+      "ปลวกแดง",
+      "วังจันทร์"
+    ],
+    "subdistricts": [
+      "ชำฆ้อ",
+      "กระแสบน",
+      "นิคมพัฒนา",
+      "หนองละลอก",
+      "ตาขัน",
+      "สำนักท้อน",
+      "ทุ่งควายกิน",
+      "หนองตะพาน",
+      "น้ำเป็น",
+      "เนินฆ้อ",
+      "ชากโดน",
+      "มาบข่า",
+      "ห้วยทับมอญ",
+      "ทับมา",
+      "บ้านค่าย",
+      "กองดิน",
+      "นาตาขวัญ",
+      "สำนักทอง",
+      "ทางเกวียน",
+      "วังหว้า",
+      "ละหาร",
+      "ปลวกแดง",
+      "พังราด",
+      "คลองปูน",
+      "ป่ายุบใน",
+      "บ้านแลง",
+      "ชุมแสง",
+      "เชิงเนิน",
+      "พลงตาเอี่ยม",
+      "หนองไร่",
+      "กะเฉด",
+      "เขาน้อย",
+      "ตะพง",
+      "บางบุตร",
+      "เนินพระ",
+      "ปากน้ำประแส"
+    ],
+    "agencies": [
+      "ทต.เมืองแกลง",
+      "อบต.น้ำเป็น",
+      "ทต.มาบข่าพัฒนา",
+      "อบต.ตะพง",
+      "ทต.ปากน้ำประแส",
+      "อบต.วังหว้า",
+      "อบต.สำนักท้อน",
+      "อบต.คลองปูน",
+      "ทต.ชากหมาก"
+    ],
+    "statuses": [
+      "แล้วเสร็จ",
+      "กำลังดำเนินการ"
+    ],
+    "statusGroups": [
+      "ผู้พิการ",
+      "ผู้สูงอายุ",
+      "ผู้สูงอายุ/ผู้พิการ"
+    ],
+    "disabilityCodes": []
+  },
+  "charts": {
+    "byYear": {
+      "2561": {
+        "budget": 458900,
+        "count": 13
+      },
+      "2562": {
+        "budget": 1598100,
+        "count": 44
+      },
+      "2563": {
+        "budget": 1174000,
+        "count": 29
+      },
+      "2564": {
+        "budget": 1564006,
+        "count": 40
+      },
+      "2565": {
+        "budget": 1690600,
+        "count": 39
+      },
+      "2566": {
+        "budget": 1875981.6,
+        "count": 40
+      },
+      "2567": {
+        "budget": 1979942.57,
+        "count": 45
+      },
+      "2568": {
+        "budget": 1334500,
+        "count": 28
+      },
+      "2569": {
+        "budget": 334000,
+        "count": 9
+      },
+      "2558-2560": {
+        "budget": 3878935,
+        "count": 64
+      }
+    },
+    "byDistrict": {
+      "แกลง": 176,
+      "นิคมพัฒนา": 21,
+      "บ้านค่าย": 21,
+      "บ้านฉาง": 48,
+      "เขาชะเมา": 42,
+      "เมือง": 24,
+      "ปลวกแดง": 5,
+      "วังจันทร์": 14
+    },
+    "byType": {
+      "ผู้พิการ": 98,
+      "ผู้สูงอายุ": 139,
+      "ผู้สูงอายุ/ผู้พิการ": 114
+    },
+    "byDisability": {
+      "ทางการเคลื่อนไหวหรือทางร่างกาย": 155,
+      "ทางสติปัญญา": 25,
+      "ทางการได้ยินหรือสื่อความหมาย": 17,
+      "ทางจิตใจหรือพฤติกรรม": 14,
+      "ทางการเรียนรู้": 6,
+      "ทางการเห็น": 24,
+      "ทางออทิสติก": 1
+    },
+    "byAge": [
+      10,
+      21,
+      67,
+      171,
+      82
+    ]
+  },
+  "records": [
+    {
+      "personName": "นายน*** รื่น***",
+      "age": 59,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "แกลง",
+      "budget": 90400,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวบ*** ขอบ***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "แกลง",
+      "budget": 27000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางบุ*** อาชญ***",
+      "age": 74,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "กระแสบน",
+      "district": "แกลง",
+      "budget": 110000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายถ*** ขัน***",
+      "age": 39,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "กระแสบน",
+      "district": "แกลง",
+      "budget": 119800,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** ศรีส***",
+      "age": 41,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "กระแสบน",
+      "district": "แกลง",
+      "budget": 29697,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** วงค์***",
+      "age": 42,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "กระแสบน",
+      "district": "แกลง",
+      "budget": 117800,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายพีร*** โพธิ์แ***",
+      "age": 29,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "นิคมพัฒนา",
+      "district": "นิคมพัฒนา",
+      "budget": 81528,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายบุญ*** ธนะเ***",
+      "age": 70,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "นิคมพัฒนา",
+      "district": "นิคมพัฒนา",
+      "budget": 71771,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** สังวา***",
+      "age": 50,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "นิคมพัฒนา",
+      "district": "นิคมพัฒนา",
+      "budget": 19256,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** กุเลา***",
+      "age": 75,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "นิคมพัฒนา",
+      "district": "นิคมพัฒนา",
+      "budget": 57000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางก*** บุตรพ***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "นิคมพัฒนา",
+      "district": "นิคมพัฒนา",
+      "budget": 8080,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางล*** แจ้งหง***",
+      "age": 50,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "นิคมพัฒนา",
+      "district": "นิคมพัฒนา",
+      "budget": 34100,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** โพธิ***",
+      "age": 75,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "นิคมพัฒนา",
+      "district": "นิคมพัฒนา",
+      "budget": 13900,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางว*** ธรรม***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "นิคมพัฒนา",
+      "district": "นิคมพัฒนา",
+      "budget": 5859,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางอ*** ทอง***",
+      "age": 70,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "นิคมพัฒนา",
+      "district": "นิคมพัฒนา",
+      "budget": 37341,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางเ*** พลอ***",
+      "age": 72,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "นิคมพัฒนา",
+      "district": "นิคมพัฒนา",
+      "budget": 66098,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** วิทย***",
+      "age": 64,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "หนองละลอก",
+      "district": "บ้านค่าย",
+      "budget": 87330,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** แสวงหา***",
+      "age": 70,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ตาขัน",
+      "district": "บ้านค่าย",
+      "budget": 29670,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสา*** จันทร์***",
+      "age": 65,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 88000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** ระว***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 120000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางปร*** งามทร***",
+      "age": 47,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 1900,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายวิ*** พรหมภ***",
+      "age": 52,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 30000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายฤท*** งบสุ***",
+      "age": 42,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 23000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายเ*** นลิน***",
+      "age": 71,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "แกลง",
+      "budget": 22900,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "เด็กชา*** แสง***",
+      "age": 15,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 76000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "เด็กชา*** มุสิ***",
+      "age": 13,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 54000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** แช่ม***",
+      "age": 61,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 101000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายอ*** ภิญโญ***",
+      "age": 45,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "หนองตะพาน",
+      "district": "บ้านค่าย",
+      "budget": 21500,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายปร*** ศิร***",
+      "age": 65,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "หนองตะพาน",
+      "district": "บ้านค่าย",
+      "budget": 120000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายอ*** ศรีร***",
+      "age": 75,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "หนองตะพาน",
+      "district": "บ้านค่าย",
+      "budget": 75000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางว*** เจริญ***",
+      "age": 17,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "หนองตะพาน",
+      "district": "บ้านค่าย",
+      "budget": 21000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายธน*** ไชยม***",
+      "age": 35,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 74000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางจิตใจหรือพฤติกรรม"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายพ*** ใจใ***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 120000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "เด็กชาย*** เคราะ***",
+      "age": 12,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "น้ำเป็น",
+      "district": "เขาชะเมา",
+      "budget": 21210,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย",
+        "ทางสติปัญญา",
+        "ทางการเรียนรู้"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสงก*** ดีผ***",
+      "age": 50,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "น้ำเป็น",
+      "district": "เขาชะเมา",
+      "budget": 56131,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายจีร*** ฉล***",
+      "age": 35,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 37000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายร*** ประ***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 68000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายวร*** เมือ***",
+      "age": 47,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 55000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายบุ*** เมือง***",
+      "age": 57,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 52000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย",
+        "ทางการเคลื่อนไหวหรือทางร่างกาย",
+        "ทางสติปัญญา",
+        "ทางการเรียนรู้"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายธ*** ปฏิส***",
+      "age": 47,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 69000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายบุ*** เจนพ***",
+      "age": 43,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 35700,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายวิ*** ดวงแ***",
+      "age": 38,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 67000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** มังค***",
+      "age": 61,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชากโดน",
+      "district": "แกลง",
+      "budget": 114700,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายจ*** วงศ์ร***",
+      "age": 82,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชากโดน",
+      "district": "แกลง",
+      "budget": 26000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายก*** ก้องเ***",
+      "age": 61,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชากโดน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายอ*** พงษ์***",
+      "age": 58,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 65000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสา*** เกตุสุ***",
+      "age": 50,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "มาบข่า",
+      "district": "นิคมพัฒนา",
+      "budget": 51940,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** บุญ***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 68000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายพิส*** แก้วป***",
+      "age": 56,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทับมา",
+      "district": "เมือง",
+      "budget": 119730,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางแ*** ตรึกห***",
+      "age": 74,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 69000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายอธ*** งาม***",
+      "age": 30,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 69000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางแ*** ประ***",
+      "age": 77,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 69000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายถ*** คุณอ***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 16000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** รถย***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 68000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** อินการ***",
+      "age": 82,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 67000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** ขัน***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "บ้านค่าย",
+      "district": "บ้านค่าย",
+      "budget": 51894,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** ประคอ***",
+      "age": 65,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "บ้านค่าย",
+      "district": "บ้านค่าย",
+      "budget": 29468,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** หวลกร***",
+      "age": 92,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "บ้านค่าย",
+      "district": "บ้านค่าย",
+      "budget": 11220,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น",
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** พึงก***",
+      "age": 69,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "บ้านค่าย",
+      "district": "บ้านค่าย",
+      "budget": 9220,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางท*** ศิริว***",
+      "age": 79,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "บ้านค่าย",
+      "district": "บ้านค่าย",
+      "budget": 49270,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** สึบป***",
+      "age": 75,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "กองดิน",
+      "district": "แกลง",
+      "budget": 119522,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวอ*** ออมช***",
+      "age": 39,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "นาตาขวัญ",
+      "district": "เมือง",
+      "budget": 120000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายม*** พิมพ***",
+      "age": 55,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "สำนักทอง",
+      "district": "เมือง",
+      "budget": 99000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายฉ*** คงคา***",
+      "age": 49,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 120000,
+      "sourceYearLabel": "2558-2560",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางบุ*** ใจ***",
+      "age": 72,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** สิงหา***",
+      "age": 64,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายเ*** สดส***",
+      "age": 29,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางออทิสติก"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** มโน***",
+      "age": 74,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายก*** ลุย***",
+      "age": 52,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 28000,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางจ*** ปัดป***",
+      "age": 65,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 28000,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายธ*** รอด***",
+      "age": 66,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 44000,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย",
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายเ*** ตรึก***",
+      "age": 40,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางบุญ*** รัตนว***",
+      "age": 82,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสา*** เขา***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 30000,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** เจริญ***",
+      "age": 63,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 30000,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสา*** พวงเ***",
+      "age": 59,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "มาบข่า",
+      "district": "นิคมพัฒนา",
+      "budget": 29000,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางร*** เกตุสุ***",
+      "age": 55,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "มาบข่า",
+      "district": "นิคมพัฒนา",
+      "budget": 49900,
+      "sourceYearLabel": "2561",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น",
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** ศิลา***",
+      "age": 83,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายสว*** คิดต***",
+      "age": 84,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางม*** ยะ***",
+      "age": 60,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายเ*** บุญแ***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายพร*** ศรีห***",
+      "age": 46,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายเทิด*** หนูตะ***",
+      "age": 50,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางรุ*** โปร่ง***",
+      "age": 60,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายร*** หท***",
+      "age": 75,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายปร*** จำเน***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายเ*** ชาญย***",
+      "age": 63,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายว*** โปร่ง***",
+      "age": 80,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางกั*** ศรีสัง***",
+      "age": 54,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายประ*** งามเส***",
+      "age": 77,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** กล้า***",
+      "age": 63,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** พรหม***",
+      "age": 55,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "น.*** เยาวล*** จันทร์พ***",
+      "age": 45,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 20000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเรียนรู้"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายเอ*** จันทร***",
+      "age": 75,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายถ*** รัตนว***",
+      "age": 58,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายสุ*** ปะสิ่***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** สกุลจ***",
+      "age": 50,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายจ*** เจริญ***",
+      "age": 78,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางส*** อรัญเ***",
+      "age": 69,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** สรรเ***",
+      "age": 46,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** มาลัย***",
+      "age": 64,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** บุญเ***",
+      "age": 76,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ละหาร",
+      "district": "ปลวกแดง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายทนง*** โพธิ***",
+      "age": 56,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ปลวกแดง",
+      "district": "ปลวกแดง",
+      "budget": 49100,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** อนัน***",
+      "age": 34,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** จินด***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางส*** ศรีศ***",
+      "age": 73,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางห*** เอี่***",
+      "age": 88,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "น.ส.สม*** แพทย์ป***",
+      "age": 60,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "พังราด",
+      "district": "แกลง",
+      "budget": 20000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวแ*** บุญผ***",
+      "age": 49,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "คลองปูน",
+      "district": "แกลง",
+      "budget": 49000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายติศ*** มั่ง***",
+      "age": 64,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย",
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายอธ*** งาม***",
+      "age": 34,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเรียนรู้"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางจ*** สุวรร***",
+      "age": 86,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายพิ*** สุวรร***",
+      "age": 47,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** หาที***",
+      "age": 83,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** ก่อเ***",
+      "age": 70,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางก*** ผสมทร***",
+      "age": 52,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางจำ*** รุจิ***",
+      "age": 79,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายบ*** ปะสิ่***",
+      "age": 52,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** ขัดเ***",
+      "age": 48,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย",
+        "ทางการเคลื่อนไหวหรือทางร่างกาย",
+        "ทางจิตใจหรือพฤติกรรม",
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** รุจิ***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายว*** มั่ง***",
+      "age": 84,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2562",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางก*** แก้ว***",
+      "age": 53,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 20000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายวิ*** พานแ***",
+      "age": 42,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 30000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย",
+        "ทางจิตใจหรือพฤติกรรม",
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางจ*** พิ***",
+      "age": 73,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางโ*** วิลัย***",
+      "age": 27,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 25400,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายบ*** คล้อ***",
+      "age": 63,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** พงษ์เ***",
+      "age": 59,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "น.ส.แรม*** จันทร***",
+      "age": 36,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 30000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางจ*** รื่น***",
+      "age": 70,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางน้*** อักษร***",
+      "age": 70,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** เดชสุ***",
+      "age": 66,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสา*** แหยมพั***",
+      "age": 62,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางด*** ช่วง***",
+      "age": 58,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "มาบข่า",
+      "district": "นิคมพัฒนา",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "น.ส.จิ*** เกตุส***",
+      "age": 17,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "มาบข่า",
+      "district": "นิคมพัฒนา",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายอนุ*** พุ่มเ***",
+      "age": 29,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ป่ายุบใน",
+      "district": "วังจันทร์",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางเ*** พิทัก***",
+      "age": 56,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "บ้านแลง",
+      "district": "เมือง",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายว*** เจริ***",
+      "age": 36,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย",
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางป*** ธิย***",
+      "age": 70,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางจิตใจหรือพฤติกรรม"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายรั*** สุวรร***",
+      "age": 57,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ชากโดน",
+      "district": "แกลง",
+      "budget": 49000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "น.ส.สำ*** ม่วงทอ***",
+      "age": 77,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ชากโดน",
+      "district": "แกลง",
+      "budget": 17600,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายท*** เกตุส***",
+      "age": 65,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชากโดน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางส*** วงศ์จ***",
+      "age": 94,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 36000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายสง*** ดีก***",
+      "age": 76,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 34000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางทอ*** นาวีเ***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 20000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายปร*** จำเน***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 13000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางบุ*** อรัญว***",
+      "age": 76,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายว*** โปร่ง***",
+      "age": 82,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 19000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** ยืน***",
+      "age": 75,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสม*** ทองด***",
+      "age": 65,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ละหาร",
+      "district": "ปลวกแดง",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** เรือ***",
+      "age": 59,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ละหาร",
+      "district": "ปลวกแดง",
+      "budget": 50000,
+      "sourceYearLabel": "2563",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายบุ*** นาคพ***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางกุ*** บุญ***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายเท*** ยอดย***",
+      "age": 78,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 42400,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางว*** ยั่ง***",
+      "age": 66,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 27800,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสม*** ผสมทร***",
+      "age": 70,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 48000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางย*** สุวรรณ***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางช*** พูว***",
+      "age": 82,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 49000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** ยับ***",
+      "age": 82,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 100000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายว*** ก้าวหน้***",
+      "age": 86,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวว*** ธีรท***",
+      "age": 79,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ชุมแสง",
+      "district": "วังจันทร์",
+      "budget": 21000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** ตันบ***",
+      "age": 84,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ชุมแสง",
+      "district": "วังจันทร์",
+      "budget": 50000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางห*** สดภิ***",
+      "age": 90,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ชุมแสง",
+      "district": "วังจันทร์",
+      "budget": 10000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "ด.ญ.ภ*** สุทธ***",
+      "age": 12,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เชิงเนิน",
+      "district": "เมือง",
+      "budget": 26000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย",
+        "ทางการเคลื่อนไหวหรือทางร่างกาย",
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางโ*** วงษ์ส***",
+      "age": 84,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "หนองละลอก",
+      "district": "บ้านค่าย",
+      "budget": 44213,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางท*** แซ่***",
+      "age": 82,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "หนองละลอก",
+      "district": "บ้านค่าย",
+      "budget": 43224,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** เพ็ชรส***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "หนองละลอก",
+      "district": "บ้านค่าย",
+      "budget": 40143,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** วงศ์พิ***",
+      "age": 80,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "หนองละลอก",
+      "district": "บ้านค่าย",
+      "budget": 49700,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางแ*** ทองก***",
+      "age": 80,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "หนองละลอก",
+      "district": "บ้านค่าย",
+      "budget": 49800,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** จันทร์ก***",
+      "age": 58,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 24100,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายบร*** อัมฤ***",
+      "age": 60,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 28900,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวธั*** ใจส***",
+      "age": 41,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 42895,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางจิตใจหรือพฤติกรรม",
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** ปราบ***",
+      "age": 71,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสม*** สารร***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 45731,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** หิน***",
+      "age": 89,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 30000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางจ*** พูลสว***",
+      "age": 89,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 30000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางจิตใจหรือพฤติกรรม"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** โพธิ***",
+      "age": 71,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางส*** ศรีส***",
+      "age": 84,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "กองดิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายจ*** ตองอ***",
+      "age": 88,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 36000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** เกตุ***",
+      "age": 62,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 30000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางห*** สาย***",
+      "age": 91,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 42000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายป*** เกิดม***",
+      "age": 87,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 43000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางปร*** มุ้ยทอ***",
+      "age": 79,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายจ*** ทองจั***",
+      "age": 48,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 30000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** แจ่มเ***",
+      "age": 87,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 40000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางอ*** ทองเ***",
+      "age": 86,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 40000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** อ้อม***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางปร*** สุขประ***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 11000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "ด.ญ.พฤ*** พันเค***",
+      "age": 3,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 27000,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายศัก*** สุทธิ***",
+      "age": 44,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 8600,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายฉ*** วงศ์***",
+      "age": 72,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 3500,
+      "sourceYearLabel": "2564",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายสว*** หน่ายห***",
+      "age": 71,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 30000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางแต*** สุทธิส***",
+      "age": 77,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวป*** เที่ย***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางว*** คล่อง***",
+      "age": 62,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 49800,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** พ้นร***",
+      "age": 60,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "น.ส.สม*** แพทย์ปร***",
+      "age": 63,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "พังราด",
+      "district": "แกลง",
+      "budget": 40000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางปร*** มุกดา***",
+      "age": 70,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "พังราด",
+      "district": "แกลง",
+      "budget": 35500,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** ลำ***",
+      "age": 88,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "พังราด",
+      "district": "แกลง",
+      "budget": 48600,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางจิตใจหรือพฤติกรรม"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางณ*** พลายงา***",
+      "age": 78,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** กรเ***",
+      "age": 75,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 35600,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางอ*** พนาว***",
+      "age": 74,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสำ*** วงค์***",
+      "age": 64,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** ปตุ***",
+      "age": 69,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชำฆ้อ",
+      "district": "เขาชะเมา",
+      "budget": 16400,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย",
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** สว่าง***",
+      "age": 80,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "พลงตาเอี่ยม",
+      "district": "วังจันทร์",
+      "budget": 46400,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายชู*** อุดห***",
+      "age": 74,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชุมแสง",
+      "district": "วังจันทร์",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางท*** ศรีม่ว***",
+      "age": 80,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "พลงตาเอี่ยม",
+      "district": "วังจันทร์",
+      "budget": 29300,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางห*** สดภิ***",
+      "age": 92,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ชุมแสง",
+      "district": "วังจันทร์",
+      "budget": 4000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางม*** ภิรมณ***",
+      "age": 88,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "พลงตาเอี่ยม",
+      "district": "วังจันทร์",
+      "budget": 34900,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** กว้าง***",
+      "age": 54,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "พลงตาเอี่ยม",
+      "district": "วังจันทร์",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางจิตใจหรือพฤติกรรม"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายแ*** เชื้อ***",
+      "age": 72,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางน*** สุพ***",
+      "age": 65,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางเหร*** ไพรส***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางจ*** สาเท***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางบ*** เพียร***",
+      "age": 78,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** งาม***",
+      "age": 56,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายสัง*** คล้าย***",
+      "age": 84,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** กลิ่น***",
+      "age": 42,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย",
+        "ทางการเคลื่อนไหวหรือทางร่างกาย",
+        "ทางสติปัญญา",
+        "ทางการเรียนรู้"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางธ*** สุวรร***",
+      "age": 61,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางห*** จันทร***",
+      "age": 76,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 20000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสม*** งาม***",
+      "age": 80,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 40000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** สบเ***",
+      "age": 36,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "เนินฆ้อ",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสา*** ศรีหา***",
+      "age": 47,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "น้ำเป็น",
+      "district": "เขาชะเมา",
+      "budget": 37300,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายล*** เจริ***",
+      "age": 70,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "น้ำเป็น",
+      "district": "เขาชะเมา",
+      "budget": 41500,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายม*** เรืองจ***",
+      "age": 73,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "น้ำเป็น",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางทอ*** พรม***",
+      "age": 58,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "น้ำเป็น",
+      "district": "เขาชะเมา",
+      "budget": 38300,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายสำ*** เขตน***",
+      "age": 63,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "หนองไร่",
+      "district": "ปลวกแดง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายเ*** วงษ์ไ***",
+      "age": 65,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "มาบข่า",
+      "district": "นิคมพัฒนา",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางถ*** เฟื่***",
+      "age": 72,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "กะเฉด",
+      "district": "เมือง",
+      "budget": 50000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** รักษ***",
+      "age": 82,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "บ้านแลง",
+      "district": "เมือง",
+      "budget": 43000,
+      "sourceYearLabel": "2565",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางอ*** ถนอม***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางส*** ฤา***",
+      "age": 80,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางพ*** ปิ่น***",
+      "age": 75,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** เกาะ***",
+      "age": 54,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสา*** มุกดา***",
+      "age": 79,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายปร*** เกตุกิ***",
+      "age": 65,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เขาน้อย",
+      "district": "เขาชะเมา",
+      "budget": 43100,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย",
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** ชินทร***",
+      "age": 76,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "เขาน้อย",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** สุวั***",
+      "age": 62,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** ผูกพ***",
+      "age": 56,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางจิตใจหรือพฤติกรรม"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสา*** ปัญ***",
+      "age": 88,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวท*** ศิริ***",
+      "age": 72,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 40800,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางปร*** ตรึกห***",
+      "age": 82,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 25900,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสา*** ช่างต***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายประ*** เร่ง***",
+      "age": 64,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** ใจเ***",
+      "age": 71,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายสุ*** โสภ***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางเ*** แสง***",
+      "age": 90,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางว*** ใจส***",
+      "age": 62,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 27000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายห*** ไพร***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 27500,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายเ*** เพิ่***",
+      "age": 88,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางเ*** ล่วง***",
+      "age": 83,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 49700,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสัง*** วรรณป***",
+      "age": 71,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางบุ*** งามเส***",
+      "age": 83,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 29600,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสา*** ปะสิ่***",
+      "age": 58,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 44800,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น",
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายสม*** ไถ่***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "คลองปูน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายบุญ*** ศรี***",
+      "age": 69,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "คลองปูน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางจิตใจหรือพฤติกรรม"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางส*** เกิ***",
+      "age": 82,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางย*** หยง***",
+      "age": 62,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "พลงตาเอี่ยม",
+      "district": "วังจันทร์",
+      "budget": 49200,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** วงษ์จ***",
+      "age": 52,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "สำนักทอง",
+      "district": "เมือง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** คงศ***",
+      "age": 83,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "เชิงเนิน",
+      "district": "เมือง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสม*** หอมช***",
+      "age": 59,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ตะพง",
+      "district": "เมือง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายสม*** สวัสด***",
+      "age": 64,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ตะพง",
+      "district": "เมือง",
+      "budget": 45072,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** แสงสิน***",
+      "age": 86,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ตะพง",
+      "district": "เมือง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** กระแสส***",
+      "age": 65,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ตะพง",
+      "district": "เมือง",
+      "budget": 48309.6,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** เอกอ***",
+      "age": 82,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ตะพง",
+      "district": "เมือง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางล*** ธาระ***",
+      "age": 85,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางป*** แสงอ***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 45000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** ธาระ***",
+      "age": 76,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายดำ*** แก่น***",
+      "age": 52,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น",
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางศ*** พัฒนสิร***",
+      "age": 75,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2566",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายวิส*** ฆวีว***",
+      "age": 63,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "บางบุตร",
+      "district": "บ้านค่าย",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายต*** มาดป***",
+      "age": 95,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "บางบุตร",
+      "district": "บ้านค่าย",
+      "budget": 42000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางจิตใจหรือพฤติกรรม"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวอุ*** บุญเ***",
+      "age": 62,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "น้ำเป็น",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสงก*** ดีผ***",
+      "age": 92,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "น้ำเป็น",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายศิ*** นึก***",
+      "age": 39,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "น้ำเป็น",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย",
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวเ*** แซ่เ***",
+      "age": 66,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 49714.15,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย",
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายอดิ*** ช่าง***",
+      "age": 51,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางจิตใจหรือพฤติกรรม"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายจิร*** ทุ่ง***",
+      "age": 35,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 49996.45,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางบ*** ประส***",
+      "age": 74,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวแ*** ฉาบคร***",
+      "age": 66,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** ผลวั***",
+      "age": 51,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 28410,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางม*** ทองห***",
+      "age": 89,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 43400,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางอ*** เจิด***",
+      "age": 92,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางปร*** วิเวก***",
+      "age": 56,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "หนองตะพาน",
+      "district": "บ้านค่าย",
+      "budget": 20000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสุ*** วงศ์***",
+      "age": 69,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "หนองตะพาน",
+      "district": "บ้านค่าย",
+      "budget": 29500,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางส*** ทอง***",
+      "age": 65,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "หนองตะพาน",
+      "district": "บ้านค่าย",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายน*** จันทร***",
+      "age": 76,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "เนินพระ",
+      "district": "เมือง",
+      "budget": 29183,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวอ*** คงศ***",
+      "age": 46,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "นาตาขวัญ",
+      "district": "เมือง",
+      "budget": 33993.15,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางส*** พันธุ์***",
+      "age": 62,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "นาตาขวัญ",
+      "district": "เมือง",
+      "budget": 42726.31,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางส*** วงษ์เ***",
+      "age": 83,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "นาตาขวัญ",
+      "district": "เมือง",
+      "budget": 34160.13,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** เพ็ชรฉ***",
+      "age": 79,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "นาตาขวัญ",
+      "district": "เมือง",
+      "budget": 40759.38,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายก*** ชลม***",
+      "age": 91,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "นาตาขวัญ",
+      "district": "เมือง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางอ*** ทองเ***",
+      "age": 69,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายบุ*** สาเท***",
+      "age": 83,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** สาเท***",
+      "age": 69,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** โพน***",
+      "age": 70,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** พิร***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 44000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางอ*** สมพั***",
+      "age": 91,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางแน่*** เหลือ***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวสุ*** สุเมธ***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** สุก***",
+      "age": 83,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายม*** รุ่งโ***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ตะพง",
+      "district": "เมือง",
+      "budget": 27800,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางส*** ไกรอิ***",
+      "age": 88,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ตะพง",
+      "district": "เมือง",
+      "budget": 48000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางจ*** แสนเ***",
+      "age": 60,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ตะพง",
+      "district": "เมือง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นางบุ*** อินฉ***",
+      "age": 75,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชุมแสง",
+      "district": "วังจันทร์",
+      "budget": 8900,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาวส*** นึกแ***",
+      "age": 62,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ชุมแสง",
+      "district": "วังจันทร์",
+      "budget": 46400,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสาว*** พิกุ***",
+      "age": 63,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "พลงตาเอี่ยม",
+      "district": "วังจันทร์",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายส*** อยู่ท***",
+      "age": 62,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "ทุ่งควายกิน",
+      "district": "แกลง",
+      "budget": 19400,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นายเทพว*** แผนพ***",
+      "age": 60,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "คลองปูน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางสา*** สมพรช***",
+      "age": 78,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "คลองปูน",
+      "district": "แกลง",
+      "budget": 41600,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "ด.ช.เธีย*** อานันท์***",
+      "age": 6,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "คลองปูน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นางกุ*** ร่วม***",
+      "age": 71,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาย*** ดีชั่ว***",
+      "age": 87,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "นายเท*** ยวดย***",
+      "age": 81,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": ""
+    },
+    {
+      "personName": "ด.ญ.ประ*** ปาน***",
+      "age": 12,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2567",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น",
+        "ทางการได้ยินหรือสื่อความหมาย",
+        "ทางการเคลื่อนไหวหรือทางร่างกาย",
+        "ทางสติปัญญา"
+      ],
+      "agency": ""
+    },
+    {
+      "personName": "นาง*** แจ้ง***",
+      "age": 78,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "ทต.เมืองแกลง"
+    },
+    {
+      "personName": "นางบุ*** จำเ***",
+      "age": 86,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 49300,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "ทต.เมืองแกลง"
+    },
+    {
+      "personName": "นางสาว*** ไกรเ***",
+      "age": 84,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "ทต.เมืองแกลง"
+    },
+    {
+      "personName": "นางส*** เปรม***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 49000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "ทต.เมืองแกลง"
+    },
+    {
+      "personName": "นางสาวอ*** นามเ***",
+      "age": 48,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ทางเกวียน",
+      "district": "แกลง",
+      "budget": 49100,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเรียนรู้"
+      ],
+      "agency": "ทต.เมืองแกลง"
+    },
+    {
+      "personName": "นางสาวจ*** เสนาะ***",
+      "age": 34,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "น้ำเป็น",
+      "district": "เขาชะเมา",
+      "budget": 38700,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย"
+      ],
+      "agency": "อบต.น้ำเป็น"
+    },
+    {
+      "personName": "นางสาว*** ไช***",
+      "age": 69,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "น้ำเป็น",
+      "district": "เขาชะเมา",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": "อบต.น้ำเป็น"
+    },
+    {
+      "personName": "นางส*** แสนศ***",
+      "age": 65,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "มาบข่า",
+      "district": "นิคมพัฒนา",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": "ทต.มาบข่าพัฒนา"
+    },
+    {
+      "personName": "นายเ*** พิมพ์จ***",
+      "age": 72,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "มาบข่า",
+      "district": "นิคมพัฒนา",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": "ทต.มาบข่าพัฒนา"
+    },
+    {
+      "personName": "นางสาวล*** รอดส***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "มาบข่า",
+      "district": "นิคมพัฒนา",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "ทต.มาบข่าพัฒนา"
+    },
+    {
+      "personName": "นางสาว*** เข็ม***",
+      "age": 56,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "มาบข่า",
+      "district": "นิคมพัฒนา",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": "ทต.มาบข่าพัฒนา"
+    },
+    {
+      "personName": "นางวิ*** เสียง***",
+      "age": 74,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "มาบข่า",
+      "district": "นิคมพัฒนา",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "ทต.มาบข่าพัฒนา"
+    },
+    {
+      "personName": "นาง*** กาห***",
+      "age": 64,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ตะพง",
+      "district": "เมือง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "อบต.ตะพง"
+    },
+    {
+      "personName": "นายว*** ดาร***",
+      "age": 22,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "ปากน้ำประแส",
+      "district": "แกลง",
+      "budget": 46700,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางจิตใจหรือพฤติกรรม",
+        "ทางสติปัญญา"
+      ],
+      "agency": "ทต.ปากน้ำประแส"
+    },
+    {
+      "personName": "นายสม*** พูลสว***",
+      "age": 78,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "ปากน้ำประแส",
+      "district": "แกลง",
+      "budget": 48800,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "ทต.ปากน้ำประแส"
+    },
+    {
+      "personName": "นางมะเ*** สิทธิ***",
+      "age": 66,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "อบต.วังหว้า"
+    },
+    {
+      "personName": "นางสา*** รื่น***",
+      "age": 70,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางจิตใจหรือพฤติกรรม"
+      ],
+      "agency": "อบต.วังหว้า"
+    },
+    {
+      "personName": "นางป*** คำบ***",
+      "age": 78,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": "อบต.วังหว้า"
+    },
+    {
+      "personName": "นางฉว*** กล้า***",
+      "age": 67,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 22500,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "อบต.วังหว้า"
+    },
+    {
+      "personName": "นายณั*** ดาศ***",
+      "age": 18,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางสติปัญญา"
+      ],
+      "agency": "อบต.วังหว้า"
+    },
+    {
+      "personName": "นายพีร*** ปรีบ***",
+      "age": 38,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 35500,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": "อบต.วังหว้า"
+    },
+    {
+      "personName": "นาย*** เนื้***",
+      "age": 58,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": "อบต.สำนักท้อน"
+    },
+    {
+      "personName": "นายม*** เกตุ***",
+      "age": 66,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": "อบต.สำนักท้อน"
+    },
+    {
+      "personName": "นางสา*** เมือง***",
+      "age": 62,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "อบต.สำนักท้อน"
+    },
+    {
+      "personName": "นางม*** หงษ***",
+      "age": 69,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "อบต.สำนักท้อน"
+    },
+    {
+      "personName": "นายน*** ครองเ***",
+      "age": 71,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [],
+      "agency": "อบต.สำนักท้อน"
+    },
+    {
+      "personName": "นายบ*** บังเก***",
+      "age": 56,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "คลองปูน",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเห็น"
+      ],
+      "agency": "อบต.คลองปูน"
+    },
+    {
+      "personName": "นายวีร*** จุลเ***",
+      "age": 25,
+      "statusGroup": "ผู้พิการ",
+      "subdistrict": "คลองปูน",
+      "district": "แกลง",
+      "budget": 44900,
+      "sourceYearLabel": "2568",
+      "projectStatus": "แล้วเสร็จ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": "อบต.คลองปูน"
+    },
+    {
+      "personName": "นางป*** คำบ***",
+      "age": 79,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "วังหว้า",
+      "district": "แกลง",
+      "budget": 50000,
+      "sourceYearLabel": "2569",
+      "projectStatus": "กำลังดำเนินการ",
+      "disabilityTypes": [
+        "ทางการเคลื่อนไหวหรือทางร่างกาย"
+      ],
+      "agency": "อบต.วังหว้า"
+    },
+    {
+      "personName": "นางสาว*** เที่ย***",
+      "age": 68,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "น้ำเป็น",
+      "district": "เขาชะเมา",
+      "budget": 40000,
+      "sourceYearLabel": "2569",
+      "projectStatus": "กำลังดำเนินการ",
+      "disabilityTypes": [
+        "ทางสติปัญญา"
+      ],
+      "agency": "อบต.น้ำเป็น"
+    },
+    {
+      "personName": "นายทอ*** ทองเ***",
+      "age": 74,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2569",
+      "projectStatus": "กำลังดำเนินการ",
+      "disabilityTypes": [],
+      "agency": "ทต.ชากหมาก"
+    },
+    {
+      "personName": "นางบ*** พูลโ***",
+      "age": 85,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 22000,
+      "sourceYearLabel": "2569",
+      "projectStatus": "กำลังดำเนินการ",
+      "disabilityTypes": [],
+      "agency": "ทต.ชากหมาก"
+    },
+    {
+      "personName": "นางส*** จั่น***",
+      "age": 69,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 18000,
+      "sourceYearLabel": "2569",
+      "projectStatus": "กำลังดำเนินการ",
+      "disabilityTypes": [],
+      "agency": "ทต.ชากหมาก"
+    },
+    {
+      "personName": "นางกม*** แข่ง***",
+      "age": 80,
+      "statusGroup": "ผู้สูงอายุ/ผู้พิการ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 40000,
+      "sourceYearLabel": "2569",
+      "projectStatus": "กำลังดำเนินการ",
+      "disabilityTypes": [
+        "ทางการได้ยินหรือสื่อความหมาย"
+      ],
+      "agency": "ทต.ชากหมาก"
+    },
+    {
+      "personName": "นายปร*** หอม***",
+      "age": 83,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 50000,
+      "sourceYearLabel": "2569",
+      "projectStatus": "กำลังดำเนินการ",
+      "disabilityTypes": [],
+      "agency": "ทต.ชากหมาก"
+    },
+    {
+      "personName": "นางจา*** สกุ***",
+      "age": 78,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 31000,
+      "sourceYearLabel": "2569",
+      "projectStatus": "กำลังดำเนินการ",
+      "disabilityTypes": [],
+      "agency": "ทต.ชากหมาก"
+    },
+    {
+      "personName": "นาง*** อ้อม***",
+      "age": 75,
+      "statusGroup": "ผู้สูงอายุ",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "budget": 33000,
+      "sourceYearLabel": "2569",
+      "projectStatus": "กำลังดำเนินการ",
+      "disabilityTypes": [],
+      "agency": "ทต.ชากหมาก"
+    }
+  ]
+}

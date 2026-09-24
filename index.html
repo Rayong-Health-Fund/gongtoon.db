@@ -7198,11 +7198,13 @@ if (document.readyState === 'loading') {
   setTimeout(updateBudgetPills, 100);
 }
 
-// ─── Project 1 API data loader ───────────────────────────────────────────────
-// NOTE: intentionally named P1_DASHBOARD_URL (not P1_API_URL) to avoid being
-// clobbered by the same-named variable in assets/js/api.js which loads after
-// this inline block and points to the old ?tab= endpoint.
-var P1_DASHBOARD_URL = 'https://script.google.com/macros/s/AKfycby6wVpfb5o_AsbvH3tV9kW54RaG5arvFxJ52TA_lkSV7sAzyXKn-VOki7WpA-GEkppf/exec?project=p1&action=dashboard';
+// ─── Project 1 data loader ────────────────────────────────────────────────────
+// Ready-made data file, refreshed from the Fund's own Excel file via
+// home-improvement/generate_data.js (see that script's notes — names are
+// always half-masked there and the house-number column is dropped before
+// this file is even written, so there is nothing more sensitive to gate
+// behind a login here).
+var P1_STATIC_URL = 'home-improvement/data/dashboard_data.json';
 
 function p1ApiRecordToLegacy(r) {
   var dis = r.disabilityTypes;
@@ -7244,19 +7246,13 @@ function loadP1Data(retriesLeft) {
     loadingEl.style.display = '';
   }
   if (dashboardEl) dashboardEl.style.display = 'none';
-  var p1Token = '';
-  try {
-    var rfUser = JSON.parse(localStorage.getItem('rf_user') || 'null');
-    if (rfUser && rfUser.token) p1Token = rfUser.token;
-  } catch (e) {}
-  var p1FetchUrl = P1_DASHBOARD_URL + (p1Token ? '&token=' + encodeURIComponent(p1Token) : '');
-  fetch(p1FetchUrl)
+  fetch(P1_STATIC_URL)
     .then(function(res) {
       if (!res.ok) throw new Error('HTTP ' + res.status);
       return res.json();
     })
     .then(function(json) {
-      if (!json.ok) throw new Error(json.error || 'API returned ok:false');
+      if (!json.ok) throw new Error(json.error || 'data file returned ok:false');
       var recs = Array.isArray(json.records) ? json.records : [];
       project1Records    = recs.map(p1ApiRecordToLegacy);
       window.p1ServerSummary = json.summary || null;
@@ -7269,12 +7265,12 @@ function loadP1Data(retriesLeft) {
         var d = json.updatedAt ? json.updatedAt.substring(0, 10) : new Date().toISOString().substring(0, 10);
         badge.innerHTML = '<span style="display:inline-block;font-size:0.72rem;'
           + 'background:#d1fae5;color:#065f46;padding:2px 10px;border-radius:6px;margin-bottom:0.5rem;">'
-          + '● ข้อมูลสด: ' + ((json.summary && json.summary.totalRecords) || 0) + ' รายการ · อัปเดต ' + d + '</span>';
+          + '● ข้อมูล: ' + ((json.summary && json.summary.totalRecords) || 0) + ' รายการ · อัปเดต ' + d + '</span>';
       }
       initProject1();
     })
     .catch(function(err) {
-      console.error('[P1] API load failed:', err);
+      console.error('[P1] data file load failed:', err);
       window.p1DataLoading = false;
       // Google Apps Script occasionally times out on a single request even
       // when the underlying data is cached and fast — one retry recovers
@@ -7516,16 +7512,9 @@ var p1PageSize = 50;
 var p1FilteredRecords = [];
 
 function loadP1List() {
-  // PDPA note: the API itself decides how much of each record to send —
-  // full personName/addressText/subdistrict only with a valid session
-  // token, otherwise masked name + no address (see maskP1RecordForPublic_
-  // in gas/p1_api.gs). This page just renders whatever it receives.
-  var hasToken = false;
-  try {
-    var rfUser = JSON.parse(localStorage.getItem('rf_user') || 'null');
-    hasToken = !!(rfUser && rfUser.token);
-  } catch (e) {}
-
+  // Privacy note: names arrive already half-masked and house numbers were
+  // never included in the first place — see home-improvement/generate_data.js.
+  // This page just renders whatever the data file contains.
   var yearVal    = (document.getElementById("p1YearFilter")||{}).value || "all";
   var distVal    = (document.getElementById("p1DistrictFilter")||{}).value || "all";
   var subdistVal = (document.getElementById("p1SubDistrictFilter")||{}).value || "all";
@@ -7573,12 +7562,6 @@ function renderP1Page() {
   if (!tbody) return;
   tbody.innerHTML = "";
 
-  var hasToken = false;
-  try {
-    var rfUser = JSON.parse(localStorage.getItem('rf_user') || 'null');
-    hasToken = !!(rfUser && rfUser.token);
-  } catch (e) {}
-
   pageRecs.forEach(function(r, i) {
     var statusBadge = r.s === "แล้วเสร็จ"
       ? '<span class="badge-status badge-success" style="font-size:0.68rem;padding:2px 6px;">✓ เสร็จ</span>'
@@ -7595,7 +7578,7 @@ function renderP1Page() {
       "<td style=\"font-size:0.78rem;font-weight:600;\">" + r.n + "</td>" +
       "<td style=\"text-align:center;font-weight:600;\">" + r.a + "</td>" +
       "<td>" + typeBadge + "</td>" +
-      "<td style=\"font-size:0.75rem;\">" + (r.tb || (hasToken ? "-" : "🔒 เข้าสู่ระบบเพื่อดู")) + "</td>" +
+      "<td style=\"font-size:0.75rem;\">" + (r.tb || "-") + "</td>" +
       "<td style=\"font-size:0.75rem;font-weight:600;\">" + r.d + "</td>" +
       "<td style=\"text-align:right;font-size:0.75rem;color:#0f766e;font-weight:600;\">฿" + r.b.toLocaleString() + "</td>" +
       "<td style=\"font-size:0.72rem;text-align:center;\">" + r.y + "</td>" +
@@ -7683,75 +7666,15 @@ function buildP1DistrictDrilldown() {
   var container = document.getElementById('p1-district-drilldown');
   if (!container || container.dataset.built === '1') return;
 
-  // Logged-in staff already have full records loaded (from action=records)
-  // — show the detailed tambon-level breakdown. Anonymous visitors never
-  // get project1Records populated (action=records requires a session), so
-  // fall back to a district-only public aggregate instead of nothing.
+  // project1Records is always fully populated now (no login tiers left —
+  // everyone gets the same masked data), so this always shows the
+  // detailed tambon-level breakdown.
+  container.dataset.built = '1';
   if (project1Records && project1Records.length) {
-    container.dataset.built = '1';
     renderP1DistrictDetailed_(container);
-    return;
-  }
-
-  var rfUserCheck = null;
-  try { rfUserCheck = JSON.parse(localStorage.getItem('rf_user') || 'null'); } catch (e) {}
-  if (rfUserCheck && rfUserCheck.token) {
-    // Logged in but records genuinely haven't loaded yet/are empty — keep
-    // the old behavior (plain "no data" message), don't show the public
-    // fallback to someone who's supposed to see the detailed view.
-    container.dataset.built = '1';
+  } else {
     container.innerHTML = '<p style="color:var(--text-gray);text-align:center;padding:2rem;">ไม่พบข้อมูล</p>';
-    return;
   }
-
-  container.innerHTML = '<p style="color:var(--text-gray);text-align:center;padding:1.5rem;font-size:0.85rem;">กำลังโหลดสรุปข้อมูลระดับอำเภอ...</p>';
-  fetchP1DistrictSummary_(container, 1);
-}
-
-// GAS occasionally returns a transient error on a single request even
-// when the endpoint itself is fine (same class of flakiness already
-// worked around elsewhere on this site) — one retry recovers most of these.
-function fetchP1DistrictSummary_(container, retriesLeft) {
-  fetch(P1_DASHBOARD_URL.replace('&action=dashboard', '') + '&action=district_summary')
-    .then(function(r) { return r.json(); })
-    .then(function(json) {
-      if (!json.ok || !json.districts || !json.districts.length) {
-        container.dataset.built = '1';
-        container.innerHTML = '<p style="color:var(--text-gray);text-align:center;padding:2rem;">ไม่พบข้อมูล</p>';
-        return;
-      }
-      container.dataset.built = '1';
-      renderP1DistrictPublicSummary_(container, json.districts);
-    })
-    .catch(function() {
-      if (retriesLeft > 0) { fetchP1DistrictSummary_(container, retriesLeft - 1); return; }
-      container.dataset.built = '1';
-      container.innerHTML = '<p style="color:var(--text-gray);text-align:center;padding:2rem;">โหลดสรุปข้อมูลระดับอำเภอไม่สำเร็จ</p>';
-    });
-}
-
-// Public view — district-level only (count, total/avg budget, % done).
-// No subdistrict, no disability-type breakdown, no names: those stay
-// behind login (see [[feedback_pdpa_personal_data]]).
-function renderP1DistrictPublicSummary_(container, districts) {
-  var html = '<p style="font-size:0.78rem;color:var(--text-gray);margin-bottom:0.75rem;">'
-    + '📊 สรุปภาพรวมระดับอำเภอ (ข้อมูลรวม ไม่ระบุตัวบุคคล) — '
-    + '<a href="login.html" style="color:#0f766e;font-weight:600;">เจ้าหน้าที่เข้าสู่ระบบ</a> เพื่อดูรายละเอียดระดับตำบล</p>';
-  html += '<div class="table-responsive"><table class="table-custom" style="font-size:0.82rem;">'
-    + '<thead><tr><th>อำเภอ</th><th style="text-align:center;">จำนวนหลัง</th>'
-    + '<th style="text-align:right;">งบประมาณรวม</th><th style="text-align:right;">งบประมาณเฉลี่ย</th>'
-    + '<th style="text-align:center;">% เสร็จสิ้น</th></tr></thead><tbody>';
-  districts.forEach(function(d) {
-    html += '<tr>'
-      + '<td style="font-weight:600;">📍 อ.' + d.district + '</td>'
-      + '<td style="text-align:center;font-weight:700;color:#0f766e;">' + d.count + '</td>'
-      + '<td style="text-align:right;color:#059669;">฿' + d.totalBudget.toLocaleString() + '</td>'
-      + '<td style="text-align:right;color:#0369a1;">฿' + d.avgBudget.toLocaleString() + '</td>'
-      + '<td style="text-align:center;">' + d.donePct + '%</td>'
-      + '</tr>';
-  });
-  html += '</tbody></table></div>';
-  container.innerHTML = html;
 }
 
 function renderP1DistrictDetailed_(container) {
