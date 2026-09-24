@@ -207,14 +207,32 @@ function doGet(e) {
   }
 
   const data = sheetToJson_(sheet);
+  const safeData = type === 'equipment' ? stripSensitiveColumns_(data, P2_SENSITIVE_EQUIPMENT_COLUMNS) : data;
 
   return jsonOutput_({
     error: false,
     type: type,
     sheet: sheetName,
-    count: data.length,
+    count: safeData.length,
     updated_at: new Date(),
-    data: data
+    data: safeData
+  });
+}
+
+// P2_MASTER_EQUIPMENT_LOAN historically carries a couple of individual-
+// borrower columns (full name, national ID card number) that the Fund
+// never actually needed — see entry-form-project2.html's own note that
+// individual borrower records belong to the receiving agency, not the
+// Fund — and this whole route has no session/auth check at all. Strip
+// them unconditionally so this public endpoint can never return anyone's
+// name or ID card number, regardless of who calls it or why.
+const P2_SENSITIVE_EQUIPMENT_COLUMNS = ['ชื่อนามสกุลผู้ยืม', 'หมายเลขบัตรประชาชน'];
+
+function stripSensitiveColumns_(rows, columns) {
+  return rows.map(function(row) {
+    const clean = Object.assign({}, row);
+    columns.forEach(function(col) { delete clean[col]; });
+    return clean;
   });
 }
 
