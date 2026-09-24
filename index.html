@@ -7169,13 +7169,11 @@ function navigateTo(url) {
 // ══════════════════════════════════════════════════
 // PROJECT 1 — ปรับสภาพแวดล้อมที่อยู่อาศัยสำหรับคนพิการ ผู้สูงอายุ ผู้ป่วยที่อยู่ในระยะกึ่งเฉียบพลันและผู้ที่มีภาวะพึ่งพิง
 // ══════════════════════════════════════════════════
-var project1Records = [
-  {n:"สมหญิง นำพิจ",a:62,t:"ผู้สูงอายุ",tb:"เนินพระ",d:"เมือง",s:"แล้วเสร็จ",y:"2568",b:15000,ag:"รพ.สต.เนินพระ",x:["หลังคา","บันได"],x_labels:"หลังคา บันได"},
-  {n:"วิทยา สุขประม",a:58,t:"ผู้พิการ",tb:"พลับพลาชัย",d:"เมือง",s:"กำลังดำเนินการ",y:"2568",b:25000,ag:"รพ.สต.พลับพลาชัย",x:["ห้องน้ำ","ทางเข้า"],x_labels:"ห้องน้ำ ทางเข้า"},
-  {n:"พัฒนา ศรีเปิ่น",a:75,t:"ผู้สูงอายุ/ผู้พิการ",tb:"ศรีราชา",d:"ศรีราชา",s:"แล้วเสร็จ",y:"2568",b:18000,ag:"รพ.สต.ศรีราชา",x:["บันได","ประตู"],x_labels:"บันได ประตู"},
-  {n:"นางนอย โทนพล",a:72,t:"ผู้สูงอายุ",tb:"เนินพระ",d:"เมือง",s:"แล้วเสร็จ",y:"2567",b:16000,ag:"รพ.สต.เนินพระ",x:["หลังคา"],x_labels:"หลังคา"},
-  {n:"สมศักดิ์ วังประ",a:68,t:"ผู้พิการ",tb:"ขลุง",d:"ขลุง",s:"กำลังดำเนินการ",y:"2567",b:22000,ag:"รพ.สต.ขลุง",x:["ห้องน้ำ"],x_labels:"ห้องน้ำ"}
-];
+// Populated from the P1 API only (see loadP1Data / p1ApiRecordToLegacy below).
+// Never hardcode sample records here again — even placeholder names/ages/
+// districts in this exact person-record shape are indistinguishable from
+// real beneficiary data to anyone reading the public source.
+var project1Records = [];
 
 var p1Charts = {};
 
@@ -7539,27 +7537,15 @@ var p1PageSize = 50;
 var p1FilteredRecords = [];
 
 function loadP1List() {
-  // AUTH CHECK: Personal records require login (PDPA protection)
+  // PDPA note: the API itself decides how much of each record to send —
+  // full personName/addressText/subdistrict only with a valid session
+  // token, otherwise masked name + no address (see maskP1RecordForPublic_
+  // in gas/p1_api.gs). This page just renders whatever it receives.
   var hasToken = false;
   try {
     var rfUser = JSON.parse(localStorage.getItem('rf_user') || 'null');
     hasToken = !!(rfUser && rfUser.token);
   } catch (e) {}
-
-  var listContainer = document.getElementById("p1-list-container");
-  if (!hasToken && (!project1Records || project1Records.length === 0)) {
-    // No login + no data = show login prompt
-    if (listContainer) {
-      listContainer.innerHTML =
-        '<div style="text-align:center;padding:2rem;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;">' +
-        '<div style="font-size:2rem;margin-bottom:0.5rem;">🔒</div>' +
-        '<p style="font-size:0.95rem;font-weight:600;color:var(--text-dark);margin-bottom:0.5rem;">รายชื่อผู้รับผลประโยชน์รายบุคคล</p>' +
-        '<p style="font-size:0.85rem;color:var(--text-gray);margin-bottom:1rem;">ข้อมูลส่วนบุคคล (ชื่อ ที่อยู่) สำหรับผู้พิการและผู้สูงอายุต้องเข้าสู่ระบบก่อนเท่านั้น</p>' +
-        '<a href="login.html" style="display:inline-block;padding:0.6rem 1.2rem;background:#0f766e;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;font-size:0.9rem;">เข้าสู่ระบบสำหรับเจ้าหน้าที่ →</a>' +
-        '</div>';
-    }
-    return;
-  }
 
   var yearVal    = (document.getElementById("p1YearFilter")||{}).value || "all";
   var distVal    = (document.getElementById("p1DistrictFilter")||{}).value || "all";
@@ -7608,6 +7594,12 @@ function renderP1Page() {
   if (!tbody) return;
   tbody.innerHTML = "";
 
+  var hasToken = false;
+  try {
+    var rfUser = JSON.parse(localStorage.getItem('rf_user') || 'null');
+    hasToken = !!(rfUser && rfUser.token);
+  } catch (e) {}
+
   pageRecs.forEach(function(r, i) {
     var statusBadge = r.s === "แล้วเสร็จ"
       ? '<span class="badge-status badge-success" style="font-size:0.68rem;padding:2px 6px;">✓ เสร็จ</span>'
@@ -7624,7 +7616,7 @@ function renderP1Page() {
       "<td style=\"font-size:0.78rem;font-weight:600;\">" + r.n + "</td>" +
       "<td style=\"text-align:center;font-weight:600;\">" + r.a + "</td>" +
       "<td>" + typeBadge + "</td>" +
-      "<td style=\"font-size:0.75rem;\">" + r.tb + "</td>" +
+      "<td style=\"font-size:0.75rem;\">" + (r.tb || (hasToken ? "-" : "🔒 เข้าสู่ระบบเพื่อดู")) + "</td>" +
       "<td style=\"font-size:0.75rem;font-weight:600;\">" + r.d + "</td>" +
       "<td style=\"text-align:right;font-size:0.75rem;color:#0f766e;font-weight:600;\">฿" + r.b.toLocaleString() + "</td>" +
       "<td style=\"font-size:0.72rem;text-align:center;\">" + r.y + "</td>" +
@@ -7646,18 +7638,7 @@ function renderP1Page() {
   if (noRes) {
     noRes.style.display = filtered.length===0 ? "block" : "none";
     if (filtered.length===0) {
-      var hasToken = false;
-      try {
-        var rfUser = JSON.parse(localStorage.getItem('rf_user') || 'null');
-        hasToken = !!(rfUser && rfUser.token);
-      } catch (e) {}
-      if (!hasToken) {
-        noRes.innerHTML = '<div class="no-results-icon">🔒</div>'
-          + '<p class="no-results-text">รายชื่อผู้รับผลประโยชน์รายบุคคลต้องเข้าสู่ระบบก่อนจึงจะดูได้ (ข้อมูลส่วนบุคคล)</p>'
-          + '<a href="login.html" style="display:inline-block;margin-top:0.5rem;font-size:0.85rem;color:#0f766e;font-weight:600;">เข้าสู่ระบบสำหรับเจ้าหน้าที่ →</a>';
-      } else {
-        noRes.innerHTML = '<div class="no-results-icon">🔍</div><p class="no-results-text">ไม่พบข้อมูล</p>';
-      }
+      noRes.innerHTML = '<div class="no-results-icon">🔍</div><p class="no-results-text">ไม่พบข้อมูล</p>';
     }
   }
 

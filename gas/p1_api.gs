@@ -235,11 +235,35 @@ function getP1DashboardData_(session) {
     charts: buildP1ChartAggregates_(records)
   };
 
-  if (session) {
-    result.records = records;
-  }
+  result.records = session ? records : records.map(maskP1RecordForPublic_);
 
   return result;
+}
+
+// Public (no login) callers get every record, but with the name partly
+// redacted and the address/subdistrict withheld outright — district stays
+// visible since buildP1PublicDistrictSummary_ already treats that as safe.
+// Full unmasked personName/addressText/subdistrict only ever go out when
+// getP1DashboardData_ is called with a validated session (see above).
+function maskP1RecordForPublic_(r) {
+  const masked = Object.assign({}, r);
+  masked.personName = maskP1Name_(r.personName);
+  masked.addressText = '';
+  masked.subdistrict = '';
+  return masked;
+}
+
+// "พิชย์พิมล" -> "พิชย์***": each space-separated part keeps its first
+// half (rounded up) and the rest becomes a fixed "***".
+function maskP1NamePart_(part) {
+  const chars = String(part || '').split('');
+  if (chars.length === 0) return '';
+  const visible = Math.max(1, Math.ceil(chars.length / 2));
+  return chars.slice(0, visible).join('') + '***';
+}
+
+function maskP1Name_(name) {
+  return String(name || '').split(' ').filter(Boolean).map(maskP1NamePart_).join(' ');
 }
 
 // getP1Records_ occasionally took long enough on the live spreadsheet
