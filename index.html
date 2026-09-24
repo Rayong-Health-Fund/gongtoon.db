@@ -2712,7 +2712,7 @@ document.addEventListener('click', function(e) {
             </div>
             <div class="table-action-row">
               <div id="p1ListCount" style="font-size:0.78rem;color:var(--text-gray);"></div>
-              <button class="btn-export" onclick="exportToExcel('p1ListTable','P1_รายการบ้าน')">📥 Export Excel</button>
+              <button class="btn-export" onclick="exportP1Excel()">📥 Export Excel (ทั้งหมด)</button>
             </div>
             <div class="table-responsive sticky-table">
               <table class="table-custom" id="p1ListTable">
@@ -4766,6 +4766,25 @@ function exportToExcel(tableId, filename) {
   XLSX.writeFile(wb, filename + '.xlsx');
 }
 window.exportToExcel = exportToExcel;
+
+// exportToExcel() above reads whatever is currently drawn in the <table> —
+// fine for tables that always show every row, but p1ListTable only ever
+// holds the current page (50 rows at a time), so that export would silently
+// leave out everything else. This builds the file straight from
+// p1FilteredRecords (every row matching the current filters/search),
+// independent of which page happens to be on screen.
+function exportP1Excel() {
+  if (typeof XLSX === 'undefined') { alert('ไม่สามารถ Export ได้ในขณะนี้'); return; }
+  var header = ['#','ชื่อ','อายุ','ประเภท','ตำบล','อำเภอ','งบประมาณ','ปี','สถานะ','ประเภทความพิการ'];
+  var rows = (p1FilteredRecords || []).map(function(r, i) {
+    return [i + 1, r.n, r.a, r.t, r.tb || '-', r.d, r.b, r.y, r.s, (r.x && r.x.length) ? r.x.join(', ') : '-'];
+  });
+  var ws = XLSX.utils.aoa_to_sheet([header].concat(rows));
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'ข้อมูล');
+  XLSX.writeFile(wb, 'P1_รายการบ้าน.xlsx');
+}
+window.exportP1Excel = exportP1Excel;
 
 // Cascade: populate ตำบล dropdown based on selected อำเภอ
 function updateP1SubDistrictFilter() {
@@ -7748,8 +7767,29 @@ window.navigateTo = navigateTo;
 </footer>
 <script>
 (function() {
+  // "ปรับปรุงล่าสุด" should reflect when the underlying data was actually
+  // regenerated (each generate_data.js stamps generatedAt/updatedAt), not
+  // just today's date — showing today unconditionally would claim the data
+  // is fresh even when nobody has updated it in months.
   var el = document.getElementById('footerLastUpdated');
-  if (el) el.textContent = new Date().toLocaleDateString('th-TH', { day:'numeric', month:'long', year:'numeric' });
+  if (!el) return;
+  var sources = [
+    'home-improvement/data/dashboard_data.json',
+    'equipment-loan/data/dashboard_data.json',
+    'network-capacity/data/dashboard_data.json',
+    'device-repair/data/dashboard_data.json'
+  ];
+  Promise.all(sources.map(function(url) {
+    return fetch(url).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
+  })).then(function(results) {
+    var latest = null;
+    results.forEach(function(json) {
+      var stamp = json && (json.generatedAt || json.updatedAt);
+      var d = stamp ? new Date(stamp) : null;
+      if (d && !isNaN(d.getTime()) && (!latest || d > latest)) latest = d;
+    });
+    el.textContent = (latest || new Date()).toLocaleDateString('th-TH', { day:'numeric', month:'long', year:'numeric' });
+  });
   document.querySelectorAll('.footer-sitemap a').forEach(function(a) {
     if (!a.style.color) a.style.color = '#cbd5e1';
     a.style.textDecoration = 'none';

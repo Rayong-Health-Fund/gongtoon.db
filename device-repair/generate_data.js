@@ -238,6 +238,7 @@ function main() {
   const devicesRows = readCsvAsObjects('Project_4_data_device_repair - all_device_data.csv');
   const fundingRows = readCsvAsObjects('Project_4_data_device_repair - total_funding.csv');
   const output = p4BuildData(devicesRows, fundingRows);
+  output.generatedAt = new Date().toISOString();
 
   fs.mkdirSync(path.dirname(OUTPUT_JSON), { recursive: true });
   fs.writeFileSync(OUTPUT_JSON, JSON.stringify(output, null, 2), 'utf8');
