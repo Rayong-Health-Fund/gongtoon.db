@@ -6745,12 +6745,40 @@ function renderP4CategoryChart(rows) {
 }
 
 var P3_API_URL = 'https://script.google.com/macros/s/AKfycbx8Z0LVi91bFyV_VZAWzmCe4L0DYoayYkBTIl2qntk6qyHyCR9tDBjJas-xbK0TpoNAXg/exec';
+// Ready-made data file, refreshed from the Fund's own Excel file via
+// network-capacity/generate_data.js (see that script's notes). Loads
+// instantly since it's just a plain file on this website, not a live
+// call out to Google every time someone opens the page.
+var P3_STATIC_URL = 'network-capacity/data/dashboard_data.json';
 
 function loadP3Data(retriesLeft) {
   if (retriesLeft === undefined) retriesLeft = 1;
   if (window.p3DataLoading) return;
   if (window.p3DataLoaded) { initP3(); return; }
   window.p3DataLoading = true;
+
+  fetch(P3_STATIC_URL)
+    .then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .then(function(json) {
+      p3Records = Array.isArray(json.records) ? json.records : [];
+      window.p3DataLoaded  = true;
+      window.p3DataLoading = false;
+      initP3();
+    })
+    .catch(function(err) {
+      console.error('[P3] data file load failed, falling back to old live connection:', err);
+      window.p3DataLoading = false;
+      loadP3DataLive_(retriesLeft);
+    });
+}
+
+// Fallback only — used if the data file above can't be reached for some
+// reason. Same Google-connected version this page used before switching
+// to the ready-made data file.
+function loadP3DataLive_(retriesLeft) {
   fetch(P3_API_URL)
     .then(function(res) {
       if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -6769,7 +6797,7 @@ function loadP3Data(retriesLeft) {
       // Google Apps Script occasionally times out on a single request even
       // when the underlying data is cached and fast — one retry recovers
       // most of these without the visitor needing to do anything.
-      if (retriesLeft > 0) { loadP3Data(retriesLeft - 1); return; }
+      if (retriesLeft > 0) { loadP3DataLive_(retriesLeft - 1); return; }
       var noRes = document.getElementById('p3ListNoResults');
       if (noRes) {
         noRes.style.display = 'block';
@@ -6950,36 +6978,6 @@ function renderP3UnitsChart(){
   });
 }
 
-function updateP3Status(record, selectEl, cellEl){
-  var rfUserP3=null;
-  try{ rfUserP3=JSON.parse(localStorage.getItem('rf_user')||'null'); }catch(e){}
-  if(!rfUserP3||!rfUserP3.token){ alert('กรุณาเข้าสู่ระบบใหม่'); return; }
-
-  var newStatus=selectEl.value;
-  var prevStatus=record.s;
-  selectEl.disabled=true;
-
-  fetch(P3_API_URL,{
-    method:'POST',
-    headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body:JSON.stringify({token:rfUserP3.token,action:'update_status',tab:record.tab,row:record.row,status:newStatus})
-  })
-    .then(function(res){return res.json();})
-    .then(function(json){
-      selectEl.disabled=false;
-      if(!json.ok){ alert('บันทึกไม่สำเร็จ: '+(json.error||'')); selectEl.value=prevStatus; return; }
-      record.s=newStatus;
-      var p3Rec=p3Records.filter(function(pr){return pr.tab===record.tab&&pr.row===record.row;})[0];
-      if(p3Rec)p3Rec.s=newStatus;
-    })
-    .catch(function(err){
-      selectEl.disabled=false;
-      selectEl.value=prevStatus;
-      alert('เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่');
-      console.error('[P3 status update] failed:',err);
-    });
-}
-
 function loadP3List(){
   var yearVal=(document.getElementById("p3YearFilter")||{}).value||"all";
   var distVal=(document.getElementById("p3DistrictFilter")||{}).value||"all";
@@ -7015,12 +7013,6 @@ function renderP3Page(){
   if(!tbody)return;
   tbody.innerHTML="";
 
-  var isP3Admin=false;
-  try{
-    var p3rf=JSON.parse(localStorage.getItem('rf_user')||'null');
-    isP3Admin=!!(p3rf&&p3rf.token&&p3rf.role==='admin');
-  }catch(e){}
-
   pageRecs.forEach(function(r,i){
     var statusBadge=r.s==="เสร็จเรียบร้อย"
       ?'<span class="badge-status badge-success" style="font-size:0.68rem;padding:2px 6px;">✓ เสร็จ</span>'
@@ -7034,20 +7026,7 @@ function renderP3Page(){
       "<td style=\"font-size:0.78rem;\">"+r.n+"</td>"+
       "<td style=\"text-align:right;font-size:0.75rem;color:#14b8a6;font-weight:600;\">฿"+r.b.toLocaleString()+"</td>";
     var statusTd=document.createElement("td");
-    if(isP3Admin&&r.tab&&r.row){
-      var sel=document.createElement("select");
-      sel.style.cssText="font-size:0.72rem;padding:2px 4px;border-radius:6px;border:1.5px solid #e2e8f0;font-family:inherit;";
-      ["ยังไม่รายงานผล","อยู่ระหว่างดำเนินการ","เสร็จเรียบร้อย","ยกเลิก"].forEach(function(opt){
-        var o=document.createElement("option");
-        o.value=opt;o.textContent=opt;
-        if(opt===r.s)o.selected=true;
-        sel.appendChild(o);
-      });
-      sel.onchange=function(){ updateP3Status(r, sel, statusTd); };
-      statusTd.appendChild(sel);
-    }else{
-      statusTd.innerHTML=statusBadge;
-    }
+    statusTd.innerHTML=statusBadge;
     tr.appendChild(statusTd);
     tbody.appendChild(tr);
   });
