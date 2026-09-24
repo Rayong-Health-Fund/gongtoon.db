@@ -4947,40 +4947,25 @@ window.openModal = function openModal(modalId) {
 // Live API: Google Apps Script (equipment / map / ref_equipment)
 // ═══════════════════════════════════════════════════════════
 
-var P2_API_BASE = 'https://script.google.com/macros/s/AKfycbxJe9aB6cQJdA-3iy6vNj1urjMV3QzM67AfNAVxon-3MDUEZz1L_AfPlHNMPtP6gvcgHw/exec';
+// Ready-made data file, refreshed from the Fund's own Excel/CSV files via
+// equipment-loan/generate_data.js (see that script's notes — the borrower
+// name / national ID card columns from the raw source are never read into
+// this file at all). Loads instantly since it's a plain file on this
+// website, not four separate live calls out to Google every page load.
+var P2_STATIC_URL = 'equipment-loan/data/dashboard_data.json';
 
 var p2GroupData    = [];
 var p2ServiceUnits = [];
 var p2UnitSummary  = [];
 var p2UnitsList    = [];
 
-// Safe coercions — Apps Script sometimes returns numbers as strings or comma-formatted
+// Safe coercions — the source data sometimes has numbers as strings or comma-formatted
 function p2Num(v) {
   if (v === null || v === undefined || v === '') return 0;
   var n = Number(String(v).replace(/,/g, '').replace(/[^\d.-]/g, ''));
   return Number.isFinite(n) ? n : 0;
 }
 function p2Text(v) { return String(v !== null && v !== undefined ? v : '').trim(); }
-
-// Fetch one type endpoint and return the .data array
-function fetchP2Type(type) {
-  var url = P2_API_BASE + '?type=' + encodeURIComponent(type);
-  return fetch(url)
-    .then(function(res) {
-      if (!res.ok) throw new Error('P2 API HTTP ' + res.status + ': ' + type);
-      return res.text();
-    })
-    .then(function(text) {
-      var json;
-      try { json = JSON.parse(text); }
-      catch (e) {
-        throw new Error('P2 API non-JSON response for "' + type + '" — GAS doGet may be missing or needs redeployment');
-      }
-      if (json.error) throw new Error(p2Text(json.message) || ('P2 API error: ' + type));
-      if (!Array.isArray(json.data)) throw new Error('P2 API invalid data array: ' + type);
-      return json.data;
-    });
-}
 
 var p2DataLoadingPromise = null;
 var p2DataLoaded = false;
@@ -4989,32 +4974,32 @@ function ensureP2DataLoaded() {
   if (p2DataLoaded) return Promise.resolve();
   if (p2DataLoadingPromise) return p2DataLoadingPromise;
 
-  p2DataLoadingPromise = Promise.all([
-    fetchP2Type('equipment'),
-    fetchP2Type('map'),
-    fetchP2Type('ref_equipment'),
-    fetchP2Type('funding')
-  ]).then(function(results) {
-    var equipmentRows = results[0];
-    var mapRows       = results[1];
-    var refRows       = results[2];
-    var fundingRows   = results[3];
+  p2DataLoadingPromise = fetch(P2_STATIC_URL)
+    .then(function(res) {
+      if (!res.ok) throw new Error('P2 data file HTTP ' + res.status);
+      return res.json();
+    })
+    .then(function(json) {
+      var equipmentRows = Array.isArray(json.equipment) ? json.equipment : [];
+      var mapRows       = Array.isArray(json.map) ? json.map : [];
+      var refRows       = Array.isArray(json.ref_equipment) ? json.ref_equipment : [];
+      var fundingRows   = Array.isArray(json.funding) ? json.funding : [];
 
-    console.log('[P2] equipment:', equipmentRows.length, 'map:', mapRows.length,
-                'ref:', refRows.length, 'funding:', fundingRows.length);
+      console.log('[P2] equipment:', equipmentRows.length, 'map:', mapRows.length,
+                  'ref:', refRows.length, 'funding:', fundingRows.length);
 
-    buildP2DatasetsFromApi({ equipmentRows: equipmentRows, mapRows: mapRows,
-                             refRows: refRows, fundingRows: fundingRows });
+      buildP2DatasetsFromApi({ equipmentRows: equipmentRows, mapRows: mapRows,
+                               refRows: refRows, fundingRows: fundingRows });
 
-    console.log('[P2] normalized groups:', p2GroupData.length,
-                'units:', p2UnitSummary.length, 'service:', p2ServiceUnits.length);
+      console.log('[P2] normalized groups:', p2GroupData.length,
+                  'units:', p2UnitSummary.length, 'service:', p2ServiceUnits.length);
 
-    if (!p2GroupData.length) throw new Error('P2 normalized equipment data is empty');
-    p2DataLoaded = true;
-  }).catch(function(err) {
-    p2DataLoadingPromise = null;
-    throw err;
-  });
+      if (!p2GroupData.length) throw new Error('P2 normalized equipment data is empty');
+      p2DataLoaded = true;
+    }).catch(function(err) {
+      p2DataLoadingPromise = null;
+      throw err;
+    });
 
   return p2DataLoadingPromise;
 }
