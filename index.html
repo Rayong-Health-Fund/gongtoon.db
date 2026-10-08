@@ -2208,6 +2208,46 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
 .summary-link-btn { display:flex; align-items:center; justify-content:center; gap:0.4rem; margin:0 0 0.9rem; padding:0.6rem 1rem; background:#f0fdfa; border:1.5px solid #14b8a6; border-radius:10px; color:#0f766e; font-weight:700; font-size:0.9rem; text-decoration:none; }
 .summary-link-btn:hover { background:#ccfbf1; color:#0f766e; }
 
+/* ── MOBILE HOME + readable tables on phones ── */
+.m-home, .m-show { display: none; }
+@media (max-width: 767px) {
+  .m-home { display: block; padding: 1rem 0.9rem 0.25rem; }
+  .m-show { display: inline; }
+  .m-hide { display: none; }
+  #budgetStickyBar { display: none !important; }
+  .m-total { background: linear-gradient(135deg, #0f766e, #0e7490); color: #fff; border-radius: 16px; padding: 1rem 1.1rem; margin-bottom: 0.9rem; }
+  .m-total-lbl { font-size: 0.95rem; opacity: 0.9; }
+  .m-total-val { font-size: 2rem; font-weight: 800; line-height: 1.2; }
+  .m-card { background: #fff; border: 1px solid #e2e8f0; border-left: 6px solid var(--mc); border-radius: 16px; padding: 1rem; margin-bottom: 0.9rem; box-shadow: 0 2px 10px rgba(15,23,42,0.06); }
+  .m-card h2 { display: flex; align-items: center; gap: 0.6rem; font-size: 1.15rem; font-weight: 800; margin: 0 0 0.25rem; color: #0f172a; line-height: 1.35; }
+  .m-card h2 span { font-size: 1.8rem; }
+  .m-card p.m-what { font-size: 0.95rem; color: #475569; margin: 0 0 0.75rem; line-height: 1.5; }
+  .m-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.85rem; }
+  .m-stat { background: #f8fafc; border-radius: 12px; padding: 0.6rem 0.75rem; }
+  .m-stat b { display: block; font-size: 1.45rem; font-weight: 800; color: var(--mc); line-height: 1.2; }
+  .m-stat small { font-size: 0.88rem; color: #475569; }
+  .m-btns { display: flex; flex-direction: column; gap: 0.5rem; }
+  .m-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 50px; border-radius: 12px; font-size: 1.05rem; font-weight: 700; text-decoration: none; border: 1.5px solid var(--mc); color: var(--mc); background: #fff; font-family: inherit; cursor: pointer; width: 100%; }
+  .m-btn.primary { background: var(--mc); color: #fff; }
+
+  /* project detail: bigger text */
+  .acc-body-inner { font-size: 1rem; }
+  .acc-body .tab-btn { font-size: 0.95rem; padding: 0.6rem 0.8rem; }
+  .acc-body .summary-card-label { font-size: 0.85rem; }
+  .acc-body .badge-status, .acc-body [class*="badge"] { font-size: 0.8rem !important; }
+
+  /* wide tables -> one card per row, each value labelled */
+  table.m-cards thead { display: none; }
+  table.m-cards, table.m-cards tbody, table.m-cards tr, table.m-cards td { display: block; width: 100% !important; }
+  table.m-cards tr { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0.5rem 0.75rem; margin-bottom: 0.6rem; }
+  table.m-cards td { display: flex; justify-content: space-between; gap: 0.75rem; border: none !important; padding: 0.3rem 0 !important; font-size: 0.98rem !important; text-align: right !important; }
+  table.m-cards td::before { content: attr(data-label); font-weight: 600; color: #64748b; text-align: left; flex: none; max-width: 45%; }
+  table.m-cards td[data-label=""]::before, table.m-cards td[data-label="#"] { display: none; }
+  table.m-cards td[colspan] { display: block; text-align: center !important; }
+  table.m-cards td[colspan]::before { display: none; }
+  .sticky-table { max-height: none !important; overflow: visible !important; }
+}
+
 /* RESPONSIVE SIDEBAR */
 @media (max-width: 768px) {
   .sidebar { position: fixed; left: 0; top: 0; width: 100%; height: auto; max-height: 100vh; border-right: none; border-bottom: 1.5px solid var(--border-light); transform: translateX(-100%); z-index: 1100; }
@@ -2222,6 +2262,7 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
   .nav-lbl-short { display: inline; }
 }
 </style>
+<link rel="stylesheet" href="assets/css/site-nav.css">
 </head>
 <body>
 
@@ -2325,82 +2366,11 @@ function govToggleContrast() {
 })();
 </script>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-  <div class="container-custom" style="display:flex;align-items:center;justify-content:space-between;">
-    <button class="sidebar-toggle" id="sidebarToggle" aria-label="เปิดเมนู">☰<span class="sidebar-toggle-label">เมนู</span></button>
-    <a href="#" class="navbar-brand" onclick="return false;">
-      <div class="navbar-logo" style="background:#fff;padding:3px;"><img src="assets/img/logo.jpg" alt="โลโก้กองทุนหลักประกันสุขภาพจังหวัดระยอง" style="width:100%;height:100%;object-fit:contain;border-radius:6px;display:block;"></div>
-      <span>กองทุนหลักประกันสุขภาพจังหวัดระยอง</span>
-    </a>
-    <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;justify-content:flex-end;">
-      <a href="documents-download.html" class="nav-docs-btn">📄 <span class="nav-lbl-long">ดาวโหลดเอกสาร</span><span class="nav-lbl-short">เอกสาร</span></a>
-      <div class="nav-dropdown">
-        <a href="#" class="nav-dropdown-toggle" onclick="return govToggleDropdown(event, this)" style="display:inline-flex;align-items:center;gap:0.35rem;color:#64748b;font-size:0.8rem;font-weight:500;text-decoration:none;padding:0.3rem 0.65rem;border:1px solid #e2e8f0;border-radius:6px;font-family:Sarabun,sans-serif;white-space:nowrap;">ℹ️ <span class="nav-lbl-long">เกี่ยวกับกองทุน</span><span class="nav-lbl-short">เกี่ยวกับ</span></a>
-        <div class="nav-dropdown-menu">
-          <a href="about.html#history">📜 ประวัติความเป็นมา</a>
-          <a href="about.html#mission">🎯 วิสัยทัศน์ พันธกิจ ยุทธศาสตร์</a>
-          <a href="about.html#structure">🏛️ โครงสร้างการบริหาร</a>
-          <a href="about.html#projects">📋 โครงการที่ดำเนินการ</a>
-          <a href="about.html#contact">📞 ติดต่อกองทุนฯ</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</nav>
-
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar" style="display:none;">
-  <div class="sidebar-header">
-    <span style="font-weight:600;color:#0f172a;">เมนู</span>
-    <button class="sidebar-toggle" id="sidebarCloseBtn" style="display:none;font-size:1.3rem;">✕</button>
-  </div>
-  <ul class="sidebar-nav">
-    <li class="sidebar-nav-item">
-      <a href="index.html" class="sidebar-nav-link active">🏠 หน้าหลัก</a>
-    </li>
-    <li class="sidebar-nav-item">
-      <a href="documents-download.html" class="sidebar-nav-link">📄 ดาวโหลดเอกสาร</a>
-    </li>
-    <li class="sidebar-nav-item">
-      <a href="project-summary.html" class="sidebar-nav-link">📊 สรุปโครงการ (หน้าเดียว)</a>
-    </li>
-  </ul>
-</aside>
+<!-- NAVBAR (shared: assets/js/site-nav.js) -->
+<div id="siteNav"></div>
+<script src="assets/js/site-nav.js"></script>
 
 <script>
-// ── SIDEBAR TOGGLE ──
-var sidebar = document.getElementById('sidebar');
-var sidebarToggle = document.getElementById('sidebarToggle');
-var sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
-
-if (sidebarToggle) {
-  sidebarToggle.addEventListener('click', function() {
-    sidebar.style.display = sidebar.style.display === 'none' ? 'flex' : 'none';
-    sidebar.classList.toggle('open');
-    if (sidebar.classList.contains('open')) {
-      sidebarCloseBtn.style.display = 'block';
-    }
-  });
-}
-if (sidebarCloseBtn) {
-  sidebarCloseBtn.addEventListener('click', function() {
-    sidebar.classList.remove('open');
-    sidebar.style.display = 'none';
-    sidebarCloseBtn.style.display = 'none';
-  });
-}
-
-var sidebarLinks = document.querySelectorAll('.sidebar-nav-link');
-sidebarLinks.forEach(function(link) {
-  link.addEventListener('click', function() {
-    if (window.innerWidth <= 768) {
-      sidebar.classList.remove('open');
-      sidebar.style.display = 'none';
-      sidebarCloseBtn.style.display = 'none';
-    }
-  });
-});
 
 // ═══════════════════════════════════════════
 // PHOTO GALLERY CAROUSEL — pulls from the same admin-managed gallery.
@@ -2538,6 +2508,15 @@ document.addEventListener('click', function(e) {
 </div>
 
 
+<!-- ░░ MOBILE HOME — phones only: big cards, big numbers, two clear buttons per project ░░ -->
+<section class="m-home" id="mobileHome" aria-label="สรุปผลการดำเนินงาน">
+  <div class="m-total">
+    <div class="m-total-lbl">งบประมาณที่กองทุนฯ สนับสนุน (ทุกโครงการ)</div>
+    <div class="m-total-val" id="mTotal">กำลังโหลด...</div>
+  </div>
+  <div id="mCards"></div>
+</section>
+
 <!-- ░░ SEARCH ░░ -->
 <div class="search-container" style="margin-top:1.25rem;">
   <input type="text" class="search-input" id="globalSearch"
@@ -2550,7 +2529,7 @@ document.addEventListener('click', function(e) {
 
 <!-- ░░ ACCORDION PROJECTS ░░ -->
 <div class="accordion-section" id="projectsGrid">
-  <p class="accordion-section-title">4 โครงการหลัก · คลิกเพื่อดูรายละเอียด</p>
+  <p class="accordion-section-title"><span class="m-hide">4 โครงการหลัก · คลิกเพื่อดูรายละเอียด</span><span class="m-show">ข้อมูลละเอียดรายโครงการ · แตะเพื่อเปิด</span></p>
 
   <!-- ── PROJECT 1 ── -->
   <div class="acc-item acc-p1" data-keywords="ปรับสภาพแวดล้อม ที่อยู่อาศัย คนพิการ ผู้สูงอายุ ผู้ป่วย ภาวะพึ่งพิง" id="accItem1">
@@ -2733,7 +2712,11 @@ document.addEventListener('click', function(e) {
             <!-- Global Search -->
             <div class="p1-acc-search-sticky">
               <input type="text" class="modal-search-input" id="p1Search"
-                placeholder="🔍 ค้นหาหน่วยงาน, อำเภอ, สถานะ..." onkeyup="loadP1List()">
+                placeholder="🔍 ค้นหารหัสอ้างอิง, หน่วยงาน, อำเภอ..." onkeyup="loadP1List()">
+            </div>
+            <div style="font-size:0.78rem;color:#475569;background:#f0fdfa;border:1px solid #99f6e4;border-radius:8px;padding:0.5rem 0.75rem;margin-bottom:0.6rem;">
+              🔒 ชื่อผู้รับประโยชน์แสดงแบบปกปิดบางส่วนตาม พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล (PDPA) · หากต้องการตรวจสอบข้อมูลเต็ม
+              กรุณาแจ้ง <strong>รหัสอ้างอิง</strong> กับเจ้าหน้าที่กองทุนฯ (รหัสตรงกับลำดับในรายงานโครงการ)
             </div>
             <div class="table-action-row">
               <div id="p1ListCount" style="font-size:0.78rem;color:var(--text-gray);"></div>
@@ -2743,9 +2726,11 @@ document.addEventListener('click', function(e) {
               <table class="table-custom" id="p1ListTable">
                 <thead><tr>
                   <th style="width:4%;">#</th>
-                  <th style="width:6%;">อายุ</th>
-                  <th style="width:14%;">ประเภท</th>
-                  <th style="width:22%;">หน่วยงาน</th>
+                  <th style="width:12%;">รหัสอ้างอิง</th>
+                  <th style="width:13%;">ชื่อ (ปกปิดบางส่วน)</th>
+                  <th style="width:5%;">อายุ</th>
+                  <th style="width:11%;">ประเภท</th>
+                  <th style="width:14%;">หน่วยงาน</th>
                   <th style="width:9%;">อำเภอ</th>
                   <th style="width:10%;">งบประมาณ</th>
                   <th style="width:7%;">ปี</th>
@@ -4800,9 +4785,9 @@ window.exportToExcel = exportToExcel;
 // independent of which page happens to be on screen.
 function exportP1Excel() {
   if (typeof XLSX === 'undefined') { alert('ไม่สามารถ Export ได้ในขณะนี้'); return; }
-  var header = ['#','อายุ','ประเภท','หน่วยงาน','อำเภอ','งบประมาณ','ปี','สถานะ','ประเภทความพิการ'];
+  var header = ['#','รหัสอ้างอิง','ชื่อ (ปกปิดบางส่วน)','อายุ','ประเภท','หน่วยงาน','อำเภอ','งบประมาณ','ปี','สถานะ','ประเภทความพิการ'];
   var rows = (p1FilteredRecords || []).map(function(r, i) {
-    return [i + 1, r.a, r.t, r.tb || '-', r.d, r.b, r.y, r.s, (r.x && r.x.length) ? r.x.join(', ') : '-'];
+    return [i + 1, r.rc, r.n, r.a, r.t, r.tb || '-', r.d, r.b, r.y, r.s, (r.x && r.x.length) ? r.x.join(', ') : '-'];
   });
   var ws = XLSX.utils.aoa_to_sheet([header].concat(rows));
   var wb = XLSX.utils.book_new();
@@ -7130,8 +7115,87 @@ function updateBudgetPills() {
 
     var totalEl = document.querySelector('#budgetStickyBar .budget-sticky-total');
     if (totalEl && complete) totalEl.textContent = '฿' + (total / 1000000).toFixed(2) + ' ล้านบาท';
+    renderMobileHome(d, complete ? total : 0);
   });
 }
+// Phone home screen: one big card per project, plain-language numbers and
+// large buttons (summary page / open the detailed tab).
+function renderMobileHome(d, total) {
+  var wrap = document.getElementById('mCards');
+  if (!wrap) return;
+  function mil(b) { return (b / 1000000).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function num(n) { return (n || 0).toLocaleString('th-TH'); }
+  var tEl = document.getElementById('mTotal');
+  if (tEl && total) tEl.textContent = mil(total) + ' ล้านบาท';
+
+  var cards = [];
+  var p1 = d[0] && d[0].summary;
+  if (p1) cards.push({ n: 1, c: '#0d9488', icon: '🏠', title: 'ปรับสภาพบ้าน',
+    what: 'ซ่อมแซม/ปรับบ้านให้ปลอดภัย สำหรับคนพิการ ผู้สูงอายุ และผู้มีภาวะพึ่งพิง',
+    stats: [[num(p1.totalRecords) + ' หลัง', 'ปรับปรุงแล้ว'], [mil(p1.totalBudget) + ' ล้าน', 'งบประมาณ (บาท)']], summary: 'p1' });
+  var u2 = d[1] && d[1].units;
+  if (u2) {
+    var ready = u2.reduce(function(s, u) { return s + (u.available_qty || 0); }, 0);
+    var qty = u2.reduce(function(s, u) { return s + (u.total_qty || 0); }, 0);
+    cards.push({ n: 2, c: '#b45309', icon: '♿', title: 'ยืมอุปกรณ์คนพิการ',
+      what: 'ยืมรถเข็น เตียง ที่นอนลม เครื่องผลิตออกซิเจน ฯลฯ ได้ที่หน่วยบริการใกล้บ้าน',
+      stats: [[num(ready) + ' ชิ้น', 'พร้อมให้ยืมตอนนี้'], [num(u2.length) + ' แห่ง', 'หน่วยบริการ (' + num(qty) + ' ชิ้น)']],
+      summary: 'p2', extra: { label: '🔍 หาอุปกรณ์ที่พร้อมให้ยืม', fn: 'mFindEquipment()' } });
+  }
+  var r3 = d[2] && d[2].records;
+  if (r3) cards.push({ n: 3, c: '#047857', icon: '🤝', title: 'พัฒนาเครือข่ายบริการ',
+    what: 'อบรมและพัฒนาศักยภาพเครือข่ายฟื้นฟูสมรรถภาพในชุมชน',
+    stats: [[num(r3.length) + ' โครงการ', 'ที่ได้รับงบ'], [mil(r3.reduce(function(s, r) { return s + (Number(r.b) || 0); }, 0)) + ' ล้าน', 'งบประมาณ (บาท)']] });
+  var u4 = d[3] && d[3].units;
+  if (u4) cards.push({ n: 4, c: '#7c3aed', icon: '🔧', title: 'ศูนย์ซ่อมอุปกรณ์',
+    what: 'ซ่อมรถเข็น เตียง ที่นอน และอุปกรณ์คนพิการ ให้กลับมาใช้งานได้',
+    stats: [[num((d[3].repairs || []).reduce(function(s, r) { return s + (r.total || 0); }, 0)) + ' ชิ้น', 'ซ่อมแล้ว'], [num(u4.length) + ' ศูนย์', 'ทั่วจังหวัด']], summary: 'p4' });
+
+  wrap.innerHTML = cards.map(function(c) {
+    return '<article class="m-card" style="--mc:' + c.c + '"><h2><span>' + c.icon + '</span>' + c.title + '</h2>' +
+      '<p class="m-what">' + c.what + '</p><div class="m-stats">' + c.stats.map(function(s) {
+        return '<div class="m-stat"><b>' + s[0] + '</b><small>' + s[1] + '</small></div>';
+      }).join('') + '</div><div class="m-btns">' +
+      (c.extra ? '<button type="button" class="m-btn primary" onclick="' + c.extra.fn + '">' + c.extra.label + '</button>' : '') +
+      (c.summary ? '<a class="m-btn' + (c.extra ? '' : ' primary') + '" href="project-summary.html#' + c.summary + '">📊 ดูสรุปโครงการ</a>' : '') +
+      '<button type="button" class="m-btn' + (c.summary || c.extra ? '' : ' primary') + '" onclick="mOpenProject(' + c.n + ')">📋 ดูข้อมูลละเอียด</button></div></article>';
+  }).join('');
+}
+function mOpenProject(n) {
+  var item = document.getElementById('accItem' + n);
+  if (item && !item.classList.contains('open')) toggleAcc(n);
+  setTimeout(function() { if (item) item.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
+}
+function mFindEquipment() {
+  mOpenProject(2);
+  ensureP2DataLoaded().then(function() { setTimeout(p2QuickFindAvailable, 400); });
+}
+
+// Label every cell with its column name so the CSS above can show wide
+// tables as one card per row on phones. Re-labels whenever a tbody is redrawn.
+(function() {
+  var IDS = ['p1ListTable', 'p2UnitTable', 'p2MapTable', 'p3ListTable', 'p3DistrictTable', 'p4BudgetTable'];
+  function label(table) {
+    var heads = Array.prototype.map.call(table.querySelectorAll('thead th'), function(th) { return th.textContent.trim(); });
+    table.querySelectorAll('tbody tr').forEach(function(tr) {
+      Array.prototype.forEach.call(tr.children, function(td, i) {
+        if (!td.hasAttribute('data-label')) td.setAttribute('data-label', heads[i] || '');
+      });
+    });
+  }
+  function init() {
+    IDS.forEach(function(id) {
+      var t = document.getElementById(id);
+      if (!t) return;
+      t.classList.add('m-cards');
+      label(t);
+      var tb = t.querySelector('tbody');
+      if (tb) new MutationObserver(function() { label(t); }).observe(tb, { childList: true });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
 // โหลด budget pills เมื่อหน้า ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', updateBudgetPills);
@@ -7141,8 +7205,9 @@ if (document.readyState === 'loading') {
 
 // ─── Project 1 data loader ────────────────────────────────────────────────────
 // Ready-made data file, refreshed from the Fund's own Excel file via
-// home-improvement/generate_data.js from เอกสารแนบ 6, which lists houses by
-// service unit only — the file has no names or addresses at all.
+// home-improvement/generate_data.js from เอกสารแนบ 6. Names are masked to
+// title + first letters before this file is written, and addresses never
+// leave the Fund's internal reference-code file (see that script's notes).
 var P1_STATIC_URL = 'home-improvement/data/dashboard_data.json';
 
 function p1ApiRecordToLegacy(r) {
@@ -7151,6 +7216,7 @@ function p1ApiRecordToLegacy(r) {
     dis = dis ? String(dis).split(',').map(function(s){ return s.trim(); }).filter(Boolean) : [];
   }
   return {
+    rc: String(r.refCode       || ''),
     n:  String(r.personName    || ''),
     a:  Number(r.age)          || 0,
     t:  String(r.statusGroup   || ''),
@@ -7478,7 +7544,7 @@ function loadP1List() {
       if (hpcHay.indexOf(hpcQuery) === -1) return false;
     }
     if (keywords.length > 0) {
-      var hay = ((r.n||'') + " " + (r.tb||'') + " " + (r.d||'') + " " + (r.t||'') + " " + (r.s||'')).toLowerCase();
+      var hay = ((r.rc||'') + " " + (r.n||'') + " " + (r.tb||'') + " " + (r.d||'') + " " + (r.t||'') + " " + (r.s||'')).toLowerCase();
       if (!keywords.every(function(kw){ return hay.indexOf(kw) > -1; })) return false;
     }
     return true;
@@ -7514,6 +7580,8 @@ function renderP1Page() {
     var tr = document.createElement("tr");
     tr.innerHTML =
       "<td style=\"color:var(--text-gray);font-size:0.72rem;\">" + (start+i+1) + "</td>" +
+      "<td style=\"font-size:0.75rem;font-weight:700;color:#0f766e;white-space:nowrap;\">" + (r.rc || "-") + "</td>" +
+      "<td style=\"font-size:0.78rem;\">" + (r.n || "-") + "</td>" +
       "<td style=\"text-align:center;font-weight:600;\">" + r.a + "</td>" +
       "<td>" + typeBadge + "</td>" +
       "<td style=\"font-size:0.78rem;font-weight:600;\">" + (r.tb || "-") + "</td>" +

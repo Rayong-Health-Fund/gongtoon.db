@@ -151,7 +151,8 @@ body.gov-contrast a { color: #ffe066 !important; }
 
 /* MAIN CONTENT */
 .main-content {
-  margin-left: 260px;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 2rem 1.5rem;
 }
 
@@ -433,6 +434,7 @@ body.gov-contrast a { color: #ffe066 !important; }
   .hero-title { font-size: 1.2rem; }
 }
 </style>
+<link rel="stylesheet" href="assets/css/site-nav.css">
 </head>
 <body>
 
@@ -450,41 +452,8 @@ body.gov-contrast a { color: #ffe066 !important; }
   </div>
 </div>
 
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <a href="index.html" class="navbar-brand" style="gap: 8px;">
-      <div class="navbar-logo">🏥</div>
-      <span style="font-size: 0.85rem;">กองทุนระยอง</span>
-    </a>
-    <button class="sidebar-toggle" id="sidebarCloseBtn">✕</button>
-  </div>
-  <ul class="sidebar-nav">
-    <li class="sidebar-nav-item">
-      <a href="index.html" class="sidebar-nav-link">🏠 หน้าหลัก</a>
-    </li>
-    <li class="sidebar-nav-item">
-      <a href="documents-download.html" class="sidebar-nav-link active">📄 ดาวโหลดเอกสาร</a>
-    </li>
-    <li class="sidebar-nav-item">
-      <a href="staff-hub.html" class="sidebar-nav-link">📝 แบบฟอร์มกรอกข้อมูล</a>
-    </li>
-  </ul>
-</aside>
-
-<!-- NAVBAR -->
-<nav class="navbar">
-  <div class="container-fluid">
-    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
-    <a class="navbar-brand" href="index.html" style="margin-left: 0;">
-      <div class="navbar-logo">🏥</div>
-      <span>กองทุนหลักประกันสุขภาพจังหวัดระยอง</span>
-    </a>
-    <div style="display: flex; align-items: center; gap: 1rem;">
-      <span id="indexUserName" style="font-size: 0.9rem; color: #475569;"></span>
-    </div>
-  </div>
-</nav>
+<div id="siteNav"></div>
+<script src="assets/js/site-nav.js"></script>
 
 <!-- HERO SECTION -->
 <section class="hero">
@@ -527,19 +496,17 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-header">
           <div class="document-icon">📎</div>
           <div>
-            <div class="document-title">เอกสารแนบ 1: สร้างเสริม ป้องกัน รักษาปฐมภูมิเชิงรุก</div>
-            <div class="document-meta">เอกสารแนบ 1</div>
+            <div class="document-title">สร้างเสริม ป้องกัน รักษาปฐมภูมิเชิงรุก</div>
           </div>
         </div>
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์สำหรับกิจกรรมสร้างเสริมสุขภาพ ป้องกันโรค และการรักษาระดับปฐมภูมิเชิงรุก</p>
-          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%201%20สร้างเสริม%20ป้องกัน%20รักษาปฐมภูมิเชิงรุก.pdf" class="download-btn" download>📥 PDF</a>
+            <a href="documents/pdf/เอกสารแนบ%201%20สร้างเสริม%20ป้องกัน%20รักษาปฐมภูมิเชิงรุก.pdf" class="download-btn" download="สร้างเสริม ป้องกัน รักษาปฐมภูมิเชิงรุก.pdf">📥 PDF</a>
             <span class="file-size">146 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.1%20สร้างเสริม%20ป้องกัน%20รักษาปฐมภูมิเชิงรุก.docx" class="download-btn" download>📥 Word</a>
+            <a href="documents/word/เอกสารแนบ%206.1%20สร้างเสริม%20ป้องกัน%20รักษาปฐมภูมิเชิงรุก.docx" class="download-btn" download="สร้างเสริม ป้องกัน รักษาปฐมภูมิเชิงรุก.docx">📥 Word</a>
             <span class="file-size">76 KB</span>
           </div>
         </div>
@@ -549,19 +516,17 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-header">
           <div class="document-icon">📎</div>
           <div>
-            <div class="document-title">เอกสารแนบ 2: ศูนย์สาธิตและยืมอุปกรณ์ฯ</div>
-            <div class="document-meta">เอกสารแนบ 2</div>
+            <div class="document-title">ศูนย์สาธิตและยืมอุปกรณ์ฯ</div>
           </div>
         </div>
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์โครงการศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้าน</p>
-          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%202%20ศูนย์สาธิต.pdf" class="download-btn" download>📥 PDF</a>
+            <a href="documents/pdf/เอกสารแนบ%202%20ศูนย์สาธิต.pdf" class="download-btn" download="ศูนย์สาธิตและยืมอุปกรณ์ฯ.pdf">📥 PDF</a>
             <span class="file-size">342 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.2%20ศูนย์สาธิต.docx" class="download-btn" download>📥 Word</a>
+            <a href="documents/word/เอกสารแนบ%206.2%20ศูนย์สาธิต.docx" class="download-btn" download="ศูนย์สาธิตและยืมอุปกรณ์ฯ.docx">📥 Word</a>
             <span class="file-size">145 KB</span>
           </div>
         </div>
@@ -571,19 +536,17 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-header">
           <div class="document-icon">📎</div>
           <div>
-            <div class="document-title">เอกสารแนบ 3: ศูนย์ซ่อมบำรุงอุปกรณ์ฯ</div>
-            <div class="document-meta">เอกสารแนบ 3</div>
+            <div class="document-title">ศูนย์ซ่อมบำรุงอุปกรณ์ฯ</div>
           </div>
         </div>
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์โครงการศูนย์ซ่อมบำรุง ดัดแปลงและจัดทำเฉพาะอุปกรณ์เครื่องช่วยความพิการ</p>
-          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%203%20ซ่อมบำรุง.pdf" class="download-btn" download>📥 PDF</a>
+            <a href="documents/pdf/เอกสารแนบ%203%20ซ่อมบำรุง.pdf" class="download-btn" download="ศูนย์ซ่อมบำรุงอุปกรณ์ฯ.pdf">📥 PDF</a>
             <span class="file-size">204 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.3%20ซ่อมบำรุง.docx" class="download-btn" download>📥 Word</a>
+            <a href="documents/word/เอกสารแนบ%206.3%20ซ่อมบำรุง.docx" class="download-btn" download="ศูนย์ซ่อมบำรุงอุปกรณ์ฯ.docx">📥 Word</a>
             <span class="file-size">83 KB</span>
           </div>
         </div>
@@ -593,19 +556,17 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-header">
           <div class="document-icon">📎</div>
           <div>
-            <div class="document-title">เอกสารแนบ 4: ปรับสภาพแวดล้อมที่อยู่อาศัยฯ</div>
-            <div class="document-meta">เอกสารแนบ 4</div>
+            <div class="document-title">ปรับสภาพแวดล้อมที่อยู่อาศัยฯ</div>
           </div>
         </div>
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์โครงการปรับสภาพแวดล้อมที่อยู่อาศัยสำหรับคนพิการ ผู้สูงอายุ และผู้ที่มีภาวะพึ่งพิง</p>
-          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%204%20ปรับสภาพบ้าน.pdf" class="download-btn" download>📥 PDF</a>
+            <a href="documents/pdf/เอกสารแนบ%204%20ปรับสภาพบ้าน.pdf" class="download-btn" download="ปรับสภาพแวดล้อมที่อยู่อาศัยฯ.pdf">📥 PDF</a>
             <span class="file-size">462 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.4%20ปรับสภาพบ้าน.docx" class="download-btn" download>📥 Word</a>
+            <a href="documents/word/เอกสารแนบ%206.4%20ปรับสภาพบ้าน.docx" class="download-btn" download="ปรับสภาพแวดล้อมที่อยู่อาศัยฯ.docx">📥 Word</a>
             <span class="file-size">253 KB</span>
           </div>
         </div>
@@ -615,19 +576,17 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-header">
           <div class="document-icon">📎</div>
           <div>
-            <div class="document-title">เอกสารแนบ 5: จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ</div>
-            <div class="document-meta">เอกสารแนบ 5</div>
+            <div class="document-title">จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ</div>
           </div>
         </div>
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์การจัดตั้งศูนย์พัฒนาและฟื้นฟูคุณภาพชีวิตผู้สูงอายุและคนพิการ</p>
-          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%205%20จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.pdf" class="download-btn" download>📥 PDF</a>
+            <a href="documents/pdf/เอกสารแนบ%205%20จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.pdf" class="download-btn" download="จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.pdf">📥 PDF</a>
             <span class="file-size">520 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.5%20จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.docx" class="download-btn" download>📥 Word</a>
+            <a href="documents/word/เอกสารแนบ%206.5%20จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.docx" class="download-btn" download="จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.docx">📥 Word</a>
             <span class="file-size">1.0 MB</span>
           </div>
         </div>
@@ -637,19 +596,17 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-header">
           <div class="document-icon">📎</div>
           <div>
-            <div class="document-title">เอกสารแนบ 6: พัฒนาศักยภาพเครือข่ายบริการ</div>
-            <div class="document-meta">เอกสารแนบ 6</div>
+            <div class="document-title">พัฒนาศักยภาพเครือข่ายบริการ</div>
           </div>
         </div>
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์โครงการพัฒนาศักยภาพเครือข่ายบริการเพื่อฟื้นฟูสมรรถภาพผู้พิการและผู้สูงอายุ</p>
-          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%206%20พัฒนาศักยภาพ.pdf" class="download-btn" download>📥 PDF</a>
+            <a href="documents/pdf/เอกสารแนบ%206%20พัฒนาศักยภาพ.pdf" class="download-btn" download="พัฒนาศักยภาพเครือข่ายบริการ.pdf">📥 PDF</a>
             <span class="file-size">178 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.6%20พัฒนาศักยภาพ.docx" class="download-btn" download>📥 Word</a>
+            <a href="documents/word/เอกสารแนบ%206.6%20พัฒนาศักยภาพ.docx" class="download-btn" download="พัฒนาศักยภาพเครือข่ายบริการ.docx">📥 Word</a>
             <span class="file-size">78 KB</span>
           </div>
         </div>
@@ -659,19 +616,17 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-header">
           <div class="document-icon">📎</div>
           <div>
-            <div class="document-title">เอกสารแนบ 7: โรคติดต่อและภัยพิบัติ</div>
-            <div class="document-meta">เอกสารแนบ 7</div>
+            <div class="document-title">โรคติดต่อและภัยพิบัติ</div>
           </div>
         </div>
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์การดำเนินงานด้านโรคติดต่อและสาธารณภัย</p>
-          <div class="document-badges"><span class="badge-tag">เอกสารแนบ</span></div>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%207%20โรคติดต่อและภัยพิบัติ.pdf" class="download-btn" download>📥 PDF</a>
+            <a href="documents/pdf/เอกสารแนบ%207%20โรคติดต่อและภัยพิบัติ.pdf" class="download-btn" download="โรคติดต่อและภัยพิบัติ.pdf">📥 PDF</a>
             <span class="file-size">171 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.7%20โรคติดต่อและภัยพิบัติ.docx" class="download-btn" download>📥 Word</a>
+            <a href="documents/word/เอกสารแนบ%206.7%20โรคติดต่อและภัยพิบัติ.docx" class="download-btn" download="โรคติดต่อและภัยพิบัติ.docx">📥 Word</a>
             <span class="file-size">75 KB</span>
           </div>
         </div>
@@ -714,30 +669,6 @@ body.gov-contrast a { color: #ffe066 !important; }
 </footer>
 
 <script>
-// ── SIDEBAR TOGGLE ──
-var sidebar = document.getElementById('sidebar');
-var sidebarToggle = document.getElementById('sidebarToggle');
-var sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
-
-if (sidebarToggle) {
-  sidebarToggle.addEventListener('click', function() {
-    sidebar.classList.toggle('open');
-  });
-}
-if (sidebarCloseBtn) {
-  sidebarCloseBtn.addEventListener('click', function() {
-    sidebar.classList.remove('open');
-  });
-}
-
-var sidebarLinks = document.querySelectorAll('.sidebar-nav-link');
-sidebarLinks.forEach(function(link) {
-  link.addEventListener('click', function() {
-    if (window.innerWidth <= 768) {
-      sidebar.classList.remove('open');
-    }
-  });
-});
 
 // ── SET CURRENT DATE ──
 var currentDate = new Date();
