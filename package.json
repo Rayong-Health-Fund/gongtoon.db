@@ -1,0 +1,14 @@
+{
+  "name": "rayong-health-fund-dashboard",
+  "private": true,
+  "description": "Static dashboard for กองทุนหลักประกันสุขภาพจังหวัดระยอง. Data files are rebuilt from the Fund's Excel reports with the scripts below.",
+  "scripts": {
+    "data:p1": "node home-improvement/generate_data.js",
+    "data:p2": "node equipment-loan/generate_data.js",
+    "data:p4": "node device-repair/generate_data.js",
+    "data": "npm run data:p1 && npm run data:p2 && npm run data:p4"
+  },
+  "devDependencies": {
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  }
+}

@@ -1,250 +1,243 @@
-// Converts the P4 (ศูนย์ซ่อมบำรุงฯ) source CSVs into the ready-made data
-// file index.html's P4 tab reads directly, in the exact project4Data
-// shape (data_by_year/budgets/budget_totals/available_years/categories)
-// the page already expects.
+// Builds the data file index.html's P4 tab (ศูนย์ซ่อมบำรุงฯ) reads, in the
+// project4Data shape the page already expects (data_by_year/budgets/
+// budget_totals/available_years/categories), plus `units` and `repairs`.
 //
-// The row-normalizing logic below (p4GetNum/p4GetText/p4SumThai/
-// p4FormatDate/p4NormalizeDevices/p4NormalizeFunding/p4BuildData) is
-// copied verbatim from assets/js/main.js's renderProject4Dashboard —
-// that code already knows how to read this exact CSV's column names
-// (it was written to read them straight from the Fund's Google Sheet,
-// which mirrors this CSV), so re-using it here instead of re-deriving
-// the multi-year/phase logic avoids getting a subtle detail wrong.
-// If assets/js/main.js's p4Normalize* functions ever change, copy the
-// updated versions here too.
+// Sources:
+//   1. "เอกสารแนบ 5 รายงานศูนย์ซ่อม.xlsx" — the report presented at the
+//      committee meeting. Each unit's district and total budget (net of any
+//      money returned to the Fund) come from here, and the totals on the
+//      site must match it.
+//   2. "สรุป โครงการศูนย์ซ่อมฯ เกี่ยวกับการขอรับงบฯ และเข้าแผนปี 2570.xlsx",
+//      sheet "สรุป 1" — one row per unit per fiscal year with the approved
+//      amount, process dates and notes. Refunds written in the notes
+//      ("คืนเงิน 12,109.-") are subtracted, which is how เอกสารแนบ 5 gets
+//      its net figures; the script checks the two agree.
+//   3. "ข้อมูลเบิกจ่ายของแต่ละหน่วยบริการ อัพเดท กันยายน 2569/*.xlsx" — one
+//      workbook per unit: spare parts bought / used per year, and how many
+//      wheelchairs / beds / mattresses were repaired.
 //
-// Usage: node generate_data.js — re-run whenever new source CSVs arrive.
+// Usage: npm run data:p4  (re-run whenever new reports arrive)
 
 const fs = require('fs');
 const path = require('path');
+const XLSX = require('xlsx');
 
 const SRC = path.join(__dirname, 'source');
+const REPORT_XLSX = path.join(SRC, 'เอกสารแนบ 5 รายงานศูนย์ซ่อม.xlsx');
+const FUNDING_XLSX = path.join(SRC, 'สรุป โครงการศูนย์ซ่อมฯ เกี่ยวกับการขอรับงบฯ และเข้าแผนปี 2570.xlsx');
+const DISBURSE_DIR = path.join(SRC, 'ข้อมูลเบิกจ่ายของแต่ละหน่วยบริการ อัพเดท กันยายน 2569');
 const OUTPUT_JSON = path.join(__dirname, 'data', 'dashboard_data.json');
 
-function parseCsv(text) {
-  const rows = [];
-  let row = [], field = '', inQuotes = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (inQuotes) {
-      if (c === '"') {
-        if (text[i + 1] === '"') { field += '"'; i++; }
-        else inQuotes = false;
-      } else field += c;
-    } else if (c === '"') {
-      inQuotes = true;
-    } else if (c === ',') {
-      row.push(field); field = '';
-    } else if (c === '\r') {
-      // skip
-    } else if (c === '\n') {
-      row.push(field); rows.push(row); row = []; field = '';
-    } else {
-      field += c;
-    }
+const PREFIXES = [
+  ['องค์การบริหารส่วนตำบล', 'อบต.'],
+  ['เทศบาลตำบล', 'ทต.'],
+  ['เทศบาลเมือง', 'ทม.'],
+  ['โรงพยาบาล', 'รพ.']
+];
+const THAI_MONTHS = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+function text(v) { return String(v == null ? '' : v).replace(/\s+/g, ' ').trim(); }
+// Handles plain numbers and the Fund's "497,500.-" money style.
+function num(v) {
+  if (typeof v === 'number') return v;
+  const m = String(v == null ? '' : v).replace(/,/g, '').match(/-?\d+(\.\d+)?/);
+  return m ? Number(m[0]) : 0;
+}
+function rowsOf(ws) { return XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' }); }
+function round2(n) { return Math.round(n * 100) / 100; }
+
+function fullName(name) {
+  name = text(name);
+  for (const [long, short] of PREFIXES) {
+    if (name.indexOf(short) === 0) return long + name.slice(short.length);
   }
-  if (field.length || row.length) { row.push(field); rows.push(row); }
-  return rows.filter(r => r.some(cell => cell !== ''));
+  return name;
 }
 
-function readCsvAsObjects(filename) {
-  const raw = fs.readFileSync(path.join(SRC, filename), 'utf8').replace(/^﻿/, '');
-  const rows = parseCsv(raw);
-  const headers = rows[0].map(h => h.trim());
-  return rows.slice(1).map(cols => {
-    const obj = {};
-    headers.forEach((h, i) => { obj[h] = cols[i] !== undefined ? cols[i].trim() : ''; });
-    return obj;
+// The Fund types dates as d/m/yy with a Buddhist-era year, which Excel
+// stores either as 19yy (two-digit year) or as a 25xx "Gregorian" year.
+// Either way the Buddhist-era year is recoverable.
+function thaiDate(v) {
+  if (typeof v !== 'number' || v < 1000) return text(v) || '-';
+  const d = XLSX.SSF.parse_date_code(v);
+  if (!d) return '-';
+  const be = d.y > 2400 ? d.y : d.y < 2000 ? 2500 + (d.y - 1900) : d.y + 543;
+  return d.d + ' ' + THAI_MONTHS[d.m - 1] + ' ' + be;
+}
+
+// ── 1. เอกสารแนบ 5: unit -> district + net total ────────────────────────
+function readReport() {
+  const rows = rowsOf(XLSX.readFile(REPORT_XLSX).Sheets['Sheet1']);
+  const units = [];
+  let district = '';
+  rows.forEach(r => {
+    if (text(r[1]) && text(r[1]) !== 'อำเภอ') district = text(r[1]);
+    const unit = text(r[2]);
+    if (!unit || unit === 'หน่วยงาน' || !num(r[7])) return;
+    units.push({ unit: fullName(unit), short: unit, district, budget: num(r[7]) });
   });
+  return units;
 }
 
-// ─── copied from assets/js/main.js — see file header note ──────────────────
-
-function p4FormatDate(isoStr) {
-  if (!isoStr || String(isoStr).trim() === '' || isoStr === '-') return '-';
-  try {
-    var s = String(isoStr).trim();
-    var beYear = parseInt(s.substring(0, 4), 10);
-    if (beYear > 2400) s = (beYear - 543) + s.substring(4);
-    var d = new Date(s);
-    if (isNaN(d.getTime())) return String(isoStr);
-    return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
-  } catch (e) { return String(isoStr); }
+// ── 2. สรุป 1: one row per unit per year ────────────────────────────────
+function readFunding() {
+  const rows = rowsOf(XLSX.readFile(FUNDING_XLSX).Sheets['สรุป 1']);
+  const out = [];
+  let year = '';
+  rows.forEach(r => {
+    const y = text(r[0]).match(/^ปีงบประมาณ\s*(25\d\d)/);
+    if (y) { year = y[1]; return; }
+    if (!/^\d+$/.test(text(r[0])) || !text(r[1])) return;
+    const approved = num(r[5]);
+    const notes = text(r[8]);
+    const refund = num((notes.match(/คืนเงิน\s*([\d,.]+)/) || [])[1]);
+    out.push({
+      year,
+      unit: fullName(r[1]),
+      approved,
+      refund,
+      budget: approved ? round2(approved - refund) : 0,
+      submitted: thaiDate(r[2]),
+      approved_date: thaiDate(r[3]),
+      mou: thaiDate(r[4]),
+      received: thaiDate(r[6]),
+      reported: thaiDate(r[7]),
+      notes
+    });
+  });
+  return out;
 }
 
-function p4GetNum(row, thaiKey, engKey) {
-  if (Object.prototype.hasOwnProperty.call(row, thaiKey)) return Number(row[thaiKey]) || 0;
-  if (engKey && Object.prototype.hasOwnProperty.call(row, engKey)) return Number(row[engKey]) || 0;
-  return 0;
+// ── 3. per-unit disbursement workbooks ──────────────────────────────────
+function readDisbursements(districtOf, warnings) {
+  const items = [];
+  const repairs = [];
+  fs.readdirSync(DISBURSE_DIR).filter(f => /\.xlsx$/i.test(f) && !f.startsWith('~$')).forEach(file => {
+    const wb = XLSX.readFile(path.join(DISBURSE_DIR, file));
+    const rows = rowsOf(wb.Sheets[wb.SheetNames[0]]);
+    // Row 3 of each workbook spells the unit inconsistently (blank on one,
+    // "เทศบาลเมือง" for a ทต. on another); the file name is reliable.
+    const fromName = file.replace(/\s*ok\.xlsx$/i, '').match(/(อบต\.|ทต\.|ทม\.|รพ\.)\S+$/);
+    const unit = fullName(fromName ? fromName[0] : (rows[2] && (rows[2][0] || rows[2][1])));
+    const district = districtOf[unit] || '';
+    if (!district) warnings.push(file + ': unit "' + unit + '" not found in เอกสารแนบ 5');
+
+    let category = '', years = [], summaryYears = null, summaryCat = '';
+    const yearOf = v => (text(v).match(/^(25\d\d)/) || [])[1];
+    rows.forEach(r => {
+      const a = text(r[0]);
+      if (/^กลุ่ม/.test(a) && !text(r[2])) { category = a.replace(/^กลุ่ม/, ''); summaryYears = null; return; }
+      // year header under "จำนวนที่ซื้อ": [ '', '', '', 2567, '2568 (1)', '2568 (2)', 2569, 2567, ... ]
+      // — a year appears twice when it had two funding rounds (ระยะ 1/2).
+      if (!a && !text(r[1]) && yearOf(r[3])) {
+        const ys = r.slice(3).map(yearOf).filter(Boolean);
+        years = ys.slice(0, ys.length / 2);
+        return;
+      }
+      if (/^สรุปเบิกจ่าย/.test(a)) {
+        summaryYears = r.slice(3).map(yearOf).filter(Boolean);
+        summaryCat = (a.match(/กลุ่ม(.+)$/) || [])[1] || '';
+        return;
+      }
+      // repaired-device count: "กลุ่มรถวีลแชร์ | | คัน | 30 | 20 | ..." or, when
+      // the group is named in the header row instead, " | | คัน | ...".
+      if (summaryYears && text(r[2]) && !text(r[1]) && (/^กลุ่ม/.test(a) || (!a && summaryCat))) {
+        const byYear = {};
+        summaryYears.forEach((y, k) => { byYear[y] = (byYear[y] || 0) + num(r[3 + k]); });
+        repairs.push({ district, unit, category: a ? a.replace(/^กลุ่ม/, '') : summaryCat.trim(),
+                       unit_type: text(r[2]), by_year: byYear, total: num(r[3 + summaryYears.length]) });
+        summaryCat = '';
+        return;
+      }
+      if (!/^\d+$/.test(a) || !text(r[1]) || !years.length) return;
+      const n = years.length;
+      const yr = {};
+      years.forEach((y, k) => {
+        const d = yr[y] || (yr[y] = { buy: 0, paid: 0 });
+        d.buy += num(r[3 + k]);
+        d.paid += num(r[3 + n + k]);
+      });
+      items.push({ dist: district, unit, cat: category, equip: text(r[1]), utype: text(r[2]),
+                   yr, remainingInFile: num(r[3 + 2 * n]), file });
+    });
+  });
+  return { items, repairs };
 }
 
-function p4GetText(row, thaiKey, engKey) {
-  if (Object.prototype.hasOwnProperty.call(row, thaiKey)) return String(row[thaiKey] || '').trim();
-  return String(row[engKey] || '').trim();
-}
-
-function p4SumThai(row, thaiKeys, engKey) {
-  var hasAny = thaiKeys.some(function(k) { return Object.prototype.hasOwnProperty.call(row, k); });
-  if (hasAny) return thaiKeys.reduce(function(sum, k) { return sum + (Number(row[k]) || 0); }, 0);
-  return (engKey && Object.prototype.hasOwnProperty.call(row, engKey)) ? Number(row[engKey]) || 0 : 0;
-}
-
-var P4_YEARS = ['2566', '2567', '2568', '2569'];
-
-function p4NormalizeDevices(rows) {
-  var itemMap = {};
-
-  rows.forEach(function(row) {
-    var dist  = p4GetText(row, 'สถานที่_อำเภอ',                    'district');
-    var unit  = p4GetText(row, 'หน่วยงาน_ที่ตั้งศูนย์ซ่อม',        'center_name');
-    var cat   = p4GetText(row, 'กลุ่ม_อุปกรณ์ที่พร้อมให้บริการ',  'category');
-    var equip = p4GetText(row, 'รายการ_อุปกรณ์',                   'item');
-    var utype = p4GetText(row, 'อุปกรณ์_หน่วย',                    'unit');
-    var key   = [dist, unit, cat, equip].join('\x00');
-
-    if (!itemMap[key]) {
-      itemMap[key] = { dist: dist, unit: unit, cat: cat, equip: equip, utype: utype, yr: {} };
+// Same per-year row shape (incl. carry-forward rows for years with no
+// movement) the page's P4 code was written against.
+function buildDataByYear(items, warnings) {
+  const allYears = [...new Set(items.flatMap(it => Object.keys(it.yr)))].sort();
+  const data_by_year = {};
+  items.forEach(it => {
+    let bal = 0, started = false;
+    allYears.forEach(year => {
+      const yd = it.yr[year];
+      const moved = yd && (yd.buy || yd.paid);
+      if (moved) {
+        bal = round2(Math.max(bal + yd.buy - yd.paid, 0));
+        started = true;
+      }
+      if (!started || (!moved && bal <= 0)) return;
+      (data_by_year[year] = data_by_year[year] || []).push({
+        district: it.dist, unit: it.unit, category: it.cat, equipment: it.equip, unit_type: it.utype,
+        year, purchased: moved ? yd.buy : 0, used: moved ? yd.paid : 0, remaining: bal, carryForward: !moved
+      });
+    });
+    if (Math.abs(bal - it.remainingInFile) > 0.01) {
+      warnings.push(it.file + ': ' + it.equip + ' remaining computed ' + bal + ', file says ' + it.remainingInFile);
     }
-
-    var rawYears = {
-      '2566': {
-        buy:  p4GetNum(row, 'จัดซื้อ_ปี66',       'buy66'),
-        paid: p4GetNum(row, 'เบิกจ่าย_ปี66',      'paid66'),
-        bal:  p4GetNum(row, 'ยอดสุทธิ_ปี66(ห้ามแก้ไข)', 'balance66')
-      },
-      '2567': {
-        buy:  p4GetNum(row, 'จัดซื้อ_ปี67',       'buy67'),
-        paid: p4GetNum(row, 'เบิกจ่าย_ปี67',      'paid67'),
-        bal:  p4GetNum(row, 'ยอดสุทธิ_ปี67(ห้ามแก้ไข)', 'balance67')
-      },
-      '2568': {
-        buy:  p4SumThai(row, ['จัดซื้อ_ปี68_ระยะ1','จัดซื้อจากฟอร์ม_68_ร1',
-                               'จัดซื้อ_ปี68_ระยะ2','จัดซื้อ_จากฟอร์ม_68_ร2'], 'buy68'),
-        paid: p4SumThai(row, ['เบิกจ่าย_ปี68_ระยะ1','เบิกจ่าย_จากฟอร์ม_68_ร1',
-                               'เบิกจ่าย_ปี68_ระยะ2','เบิกจ่าย_จากฟอร์ม_68_ร2'], 'paid68'),
-        bal:  p4GetNum(row, 'ยอดสุทธิ_ปี68(ห้ามแก้ไข)', 'balance68')
-      },
-      '2569': {
-        buy:  p4SumThai(row, ['จัดซื้อ_ปี69','จัดซื้อ_จากฟอร์ม_69'], 'buy69'),
-        paid: p4SumThai(row, ['เบิกจ่าย_ปี69','เบิกจ่าย_จากฟอร์ม_69'], 'paid69'),
-        bal:  p4GetNum(row, 'ยอดสุทธิ_ปี69(ห้ามแก้ไข)', 'balance69')
-      }
-    };
-
-    P4_YEARS.forEach(function(y) {
-      var d = rawYears[y];
-      if (d.buy !== 0 || d.paid !== 0 || d.bal !== 0) {
-        itemMap[key].yr[y] = d;
-      }
-    });
   });
-
-  var data_by_year = {};
-
-  Object.keys(itemMap).forEach(function(key) {
-    var item = itemMap[key];
-    var prevBal = 0;
-
-    P4_YEARS.forEach(function(year) {
-      var yd = item.yr[year];
-      if (yd) {
-        var effectiveBal = yd.bal > 0 ? yd.bal : Math.max(prevBal + yd.buy - yd.paid, 0);
-        if (!data_by_year[year]) data_by_year[year] = [];
-        data_by_year[year].push({
-          district:     item.dist,
-          unit:         item.unit,
-          category:     item.cat,
-          equipment:    item.equip,
-          unit_type:    item.utype,
-          year:         year,
-          purchased:    yd.buy,
-          used:         yd.paid,
-          remaining:    effectiveBal,
-          carryForward: false
-        });
-        prevBal = effectiveBal;
-      } else if (prevBal > 0) {
-        if (!data_by_year[year]) data_by_year[year] = [];
-        data_by_year[year].push({
-          district:     item.dist,
-          unit:         item.unit,
-          category:     item.cat,
-          equipment:    item.equip,
-          unit_type:    item.utype,
-          year:         year,
-          purchased:    0,
-          used:         0,
-          remaining:    prevBal,
-          carryForward: true
-        });
-      }
-    });
-  });
-
   return data_by_year;
 }
 
-function p4NormalizeFunding(rows) {
-  return rows.map(function(b) {
-    var budgetRaw = String(b['งบประมาณ_จำนวนเงิน'] || b.budget || '');
-    var budget = Number(budgetRaw.replace(/[^0-9.]/g, '')) || 0;
-    return {
-      year:      String(b['ปี_งบประมาณ']          || b.budget_year  || ''),
-      unit:      String(b['ชื่อ_หน่วยงาน']          || b.agency        || ''),
-      budget:    budget,
-      submitted: p4FormatDate(b['วันที่_ส่งโครงการฯ'] || b.submit_date  || ''),
-      approved:  p4FormatDate(b['วันที่_อนุมัติ']      || b.approve_date || ''),
-      mou:       p4FormatDate(b['วันที่_ทำMOU']        || b.mou_date     || ''),
-      received:  p4FormatDate(b['วันที่_รับเช็ค']       || b.check_date   || ''),
-      reported:  p4FormatDate(b['วันที่_ส่งรายงานผล']  || b.report_date  || ''),
-      notes:     String(b['หมายเหตุ'] || b.remark || '')
-    };
-  });
-}
-
-function p4BuildData(devicesRows, fundingRows) {
-  var data_by_year = p4NormalizeDevices(devicesRows);
-  var budgets      = p4NormalizeFunding(fundingRows);
-
-  var budget_totals = {};
-  budgets.forEach(function(b) {
-    if (!b.year) return;
-    budget_totals[b.year] = (budget_totals[b.year] || 0) + b.budget;
-  });
-
-  var yearSet = {};
-  Object.keys(data_by_year).forEach(function(y) { yearSet[y] = true; });
-  budgets.forEach(function(b) { if (b.year) yearSet[b.year] = true; });
-  var available_years = Object.keys(yearSet).sort().reverse();
-
-  var catSet = {};
-  available_years.forEach(function(y) {
-    (data_by_year[y] || []).forEach(function(r) { if (r.category) catSet[r.category] = true; });
-  });
-  var categories = Object.keys(catSet).sort();
-
-  return {
-    data_by_year:    data_by_year,
-    budgets:         budgets,
-    budget_totals:   budget_totals,
-    available_years: available_years,
-    categories:      categories
-  };
-}
-
-// ─── end copied section ─────────────────────────────────────────────────────
-
 function main() {
-  const devicesRows = readCsvAsObjects('Project_4_data_device_repair - all_device_data.csv');
-  const fundingRows = readCsvAsObjects('Project_4_data_device_repair - total_funding.csv');
-  const output = p4BuildData(devicesRows, fundingRows);
-  output.generatedAt = new Date().toISOString();
+  const warnings = [];
+  const units = readReport();
+  const districtOf = {};
+  units.forEach(u => { districtOf[u.unit] = u.district; });
+
+  const funding = readFunding();
+  funding.forEach(b => { b.district = districtOf[b.unit] || ''; });
+  units.forEach(u => {
+    const sum = round2(funding.filter(b => b.unit === u.unit).reduce((a, b) => a + b.budget, 0));
+    u.years = [...new Set(funding.filter(b => b.unit === u.unit && b.budget > 0).map(b => b.year))];
+    if (Math.abs(sum - u.budget) > 1) {
+      warnings.push(u.short + ': สรุป 1 (net of refunds) = ' + sum + ', เอกสารแนบ 5 = ' + u.budget);
+    }
+  });
+
+  const { items, repairs } = readDisbursements(districtOf, warnings);
+  const data_by_year = buildDataByYear(items, warnings);
+
+  const budget_totals = {};
+  funding.forEach(b => { budget_totals[b.year] = round2((budget_totals[b.year] || 0) + b.budget); });
+  const available_years = [...new Set([...Object.keys(data_by_year), ...Object.keys(budget_totals)])].sort().reverse();
+  const categories = [...new Set(items.map(it => it.cat).filter(Boolean))].sort();
+
+  const output = {
+    source: path.basename(REPORT_XLSX),
+    data_by_year,
+    budgets: funding.map(b => ({
+      year: b.year, unit: b.unit, district: b.district, budget: b.budget, approved_amount: b.approved,
+      refund: b.refund, submitted: b.submitted, approved: b.approved_date, mou: b.mou,
+      received: b.received, reported: b.reported, notes: b.notes
+    })),
+    budget_totals,
+    available_years,
+    categories,
+    units: units.map(u => ({ unit: u.unit, short: u.short, district: u.district, budget: u.budget, years: u.years })),
+    repairs,
+    generatedAt: new Date().toISOString()
+  };
 
   fs.mkdirSync(path.dirname(OUTPUT_JSON), { recursive: true });
   fs.writeFileSync(OUTPUT_JSON, JSON.stringify(output, null, 2), 'utf8');
-  const totalRows = output.available_years.reduce((s, y) => s + (output.data_by_year[y] || []).length, 0);
-  console.log('Wrote P4 data: ' + totalRows + ' device rows across ' + output.available_years.length
-    + ' years, ' + output.budgets.length + ' funding rows -> ' + OUTPUT_JSON);
+  const total = units.reduce((a, u) => a + u.budget, 0);
+  const rowCount = Object.values(data_by_year).reduce((a, r) => a + r.length, 0);
+  console.log('P4: ' + units.length + ' units, ' + total.toLocaleString() + ' บาท, ' + items.length
+    + ' spare-part items (' + rowCount + ' year rows), ' + repairs.length + ' repair summaries -> ' + OUTPUT_JSON);
+  warnings.forEach(w => console.warn('  ! ' + w));
 }
 
 main();

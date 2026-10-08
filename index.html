@@ -59,7 +59,8 @@ body {
 .sidebar {
   width: 260px; background: var(--white); border-right: 1.5px solid var(--border-light);
   display: flex; flex-direction: column; max-height: 100vh; overflow-y: auto;
-  position: fixed; left: 0; top: 0; z-index: 50; transition: transform 0.3s ease;
+  position: fixed; left: 0; top: 0; z-index: 1100; transition: transform 0.3s ease;
+  box-shadow: 4px 0 24px rgba(15,23,42,0.18);
 }
 .sidebar-header { padding: 1rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
 .sidebar-nav { flex: 1; padding: 0; margin: 0; list-style: none; }
@@ -70,7 +71,12 @@ body {
 }
 .sidebar-nav-link:hover { background: #f0fdfa; color: var(--primary-blue); }
 .sidebar-nav-link.active { background: #ccfbf1; color: var(--primary-blue); border-left: 3px solid var(--primary-blue); padding-left: calc(1rem - 3px); font-weight: 600; }
-.sidebar-toggle { display: none; background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--primary-blue); }
+/* ☰ is shown at every screen size so PC and phone get the same menu. */
+.sidebar-toggle { display: inline-flex; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--primary-blue); padding: 0 6px 0 0; flex: none; }
+.sidebar-toggle-label { font-size: 0.78rem; font-weight: 700; font-family: inherit; }
+.nav-docs-btn { display: inline-flex; align-items: center; gap: 0.35rem; color: #0f766e; font-size: 0.8rem; font-weight: 600; text-decoration: none; padding: 0.3rem 0.65rem; border: 1px solid #14b8a6; background: #f0fdfa; border-radius: 6px; white-space: nowrap; }
+.nav-docs-btn:hover { background: #ccfbf1; color: #0f766e; }
+.nav-lbl-short { display: none; }
 
 .navbar {
   background: var(--white);
@@ -2199,11 +2205,21 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
   .p4-drill2-tbl thead th, .p4-drill2-tbl tbody td { padding: 0.2rem 0.3rem; }
 }
 
+.summary-link-btn { display:flex; align-items:center; justify-content:center; gap:0.4rem; margin:0 0 0.9rem; padding:0.6rem 1rem; background:#f0fdfa; border:1.5px solid #14b8a6; border-radius:10px; color:#0f766e; font-weight:700; font-size:0.9rem; text-decoration:none; }
+.summary-link-btn:hover { background:#ccfbf1; color:#0f766e; }
+
 /* RESPONSIVE SIDEBAR */
 @media (max-width: 768px) {
-  .sidebar { position: fixed; left: 0; top: 50px; width: 100%; height: auto; max-height: none; border-right: none; border-bottom: 1.5px solid var(--border-light); transform: translateX(-100%); z-index: 150; }
+  .sidebar { position: fixed; left: 0; top: 0; width: 100%; height: auto; max-height: 100vh; border-right: none; border-bottom: 1.5px solid var(--border-light); transform: translateX(-100%); z-index: 1100; }
   .sidebar.open { transform: translateX(0); }
-  .sidebar-toggle { display: block; }
+  /* Navbar must fit a phone screen: let the fund name wrap instead of
+     pushing the page wider than the screen. */
+  .navbar .container-custom { gap: 0.4rem; }
+  .navbar .navbar-brand { min-width: 0; gap: 8px; font-size: 0.92rem; line-height: 1.25; }
+  .navbar .navbar-brand span { white-space: normal; }
+  .navbar .navbar-logo { width: 34px; height: 34px; flex: none; }
+  .nav-lbl-long { display: none; }
+  .nav-lbl-short { display: inline; }
 }
 </style>
 </head>
@@ -2214,14 +2230,14 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
   position:fixed;inset:0;z-index:5000;display:none;
   background:linear-gradient(135deg, #1db584 0%, #0ea5a5 50%, #0f8fbe 100%);
   color:#fff;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-  padding:2rem;font-family:'Sarabun','Inter',-apple-system,sans-serif;">
+  padding:2rem 1rem;overflow-y:auto;font-family:'Sarabun','Inter',-apple-system,sans-serif;">
 
   <div style="width:156px;height:156px;margin-bottom:1.5rem;animation:bounce-pulse 1.8s ease-in-out infinite;
     border-radius:50%;background:#fff;padding:8px;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
     <img src="assets/img/logo.jpg" alt="logo" style="width:100%;height:100%;object-fit:contain;border-radius:50%;">
   </div>
 
-  <h1 style="font-size:2.2rem;font-weight:800;margin:0 0 0.5rem 0;line-height:1.2;letter-spacing:-0.5px;">กองทุนหลักประกันสุขภาพ จังหวัดระยอง</h1>
+  <h1 style="font-size:clamp(1.45rem,7vw,2.2rem);font-weight:800;margin:0 0 0.5rem 0;line-height:1.2;letter-spacing:-0.5px;">กองทุนหลักประกันสุขภาพ จังหวัดระยอง</h1>
 
   <p style="font-size:1.05rem;margin:0 0 0.8rem 0;opacity:0.9;max-width:450px;line-height:1.6;font-weight:300;">
     เพื่อคุณภาพชีวิตที่ดีของคนระยองอย่างยั่งยืน
@@ -2312,14 +2328,15 @@ function govToggleContrast() {
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="container-custom" style="display:flex;align-items:center;justify-content:space-between;">
-    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="เปิดเมนู">☰<span class="sidebar-toggle-label">เมนู</span></button>
     <a href="#" class="navbar-brand" onclick="return false;">
       <div class="navbar-logo" style="background:#fff;padding:3px;"><img src="assets/img/logo.jpg" alt="โลโก้กองทุนหลักประกันสุขภาพจังหวัดระยอง" style="width:100%;height:100%;object-fit:contain;border-radius:6px;display:block;"></div>
       <span>กองทุนหลักประกันสุขภาพจังหวัดระยอง</span>
     </a>
-    <div style="display:flex;align-items:center;gap:0.5rem;">
+    <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;justify-content:flex-end;">
+      <a href="documents-download.html" class="nav-docs-btn">📄 <span class="nav-lbl-long">ดาวโหลดเอกสาร</span><span class="nav-lbl-short">เอกสาร</span></a>
       <div class="nav-dropdown">
-        <a href="#" class="nav-dropdown-toggle" onclick="return govToggleDropdown(event, this)" style="display:inline-flex;align-items:center;gap:0.35rem;color:#64748b;font-size:0.8rem;font-weight:500;text-decoration:none;padding:0.3rem 0.65rem;border:1px solid #e2e8f0;border-radius:6px;font-family:Sarabun,sans-serif;">ℹ️ เกี่ยวกับกองทุน</a>
+        <a href="#" class="nav-dropdown-toggle" onclick="return govToggleDropdown(event, this)" style="display:inline-flex;align-items:center;gap:0.35rem;color:#64748b;font-size:0.8rem;font-weight:500;text-decoration:none;padding:0.3rem 0.65rem;border:1px solid #e2e8f0;border-radius:6px;font-family:Sarabun,sans-serif;white-space:nowrap;">ℹ️ <span class="nav-lbl-long">เกี่ยวกับกองทุน</span><span class="nav-lbl-short">เกี่ยวกับ</span></a>
         <div class="nav-dropdown-menu">
           <a href="about.html#history">📜 ประวัติความเป็นมา</a>
           <a href="about.html#mission">🎯 วิสัยทัศน์ พันธกิจ ยุทธศาสตร์</a>
@@ -2344,6 +2361,9 @@ function govToggleContrast() {
     </li>
     <li class="sidebar-nav-item">
       <a href="documents-download.html" class="sidebar-nav-link">📄 ดาวโหลดเอกสาร</a>
+    </li>
+    <li class="sidebar-nav-item">
+      <a href="project-summary.html" class="sidebar-nav-link">📊 สรุปโครงการ (หน้าเดียว)</a>
     </li>
   </ul>
 </aside>
@@ -2479,20 +2499,20 @@ document.addEventListener('click', function(e) {
   <div class="budget-sticky-inner">
     <div>
       <div class="budget-sticky-label">งบประมาณรวมทุกโครงการ</div>
-      <div class="budget-sticky-total">฿24.93 ล้านบาท</div>
+      <div class="budget-sticky-total">กำลังโหลด...</div>
     </div>
     <div class="budget-sticky-divider"></div>
     <div class="budget-sticky-pills">
       <div id="budgetPill1" class="budget-sticky-pill" style="background:rgba(20,184,166,0.15);border-color:#14b8a6;">
         <span class="pill-dot" style="background:#14b8a6;"></span>
         <strong style="font-size:0.75rem;">ปรับปรุงที่อยู่</strong>
-        <div id="pill1Stats" style="font-size:0.68rem;opacity:0.85;margin-top:0.2rem;">351 หลัง</div>
+        <div id="pill1Stats" style="font-size:0.68rem;opacity:0.85;margin-top:0.2rem;">—</div>
         <div id="pill1Year" style="font-size:0.65rem;opacity:0.65;margin-top:0.15rem;">ปี 2568</div>
       </div>
       <div id="budgetPill2" class="budget-sticky-pill" style="background:rgba(245,158,11,0.15);border-color:#f59e0b;">
         <span class="pill-dot" style="background:#f59e0b;"></span>
         <strong style="font-size:0.75rem;">อุปกรณ์ช่วย</strong>
-        <div id="pill2Stats" style="font-size:0.68rem;opacity:0.85;margin-top:0.2rem;">3,388 ชิ้น</div>
+        <div id="pill2Stats" style="font-size:0.68rem;opacity:0.85;margin-top:0.2rem;">—</div>
         <div id="pill2Year" style="font-size:0.65rem;opacity:0.65;margin-top:0.15rem;">สะสม</div>
       </div>
       <div id="budgetPill3" class="budget-sticky-pill" style="background:rgba(16,185,129,0.15);border-color:#10b981;">
@@ -2542,11 +2562,11 @@ document.addEventListener('click', function(e) {
       </div>
       <div class="acc-mini-stats">
         <div class="acc-mini-stat">
-          <span class="acc-mini-stat-val" id="p1HeaderHouses" style="color:#14b8a6;">351</span>
+          <span class="acc-mini-stat-val" id="p1HeaderHouses" style="color:#14b8a6;">—</span>
           <span class="acc-mini-stat-lbl">หลัง</span>
         </div>
         <div class="acc-mini-stat">
-          <span class="acc-mini-stat-val" id="p1HeaderBudget">15.89M</span>
+          <span class="acc-mini-stat-val" id="p1HeaderBudget">—</span>
           <span class="acc-mini-stat-lbl">บาท</span>
         </div>
       </div>
@@ -2554,6 +2574,7 @@ document.addEventListener('click', function(e) {
     </div>
     <div class="acc-body" id="accBody1">
       <div class="acc-body-inner">
+        <a href="project-summary.html#p1" class="summary-link-btn">📄 สรุปโครงการหน้าเดียว (สำหรับนำเสนอ / พิมพ์) →</a>
         <div class="alert-info">
           <span style="font-size:1.4rem;">🏠</span>
           <div><strong>โครงการนี้คืออะไร:</strong> กองทุนฯ สนับสนุนงบประมาณปรับปรุง/ซ่อมแซมที่อยู่อาศัยให้ปลอดภัยและเหมาะสม สำหรับผู้พิการ ผู้สูงอายุ และผู้ป่วยที่ต้องได้รับการดูแลเป็นพิเศษ <strong>โดยไม่เสียค่าใช้จ่าย</strong> — ตัวเลขด้านล่างคือสรุปผลการดำเนินงานที่ผ่านมา</div>
@@ -2684,7 +2705,7 @@ document.addEventListener('click', function(e) {
                 </select>
               </div>
               <div class="filter-group">
-                <label class="filter-label">เลือกตำบล</label>
+                <label class="filter-label">เลือกหน่วยงาน</label>
                 <select class="year-select" id="p1SubDistrictFilter" onchange="loadP1List()">
                   <option value="all">ทั้งหมด</option>
                 </select>
@@ -2702,9 +2723,9 @@ document.addEventListener('click', function(e) {
             <!-- รพ.สต. Specific Search -->
             <div class="filter-row" style="margin-top:-.4rem;margin-bottom:.35rem;">
               <div class="filter-group" style="flex:1;min-width:180px;">
-                <label class="filter-label">🏥 ค้นหาตาม รพ.สต. / ตำบล</label>
+                <label class="filter-label">🏥 ค้นหาตามหน่วยงาน</label>
                 <input type="text" class="year-select" id="p1HpcSearch"
-                  placeholder="พิมพ์ชื่อ รพ.สต. หรือ ตำบล..."
+                  placeholder="พิมพ์ชื่อหน่วยงาน เช่น ทต.ชากหมาก..."
                   oninput="loadP1List()"
                   style="font-size:0.84rem;padding:0.45rem 0.75rem;font-family:inherit;">
               </div>
@@ -2712,7 +2733,7 @@ document.addEventListener('click', function(e) {
             <!-- Global Search -->
             <div class="p1-acc-search-sticky">
               <input type="text" class="modal-search-input" id="p1Search"
-                placeholder="🔍 ค้นหาชื่อ, ตำบล, อำเภอ, สถานะ..." onkeyup="loadP1List()">
+                placeholder="🔍 ค้นหาหน่วยงาน, อำเภอ, สถานะ..." onkeyup="loadP1List()">
             </div>
             <div class="table-action-row">
               <div id="p1ListCount" style="font-size:0.78rem;color:var(--text-gray);"></div>
@@ -2722,10 +2743,9 @@ document.addEventListener('click', function(e) {
               <table class="table-custom" id="p1ListTable">
                 <thead><tr>
                   <th style="width:4%;">#</th>
-                  <th style="width:18%;">ชื่อ</th>
-                  <th style="width:5%;">อายุ</th>
-                  <th style="width:12%;">ประเภท</th>
-                  <th style="width:12%;">ตำบล</th>
+                  <th style="width:6%;">อายุ</th>
+                  <th style="width:14%;">ประเภท</th>
+                  <th style="width:22%;">หน่วยงาน</th>
                   <th style="width:9%;">อำเภอ</th>
                   <th style="width:10%;">งบประมาณ</th>
                   <th style="width:7%;">ปี</th>
@@ -2743,8 +2763,8 @@ document.addEventListener('click', function(e) {
 
           <!-- TAB: SUMMARY (สรุปข้อมูล) — District → Subdistrict Drill-down -->
           <div id="tab1-summary" class="tab-content">
-            <h6 class="section-header">🗺️ สรุปข้อมูล · อำเภอ → ตำบล</h6>
-            <p style="font-size:0.75rem;color:var(--text-gray);margin-bottom:1rem;">คลิกที่ชื่ออำเภอเพื่อดูรายละเอียดระดับตำบล</p>
+            <h6 class="section-header">🗺️ สรุปข้อมูล · อำเภอ → หน่วยงาน</h6>
+            <p style="font-size:0.75rem;color:var(--text-gray);margin-bottom:1rem;">คลิกที่ชื่ออำเภอเพื่อดูรายละเอียดรายหน่วยงาน</p>
             <div id="p1-district-drilldown"></div>
           </div>
 
@@ -2763,11 +2783,11 @@ document.addEventListener('click', function(e) {
       </div>
       <div class="acc-mini-stats">
         <div class="acc-mini-stat">
-          <span class="acc-mini-stat-val" id="p2HeaderCount" style="color:#d97706;">3,388</span>
+          <span class="acc-mini-stat-val" id="p2HeaderCount" style="color:#d97706;">—</span>
           <span class="acc-mini-stat-lbl">ชิ้น</span>
         </div>
         <div class="acc-mini-stat">
-          <span class="acc-mini-stat-val" id="p2HeaderTypes">26</span>
+          <span class="acc-mini-stat-val" id="p2HeaderTypes">—</span>
           <span class="acc-mini-stat-lbl">ประเภท</span>
         </div>
       </div>
@@ -2775,9 +2795,10 @@ document.addEventListener('click', function(e) {
     </div>
     <div class="acc-body" id="accBody2">
       <div class="acc-body-inner">
+        <a href="project-summary.html#p2" class="summary-link-btn">📄 สรุปโครงการหน้าเดียว (สำหรับนำเสนอ / พิมพ์) →</a>
         <div class="alert-info">
           <span style="font-size:1.4rem;">📊</span>
-          <div><strong>สรุปข้อมูล:</strong> 3,388 ชิ้น, 26 ประเภท, 71 หน่วยบริการ, 8 อำเภอ</div>
+          <div id="p2SummaryText"><strong>สรุปข้อมูล:</strong> กำลังโหลด...</div>
         </div>
         <button onclick="p2QuickFindAvailable()" style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-bottom:1.1rem;padding:0.7rem 1rem;background:#ecfdf5;border:1.5px solid #10b981;border-radius:10px;color:#065f46;font-weight:700;font-size:0.9rem;font-family:inherit;cursor:pointer;">
           🔍 ต้องการยืมอุปกรณ์? ดูรายการที่ "พร้อมให้บริการ" ตอนนี้ →
@@ -2806,7 +2827,7 @@ document.addEventListener('click', function(e) {
                 <option value="all">ทุกปี</option>
                 <option value="2564">2564</option><option value="2565">2565</option>
                 <option value="2566">2566</option><option value="2567">2567</option>
-                <option value="2568">2568</option>
+                <option value="2568">2568</option><option value="2569">2569</option>
               </select>
             </div>
             <div class="filter-group">
@@ -2839,11 +2860,10 @@ document.addEventListener('click', function(e) {
           <div class="table-responsive sticky-table">
             <table class="table-custom" id="p2UnitTable">
               <thead><tr>
-                <th style="width:26%;">หน่วยบริการ</th><th style="width:12%;">อำเภอ</th>
-                <th style="width:9%;">ปี 64</th><th style="width:9%;">ปี 65</th>
-                <th style="width:9%;">ปี 66</th><th style="width:9%;">ปี 67</th>
-                <th style="width:9%;">ปี 68</th><th style="width:9%;">รวม</th>
-                <th style="width:8%;">สถานะ</th>
+                <th style="width:24%;">หน่วยบริการ</th><th style="width:11%;">อำเภอ</th>
+                <th style="width:13%;">ปีที่ได้รับงบ</th><th style="width:14%;">งบประมาณ</th>
+                <th style="width:10%;">อุปกรณ์ (ชิ้น)</th>
+                <th style="width:28%;">สถานะ</th>
               </tr></thead>
               <tbody id="p2UnitBody"></tbody>
             </table>
@@ -2898,11 +2918,11 @@ document.addEventListener('click', function(e) {
       </div>
       <div class="acc-mini-stats">
         <div class="acc-mini-stat">
-          <span class="acc-mini-stat-val" style="color:#059669;">30</span>
+          <span class="acc-mini-stat-val" id="p3HeaderCount" style="color:#059669;">—</span>
           <span class="acc-mini-stat-lbl">โครงการ</span>
         </div>
         <div class="acc-mini-stat">
-          <span class="acc-mini-stat-val">1.92M</span>
+          <span class="acc-mini-stat-val" id="p3HeaderBudget">—</span>
           <span class="acc-mini-stat-lbl">บาท</span>
         </div>
       </div>
@@ -3033,6 +3053,7 @@ document.addEventListener('click', function(e) {
     </div>
     <div class="acc-body" id="accBody4">
       <div class="acc-body-inner">
+        <a href="project-summary.html#p4" class="summary-link-btn">📄 สรุปโครงการหน้าเดียว (สำหรับนำเสนอ / พิมพ์) →</a>
 
         <!-- Tab Buttons -->
         <div class="tabs-container">
@@ -4779,9 +4800,9 @@ window.exportToExcel = exportToExcel;
 // independent of which page happens to be on screen.
 function exportP1Excel() {
   if (typeof XLSX === 'undefined') { alert('ไม่สามารถ Export ได้ในขณะนี้'); return; }
-  var header = ['#','ชื่อ','อายุ','ประเภท','ตำบล','อำเภอ','งบประมาณ','ปี','สถานะ','ประเภทความพิการ'];
+  var header = ['#','อายุ','ประเภท','หน่วยงาน','อำเภอ','งบประมาณ','ปี','สถานะ','ประเภทความพิการ'];
   var rows = (p1FilteredRecords || []).map(function(r, i) {
-    return [i + 1, r.n, r.a, r.t, r.tb || '-', r.d, r.b, r.y, r.s, (r.x && r.x.length) ? r.x.join(', ') : '-'];
+    return [i + 1, r.a, r.t, r.tb || '-', r.d, r.b, r.y, r.s, (r.x && r.x.length) ? r.x.join(', ') : '-'];
   });
   var ws = XLSX.utils.aoa_to_sheet([header].concat(rows));
   var wb = XLSX.utils.book_new();
@@ -4790,7 +4811,7 @@ function exportP1Excel() {
 }
 window.exportP1Excel = exportP1Excel;
 
-// Cascade: populate ตำบล dropdown based on selected อำเภอ
+// Cascade: populate หน่วยงาน dropdown based on selected อำเภอ
 function updateP1SubDistrictFilter() {
   var distVal = (document.getElementById('p1DistrictFilter') || {}).value || 'all';
   var sdSel = document.getElementById('p1SubDistrictFilter');
@@ -4876,7 +4897,8 @@ function ensureP2DataLoaded() {
                   'ref:', refRows.length, 'funding:', fundingRows.length);
 
       buildP2DatasetsFromApi({ equipmentRows: equipmentRows, mapRows: mapRows,
-                               refRows: refRows, fundingRows: fundingRows });
+                               refRows: refRows, fundingRows: fundingRows,
+                               unitRows: Array.isArray(json.units) ? json.units : [] });
 
       console.log('[P2] normalized groups:', p2GroupData.length,
                   'units:', p2UnitSummary.length, 'service:', p2ServiceUnits.length);
@@ -4994,7 +5016,18 @@ function buildP2DatasetsFromApi(opts) {
              years: years, units: units, items: items };
   });
 
-  p2UnitSummary = Object.values(unitMap).sort(function(a, b){ return b.total - a.total; });
+  // Prefer the per-unit rows taken straight from เอกสารแนบ 4 (budget +
+  // years funded + status counts); fall back to rolling up equipment rows.
+  if (opts.unitRows && opts.unitRows.length) {
+    p2UnitSummary = opts.unitRows.map(function(u) {
+      return { unit: p2Text(u.agency), district: p2Text(u.district), years: p2Text(u.years),
+               budget: p2Num(u.budget), total: p2Num(u.total_qty), ready: p2Num(u.available_qty),
+               inuse: p2Num(u.borrowed_qty), broken: p2Num(u.damaged_qty), disposed: p2Num(u.disposed_qty) };
+    });
+  } else {
+    p2UnitSummary = Object.values(unitMap);
+  }
+  p2UnitSummary.sort(function(a, b){ return (b.budget || 0) - (a.budget || 0) || b.total - a.total; });
   p2UnitsList   = p2UnitSummary.map(function(u){ return u.unit; });
 
   p2ServiceUnits = mapRows.map(function(row, idx) {
@@ -5063,17 +5096,19 @@ function renderP2ByUnit() {
   tbody.innerHTML = "";
 
   p2UnitSummary.forEach(function(u) {
+    var stHtml = "";
+    if (u.ready  > 0) stHtml += "<span class=\"badge-status badge-success\" style=\"font-size:0.68rem;\">✓ " + u.ready  + " พร้อม</span> ";
+    if (u.inuse  > 0) stHtml += "<span class=\"badge-status badge-warning\" style=\"font-size:0.68rem;\">⟳ " + u.inuse  + " ยืม</span> ";
+    if (u.broken > 0) stHtml += "<span class=\"badge-status badge-danger\" style=\"font-size:0.68rem;\">✕ " + u.broken + " ชำรุด</span>";
     var tr = document.createElement("tr");
+    tr.setAttribute("data-searchable", u.unit + " " + u.district);
     tr.innerHTML =
       "<td style=\"font-size:0.78rem;font-weight:600;\">" + u.unit + "</td>" +
       "<td style=\"font-size:0.75rem;\">" + u.district + "</td>" +
-      "<td style=\"text-align:right;font-size:0.75rem;\">" + u.y64.toLocaleString() + "</td>" +
-      "<td style=\"text-align:right;font-size:0.75rem;\">" + u.y65.toLocaleString() + "</td>" +
-      "<td style=\"text-align:right;font-size:0.75rem;\">" + u.y66.toLocaleString() + "</td>" +
-      "<td style=\"text-align:right;font-size:0.75rem;\">" + u.y67.toLocaleString() + "</td>" +
-      "<td style=\"text-align:right;font-size:0.75rem;\">" + u.y68.toLocaleString() + "</td>" +
-      "<td style=\"text-align:right;font-size:0.75rem;font-weight:700;color:#b45309;\">" + u.total.toLocaleString() + "</td>" +
-      "<td>" + p2UnitStatusBadge(u) + "</td>";
+      "<td style=\"font-size:0.75rem;text-align:center;\">" + (u.years || "-") + "</td>" +
+      "<td style=\"text-align:right;font-size:0.75rem;font-weight:700;color:#b45309;\">" + (u.budget ? "฿" + u.budget.toLocaleString() : "-") + "</td>" +
+      "<td style=\"text-align:center;font-size:0.75rem;font-weight:700;color:#0f766e;\">" + u.total.toLocaleString() + "</td>" +
+      "<td>" + (stHtml || p2UnitStatusBadge(u)) + "</td>";
     tbody.appendChild(tr);
   });
 
@@ -5313,7 +5348,13 @@ function _renderP2UI() {
   setP2El('p2StatInuse',  totalInuse.toLocaleString());
   setP2El('p2StatBroken', totalBroken.toLocaleString());
   setP2El('p2StatTypes',  p2GroupData.length);
-  setP2El('p2StatUnits',  p2UnitsList.length);
+  setP2El('p2StatUnits',  p2UnitSummary.length);
+  var p2BudgetTotal = p2UnitSummary.reduce(function(s, u){ return s + (u.budget || 0); }, 0);
+  var p2DistrictCount = new Set(p2UnitSummary.map(function(u){ return u.district; })).size;
+  var st = document.getElementById('p2SummaryText');
+  if (st) st.innerHTML = '<strong>สรุปข้อมูล:</strong> ' + p2UnitSummary.length + ' หน่วยบริการ, ' + p2DistrictCount + ' อำเภอ, '
+    + 'งบประมาณรวม ฿' + p2BudgetTotal.toLocaleString() + ' · อุปกรณ์ที่มีอยู่ ' + totalItems.toLocaleString() + ' ชิ้น ('
+    + p2GroupData.length + ' ประเภท) · ข้อมูลตามเอกสารแนบ 4';
 
   // ── Populate unit filter ──
   var unitSel = document.getElementById("p2UnitFilter");
@@ -5372,29 +5413,7 @@ function _renderP2UI() {
   }
 
   // ── Build unit summary table ──
-  var unitBody = document.getElementById("p2UnitBody");
-  if (unitBody) {
-    unitBody.innerHTML = '';
-    p2UnitSummary.forEach(function(row) {
-      var tr = document.createElement("tr");
-      var stHtml = "";
-      if (row.ready  > 0) stHtml += "<span class=\"badge-status badge-success\" style=\"font-size:0.68rem;\">✓ " + row.ready  + " พร้อม</span> ";
-      if (row.inuse  > 0) stHtml += "<span class=\"badge-status badge-warning\" style=\"font-size:0.68rem;\">⟳ " + row.inuse  + " ใช้งาน</span>";
-      if (row.broken > 0) stHtml += " <span class=\"badge-status badge-danger\" style=\"font-size:0.68rem;\">✕ " + row.broken + "</span>";
-      tr.setAttribute("data-searchable", row.unit + " " + row.district);
-      tr.innerHTML =
-        "<td style=\"font-weight:600;\">" + row.unit + "</td>" +
-        "<td>" + row.district + "</td>" +
-        "<td style=\"text-align:center;\">" + (row.y64 > 0 ? row.y64 : "-") + "</td>" +
-        "<td style=\"text-align:center;\">" + (row.y65 > 0 ? row.y65 : "-") + "</td>" +
-        "<td style=\"text-align:center;\">" + (row.y66 > 0 ? row.y66 : "-") + "</td>" +
-        "<td style=\"text-align:center;\">" + (row.y67 > 0 ? row.y67 : "-") + "</td>" +
-        "<td style=\"text-align:center;\">" + (row.y68 > 0 ? row.y68 : "-") + "</td>" +
-        "<td style=\"text-align:center;font-weight:700;color:#0f766e;\">" + row.total + "</td>" +
-        "<td>" + stHtml + "</td>";
-      unitBody.appendChild(tr);
-    });
-  }
+  renderP2ByUnit();
 
   // ── Build service map table ──
   var mapBody = document.getElementById("p2MapBody");
@@ -7038,36 +7057,80 @@ var p1Charts = {};
 // UPDATE BUDGET PILLS WITH DYNAMIC DATA
 // ═══════════════════════════════════════════════════════════════════════════════
 function updateBudgetPills() {
-  // P1: ปรับปรุงที่อยู่อาศัย — ข้อมูลปีล่าสุด
-  var p1Total = project1Records.length;
-  var p1Completed = project1Records.filter(function(r) { return r.s === "แล้วเสร็จ"; }).length;
-  var p1Budget = project1Records.reduce(function(sum, r) { return sum + (r.b || 0); }, 0);
-  var p1LatestYear = Math.max.apply(null, project1Records.map(function(r) { return parseInt(r.y) || 0; }));
-  var p1BudgetM = (p1Budget / 1000000).toFixed(2);
-  document.getElementById('pill1Stats').innerHTML =
-    '<span style="font-weight:600;">' + p1Total + ' หลัง</span>' +
-    '<span style="opacity:0.7;">| ' + p1Completed + ' เสร็จ | ฿' + p1BudgetM + 'M</span>';
-  document.getElementById('pill1Year').innerHTML = 'ปี ' + p1LatestYear + ' (ปัจจุบัน)';
+  // Every number here comes from the same four data files the project tabs
+  // read (P1/P2/P4 are built from เอกสารแนบ 4-6), so the headline figures
+  // always match the tabs and the meeting documents.
+  function get(url) {
+    return fetch(url).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
+  }
+  function m(baht) { return '฿' + (baht / 1000000).toFixed(2) + 'M'; }
+  function yearSpan(list) {
+    var ys = [];
+    list.forEach(function(y) { String(y || '').split('-').forEach(function(p) { var n = parseInt(p, 10); if (n > 2500 && n < 2600) ys.push(n); }); });
+    if (!ys.length) return '';
+    var lo = Math.min.apply(null, ys), hi = Math.max.apply(null, ys);
+    return lo === hi ? String(lo) : lo + '-' + hi;
+  }
+  function set(id, html) { var el = document.getElementById(id); if (el) el.innerHTML = html; }
+  function setText(id, t) { var el = document.getElementById(id); if (el) el.textContent = t; }
+  function shortM(baht) { return (baht / 1000000).toFixed(2) + 'M'; }
+  function stats(main, rest) {
+    return '<span style="font-weight:600;">' + main + '</span><span style="opacity:0.7;"> | ' + rest + '</span>';
+  }
 
-  // P2: อุปกรณ์เครื่องช่วย — ข้อมูลสะสมตั้งแต่ปี 2564-2568
-  var p2Budget = 1200000; // ประมาณ 1.2M (จากข้อมูลที่มี)
-  document.getElementById('pill2Stats').innerHTML =
-    '<span style="font-weight:600;">3,388 ชิ้น</span>' +
-    '<span style="opacity:0.7;">| 71 หน่วย | ฿' + (p2Budget/1000000).toFixed(2) + 'M</span>';
-  document.getElementById('pill2Year').innerHTML = 'สะสม (2564-2568)';
+  Promise.all([
+    get('home-improvement/data/dashboard_data.json'),
+    get('equipment-loan/data/dashboard_data.json'),
+    get('network-capacity/data/dashboard_data.json'),
+    get('device-repair/data/dashboard_data.json')
+  ]).then(function(d) {
+    var total = 0, complete = true;
 
-  // P3: พัฒนาเครือข่ายบริการ — ข้อมูลปีล่าสุด
-  var p3Budget = 1920000; // 1.92M
-  document.getElementById('pill3Stats').innerHTML =
-    '<span style="font-weight:600;">24 โครงการ</span>' +
-    '<span style="opacity:0.7;">| 18 เสร็จ | ฿' + (p3Budget/1000000).toFixed(2) + 'M</span>';
-  document.getElementById('pill3Year').innerHTML = 'ปี 2568 (ปัจจุบัน)';
+    var p1 = d[0] && d[0].summary;
+    if (p1) {
+      total += p1.totalBudget || 0;
+      set('pill1Stats', stats(p1.totalRecords.toLocaleString() + ' หลัง', p1.completed + ' เสร็จ | ' + m(p1.totalBudget)));
+      set('pill1Year', 'สะสม (' + yearSpan((d[0].filters || {}).years || []) + ')');
+      setText('p1HeaderHouses', p1.totalRecords.toLocaleString());
+      setText('p1HeaderBudget', shortM(p1.totalBudget));
+    } else complete = false;
 
-  // P4: ศูนย์ซ่อมบำรุง — ข้อมูลสะสมตั้งแต่ปี 2564-2568
-  document.getElementById('pill4Stats').innerHTML =
-    '<span style="font-weight:600;">156 รายการ</span>' +
-    '<span style="opacity:0.7;">| 9 ศูนย์ | ฿7.46M</span>';
-  document.getElementById('pill4Year').innerHTML = 'สะสม (2564-2568)';
+    var p2 = d[1] && d[1].units;
+    if (p2 && p2.length) {
+      var b2 = p2.reduce(function(s, u) { return s + (u.budget || 0); }, 0);
+      var q2 = p2.reduce(function(s, u) { return s + (u.total_qty || 0); }, 0);
+      total += b2;
+      set('pill2Stats', stats(q2.toLocaleString() + ' ชิ้น', p2.length + ' หน่วย | ' + m(b2)));
+      set('pill2Year', 'สะสม (' + yearSpan(p2.map(function(u) { return u.years; })) + ')');
+      setText('p2HeaderCount', q2.toLocaleString());
+      setText('p2HeaderTypes', new Set((d[1].equipment || []).map(function(r) { return r.equipment_name; })).size);
+    } else complete = false;
+
+    var p3 = d[2] && d[2].records;
+    if (p3 && p3.length) {
+      var b3 = p3.reduce(function(s, r) { return s + (Number(r.b) || 0); }, 0);
+      var done3 = p3.filter(function(r) { return /เสร็จ/.test(r.s || ''); }).length;
+      total += b3;
+      set('pill3Stats', stats(p3.length + ' โครงการ', done3 + ' เสร็จ | ' + m(b3)));
+      set('pill3Year', 'สะสม (' + yearSpan(p3.map(function(r) { return r.y; })) + ')');
+      setText('p3HeaderCount', p3.length);
+      setText('p3HeaderBudget', shortM(b3));
+    } else complete = false;
+
+    var p4 = d[3] && d[3].units;
+    if (p4 && p4.length) {
+      var b4 = p4.reduce(function(s, u) { return s + (u.budget || 0); }, 0);
+      var fixed4 = (d[3].repairs || []).reduce(function(s, r) { return s + (r.total || 0); }, 0);
+      total += b4;
+      set('pill4Stats', stats(p4.length + ' ศูนย์', (fixed4 ? 'ซ่อม ' + fixed4.toLocaleString() + ' ชิ้น | ' : '') + m(b4)));
+      set('pill4Year', 'สะสม (' + yearSpan(Object.keys(d[3].budget_totals || {})) + ')');
+      setText('p4HeaderCenters', p4.length);
+      setText('p4HeaderBudget', shortM(b4));
+    } else complete = false;
+
+    var totalEl = document.querySelector('#budgetStickyBar .budget-sticky-total');
+    if (totalEl && complete) totalEl.textContent = '฿' + (total / 1000000).toFixed(2) + ' ล้านบาท';
+  });
 }
 // โหลด budget pills เมื่อหน้า ready
 if (document.readyState === 'loading') {
@@ -7078,10 +7141,8 @@ if (document.readyState === 'loading') {
 
 // ─── Project 1 data loader ────────────────────────────────────────────────────
 // Ready-made data file, refreshed from the Fund's own Excel file via
-// home-improvement/generate_data.js (see that script's notes — names are
-// always half-masked there and the house-number column is dropped before
-// this file is even written, so there is nothing more sensitive to gate
-// behind a login here).
+// home-improvement/generate_data.js from เอกสารแนบ 6, which lists houses by
+// service unit only — the file has no names or addresses at all.
 var P1_STATIC_URL = 'home-improvement/data/dashboard_data.json';
 
 function p1ApiRecordToLegacy(r) {
@@ -7453,10 +7514,9 @@ function renderP1Page() {
     var tr = document.createElement("tr");
     tr.innerHTML =
       "<td style=\"color:var(--text-gray);font-size:0.72rem;\">" + (start+i+1) + "</td>" +
-      "<td style=\"font-size:0.78rem;font-weight:600;\">" + r.n + "</td>" +
       "<td style=\"text-align:center;font-weight:600;\">" + r.a + "</td>" +
       "<td>" + typeBadge + "</td>" +
-      "<td style=\"font-size:0.75rem;\">" + (r.tb || "-") + "</td>" +
+      "<td style=\"font-size:0.78rem;font-weight:600;\">" + (r.tb || "-") + "</td>" +
       "<td style=\"font-size:0.75rem;font-weight:600;\">" + r.d + "</td>" +
       "<td style=\"text-align:right;font-size:0.75rem;color:#0f766e;font-weight:600;\">฿" + r.b.toLocaleString() + "</td>" +
       "<td style=\"font-size:0.72rem;text-align:center;\">" + r.y + "</td>" +
@@ -7593,7 +7653,7 @@ function renderP1DistrictDetailed_(container) {
       if (sd.both > 0)     badges += '<span style="font-size:0.6rem;background:#ede9fe;color:#5b21b6;padding:1px 6px;border-radius:8px;">รวม:'+sd.both+'</span>';
       return '<tr class="p1-sd-row">' +
         '<td style="padding:0.38rem 0.65rem 0.38rem 2rem;font-size:0.75rem;color:var(--text-dark);">' +
-          '<span style="color:#94a3b8;margin-right:4px;">↳</span>ต.' + tb +
+          '<span style="color:#94a3b8;margin-right:4px;">↳</span>' + tb +
         '</td>' +
         '<td style="text-align:center;font-weight:700;color:#0f766e;font-size:0.75rem;">' + sd.count + '</td>' +
         '<td style="text-align:right;font-size:0.72rem;color:#059669;">฿' + sd.budget.toLocaleString(undefined,{maximumFractionDigits:0}) + '</td>' +
@@ -7615,7 +7675,7 @@ function renderP1DistrictDetailed_(container) {
           '<div class="table-responsive" style="margin:0;">' +
             '<table class="table-custom" style="margin:0;font-size:0.78rem;">' +
               '<thead><tr style="font-size:0.65rem;">' +
-                '<th style="padding-left:2rem;">ตำบล</th>' +
+                '<th style="padding-left:2rem;">หน่วยงาน</th>' +
                 '<th style="text-align:center;">จำนวนหลัง</th>' +
                 '<th style="text-align:right;">งบประมาณรวม</th>' +
                 '<th style="text-align:right;">งบประมาณเฉลี่ย</th>' +

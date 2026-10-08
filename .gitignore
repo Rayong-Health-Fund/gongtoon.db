@@ -8,3 +8,6 @@ _archive/
 
 # Local tooling
 .claude/settings.local.json
+
+# npm
+node_modules/

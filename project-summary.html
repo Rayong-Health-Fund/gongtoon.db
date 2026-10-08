@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สรุปโครงการ - กองทุนหลักประกันสุขภาพ จังหวัดระยอง</title>
+<link rel="icon" href="assets/img/logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0f766e; --teal-soft: #ccfbf1; --ink: #0f172a; --text: #1e293b; --muted: #64748b;
+  --line: #e2e8f0; --band: #f1f5f9; --bg: #f8fafc; --card: #ffffff;
+  --ok: #10b981; --warn: #f59e0b; --bad: #ef4444; --violet: #8b5cf6; --sky: #0ea5e9;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Sarabun', Tahoma, sans-serif; font-size: 16px; line-height: 1.55; }
+a { color: var(--teal); }
+
+.topbar { background: var(--teal); color: #fff; }
+.topbar-inner { max-width: 1000px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.topbar img { width: 38px; height: 38px; border-radius: 8px; background: #fff; padding: 2px; object-fit: contain; }
+.topbar .org { font-weight: 700; font-size: 1rem; flex: 1; min-width: 180px; }
+.topbar a.back { color: #fff; text-decoration: none; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.5); border-radius: 8px; padding: 5px 10px; white-space: nowrap; }
+
+.tabs { max-width: 1000px; margin: 14px auto 0; padding: 0 16px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.tabs a { text-decoration: none; color: var(--text); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px; font-weight: 600; font-size: 0.95rem; }
+.tabs a.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+.tabs button { margin-left: auto; font: inherit; font-weight: 600; font-size: 0.9rem; border: 1px solid var(--teal); color: var(--teal); background: #fff; border-radius: 999px; padding: 7px 16px; cursor: pointer; }
+
+main { max-width: 1000px; margin: 0 auto; padding: 14px 16px 40px; }
+.sheet { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; }
+.head { display: flex; gap: 14px; align-items: flex-start; border-bottom: 2px solid var(--teal); padding-bottom: 12px; margin-bottom: 16px; }
+.head img { width: 54px; height: 54px; object-fit: contain; flex: none; }
+.head h1 { font-size: 1.25rem; margin: 0; color: var(--ink); line-height: 1.35; }
+.head .sub { color: var(--muted); font-size: 0.88rem; margin-top: 4px; }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 18px; }
+.kpi { border: 1px solid var(--line); border-top: 3px solid var(--c, var(--teal)); border-radius: 10px; padding: 10px 12px; background: #fff; }
+.kpi .v { font-size: 1.45rem; font-weight: 800; color: var(--c, var(--teal)); line-height: 1.2; font-variant-numeric: tabular-nums; }
+.kpi .l { font-size: 0.8rem; color: var(--muted); }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+section.blk { margin-bottom: 18px; break-inside: avoid; }
+section.blk h2 { font-size: 1rem; margin: 0 0 8px; color: var(--ink); }
+section.blk .note { font-size: 0.78rem; color: var(--muted); margin-top: 6px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+th, td { padding: 5px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+th { background: var(--band); font-weight: 700; white-space: nowrap; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.tot td { font-weight: 800; background: var(--band); }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+.bar { height: 10px; background: var(--band); border-radius: 5px; overflow: hidden; display: flex; min-width: 60px; }
+.bar span { display: block; height: 100%; }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); margin-bottom: 6px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+
+.hbar { display: grid; grid-template-columns: minmax(110px, 50%) 1fr auto; gap: 8px; align-items: center; font-size: 0.85rem; margin: 4px 0; }
+.hbar .lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hbar .val { font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+
+details.more { margin-top: 10px; border: 1px solid var(--line); border-radius: 10px; }
+details.more > summary { cursor: pointer; padding: 10px 14px; font-weight: 700; color: var(--teal); }
+details.more .inner { padding: 0 14px 14px; }
+details.more h3 { font-size: 0.92rem; margin: 14px 0 6px; }
+
+.foot { color: var(--muted); font-size: 0.78rem; margin-top: 14px; border-top: 1px solid var(--line); padding-top: 8px; }
+.loading, .error { text-align: center; padding: 40px 10px; color: var(--muted); }
+.error { color: var(--bad); }
+
+@media (max-width: 720px) {
+  .grid2 { grid-template-columns: 1fr; }
+  .sheet { padding: 16px 14px; }
+  .head h1 { font-size: 1.08rem; }
+  .tabs button { margin-left: 0; }
+}
+
+@media print {
+  @page { size: A4; margin: 10mm; }
+  body { background: #fff; font-size: 12px; }
+  .topbar, .tabs, details.more { display: none !important; }
+  main { padding: 0; max-width: none; }
+  .sheet { border: none; padding: 0; border-radius: 0; }
+  .kpi .v { font-size: 1.2rem; }
+  table { font-size: 11px; }
+  th, td { padding: 3px 6px; }
+  section.blk { margin-bottom: 10px; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="topbar-inner">
+  <img src="assets/img/logo.jpg" alt="">
+  <div class="org">กองทุนหลักประกันสุขภาพจังหวัดระยอง · สรุปโครงการ</div>
+  <a class="back" href="index.html">← กลับหน้าหลัก</a>
+</div></div>
+
+<nav class="tabs" aria-label="เลือกโครงการ">
+  <a href="#p1" data-p="p1">🏠 ปรับสภาพบ้าน</a>
+  <a href="#p2" data-p="p2">♿ ศูนย์สาธิตและยืมอุปกรณ์</a>
+  <a href="#p4" data-p="p4">🔧 ศูนย์ซ่อมบำรุง</a>
+  <button type="button" onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button>
+</nav>
+
+<main><div class="sheet" id="sheet"><div class="loading">⏳ กำลังโหลดข้อมูล...</div></div></main>
+
+<script>
+(function () {
+  var SOURCES = {
+    p1: 'home-improvement/data/dashboard_data.json',
+    p2: 'equipment-loan/data/dashboard_data.json',
+    p4: 'device-repair/data/dashboard_data.json'
+  };
+  var cache = {};
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function n(v) {
+    v = Number(v) || 0;
+    var dp = Math.abs(v - Math.round(v)) < 0.005 ? 0 : 2;
+    return v.toLocaleString('th-TH', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function baht(v) { return n(v) + ' บาท'; }
+  function mil(v) { return ((Number(v) || 0) / 1e6).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function sum(arr, f) { return arr.reduce(function (s, x) { return s + (Number(f(x)) || 0); }, 0); }
+  function pct(a, b) { return b ? Math.round(a / b * 1000) / 10 : 0; }
+  function thaiDate(iso) {
+    var d = iso ? new Date(iso) : null;
+    return d && !isNaN(d) ? d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' }) : '-';
+  }
+  function load(p) {
+    if (!cache[p]) cache[p] = fetch(SOURCES[p]).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    });
+    return cache[p];
+  }
+
+  function head(title, sourceNote, stamp) {
+    return '<div class="head"><img src="assets/img/logo.jpg" alt="โลโก้กองทุน">' +
+      '<div><h1>' + esc(title) + '</h1>' +
+      '<div class="sub">กองทุนหลักประกันสุขภาพจังหวัดระยอง · ' + esc(sourceNote) +
+      ' · ปรับปรุงข้อมูล ' + esc(thaiDate(stamp)) + '</div></div></div>';
+  }
+  function kpis(list) {
+    return '<div class="kpis">' + list.map(function (k) {
+      return '<div class="kpi" style="--c:' + (k.c || 'var(--teal)') + '"><div class="v">' + esc(k.v) +
+        '</div><div class="l">' + esc(k.l) + '</div></div>';
+    }).join('') + '</div>';
+  }
+  function bar(parts, max) {
+    return '<div class="bar">' + parts.map(function (p) {
+      return '<span style="width:' + (max ? p.v / max * 100 : 0) + '%;background:' + p.c + '"></span>';
+    }).join('') + '</div>';
+  }
+  function hbars(rows, color, fmt) {
+    var max = Math.max.apply(null, rows.map(function (r) { return r.v; }).concat(1));
+    return rows.map(function (r) {
+      return '<div class="hbar"><span class="lbl" title="' + esc(r.k) + '">' + esc(r.k) + '</span>' +
+        bar([{ v: r.v, c: color }], max) + '<span class="val">' + (fmt ? fmt(r.v) : n(r.v)) + '</span></div>';
+    }).join('');
+  }
+  function blk(title, body, note) {
+    return '<section class="blk"><h2>' + esc(title) + '</h2>' + body + (note ? '<div class="note">' + note + '</div>' : '') + '</section>';
+  }
+  function table(headers, rows, totalRow) {
+    var h = '<div class="scroll"><table><thead><tr>' + headers.map(function (x) {
+      return '<th' + (x.n ? ' class="n"' : '') + '>' + esc(x.t) + '</th>';
+    }).join('') + '</tr></thead><tbody>';
+    rows.concat(totalRow ? [totalRow] : []).forEach(function (r, i) {
+      h += '<tr' + (totalRow && i === rows.length ? ' class="tot"' : '') + '>' + r.map(function (c, j) {
+        return '<td' + (headers[j].n ? ' class="n"' : '') + '>' + (c && c.html != null ? c.html : esc(c)) + '</td>';
+      }).join('') + '</tr>';
+    });
+    return h + '</tbody></table></div>';
+  }
+  function yearEnd(label) { var m = String(label).match(/(\d{4})\s*$/); return m ? +m[1] : 0; }
+  function foot(file) {
+    return '<div class="foot">ที่มา: ' + esc(file) + ' · ตัวเลขทั้งหมดในหน้านี้คำนวณจากไฟล์ข้อมูลเดียวกับที่ใช้บนเว็บไซต์ · ' +
+      'ไม่มีข้อมูลส่วนบุคคล (ชื่อ/ที่อยู่) ของผู้รับประโยชน์</div>';
+  }
+
+  // ── P1 ปรับสภาพบ้าน (เอกสารแนบ 6) ─────────────────────────────────────
+  function renderP1(d) {
+    var s = d.summary, recs = d.records || [];
+    var ov = d.overview || {};
+    var districts = Object.keys(ov).length ? Object.keys(ov) : Object.keys(d.charts.byDistrict);
+    var distRows = districts.map(function (k) {
+      var rs = recs.filter(function (r) { return r.district === k; });
+      return { k: k, years: ov[k] ? ov[k].years : '', count: rs.length, budget: sum(rs, function (r) { return r.budget; }),
+               units: new Set(rs.map(function (r) { return r.agency; })).size };
+    }).sort(function (a, b) { return b.count - a.count; });
+    var maxB = Math.max.apply(null, distRows.map(function (r) { return r.budget; }));
+
+    var years = Object.keys(d.charts.byYear).sort(function (a, b) { return yearEnd(a) - yearEnd(b) || a.localeCompare(b); });
+    var types = Object.keys(d.charts.byType).map(function (k) { return { k: k, v: d.charts.byType[k] }; })
+      .sort(function (a, b) { return b.v - a.v; });
+    var dis = Object.keys(d.charts.byDisability).map(function (k) { return { k: k, v: d.charts.byDisability[k] }; })
+      .sort(function (a, b) { return b.v - a.v; });
+    var ageLabels = ['ต่ำกว่า 20 ปี', '20–39 ปี', '40–59 ปี', '60–79 ปี', '80 ปีขึ้นไป'];
+
+    var html = head(d.projectName, 'ข้อมูลตามเอกสารแนบ 6 รายงานปรับสภาพบ้าน', d.updatedAt);
+    html += kpis([
+      { v: n(s.totalRecords) + ' หลัง', l: 'ปรับสภาพบ้านทั้งหมด' },
+      { v: mil(s.totalBudget) + ' ล้าน', l: 'งบประมาณรวม (บาท)', c: '#b45309' },
+      { v: n(s.averageBudgetPerRecord), l: 'งบเฉลี่ยต่อหลัง (บาท)', c: 'var(--sky)' },
+      { v: n(s.completed), l: 'แล้วเสร็จ (หลัง)', c: 'var(--ok)' },
+      { v: n(s.inProgress), l: 'กำลังดำเนินการ (หลัง)', c: 'var(--warn)' },
+      { v: s.districtCount + ' / ' + s.agencyCount, l: 'อำเภอ / หน่วยงาน', c: 'var(--violet)' }
+    ]);
+    html += blk('ผลการดำเนินงานรายอำเภอ', table(
+      [{ t: 'อำเภอ' }, { t: 'ปีงบประมาณ' }, { t: 'หน่วยงาน', n: 1 }, { t: 'จำนวน (หลัง)', n: 1 }, { t: 'งบประมาณ (บาท)', n: 1 }, { t: '' }],
+      distRows.map(function (r) {
+        return [r.k, r.years, r.units, n(r.count), n(r.budget), { html: bar([{ v: r.budget, c: 'var(--teal)' }], maxB) }];
+      }),
+      ['รวม', '', s.agencyCount, n(s.totalRecords), n(s.totalBudget), '']
+    ));
+    html += '<div class="grid2">';
+    html += blk('จำนวนหลังและงบประมาณตามปีงบประมาณ', table(
+      [{ t: 'ปีงบประมาณ' }, { t: 'หลัง', n: 1 }, { t: 'งบประมาณ (บาท)', n: 1 }],
+      years.map(function (y) { return [y, d.charts.byYear[y].count, n(d.charts.byYear[y].budget)]; })
+    ), 'ปีที่เป็นช่วง (เช่น 2558-2561) คือรายการที่ต้นฉบับบันทึกไว้เป็นช่วงปี');
+    html += '<div>' + blk('กลุ่มผู้รับประโยชน์', hbars(types, 'var(--teal)', function (v) { return n(v) + ' หลัง'; })) +
+      blk('ประเภทความพิการ (ป.1–ป.7)', hbars(dis, 'var(--violet)', function (v) { return n(v) + ' ราย'; }),
+        'นับเฉพาะผู้ที่ระบุประเภทความพิการ (1 คนอาจมีมากกว่า 1 ประเภท)') +
+      blk('ช่วงอายุ', hbars((d.charts.byAge || []).map(function (v, i) { return { k: ageLabels[i], v: v }; }), 'var(--sky)',
+        function (v) { return n(v) + ' ราย'; })) + '</div>';
+    html += '</div>';
+
+    var more = '';
+    distRows.forEach(function (dr) {
+      var byAg = {};
+      recs.filter(function (r) { return r.district === dr.k; }).forEach(function (r) {
+        var a = byAg[r.agency] || (byAg[r.agency] = { count: 0, budget: 0, years: new Set() });
+        a.count++; a.budget += r.budget; a.years.add(r.sourceYearLabel);
+      });
+      more += '<h3>อำเภอ' + esc(dr.k) + '</h3>' + table(
+        [{ t: 'หน่วยงาน' }, { t: 'ปีงบประมาณ' }, { t: 'หลัง', n: 1 }, { t: 'งบประมาณ (บาท)', n: 1 }],
+        Object.keys(byAg).sort(function (a, b) { return byAg[b].count - byAg[a].count; }).map(function (k) {
+          return [k, Array.from(byAg[k].years).sort().join(', '), byAg[k].count, n(byAg[k].budget)];
+        }));
+    });
+    html += '<details class="more"><summary>ดูรายละเอียดรายหน่วยงาน</summary><div class="inner">' + more + '</div></details>';
+    return html + foot(d.source || 'เอกสารแนบ 6');
+  }
+
+  // ── P2 ศูนย์สาธิต (เอกสารแนบ 4) ──────────────────────────────────────
+  function renderP2(d) {
+    var units = d.units || [], eq = d.equipment || [];
+    var total = sum(units, function (u) { return u.budget; });
+    var avail = sum(units, function (u) { return u.available_qty; });
+    var borrow = sum(units, function (u) { return u.borrowed_qty; });
+    var damaged = sum(units, function (u) { return u.damaged_qty; });
+    var disposed = sum(units, function (u) { return u.disposed_qty; });
+    var inStock = avail + borrow + damaged;
+    var stamp = d.generatedAt;
+
+    var overview = (d.overview && d.overview.length) ? d.overview : [];
+    var distRows = overview.map(function (o) {
+      var us = units.filter(function (u) { return u.district === o.district; });
+      return { k: o.district, units: o.units, budget: o.budget,
+               a: sum(us, function (u) { return u.available_qty; }), b: sum(us, function (u) { return u.borrowed_qty; }),
+               c: sum(us, function (u) { return u.damaged_qty; }) };
+    }).sort(function (a, b) { return b.budget - a.budget; });
+    var maxQ = Math.max.apply(null, distRows.map(function (r) { return r.a + r.b + r.c; }));
+
+    var byYear = {};
+    units.forEach(function (u) { Object.keys(u.budget_by_year || {}).forEach(function (y) { byYear[y] = (byYear[y] || 0) + u.budget_by_year[y]; }); });
+    var yearTotal = sum(Object.keys(byYear), function (y) { return byYear[y]; });
+
+    var items = {};
+    eq.forEach(function (r) {
+      var it = items[r.equipment_name] || (items[r.equipment_name] = { a: 0, b: 0, c: 0, units: 0 });
+      it.a += r.available_qty; it.b += r.borrowed_qty; it.c += r.damaged_qty; it.units++;
+    });
+    var itemRows = Object.keys(items).map(function (k) { var i = items[k]; return { k: k, a: i.a, b: i.b, c: i.c, t: i.a + i.b + i.c, units: i.units }; })
+      .filter(function (r) { return r.t > 0; }).sort(function (a, b) { return b.t - a.t; });
+    var maxI = itemRows.length ? itemRows[0].t : 1;
+    var legend = '<div class="legend"><span><i style="background:var(--warn)"></i>ยืมใช้งาน</span>' +
+      '<span><i style="background:var(--ok)"></i>พร้อมให้ยืม</span><span><i style="background:var(--bad)"></i>ชำรุด</span></div>';
+
+    var html = head('โครงการศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้าน', 'ข้อมูลตามเอกสารแนบ 4 รายงานศูนย์สาธิต', stamp);
+    html += kpis([
+      { v: n(units.length) + ' แห่ง', l: 'หน่วยบริการที่ได้รับงบ' },
+      { v: mil(total) + ' ล้าน', l: 'งบประมาณรวม (บาท)', c: '#b45309' },
+      { v: n(inStock) + ' ชิ้น', l: 'อุปกรณ์ที่มีอยู่', c: 'var(--sky)' },
+      { v: n(borrow), l: 'ยืมใช้งานอยู่ (' + pct(borrow, inStock) + '%)', c: 'var(--warn)' },
+      { v: n(avail), l: 'พร้อมให้ยืม (' + pct(avail, inStock) + '%)', c: 'var(--ok)' },
+      { v: n(damaged), l: 'ชำรุด (จำหน่ายออกแล้ว ' + n(disposed) + ' ชิ้น)', c: 'var(--bad)' }
+    ]);
+    html += blk('ภาพรวมรายอำเภอ', legend + table(
+      [{ t: 'อำเภอ' }, { t: 'หน่วยงาน (แห่ง)', n: 1 }, { t: 'งบประมาณ (บาท)', n: 1 }, { t: 'อุปกรณ์ (ชิ้น)', n: 1 }, { t: 'สถานะอุปกรณ์' }],
+      distRows.map(function (r) {
+        return [r.k, r.units, n(r.budget), n(r.a + r.b + r.c),
+          { html: bar([{ v: r.b, c: 'var(--warn)' }, { v: r.a, c: 'var(--ok)' }, { v: r.c, c: 'var(--bad)' }], maxQ) }];
+      }),
+      ['รวม', sum(distRows, function (r) { return r.units; }), n(total), n(inStock), '']
+    ));
+    html += '<div class="grid2">';
+    var yRows = Object.keys(byYear).sort().map(function (y) { return [y, n(byYear[y])]; });
+    if (Math.abs(total - yearTotal) > 1) yRows.push(['ไม่ได้แยกปีในไฟล์ต้นทาง', n(total - yearTotal)]);
+    html += blk('งบประมาณตามปีงบประมาณ', table([{ t: 'ปีงบประมาณ' }, { t: 'งบประมาณ (บาท)', n: 1 }], yRows, ['รวม', n(total)]),
+      'รายปีจากไฟล์อัพเดทเดือนกันยายน 2569 · ยอดรวมตามเอกสารแนบ 4');
+    html += blk('อุปกรณ์ที่มีมากที่สุด 10 อันดับ', legend + itemRows.slice(0, 10).map(function (r) {
+      return '<div class="hbar"><span class="lbl" title="' + esc(r.k) + '">' + esc(r.k) + '</span>' +
+        bar([{ v: r.b, c: 'var(--warn)' }, { v: r.a, c: 'var(--ok)' }, { v: r.c, c: 'var(--bad)' }], maxI) +
+        '<span class="val">' + n(r.t) + '</span></div>';
+    }).join(''));
+    html += '</div>';
+
+    var more = '<h3>อุปกรณ์ทุกรายการ</h3>' + table(
+      [{ t: 'รายการ' }, { t: 'หน่วยที่มี', n: 1 }, { t: 'ยืมใช้งาน', n: 1 }, { t: 'พร้อมให้ยืม', n: 1 }, { t: 'ชำรุด', n: 1 }, { t: 'รวม', n: 1 }],
+      itemRows.map(function (r) { return [r.k, r.units, n(r.b), n(r.a), n(r.c), n(r.t)]; }));
+    distRows.forEach(function (dr) {
+      more += '<h3>อำเภอ' + esc(dr.k) + '</h3>' + table(
+        [{ t: 'หน่วยงาน' }, { t: 'ปีที่ได้รับงบ' }, { t: 'งบประมาณ (บาท)', n: 1 }, { t: 'ยืม', n: 1 }, { t: 'พร้อม', n: 1 }, { t: 'ชำรุด', n: 1 }],
+        units.filter(function (u) { return u.district === dr.k; }).map(function (u) {
+          return [u.agency, u.years, n(u.budget), n(u.borrowed_qty), n(u.available_qty), n(u.damaged_qty)];
+        }));
+    });
+    html += '<details class="more"><summary>ดูรายละเอียดรายหน่วยงานและรายอุปกรณ์</summary><div class="inner">' + more + '</div></details>';
+    return html + foot(d.source || 'เอกสารแนบ 4');
+  }
+
+  // ── P4 ศูนย์ซ่อม (เอกสารแนบ 5) ───────────────────────────────────────
+  function renderP4(d) {
+    var units = d.units || [], repairs = d.repairs || [];
+    var total = sum(units, function (u) { return u.budget; });
+    var fixed = sum(repairs, function (r) { return r.total; });
+    var districts = new Set(units.map(function (u) { return u.district; })).size;
+    var years = Object.keys(d.budget_totals || {}).sort();
+
+    // Merge oxygen-concentrator sizes etc. into one group per device type.
+    function group(cat) { return String(cat).replace(/\s*ขนาด.*$/, ''); }
+    var byCat = {}, byUnit = {};
+    repairs.forEach(function (r) {
+      var g = group(r.category);
+      var c = byCat[g] || (byCat[g] = { v: 0, t: r.unit_type });
+      c.v += r.total;
+      byUnit[r.unit] = (byUnit[r.unit] || 0) + r.total;
+    });
+    var catRows = Object.keys(byCat).map(function (k) { return { k: k + ' (' + byCat[k].t + ')', v: byCat[k].v }; })
+      .sort(function (a, b) { return b.v - a.v; });
+    var repYear = {};
+    repairs.forEach(function (r) { Object.keys(r.by_year || {}).forEach(function (y) { repYear[y] = (repYear[y] || 0) + r.by_year[y]; }); });
+    var maxB = Math.max.apply(null, units.map(function (u) { return u.budget; }));
+    var reportedRefund = sum(d.budgets || [], function (b) { return b.refund; });
+
+    var html = head('โครงการศูนย์ซ่อมบำรุง ดัดแปลงและจัดทำเฉพาะ อุปกรณ์เครื่องช่วยความพิการ', 'ข้อมูลตามเอกสารแนบ 5 รายงานศูนย์ซ่อม', d.generatedAt);
+    html += kpis([
+      { v: n(units.length) + ' ศูนย์', l: 'ศูนย์ซ่อมที่ได้รับงบ' },
+      { v: mil(total) + ' ล้าน', l: 'งบประมาณรวม (บาท)', c: '#b45309' },
+      { v: n(fixed) + ' ชิ้น', l: 'อุปกรณ์ที่ซ่อมแล้ว', c: 'var(--ok)' },
+      { v: n(districts) + ' อำเภอ', l: 'ครอบคลุม', c: 'var(--violet)' },
+      { v: years.length ? years[0] + '–' + years[years.length - 1] : '-', l: 'ปีงบประมาณ', c: 'var(--sky)' }
+    ]);
+    html += blk('ศูนย์ซ่อมและงบประมาณที่ได้รับ', table(
+      [{ t: 'อำเภอ' }, { t: 'หน่วยงาน' }, { t: 'ปีที่ได้รับงบ' }, { t: 'งบประมาณ (บาท)', n: 1 }, { t: 'ซ่อมแล้ว (ชิ้น)', n: 1 }, { t: '' }],
+      units.map(function (u) {
+        return [u.district, u.short || u.unit, (u.years || []).join(', '), n(u.budget), byUnit[u.unit] ? n(byUnit[u.unit]) : '—',
+          { html: bar([{ v: u.budget, c: 'var(--teal)' }], maxB) }];
+      }),
+      ['รวม', units.length + ' ศูนย์', '', n(total), n(fixed), '']
+    ), (reportedRefund ? 'งบประมาณเป็นยอดสุทธิหลังหักเงินคืนกองทุนฯ รวม ' + baht(reportedRefund) + ' · ' : '') +
+      '“—” = รายงานการเบิกจ่ายของหน่วยงานยังไม่ระบุจำนวนอุปกรณ์ที่ซ่อม');
+    html += '<div class="grid2">';
+    html += blk('งบประมาณและการซ่อมตามปีงบประมาณ', table(
+      [{ t: 'ปีงบประมาณ' }, { t: 'งบประมาณ (บาท)', n: 1 }, { t: 'ซ่อมแล้ว (ชิ้น)', n: 1 }],
+      years.map(function (y) { return [y, n(d.budget_totals[y]), n(repYear[y] || 0)]; }),
+      ['รวม', n(total), n(fixed)]));
+    html += blk('อุปกรณ์ที่ซ่อมแล้วตามประเภท', hbars(catRows, 'var(--ok)'));
+    html += '</div>';
+
+    var more = '<h3>ขั้นตอนการขอรับงบประมาณรายปี</h3>' + table(
+      [{ t: 'ปี' }, { t: 'หน่วยงาน' }, { t: 'งบประมาณ (บาท)', n: 1 }, { t: 'อนุมัติ' }, { t: 'รับเช็ค' }, { t: 'ส่งรายงานผล' }, { t: 'หมายเหตุ' }],
+      (d.budgets || []).map(function (b) {
+        return [b.year, b.unit, b.budget ? n(b.budget) : '-', b.approved, b.received, b.reported, b.notes || '-'];
+      }));
+    html += '<details class="more"><summary>ดูรายละเอียดขั้นตอนการขอรับงบประมาณ</summary><div class="inner">' + more + '</div></details>';
+    return html + foot(d.source || 'เอกสารแนบ 5');
+  }
+
+  var RENDER = { p1: renderP1, p2: renderP2, p4: renderP4 };
+  var TITLES = { p1: 'ปรับสภาพบ้าน', p2: 'ศูนย์สาธิตและยืมอุปกรณ์', p4: 'ศูนย์ซ่อมบำรุง' };
+
+  function show() {
+    var p = (location.hash || '#p1').slice(1);
+    if (!RENDER[p]) p = 'p1';
+    document.querySelectorAll('.tabs a').forEach(function (a) { a.classList.toggle('active', a.getAttribute('data-p') === p); });
+    document.title = 'สรุปโครงการ' + TITLES[p] + ' - กองทุนหลักประกันสุขภาพ จังหวัดระยอง';
+    var sheet = document.getElementById('sheet');
+    sheet.innerHTML = '<div class="loading">⏳ กำลังโหลดข้อมูล...</div>';
+    load(p).then(function (d) {
+      sheet.innerHTML = RENDER[p](d);
+    }).catch(function (err) {
+      sheet.innerHTML = '<div class="error">⚠ โหลดข้อมูลไม่สำเร็จ (' + esc(err.message) + ') <br><a href="javascript:location.reload()">ลองอีกครั้ง</a></div>';
+    });
+  }
+  window.addEventListener('hashchange', show);
+  show();
+})();
+</script>
+</body>
+</html>
