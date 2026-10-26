@@ -37,7 +37,11 @@ const STATUS_ROWS = { 'ยืมใช้งาน': 'borrowed', 'พร้อ�
 const UNIT_NAME_FIX = { 'รพ.สต.บ้านมาบบางพร': 'รพ.สต.บ้านมาบยางพร' };
 function unitName(s) { return UNIT_NAME_FIX[s] || s; }
 
-function text(v) { return String(v == null ? '' : v).replace(/\s+/g, ' ').trim(); }
+// Also collapses a Thai vowel/tone mark typed twice ("บ้้าน" -> "บ้าน")
+function text(v) {
+  return String(v == null ? '' : v).replace(/\s+/g, ' ')
+    .replace(/([ัิ-ฺ็-๎])\1+/g, '$1').trim();
+}
 function num(v) { const n = Number(String(v == null ? '' : v).replace(/[^\d.-]/g, '')); return isFinite(n) ? n : 0; }
 function rowsOf(ws) { return XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' }); }
 

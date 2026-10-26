@@ -53,7 +53,11 @@ const AGENCY_PREFIXES = [
   ['เทศบาลตำบล', 'ทต.']
 ];
 
-function text(v) { return String(v == null ? '' : v).replace(/\s+/g, ' ').trim(); }
+// Also collapses a Thai vowel/tone mark typed twice ("บ้้าน" -> "บ้าน")
+function text(v) {
+  return String(v == null ? '' : v).replace(/\s+/g, ' ')
+    .replace(/([ัิ-ฺ็-๎])\1+/g, '$1').trim();
+}
 function ticked(v) { return /[√✓✔]/.test(String(v || '')); }
 
 // Unit names เอกสารแนบ 6 spells differently from the Fund's other files;

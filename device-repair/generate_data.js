@@ -36,7 +36,11 @@ const PREFIXES = [
 ];
 const THAI_MONTHS = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
 
-function text(v) { return String(v == null ? '' : v).replace(/\s+/g, ' ').trim(); }
+// Also collapses a Thai vowel/tone mark typed twice ("บ้้าน" -> "บ้าน")
+function text(v) {
+  return String(v == null ? '' : v).replace(/\s+/g, ' ')
+    .replace(/([ัิ-ฺ็-๎])\1+/g, '$1').trim();
+}
 // Handles plain numbers and the Fund's "497,500.-" money style.
 function num(v) {
   if (typeof v === 'number') return v;

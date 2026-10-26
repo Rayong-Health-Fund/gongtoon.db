@@ -44,7 +44,9 @@ function parseCsv(text) {
 }
 
 function main() {
-  const raw = fs.readFileSync(SOURCE_CSV, 'utf8').replace(/^﻿/, '');
+  // also collapse a Thai vowel/tone mark typed twice ("สิิงห์" -> "สิงห์")
+  const raw = fs.readFileSync(SOURCE_CSV, 'utf8').replace(/^﻿/, '')
+    .replace(/([ัิ-ฺ็-๎])\1+/g, '$1');
   const rows = parseCsv(raw);
   const headers = rows[0].map(h => h.trim());
   const idx = {};
