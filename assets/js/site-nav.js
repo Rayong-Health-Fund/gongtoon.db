@@ -46,7 +46,7 @@
     }).join('') +
     '<div class="sn-group">เกี่ยวกับกองทุน</div>' +
     ABOUT.map(function (a) { return '<a class="sn-small" href="' + a.href + '">' + a.label + '</a>'; }).join('') +
-    '</nav><div class="sn-contact">📞 โทร <a href="tel:038617430">038-617-430</a> ต่อ 203<br>💬 Line: 095-818-0720</div></aside>';
+    '</nav><div class="sn-contact">📞 โทร <a href="tel:038617430">038-617-430</a> ต่อ 203<br>💬 Line: 095-818-0720<br>✉️ <a href="mailto:gongtoon2014rayong@gmail.com">gongtoon2014rayong@gmail.com</a></div></aside>';
 
   mount.outerHTML = '<header class="sn-bar"><div class="sn-inner">' + brand + desktop +
     '<button type="button" class="sn-menu-btn" aria-label="เปิดเมนู"><span class="sn-burger">☰</span> เมนู</button>' +

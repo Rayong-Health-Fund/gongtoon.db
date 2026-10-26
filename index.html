@@ -1250,6 +1250,18 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
 }
 .p2-item-unit { font-weight: 600; flex: 1; }
 .p2-item-detail { color: var(--text-gray); font-size: 0.75rem; flex: 1; }
+/* P2 tappable status pills / cards */
+.p2-click { cursor: pointer; transition: transform 0.12s, box-shadow 0.12s; }
+.p2-click:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
+.p2-click:active { transform: scale(0.97); }
+/* P2 popup: อำเภอ / ตำบล / หน่วยบริการ filter */
+.p2-loc-panel { position: sticky; top: -1rem; z-index: 2; background: #fff; margin: -1rem -1.4rem 0.5rem; padding: 0.75rem 1.4rem 0.6rem; border-bottom: 1px solid #e2e8f0; }
+.p2-loc-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-bottom: 6px; }
+.p2-loc-label { font-size: 0.75rem; font-weight: 700; color: var(--text-dark); min-width: 92px; }
+.p2-loc-chip { border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; border-radius: 999px; padding: 3px 10px; font-size: 0.74rem; font-family: inherit; cursor: pointer; }
+.p2-loc-chip:hover { border-color: #0f766e; color: #0f766e; }
+.p2-loc-chip.active { background: #0f766e; border-color: #0f766e; color: #fff; font-weight: 700; }
+@media (max-width: 600px) { .p2-loc-label { min-width: 100%; } }
 /* P2 no results */
 .p2-no-results {
   text-align: center;
@@ -2288,6 +2300,7 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
     <div style="margin-bottom:0.5rem;font-weight:600;">ℹ️ ข้อมูลสำคัญ</div>
     <div>• ที่อยู่: 140 ม.2 ถ.สุขุมวิท ต.เนินพระ อ.เมือง จ.ระยอง 21000</div>
     <div>• โทร: 038-617-430 ต่อ 203 | Line: 095-818-0720</div>
+    <div>• อีเมล: gongtoon2014rayong@gmail.com</div>
     <div>• เว็บไซต์นี้แสดงข้อมูลโครงการของกองทุนฯ ให้ประชาชนเข้าถึงได้โดยไม่ต้องเข้าสู่ระบบ</div>
   </div>
 
@@ -2791,12 +2804,12 @@ document.addEventListener('click', function(e) {
         <div style="margin-bottom:1.25rem;">
           <h6 class="section-header" style="margin-top:0.5rem;">📈 สถิติภาพรวม</h6>
           <div class="summary-cards">
-            <div class="summary-card" style="border-top:3px solid #0f766e;"><span class="summary-card-value" style="color:#0f766e;" id="p2StatTotal">—</span><span class="summary-card-label">ชิ้นทั้งหมด</span></div>
-            <div class="summary-card" style="border-top:3px solid #10b981;"><span class="summary-card-value" style="color:#10b981;" id="p2StatReady">—</span><span class="summary-card-label">พร้อมให้บริการ</span></div>
-            <div class="summary-card" style="border-top:3px solid #f59e0b;"><span class="summary-card-value" style="color:#f59e0b;" id="p2StatInuse">—</span><span class="summary-card-label">กำลังใช้งาน</span></div>
-            <div class="summary-card" style="border-top:3px solid #ef4444;"><span class="summary-card-value" style="color:#ef4444;" id="p2StatBroken">—</span><span class="summary-card-label">ชำรุด</span></div>
-            <div class="summary-card" style="border-top:3px solid #8b5cf6;"><span class="summary-card-value" style="color:#8b5cf6;" id="p2StatTypes">—</span><span class="summary-card-label">ประเภทอุปกรณ์</span></div>
-            <div class="summary-card" style="border-top:3px solid #06b6d4;"><span class="summary-card-value" style="color:#06b6d4;" id="p2StatUnits">—</span><span class="summary-card-label">หน่วยบริการ</span></div>
+            <div class="summary-card p2-click" style="border-top:3px solid #0f766e;" title="กดเพื่อดูรายการ" onclick="p2ShowStatus('all')"><span class="summary-card-value" style="color:#0f766e;" id="p2StatTotal">—</span><span class="summary-card-label">ชิ้นทั้งหมด</span></div>
+            <div class="summary-card p2-click" style="border-top:3px solid #10b981;" title="กดเพื่อดูรายการ" onclick="p2ShowStatus('พร้อม')"><span class="summary-card-value" style="color:#10b981;" id="p2StatReady">—</span><span class="summary-card-label">พร้อมให้บริการ</span></div>
+            <div class="summary-card p2-click" style="border-top:3px solid #f59e0b;" title="กดเพื่อดูรายการ" onclick="p2ShowStatus('ใช้งานอยู่')"><span class="summary-card-value" style="color:#f59e0b;" id="p2StatInuse">—</span><span class="summary-card-label">กำลังใช้งาน</span></div>
+            <div class="summary-card p2-click" style="border-top:3px solid #ef4444;" title="กดเพื่อดูรายการ" onclick="p2ShowStatus('ชำรุด')"><span class="summary-card-value" style="color:#ef4444;" id="p2StatBroken">—</span><span class="summary-card-label">ชำรุด</span></div>
+            <div class="summary-card p2-click" style="border-top:3px solid #8b5cf6;" title="กดเพื่อดูรายการ" onclick="p2ShowStatus('all')"><span class="summary-card-value" style="color:#8b5cf6;" id="p2StatTypes">—</span><span class="summary-card-label">ประเภทอุปกรณ์</span></div>
+            <div class="summary-card p2-click" style="border-top:3px solid #06b6d4;" title="กดเพื่อดูรายการ" onclick="switchTab2('byUnit', document.querySelectorAll('#accBody2 .tab-btn')[1]);document.getElementById('tab2-byUnit').scrollIntoView({behavior:'smooth',block:'start'})"><span class="summary-card-value" style="color:#06b6d4;" id="p2StatUnits">—</span><span class="summary-card-label">หน่วยบริการ</span></div>
           </div>
         </div>
         <div class="tabs-container">
@@ -2816,6 +2829,10 @@ document.addEventListener('click', function(e) {
               </select>
             </div>
             <div class="filter-group">
+              <label class="filter-label">อำเภอ</label>
+              <select class="year-select" id="p2InvDistrictFilter" onchange="p2OnInvDistrictChange()"><option value="all">ทุกอำเภอ</option></select>
+            </div>
+            <div class="filter-group">
               <label class="filter-label">หน่วยบริการ</label>
               <select class="year-select" id="p2UnitFilter" onchange="filterP2Cards()"><option value="all">ทุกหน่วย</option></select>
             </div>
@@ -2830,10 +2847,11 @@ document.addEventListener('click', function(e) {
             </div>
           </div>
           <div class="p1-acc-search-sticky">
-            <input type="text" class="modal-search-input" id="p2GroupSearch" placeholder="🔍 ค้นหาชื่ออุปกรณ์ รหัส หน่วยงาน..." onkeyup="filterP2Cards()">
+            <input type="text" class="modal-search-input" id="p2GroupSearch" placeholder="🔍 ค้นหา เช่น  รถเข็น รพ.สต.กะเฉด  หรือ  ไม้เท้า บ้านฉาง" onkeyup="filterP2Cards()">
           </div>
           <div id="p2CardCount" style="font-size:0.8rem;color:var(--text-gray);margin-bottom:0.75rem;"></div>
           <div class="equip-group-grid" id="p2GroupGrid"></div>
+          <div class="equip-group-grid" id="p2UnitCardGrid" style="display:none;"></div>
           <div class="p2-no-results" id="p2NoResults"><div style="font-size:2rem;">🔍</div><p>ไม่พบอุปกรณ์ที่ตรงกัน</p></div>
         </div>
         <div id="tab2-byUnit" class="tab-content">
@@ -5081,14 +5099,18 @@ function renderP2ByUnit() {
   tbody.innerHTML = "";
 
   p2UnitSummary.forEach(function(u) {
+    var uArg = JSON.stringify(u.unit).replace(/"/g, "&quot;");
+    function badge(cls, text, status) {
+      return "<span class=\"badge-status " + cls + " p2-click\" style=\"font-size:0.68rem;\" title=\"กดเพื่อดูรายการ\" onclick=\"p2ShowStatus('" + status + "'," + uArg + ")\">" + text + "</span> ";
+    }
     var stHtml = "";
-    if (u.ready  > 0) stHtml += "<span class=\"badge-status badge-success\" style=\"font-size:0.68rem;\">✓ " + u.ready  + " พร้อม</span> ";
-    if (u.inuse  > 0) stHtml += "<span class=\"badge-status badge-warning\" style=\"font-size:0.68rem;\">⟳ " + u.inuse  + " ยืม</span> ";
-    if (u.broken > 0) stHtml += "<span class=\"badge-status badge-danger\" style=\"font-size:0.68rem;\">✕ " + u.broken + " ชำรุด</span>";
+    if (u.ready  > 0) stHtml += badge("badge-success", "✓ " + u.ready  + " พร้อม", "พร้อม");
+    if (u.inuse  > 0) stHtml += badge("badge-warning", "⟳ " + u.inuse  + " ยืม",   "ใช้งานอยู่");
+    if (u.broken > 0) stHtml += badge("badge-danger",  "✕ " + u.broken + " ชำรุด", "ชำรุด");
     var tr = document.createElement("tr");
     tr.setAttribute("data-searchable", u.unit + " " + u.district);
     tr.innerHTML =
-      "<td style=\"font-size:0.78rem;font-weight:600;\">" + u.unit + "</td>" +
+      "<td style=\"font-size:0.78rem;font-weight:600;\"><a href=\"#\" class=\"p2-click\" title=\"ดูอุปกรณ์ของหน่วยนี้\" onclick=\"p2ShowStatus('all'," + uArg + ");return false;\" style=\"color:#0f766e;\">" + u.unit + "</a></td>" +
       "<td style=\"font-size:0.75rem;\">" + u.district + "</td>" +
       "<td style=\"font-size:0.75rem;text-align:center;\">" + (u.years || "-") + "</td>" +
       "<td style=\"text-align:right;font-size:0.75rem;font-weight:700;color:#b45309;\">" + (u.budget ? "฿" + u.budget.toLocaleString() : "-") + "</td>" +
@@ -5187,110 +5209,468 @@ function filterUnits2(unitType, btnEl) {
   if (srch) srch.value = "";
 }
 
-function filterP2Cards() {
-  var yearVal   = document.getElementById("p2YearFilter").value;
-  var unitVal   = document.getElementById("p2UnitFilter").value;
-  var statusVal = document.getElementById("p2StatusFilter").value;
-  var search    = (document.getElementById("p2GroupSearch").value || "").toLowerCase().trim();
+// ── P2 search ──────────────────────────────────────────────
+// The search box and the dropdowns are applied to every single item, so a
+// card's counts and its detail popup only ever include items that actually
+// match (e.g. "รถเข็น รพ.สต.กะเฉด" shows only กะเฉด's wheelchairs — before,
+// the card appeared because กะเฉด had one, but counted every unit's).
 
-  var cards = document.querySelectorAll(".equip-group-card");
-  var visible = 0;
+// Lowercase, drop dots/spaces so "รพ.สต. กะเฉด" == "รพสตกะเฉด"
+function p2Norm(s) { return String(s || '').toLowerCase().replace(/[\s.]+/g, ''); }
+
+// Splits the search text into (a) full unit names typed anywhere in it —
+// these become an exact unit match, so "รพ.แกลง" never pulls in
+// "รพ.สต.แกลง" — and (b) leftover keywords (equipment name, code, district).
+function p2ParseSearch(raw) {
+  var text = String(raw || '').toLowerCase()
+    // join "รพ.สต. กะเฉด" / "รพ. แกลง" into one word before splitting
+    .replace(/(รพ\.?\s*สต\.?|รพ\.|สสอ\.|ทต\.|ทน\.|ทม\.|สอน\.)\s+/g, '$1');
+  var tokens = text.split(/\s+/).map(p2Norm).filter(Boolean);
+  var units = [];
+  if (tokens.length) {
+    var byLen = p2UnitsList.slice().sort(function(a, b) { return p2Norm(b).length - p2Norm(a).length; });
+    byLen.forEach(function(u) {
+      var nu = p2Norm(u);
+      if (!nu) return;
+      for (var i = 0; i < tokens.length; i++) {
+        if (tokens[i].indexOf(nu) > -1) {
+          if (units.indexOf(u) < 0) units.push(u);
+          tokens[i] = tokens[i].replace(nu, '');
+        }
+      }
+    });
+  }
+  return { units: units, keywords: tokens.filter(Boolean) };
+}
+
+function p2CurrentFilters() {
+  var distEl = document.getElementById("p2InvDistrictFilter");
+  return {
+    year:     document.getElementById("p2YearFilter").value,
+    district: distEl ? distEl.value : "all",
+    unit:     document.getElementById("p2UnitFilter").value,
+    status:   document.getElementById("p2StatusFilter").value,
+    search:   p2ParseSearch(document.getElementById("p2GroupSearch").value)
+  };
+}
+
+// Items of one equipment group that pass every filter + the search box
+function p2FilterItems(grp, f) {
+  var grpText = p2Norm(grp.name + " " + (grp.base_code || ""));
+  var kws = f.search.keywords, sUnits = f.search.units;
+  return grp.items.filter(function(item) {
+    if (f.year     !== "all" && String(item.year) !== f.year)     return false;
+    if (f.district !== "all" && item.district     !== f.district) return false;
+    if (f.unit     !== "all" && item.unit         !== f.unit)     return false;
+    if (f.status   !== "all" && item.status       !== f.status)   return false;
+    if (sUnits.length && sUnits.indexOf(item.unit) < 0)          return false;
+    if (kws.length) {
+      var itemText = p2Norm(item.unit + " " + item.district);
+      for (var k = 0; k < kws.length; k++) {
+        if (grpText.indexOf(kws[k]) < 0 && itemText.indexOf(kws[k]) < 0) return false;
+      }
+    }
+    return true;
+  });
+}
+
+function p2CountStatus(items) {
+  var c = { ready: 0, inuse: 0, broken: 0 };
+  items.forEach(function(i) {
+    if (i.status === "พร้อม") c.ready++;
+    else if (i.status === "ชำรุด") c.broken++;
+    else c.inuse++;
+  });
+  return c;
+}
+
+// District dropdown on the รายการอุปกรณ์ tab narrows the unit dropdown
+function p2OnInvDistrictChange() {
+  p2FillUnitFilter();
+  filterP2Cards();
+}
+
+// Unit dropdown grouped by district (alphabetical), so a unit is easy to find
+function p2FillUnitFilter() {
+  var unitSel = document.getElementById("p2UnitFilter");
+  if (!unitSel) return;
+  var distEl = document.getElementById("p2InvDistrictFilter");
+  var dist = distEl ? distEl.value : "all";
+  var prev = unitSel.value;
+  var byDist = {};
+  p2UnitSummary.forEach(function(u) {
+    if (dist !== "all" && u.district !== dist) return;
+    var d = u.district || "ไม่ระบุอำเภอ";
+    (byDist[d] = byDist[d] || []).push(u.unit);
+  });
+  var html = '<option value="all">ทุกหน่วย</option>';
+  Object.keys(byDist).sort(function(a, b) { return a.localeCompare(b, 'th'); }).forEach(function(d) {
+    html += '<optgroup label="อ.' + d + '">';
+    byDist[d].sort(function(a, b) { return a.localeCompare(b, 'th'); }).forEach(function(u) {
+      html += '<option value="' + u + '">' + u + '</option>';
+    });
+    html += '</optgroup>';
+  });
+  unitSel.innerHTML = html;
+  unitSel.value = prev;
+  if (unitSel.value !== prev) unitSel.value = "all";
+}
+
+function filterP2Cards() {
+  var f = p2CurrentFilters();
+  var grid = document.getElementById("p2GroupGrid");
+  var cards = Array.prototype.slice.call(document.querySelectorAll("#p2GroupGrid .equip-group-card"));
+  var shown = [], hiddenCards = [];
 
   cards.forEach(function(card) {
     var grpIdx = Number(card.getAttribute("data-idx")) || 0;
     var grp = p2GroupData[grpIdx];
-    if (!grp) { card.classList.add("hidden"); return; }
+    var items = grp ? p2FilterItems(grp, f) : [];
+    if (!items.length) { card.classList.add("hidden"); hiddenCards.push(card); return; }
 
-    // Filter items respecting priority sort (already sorted in data)
-    var filteredItems = grp.items.filter(function(item) {
-      if (yearVal !== "all" && String(item.year) !== yearVal) return false;
-      if (unitVal !== "all" && item.unit !== unitVal) return false;
-      if (statusVal !== "all" && item.status !== statusVal) return false;
-      return true;
-    });
-
-    // Search: multi-keyword AND logic across name, code, unit names, districts
-    var searchMatch = true;
-    if (search) {
-      var kws2 = search.split(/\s+/).filter(Boolean);
-      var haystack2 = grp.name.toLowerCase() + " " + (grp.base_code || "").toLowerCase() + " " +
-        filteredItems.map(function(i){
-          return (i.unit + " " + (i.ec||"") + " " + (i.cc||"") + " " + i.district).toLowerCase();
-        }).join(" ");
-      searchMatch = kws2.every(function(kw){ return haystack2.indexOf(kw) > -1; });
-    }
-
-    if (filteredItems.length === 0 || !searchMatch) {
-      card.classList.add("hidden");
-    } else {
-      card.classList.remove("hidden");
-      visible++;
-      var r = filteredItems.filter(function(i){return i.status==="พร้อม";}).length;
-      var n = filteredItems.filter(function(i){return i.status==="ใช้งานอยู่";}).length;
-      var b = filteredItems.filter(function(i){return i.status==="ชำรุด";}).length;
-      var tEl = card.querySelector(".pill-total");
-      var rEl = card.querySelector(".pill-ready");
-      var nEl = card.querySelector(".pill-inuse");
-      var bEl = card.querySelector(".pill-broken");
-      if (tEl) tEl.textContent = filteredItems.length + " ชิ้น";
-      if (rEl) { rEl.textContent = "✓ " + r + " พร้อม";  rEl.style.display = r > 0 ? "" : "none"; }
-      if (nEl) { nEl.textContent = "⟳ " + n + " ใช้งาน"; nEl.style.display = n > 0 ? "" : "none"; }
-      if (bEl) { bEl.textContent = "✕ " + b + " ชำรุด";  bEl.style.display = b > 0 ? "" : "none"; }
-    }
+    card.classList.remove("hidden");
+    var c = p2CountStatus(items);
+    shown.push({ card: card, idx: grpIdx, ready: c.ready, total: items.length });
+    var tEl = card.querySelector(".pill-total");
+    var rEl = card.querySelector(".pill-ready");
+    var nEl = card.querySelector(".pill-inuse");
+    var bEl = card.querySelector(".pill-broken");
+    if (tEl) tEl.textContent = items.length + " ชิ้น";
+    if (rEl) { rEl.textContent = "✓ " + c.ready + " พร้อม";  rEl.style.display = c.ready  > 0 ? "" : "none"; }
+    if (nEl) { nEl.textContent = "⟳ " + c.inuse + " ใช้งาน"; nEl.style.display = c.inuse  > 0 ? "" : "none"; }
+    if (bEl) { bEl.textContent = "✕ " + c.broken + " ชำรุด"; bEl.style.display = c.broken > 0 ? "" : "none"; }
+    var pct = Math.round(c.ready / items.length * 100);
+    var bar = card.querySelector(".p2-ready-bar");
+    if (bar) { bar.style.width = pct + "%"; bar.style.background = c.broken > 0 ? "#ef4444" : (c.ready > 0 ? "#10b981" : "#f59e0b"); }
+    var pctEl = card.querySelector(".p2-ready-pct");
+    if (pctEl) pctEl.textContent = pct + "% พร้อม · กดเพื่อดูรายละเอียด";
   });
+
+  // Cards with the most items ready to lend come first
+  shown.sort(function(a, b) { return b.ready - a.ready || b.total - a.total || a.idx - b.idx; });
+  hiddenCards.sort(function(a, b) { return Number(a.getAttribute("data-idx")) - Number(b.getAttribute("data-idx")); });
+  if (grid) {
+    shown.forEach(function(s) { grid.appendChild(s.card); });
+    hiddenCards.forEach(function(card) { grid.appendChild(card); });
+  }
+
+  // Searching / picking an อำเภอ or หน่วย → one card per service unit instead
+  var unitMode = !!document.getElementById("p2GroupSearch").value.trim() || f.district !== "all" || f.unit !== "all" || f.status !== "all";
+  var unitGrid = document.getElementById("p2UnitCardGrid");
+  if (grid) grid.style.display = unitMode ? "none" : "";
+  if (unitGrid) unitGrid.style.display = unitMode ? "" : "none";
+  if (unitMode) {
+    var n = p2RenderUnitCards(f);
+    var countEl2 = document.getElementById("p2CardCount");
+    if (countEl2) {
+      var stInfo = P2_STATUS_INFO[f.status];
+      var msg2 = "พบ " + n.cards + " รายการ จาก " + n.units + " หน่วยบริการ · " +
+        (stInfo ? "แสดงเฉพาะ: <strong style=\"color:" + stInfo.color + ";\">" + stInfo.label + "</strong>"
+                : "หน่วยที่มีของพร้อมให้บริการแสดงก่อน");
+      if (f.unit !== "all") msg2 += " · 🏥 หน่วย: <strong>" + f.unit + "</strong>";
+      if (f.search.units.length) msg2 += " · 🏥 เฉพาะหน่วย: <strong>" + f.search.units.join(", ") + "</strong>";
+      msg2 += " · <a href=\"#\" onclick=\"p2ShowStatus('all');return false;\" style=\"color:#0f766e;font-weight:600;\">✕ ล้างตัวกรอง</a>";
+      countEl2.innerHTML = msg2;
+    }
+    var noRes2 = document.getElementById("p2NoResults");
+    if (noRes2) noRes2.style.display = n.cards === 0 ? "block" : "none";
+    return;
+  }
 
   var countEl = document.getElementById("p2CardCount");
-  if (countEl) countEl.textContent = "แสดง " + visible + " จาก " + p2GroupData.length + " ประเภท";
+  if (countEl) {
+    var msg = "แสดง " + shown.length + " จาก " + p2GroupData.length + " ประเภท · เรียงตามจำนวนที่พร้อมให้บริการ";
+    if (f.search.units.length) msg += " · 🏥 เฉพาะหน่วย: <strong>" + f.search.units.join(", ") + "</strong>";
+    countEl.innerHTML = msg;
+  }
   var noRes = document.getElementById("p2NoResults");
-  if (noRes) noRes.style.display = visible === 0 ? "block" : "none";
+  if (noRes) noRes.style.display = shown.length === 0 ? "block" : "none";
 }
 
-function openP2Detail(grpIdx) {
-  var grp = p2GroupData[grpIdx];
-  if (!grp) return;
+function p2PhoneMap() {
+  var m = {};
+  p2ServiceUnits.forEach(function(u) { if (u.phone && !m[u.name]) m[u.name] = u.phone; });
+  return m;
+}
 
-  var yearVal   = document.getElementById("p2YearFilter").value;
-  var unitVal   = document.getElementById("p2UnitFilter").value;
-  var statusVal = document.getElementById("p2StatusFilter").value;
+function p2PhoneHtml(phone) {
+  if (!phone) return "<span style=\"color:var(--text-gray);\">☎ ยังไม่มีเบอร์ในระบบ</span>";
+  return "☎ <a href=\"tel:" + phone.replace(/[^d+]/g, "") + "\" onclick=\"event.stopPropagation();\" style=\"color:#0f766e;font-weight:600;\">" + phone + "</a>";
+}
 
-  // Items are already priority-sorted in the data (year DESC, พร้อม first)
-  var items = grp.items.filter(function(item) {
-    if (yearVal   !== "all" && String(item.year)  !== yearVal)   return false;
-    if (unitVal   !== "all" && item.unit           !== unitVal)   return false;
-    if (statusVal !== "all" && item.status         !== statusVal) return false;
-    return true;
+var P2_STATUS_INFO = {
+  'พร้อม':      { label: 'พร้อมให้บริการ', icon: '✅', color: '#10b981', pill: 'ready'  },
+  'ใช้งานอยู่': { label: 'กำลังใช้งาน',    icon: '⟳',  color: '#f59e0b', pill: 'inuse'  },
+  'ชำรุด':      { label: 'ชำรุด',          icon: '✕',  color: '#ef4444', pill: 'broken' }
+};
+
+// Status pill that does something when tapped. `onclickJs` runs after
+// stopping the click from also triggering the card underneath.
+function p2Pill(cls, text, onclickJs) {
+  return "<span class=\"equip-stat-pill " + cls + " p2-click\" title=\"กดเพื่อดูรายการ\" onclick=\"event.stopPropagation();" + onclickJs + "\">" + text + "</span>";
+}
+
+// Jump to the รายการอุปกรณ์ list showing only one status (and optionally
+// one unit) — used by the summary cards, the by-unit table and others.
+function p2ShowStatus(status, unit) {
+  switchTab2('inventory', document.querySelector('#accBody2 .tab-btn'));
+  document.getElementById("p2GroupSearch").value = "";
+  document.getElementById("p2YearFilter").value = "all";
+  var distEl = document.getElementById("p2InvDistrictFilter");
+  if (distEl) { distEl.value = "all"; p2FillUnitFilter(); }
+  document.getElementById("p2UnitFilter").value = unit || "all";
+  document.getElementById("p2StatusFilter").value = status || "all";
+  var ov = document.getElementById("p2DetailOverlay");
+  if (ov) ov.classList.remove("active");
+  filterP2Cards();
+  var el = document.getElementById("p2CardCount");
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// One card per (equipment type × service unit), ready-to-lend first
+function p2RenderUnitCards(f) {
+  var unitGrid = document.getElementById("p2UnitCardGrid");
+  var phoneOf = p2PhoneMap();
+  var rows = [], unitSet = {};
+  p2GroupData.forEach(function(grp, grpIdx) {
+    var byUnit = {}, order = [];
+    p2FilterItems(grp, f).forEach(function(item) {
+      var u = byUnit[item.unit];
+      if (!u) { u = byUnit[item.unit] = { grpIdx: grpIdx, name: grp.name, unit: item.unit, district: item.district, ready: 0, inuse: 0, broken: 0 }; order.push(u); }
+      if (item.status === "พร้อม") u.ready++;
+      else if (item.status === "ชำรุด") u.broken++;
+      else u.inuse++;
+    });
+    order.forEach(function(u) { rows.push(u); unitSet[u.unit] = 1; });
+  });
+  rows.sort(function(a, b) {
+    return (b.ready > 0) - (a.ready > 0) || b.ready - a.ready ||
+           b.inuse - a.inuse || b.broken - a.broken ||
+           a.name.localeCompare(b.name, 'th') || a.unit.localeCompare(b.unit, 'th');
   });
 
-  var r = items.filter(function(i){return i.status==="พร้อม";}).length;
-  var n = items.filter(function(i){return i.status==="ใช้งานอยู่";}).length;
-  var b = items.filter(function(i){return i.status==="ชำรุด";}).length;
+  var statusInfo = P2_STATUS_INFO[f.status];
+  if (unitGrid) {
+    unitGrid.innerHTML = rows.map(function(u) {
+      var total = u.ready + u.inuse + u.broken;
+      var border, head;
+      if (statusInfo && f.status !== "พร้อม") {
+        // A status was picked: headline that status, not "ready"
+        border = statusInfo.color;
+        head = statusInfo.icon + " " + statusInfo.label + " " + total + " ชิ้น";
+      } else {
+        border = u.ready > 0 ? "#10b981" : (u.inuse > 0 ? "#f59e0b" : "#ef4444");
+        head = u.ready > 0 ? "✅ พร้อมให้บริการ " + u.ready + " ชิ้น" : "⏳ ยังไม่มีพร้อมให้บริการ";
+      }
+      return "<div class=\"equip-group-card\" style=\"border-left:4px solid " + border + ";\" onclick=\"openP2Detail(" + u.grpIdx + ")\">" +
+          "<div style=\"font-size:0.72rem;font-weight:700;color:" + border + ";margin-bottom:2px;\">" + head + "</div>" +
+          "<div class=\"equip-group-name\">" + u.name + "</div>" +
+          "<div style=\"font-weight:600;font-size:0.85rem;margin-top:4px;\">🏥 " + u.unit + "</div>" +
+          "<div style=\"font-size:0.75rem;color:var(--text-gray);\">อ." + u.district + "</div>" +
+          "<div style=\"font-size:0.85rem;margin-top:4px;\">" + p2PhoneHtml(phoneOf[u.unit]) + "</div>" +
+          "<div class=\"equip-group-stats\" style=\"margin-top:0.5rem;\">" +
+            p2Pill("total", total + " ชิ้น", "openP2Detail(" + u.grpIdx + ",'all')") +
+            (u.ready  > 0 ? p2Pill("ready",  "✓ " + u.ready + " พร้อม",  "openP2Detail(" + u.grpIdx + ",'พร้อม')") : "") +
+            (u.inuse  > 0 ? p2Pill("inuse",  "⟳ " + u.inuse + " ใช้งาน", "openP2Detail(" + u.grpIdx + ",'ใช้งานอยู่')") : "") +
+            (u.broken > 0 ? p2Pill("broken", "✕ " + u.broken + " ชำรุด", "openP2Detail(" + u.grpIdx + ",'ชำรุด')") : "") +
+          "</div>" +
+        "</div>";
+    }).join("");
+  }
+  return { cards: rows.length, units: Object.keys(unitSet).length };
+}
+
+// Popup state: which equipment type, status, and location narrowing
+// (อำเภอ → ตำบล → หน่วยบริการ) the viewer picked inside the popup.
+var p2Detail = { grpIdx: -1, status: "all", district: "", tambon: "", unit: "", lists: {} };
+
+function p2TambonMap() {
+  var m = {};
+  p2ServiceUnits.forEach(function(u) { if (u.tambon && !m[u.name]) m[u.name] = u.tambon; });
+  return m;
+}
+
+// statusOverride: show only that status in the popup ("all" = every status);
+// when omitted, the popup follows the สถานะ dropdown. Opening resets the
+// popup's own อำเภอ/ตำบล/หน่วย choice.
+function openP2Detail(grpIdx, statusOverride) {
+  if (!p2GroupData[grpIdx]) return;
+  p2Detail = { grpIdx: grpIdx, status: statusOverride || p2CurrentFilters().status,
+               district: "", tambon: "", unit: "", lists: {} };
+  p2RenderDetail();
+  document.getElementById("p2DetailOverlay").classList.add("active");
+  var body = document.getElementById("p2DetailBody");
+  if (body) body.scrollTop = 0;
+}
+
+// key: status | district | tambon | unit. For the location keys `idx` is an
+// index into p2Detail.lists[key] (-1 = ทั้งหมด), which avoids quoting Thai
+// names inside onclick attributes. Picking a broader level clears the
+// narrower ones (new อำเภอ → ตำบล/หน่วย reset).
+function p2DetailSet(key, idx) {
+  if (key === "status") {
+    p2Detail.status = idx;
+  } else {
+    var val = idx < 0 ? "" : (p2Detail.lists[key] || [])[idx] || "";
+    if (key === "unit" && p2Detail.unit === val) val = "";   // tap again = unselect
+    p2Detail[key] = val;
+    if (key === "district") { p2Detail.tambon = ""; p2Detail.unit = ""; }
+    if (key === "tambon")   { p2Detail.unit = ""; }
+  }
+  p2RenderDetail();
+}
+
+function p2RenderDetail() {
+  var d = p2Detail;
+  var grp = p2GroupData[d.grpIdx];
+  if (!grp) return;
+  var tambonOf = p2TambonMap();
+  var phoneOf  = p2PhoneMap();
+  var NO_TAMBON = "ไม่ระบุตำบล";
+  function tambonOfItem(i) { return tambonOf[i.unit] || NO_TAMBON; }
+
+  // Page filters (search, year, page dropdowns) are the starting point
+  var fAll = p2CurrentFilters(); fAll.status = "all";
+  var baseAll = p2FilterItems(grp, fAll);
+  var st = d.status;
+  var base = baseAll.filter(function(i) { return st === "all" || i.status === st; });
+
+  // Location narrowing, one level at a time
+  var inDistrict = base.filter(function(i) { return !d.district || i.district === d.district; });
+  var inTambon   = inDistrict.filter(function(i) { return !d.tambon || tambonOfItem(i) === d.tambon; });
+  var items      = inTambon.filter(function(i) { return !d.unit || i.unit === d.unit; });
+
+  // Status pill counts follow the location choice, so they always add up
+  var locAll = baseAll.filter(function(i) {
+    return (!d.district || i.district === d.district) &&
+           (!d.tambon || tambonOfItem(i) === d.tambon) && (!d.unit || i.unit === d.unit);
+  });
+  var c = p2CountStatus(locAll);
+  var allCount = locAll.length;
 
   document.getElementById("p2DetailTitle").textContent    = grp.name;
-  document.getElementById("p2DetailSubtitle").textContent = "รหัส: " + (grp.base_code || "-");
+  var where = [d.unit, d.tambon && d.tambon !== NO_TAMBON ? "ต." + d.tambon : d.tambon, d.district ? "อ." + d.district : ""].filter(Boolean).join(" ");
+  document.getElementById("p2DetailSubtitle").textContent = "รหัส: " + (grp.base_code || "-") +
+    (P2_STATUS_INFO[st] ? " · แสดงเฉพาะ: " + P2_STATUS_INFO[st].label : "") +
+    (where ? " · " + where : "");
 
+  function metaPill(cls, text, value) {
+    var on = (st === value) ? "outline:2px solid currentColor;outline-offset:1px;" : "";
+    return "<span class=\"equip-stat-pill " + cls + " p2-click\" style=\"" + on + "\" title=\"กดเพื่อดูรายการ\" onclick=\"p2DetailSet('status','" + value + "')\">" + text + "</span>";
+  }
   document.getElementById("p2DetailMeta").innerHTML =
-    "<span class=\"equip-stat-pill total\">" + items.length + " ชิ้น</span>" +
-    (r > 0 ? "<span class=\"equip-stat-pill ready\">✓ " + r + " พร้อม</span>" : "") +
-    (n > 0 ? "<span class=\"equip-stat-pill inuse\">⟳ " + n + " ใช้งาน</span>" : "") +
-    (b > 0 ? "<span class=\"equip-stat-pill broken\">✕ " + b + " ชำรุด</span>" : "");
+    metaPill("total", "ทั้งหมด " + allCount + " ชิ้น", "all") +
+    (c.ready  > 0 ? metaPill("ready",  "✓ " + c.ready + " พร้อม",  "พร้อม") : "") +
+    (c.inuse  > 0 ? metaPill("inuse",  "⟳ " + c.inuse + " ใช้งาน", "ใช้งานอยู่") : "") +
+    (c.broken > 0 ? metaPill("broken", "✕ " + c.broken + " ชำรุด", "ชำรุด") : "") +
+    "<span style=\"font-size:0.7rem;color:var(--text-gray);align-self:center;\">กดที่ปุ่มสถานะเพื่อดูเฉพาะรายการนั้น</span>";
 
-  var bodyHtml = "";
-  items.forEach(function(item, idx) {
-    var sc  = item.status === "พร้อม"     ? "badge-success" :
-              item.status === "ชำรุด"     ? "badge-danger"  : "badge-warning";
-    var slb = item.status === "พร้อม"     ? "พร้อม"  :
-              item.status === "ชำรุด"     ? "ชำรุด"  : "ใช้งาน";
-    bodyHtml +=
-      "<div class=\"p2-item-row\">" +
-        "<div class=\"p2-item-num\">" + (idx + 1) + "</div>" +
-        "<div class=\"p2-item-unit\">" + item.unit + "</div>" +
-        "<div class=\"p2-item-detail\">ปี " + item.year + " · " + item.district + "</div>" +
-        "<span class=\"badge-status " + sc + "\" style=\"font-size:0.72rem;\">" + slb + "</span>" +
-      "</div>";
+  // ── อำเภอ / ตำบล / หน่วยบริการ buttons ──
+  function countBy(list, keyFn) {
+    var m = {};
+    list.forEach(function(i) { var k = keyFn(i); m[k] = (m[k] || 0) + 1; });
+    return m;
+  }
+  function sortedKeys(m) {
+    return Object.keys(m).sort(function(a, b) {
+      if (a === NO_TAMBON) return 1;
+      if (b === NO_TAMBON) return -1;
+      return a.localeCompare(b, 'th');
+    });
+  }
+  function chip(text, active, onclickJs) {
+    return "<button type=\"button\" class=\"p2-loc-chip" + (active ? " active" : "") + "\" onclick=\"" + onclickJs + "\">" + text + "</button>";
+  }
+  function chipRow(label, key, counts, current, totalCount) {
+    var keys = sortedKeys(counts);
+    d.lists[key] = keys;
+    var html = "<div class=\"p2-loc-row\"><span class=\"p2-loc-label\">" + label + "</span>" +
+      chip("ทั้งหมด (" + totalCount + ")", !current, "p2DetailSet('" + key + "',-1)");
+    keys.forEach(function(k, i) {
+      html += chip(k + " (" + counts[k] + ")", current === k, "p2DetailSet('" + key + "'," + i + ")");
+    });
+    return html + "</div>";
+  }
+
+  var unitCounts = {}, unitReady = {};
+  inTambon.forEach(function(i) {
+    unitCounts[i.unit] = (unitCounts[i.unit] || 0) + 1;
+    if (i.status === "พร้อม") unitReady[i.unit] = (unitReady[i.unit] || 0) + 1;
+  });
+  var unitKeys = Object.keys(unitCounts).sort(function(a, b) {
+    return (unitReady[b] || 0) - (unitReady[a] || 0) || a.localeCompare(b, 'th');
+  });
+  d.lists.unit = unitKeys;
+
+  var filterHtml = "<div class=\"p2-loc-panel\">" +
+    chipRow("📍 อำเภอ", "district", countBy(base, function(i) { return i.district; }), d.district, base.length);
+  if (d.district) {
+    filterHtml += chipRow("🏘️ ตำบล", "tambon", countBy(inDistrict, tambonOfItem), d.tambon, inDistrict.length);
+  }
+  filterHtml += "<div class=\"p2-loc-row\"><span class=\"p2-loc-label\">🏥 หน่วยบริการ</span>" +
+    "<select class=\"year-select\" style=\"flex:1;min-width:0;max-width:100%;\" onchange=\"p2DetailSet('unit', Number(this.value))\">" +
+    "<option value=\"-1\">ทุกหน่วย (" + unitKeys.length + " แห่ง)</option>" +
+    unitKeys.map(function(u, i) {
+      return "<option value=\"" + i + "\"" + (d.unit === u ? " selected" : "") + ">" + u +
+        " — " + (unitReady[u] ? "พร้อม " + unitReady[u] + " / " : "") + unitCounts[u] + " ชิ้น</option>";
+    }).join("") + "</select></div>";
+  if (d.district || d.unit) {
+    filterHtml += "<div style=\"text-align:right;\"><a href=\"#\" onclick=\"p2DetailSet('district',-1);return false;\" style=\"font-size:0.75rem;color:#0f766e;font-weight:600;\">✕ ล้างการเลือกพื้นที่</a></div>";
+  }
+  filterHtml += "</div>";
+
+  // One row per service unit (not one per piece), units with items ready first
+  var unitMap = {}, unitOrder = [];
+  items.forEach(function(item) {
+    var u = unitMap[item.unit];
+    if (!u) { u = unitMap[item.unit] = { unit: item.unit, district: item.district, tambon: tambonOf[item.unit] || "", ready: 0, inuse: 0, broken: 0 }; unitOrder.push(u); }
+    if (item.status === "พร้อม") u.ready++;
+    else if (item.status === "ชำรุด") u.broken++;
+    else u.inuse++;
+  });
+  unitOrder.sort(function(a, b) {
+    return b.ready - a.ready || b.inuse - a.inuse || b.broken - a.broken || a.unit.localeCompare(b.unit, 'th');
   });
 
-  document.getElementById("p2DetailBody").innerHTML = bodyHtml;
-  document.getElementById("p2DetailOverlay").classList.add("active");
+  function unitRow(u, idx) {
+    var ui = unitKeys.indexOf(u.unit);
+    return "<div class=\"p2-item-row p2-click\" title=\"กดเพื่อดูเฉพาะหน่วยนี้ (กดซ้ำเพื่อยกเลิก)\" onclick=\"p2DetailSet('unit'," + ui + ")\">" +
+        "<div class=\"p2-item-num\">" + (idx + 1) + "</div>" +
+        "<div style=\"flex:1;min-width:0;\">" +
+          "<div class=\"p2-item-unit\">" + u.unit + "</div>" +
+          "<div class=\"p2-item-detail\">" + (u.tambon ? "ต." + u.tambon + " " : "") + "อ." + u.district + " · " + p2PhoneHtml(phoneOf[u.unit]) + "</div>" +
+        "</div>" +
+        "<div style=\"display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;\">" +
+          (u.ready  > 0 ? "<span class=\"badge-status badge-success\" style=\"font-size:0.72rem;\">✓ พร้อม " + u.ready + "</span>" : "") +
+          (u.inuse  > 0 ? "<span class=\"badge-status badge-warning\" style=\"font-size:0.72rem;\">⟳ ใช้งาน " + u.inuse + "</span>" : "") +
+          (u.broken > 0 ? "<span class=\"badge-status badge-danger\" style=\"font-size:0.72rem;\">✕ ชำรุด " + u.broken + "</span>" : "") +
+        "</div>" +
+      "</div>";
+  }
+  function sectionHead(text, color) {
+    return "<div style=\"font-weight:700;font-size:0.8rem;color:" + color + ";margin:0.5rem 0 0.25rem;\">" + text + "</div>";
+  }
+
+  var listHtml = "";
+  if (st === "ใช้งานอยู่" || st === "ชำรุด") {
+    var info = P2_STATUS_INFO[st];
+    listHtml += sectionHead(info.icon + " หน่วยที่มีอุปกรณ์" + info.label + " (" + unitOrder.length + " แห่ง · " + items.length + " ชิ้น)", info.color);
+    unitOrder.forEach(function(u, i) { listHtml += unitRow(u, i); });
+  } else {
+    var withReady = unitOrder.filter(function(u) { return u.ready > 0; });
+    var noReady   = unitOrder.filter(function(u) { return u.ready === 0; });
+    if (withReady.length) {
+      listHtml += sectionHead("✅ หน่วยที่มีพร้อมให้บริการ (" + withReady.length + " แห่ง)", "#059669");
+      withReady.forEach(function(u, i) { listHtml += unitRow(u, i); });
+    }
+    if (noReady.length) {
+      listHtml += sectionHead("⏳ หน่วยที่ยังไม่มีพร้อมให้บริการ (" + noReady.length + " แห่ง)", "#b45309");
+      noReady.forEach(function(u, i) { listHtml += unitRow(u, withReady.length + i); });
+    }
+  }
+  if (!listHtml) listHtml = "<div class=\"p2-no-results\" style=\"display:block;\">ไม่พบอุปกรณ์ที่ตรงกับตัวกรอง</div>";
+
+  document.getElementById("p2DetailBody").innerHTML = filterHtml + listHtml;
 }
 
 function closeP2Detail(event) {
@@ -5341,16 +5721,15 @@ function _renderP2UI() {
     + 'งบประมาณรวม ฿' + p2BudgetTotal.toLocaleString() + ' · อุปกรณ์ที่มีอยู่ ' + totalItems.toLocaleString() + ' ชิ้น ('
     + p2GroupData.length + ' ประเภท) · ข้อมูลตามเอกสารแนบ 4';
 
-  // ── Populate unit filter ──
-  var unitSel = document.getElementById("p2UnitFilter");
-  if (unitSel) {
-    while (unitSel.options.length > 1) unitSel.remove(1);
-    p2UnitsList.forEach(function(u) {
-      var opt = document.createElement("option");
-      opt.value = u; opt.textContent = u;
-      unitSel.appendChild(opt);
-    });
+  // ── Populate district + unit filters ──
+  var invDistSel = document.getElementById("p2InvDistrictFilter");
+  if (invDistSel) {
+    var dists = [...new Set(p2UnitSummary.map(function(u){ return u.district; }).filter(Boolean))]
+      .sort(function(a, b){ return a.localeCompare(b, 'th'); });
+    invDistSel.innerHTML = '<option value="all">ทุกอำเภอ</option>' +
+      dists.map(function(d){ return '<option value="' + d + '">' + d + '</option>'; }).join('');
   }
+  p2FillUnitFilter();
 
   // ── Build equipment group cards ──
   var grid = document.getElementById("p2GroupGrid");
@@ -5378,23 +5757,23 @@ function _renderP2UI() {
           "</div>" +
         "</div>" +
         "<div class=\"equip-group-stats\">" +
-          "<span class=\"equip-stat-pill total pill-total\">" + grp.total + " ชิ้น</span>" +
-          "<span class=\"equip-stat-pill ready pill-ready\"" + (r > 0 ? "" : " style=\"display:none;\"") + ">✓ " + r + " พร้อม</span>" +
-          "<span class=\"equip-stat-pill inuse pill-inuse\"" + (n > 0 ? "" : " style=\"display:none;\"") + ">⟳ " + n + " ใช้งาน</span>" +
-          "<span class=\"equip-stat-pill broken pill-broken\"" + (b > 0 ? "" : " style=\"display:none;\"") + ">✕ " + b + " ชำรุด</span>" +
+          "<span class=\"equip-stat-pill total pill-total p2-click\" onclick=\"event.stopPropagation();openP2Detail(" + idx + ",'all')\">" + grp.total + " ชิ้น</span>" +
+          "<span class=\"equip-stat-pill ready pill-ready p2-click\" onclick=\"event.stopPropagation();openP2Detail(" + idx + ",'พร้อม')\"" + (r > 0 ? "" : " style=\"display:none;\"") + ">✓ " + r + " พร้อม</span>" +
+          "<span class=\"equip-stat-pill inuse pill-inuse p2-click\" onclick=\"event.stopPropagation();openP2Detail(" + idx + ",'ใช้งานอยู่')\"" + (n > 0 ? "" : " style=\"display:none;\"") + ">⟳ " + n + " ใช้งาน</span>" +
+          "<span class=\"equip-stat-pill broken pill-broken p2-click\" onclick=\"event.stopPropagation();openP2Detail(" + idx + ",'ชำรุด')\"" + (b > 0 ? "" : " style=\"display:none;\"") + ">✕ " + b + " ชำรุด</span>" +
         "</div>" +
         "<div style=\"margin-top:0.75rem;height:4px;background:#f1f5f9;border-radius:4px;overflow:hidden;\">" +
-          "<div style=\"height:100%;width:" + readyPct + "%;background:" + barColor + ";border-radius:4px;transition:width 0.4s;\"></div>" +
+          "<div class=\"p2-ready-bar\" style=\"height:100%;width:" + readyPct + "%;background:" + barColor + ";border-radius:4px;transition:width 0.4s;\"></div>" +
         "</div>" +
-        "<div style=\"margin-top:4px;font-size:0.68rem;color:var(--text-gray);text-align:right;\">" +
+        "<div class=\"p2-ready-pct\" style=\"margin-top:4px;font-size:0.68rem;color:var(--text-gray);text-align:right;\">" +
           readyPct + "% พร้อม · กดเพื่อดูรายละเอียด" +
         "</div>";
 
       grid.appendChild(card);
     });
 
-    var countEl = document.getElementById("p2CardCount");
-    if (countEl) countEl.textContent = "แสดง " + p2GroupData.length + " จาก " + p2GroupData.length + " ประเภท";
+    // Apply current filters + put types with items ready to lend first
+    filterP2Cards();
   }
 
   // ── Build unit summary table ──
@@ -7878,6 +8257,10 @@ window.navigateTo = navigateTo;
           <span class="footer-icon" style="color:#06b025;">💬</span>
           <span>Line: 095-818-0720</span>
         </a>
+        <a class="footer-link" href="mailto:gongtoon2014rayong@gmail.com">
+          <span class="footer-icon">✉️</span>
+          <span>gongtoon2014rayong@gmail.com</span>
+        </a>
       </div>
       <div class="footer-contact-row">
         <a class="footer-link" href="https://shorturl.asia/W9nz0" target="_blank" onclick="navigateTo('https://shorturl.asia/W9nz0'); return false;">
@@ -7954,6 +8337,7 @@ window.navigateTo = navigateTo;
   <a href="tel:038617430" style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.4rem;font-size:0.8rem;color:#0f766e;text-decoration:none;font-weight:600;">📞 038-617-430 ต่อ 203</a>
   <a href="tel:0958180720" style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.4rem;font-size:0.8rem;color:#0f766e;text-decoration:none;font-weight:600;">📱 095-818-0720</a>
   <a href="tel:0958180720" style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.6rem;font-size:0.8rem;color:#06b025;text-decoration:none;font-weight:600;">💬 Line: 095-818-0720</a>
+  <a href="mailto:gongtoon2014rayong@gmail.com" style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.6rem;font-size:0.8rem;color:#0f766e;text-decoration:none;font-weight:600;word-break:break-all;">✉️ gongtoon2014rayong@gmail.com</a>
   <div style="display:flex;gap:0.5rem;padding-top:0.6rem;border-top:1px solid #e2e8f0;">
     <a href="https://shorturl.asia/W9nz0" target="_blank" style="flex:1;text-align:center;background:#f0fdfa;color:#1877f2;text-decoration:none;font-size:0.75rem;font-weight:700;padding:0.35rem;border-radius:6px;">👥 Facebook</a>
     <a href="https://maps.app.goo.gl/XLqJxpYksk582T5g6" target="_blank" style="flex:1;text-align:center;background:#fef2f2;color:#ea4335;text-decoration:none;font-size:0.75rem;font-weight:700;padding:0.35rem;border-radius:6px;">🗺️ Map</a>
