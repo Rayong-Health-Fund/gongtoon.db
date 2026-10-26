@@ -2,7 +2,7 @@
   "ok": true,
   "project": "P2",
   "source": "เอกสารแนบ 4 รายงานศูนย์สาธิต.xlsx",
-  "generatedAt": "2026-10-26T08:06:10.295Z",
+  "generatedAt": "2026-10-26T09:09:19.005Z",
   "overview": [
     {
       "district": "เมืองระยอง",
@@ -1058,10 +1058,14 @@
     },
     {
       "district": "ปลวกแดง",
-      "agency": "รพ.สต.บ้านมาบบางพร",
+      "agency": "รพ.สต.บ้านมาบยางพร",
       "years": "2566-2569",
       "budget": 208000,
-      "budget_by_year": {},
+      "budget_by_year": {
+        "2566": 49800,
+        "2568": 59800,
+        "2569": 98400
+      },
       "available_qty": 15,
       "borrowed_qty": 2,
       "damaged_qty": 0,
@@ -7809,18 +7813,19 @@
     },
     {
       "district": "ปลวกแดง",
-      "agency": "รพ.สต.บ้านมาบบางพร",
+      "agency": "รพ.สต.บ้านมาบยางพร",
       "equipment_name": "ไม้เท้าสำหรับคนตาบอดพับได้",
       "available_qty": 1,
       "active_qty": 0,
       "damaged_qty": 0,
       "borrowed_qty": 0,
       "disposed_qty": 0,
-      "total_supported_qty": 1
+      "total_supported_qty": 1,
+      "budget_2566": 1
     },
     {
       "district": "ปลวกแดง",
-      "agency": "รพ.สต.บ้านมาบบางพร",
+      "agency": "รพ.สต.บ้านมาบยางพร",
       "equipment_name": "รถนั่งคนพิการฯ แบบปรับให้เหมาะสมกับความพิการได้",
       "available_qty": 5,
       "active_qty": 0,
@@ -7831,69 +7836,76 @@
     },
     {
       "district": "ปลวกแดง",
-      "agency": "รพ.สต.บ้านมาบบางพร",
+      "agency": "รพ.สต.บ้านมาบยางพร",
       "equipment_name": "รถเข็นแบบ ชนิดเบา",
       "available_qty": 1,
       "active_qty": 0,
       "damaged_qty": 0,
       "borrowed_qty": 0,
       "disposed_qty": 0,
-      "total_supported_qty": 1
+      "total_supported_qty": 1,
+      "budget_2566": 1
     },
     {
       "district": "ปลวกแดง",
-      "agency": "รพ.สต.บ้านมาบบางพร",
+      "agency": "รพ.สต.บ้านมาบยางพร",
       "equipment_name": "เบาะรองนั่ง ป้องกันแผลกดทับ",
       "available_qty": 1,
       "active_qty": 0,
       "damaged_qty": 0,
       "borrowed_qty": 0,
       "disposed_qty": 0,
-      "total_supported_qty": 1
+      "total_supported_qty": 1,
+      "budget_2566": 1
     },
     {
       "district": "ปลวกแดง",
-      "agency": "รพ.สต.บ้านมาบบางพร",
+      "agency": "รพ.สต.บ้านมาบยางพร",
       "equipment_name": "Push up box",
       "available_qty": 2,
       "active_qty": 0,
       "damaged_qty": 0,
       "borrowed_qty": 0,
       "disposed_qty": 0,
-      "total_supported_qty": 2
+      "total_supported_qty": 2,
+      "budget_2566": 2
     },
     {
       "district": "ปลวกแดง",
-      "agency": "รพ.สต.บ้านมาบบางพร",
+      "agency": "รพ.สต.บ้านมาบยางพร",
       "equipment_name": "เครื่องผลิต ออกซิเจน ขนาด 5 ลิตร",
       "available_qty": 2,
       "active_qty": 0,
       "damaged_qty": 0,
       "borrowed_qty": 1,
       "disposed_qty": 0,
-      "total_supported_qty": 3
+      "total_supported_qty": 3,
+      "budget_2568": 2,
+      "budget_2569": 1
     },
     {
       "district": "ปลวกแดง",
-      "agency": "รพ.สต.บ้านมาบบางพร",
+      "agency": "รพ.สต.บ้านมาบยางพร",
       "equipment_name": "เครื่องผลิต ออกซิเจน ขนาด 10 ลิตร",
       "available_qty": 1,
       "active_qty": 0,
       "damaged_qty": 0,
       "borrowed_qty": 0,
       "disposed_qty": 0,
-      "total_supported_qty": 1
+      "total_supported_qty": 1,
+      "budget_2569": 1
     },
     {
       "district": "ปลวกแดง",
-      "agency": "รพ.สต.บ้านมาบบางพร",
+      "agency": "รพ.สต.บ้านมาบยางพร",
       "equipment_name": "เครื่องดูดเสมหะ (SUCTION)",
       "available_qty": 2,
       "active_qty": 0,
       "damaged_qty": 0,
       "borrowed_qty": 0,
       "disposed_qty": 0,
-      "total_supported_qty": 2
+      "total_supported_qty": 2,
+      "budget_2569": 2
     },
     {
       "district": "ปลวกแดง",
@@ -9000,15 +9012,15 @@
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
-      "agency": "รพ.สต.คลองบางไผ่",
+      "agency": "รพ.สต.บ้านคลองบางไผ่",
       "subdistrict": "สำนักท้อน",
-      "district": "เมืองระยอง",
-      "phone": "",
+      "district": "บ้านฉาง",
+      "phone": "038030433",
       "google_map_link": "https://maps.app.goo.gl/H7iiJYeoTkRXnH2m6"
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
-      "agency": "รพ.สต.ก้นหนอง",
+      "agency": "รพ.สต.บ้านก้นหนอง",
       "subdistrict": "บ้านแลง",
       "district": "เมืองระยอง",
       "phone": "038626275",
@@ -9019,7 +9031,7 @@
       "agency": "รพ.สต.บ้านยายจั่น",
       "subdistrict": "สำนักทอง",
       "district": "เมืองระยอง",
-      "phone": "",
+      "phone": "038031631",
       "google_map_link": "https://maps.app.goo.gl/SQMfH9MwNhP9Qm4z7"
     },
     {
@@ -9040,10 +9052,10 @@
     },
     {
       "agency_type": "ศูนย์บริการสาธารณสุข",
-      "agency": "ศูนย์บริการสาธารณสุข_ทน.ระยอง",
+      "agency": "ทน.ระยอง",
       "subdistrict": "ท่าประดู่",
       "district": "เมืองระยอง",
-      "phone": "038610124",
+      "phone": "038620111, 038611345",
       "google_map_link": "https://maps.app.goo.gl/EQr4U3K9r1Qe6TH39"
     },
     {
@@ -9107,7 +9119,7 @@
       "agency": "รพ.สต.สำนักท้อน",
       "subdistrict": "สำนักท้อน",
       "district": "บ้านฉาง",
-      "phone": "",
+      "phone": "038-963-431",
       "google_map_link": "https://maps.app.goo.gl/9KbRYLw4q2EBT1as7"
     },
     {
@@ -9123,7 +9135,7 @@
       "agency": "รพ.สต.บ้านเขาครอก",
       "subdistrict": "สำนักท้อน",
       "district": "บ้านฉาง",
-      "phone": "",
+      "phone": "038963337",
       "google_map_link": "https://maps.app.goo.gl/TxRkjmTQFCj28BEm7"
     },
     {
@@ -9147,7 +9159,7 @@
       "agency": "รพ.สต.บ้านชำฆ้อ",
       "subdistrict": "ชำฆ้อ",
       "district": "เขาชะเมา",
-      "phone": "",
+      "phone": "-",
       "google_map_link": "https://maps.app.goo.gl/DsnxC75VDZH8eZ8a8"
     },
     {
@@ -9155,7 +9167,7 @@
       "agency": "รพ.สต.แสงส่องหล้า 2",
       "subdistrict": "ห้วยทับมอญ",
       "district": "เขาชะเมา",
-      "phone": "",
+      "phone": "-",
       "google_map_link": "https://maps.app.goo.gl/hR64pRUnMbYV85an8"
     },
     {
@@ -9163,7 +9175,7 @@
       "agency": "รพ.สต.บ้านเขาน้อย",
       "subdistrict": "เขาน้อย",
       "district": "เขาชะเมา",
-      "phone": "",
+      "phone": "-",
       "google_map_link": "https://maps.app.goo.gl/DByjxN3xe9dWXLN69"
     },
     {
@@ -9171,15 +9183,15 @@
       "agency": "รพ.สต.บ้านสามแยกน้ำเป็น",
       "subdistrict": "น้ำเป็น",
       "district": "เขาชะเมา",
-      "phone": "",
+      "phone": "038-894265",
       "google_map_link": "https://maps.app.goo.gl/RGo3A37vmM5jWP4e8"
     },
     {
       "agency_type": "สถานีอนามัย",
-      "agency": "สถานีอนามัยเฉลิมพระเกียรติ_60_พรรษา_นวมินทราชินี_บ้านน้ำใส",
+      "agency": "สอน.บ้านน้ำใส",
       "subdistrict": "น้ำเป็น",
       "district": "เขาชะเมา",
-      "phone": "",
+      "phone": "-",
       "google_map_link": "https://maps.app.goo.gl/GoAzRpfHDdAAHxoQ7"
     },
     {
@@ -9211,7 +9223,7 @@
       "agency": "รพ.สต.กร่ำ",
       "subdistrict": "กร่ำ",
       "district": "แกลง",
-      "phone": "",
+      "phone": "038-657457",
       "google_map_link": "https://maps.app.goo.gl/sfa7dzMcubg4wXps5"
     },
     {
@@ -9227,7 +9239,7 @@
       "agency": "รพ.สต.บ้านวัดบุนนาค",
       "subdistrict": "ชากโดน",
       "district": "แกลง",
-      "phone": "",
+      "phone": "038-632-249",
       "google_map_link": "https://maps.app.goo.gl/ZRNRW7pXZc9YR7i86"
     },
     {
@@ -9251,7 +9263,7 @@
       "agency": "รพ.สต.บ้านเขาดิน",
       "subdistrict": "ทุ่งควายกิน",
       "district": "แกลง",
-      "phone": "",
+      "phone": "038-669-502",
       "google_map_link": "https://maps.app.goo.gl/vFzU5ofCdGgwA4ki9"
     },
     {
@@ -9275,7 +9287,7 @@
       "agency": "รพ.สต.บ้านคลองคา",
       "subdistrict": "ห้วยยาง",
       "district": "แกลง",
-      "phone": "",
+      "phone": "038632303",
       "google_map_link": "https://maps.app.goo.gl/GLnznSBepT6K5nkE8"
     },
     {
@@ -9283,7 +9295,7 @@
       "agency": "รพ.สต.บ้านถนนกะเพรา",
       "subdistrict": "เนินฆ้อ",
       "district": "แกลง",
-      "phone": "",
+      "phone": "038 697 015",
       "google_map_link": "https://maps.app.goo.gl/eUxs8GfpXqkQFYdG8"
     },
     {
@@ -9299,7 +9311,7 @@
       "agency": "รพ.สต.บ้านจำรุง",
       "subdistrict": "เนินฆ้อ",
       "district": "แกลง",
-      "phone": "",
+      "phone": "038-670-708",
       "google_map_link": "https://maps.app.goo.gl/qm5u7vNLW8S1hsjL7"
     },
     {
@@ -9312,10 +9324,10 @@
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
-      "agency": "รพ.สต.หนองแพงพวย",
+      "agency": "รพ.สต.บ้านหนองแพงพวย",
       "subdistrict": "เนินฆ้อ",
       "district": "แกลง",
-      "phone": "",
+      "phone": "038 020 330",
       "google_map_link": "https://maps.app.goo.gl/XNkZuq4b4LgMaM4s8"
     },
     {
@@ -9323,7 +9335,7 @@
       "agency": "รพ.สต.พังราด",
       "subdistrict": "พังราด",
       "district": "แกลง",
-      "phone": "",
+      "phone": "038661504",
       "google_map_link": "https://maps.app.goo.gl/6iYaqhiugweBzwPx6"
     },
     {
@@ -9336,10 +9348,10 @@
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
-      "agency": "รพ.สต.เต้าปูนหาย",
-      "subdistrict": "ห้วยยาง",
+      "agency": "รพ.สต.บ้านเต้าปูนหาย",
+      "subdistrict": "สองสลึง",
       "district": "แกลง",
-      "phone": "",
+      "phone": "038-993-362",
       "google_map_link": "https://maps.app.goo.gl/VfAnSNSXo8tHoCZk8"
     },
     {
@@ -9347,7 +9359,7 @@
       "agency": "รพ.สต.สองสลึง",
       "subdistrict": "สองสลึง",
       "district": "แกลง",
-      "phone": "",
+      "phone": "0876031863",
       "google_map_link": "https://maps.app.goo.gl/GS2ME57McUhYzcGH7"
     },
     {
@@ -9363,7 +9375,7 @@
       "agency": "รพ.สต.คลองปูน",
       "subdistrict": "คลองปูน",
       "district": "แกลง",
-      "phone": "",
+      "phone": "038661506",
       "google_map_link": "https://maps.app.goo.gl/vxmQJ1nwTtoyzKf27"
     },
     {
@@ -9371,15 +9383,15 @@
       "agency": "รพ.สต.ปากน้ำกระแส",
       "subdistrict": "ปากน้ำกระแส",
       "district": "แกลง",
-      "phone": "",
+      "phone": "038-661-371",
       "google_map_link": "https://maps.app.goo.gl/DpjZ4a6udtxKSJBK9"
     },
     {
       "agency_type": "ศูนย์บริการสาธารณสุข",
-      "agency": "ศูนย์บริการสาธารณสุข_ทต.เมืองแกลง",
+      "agency": "ทต.เมืองแกลง",
       "subdistrict": "ทางเกวียน",
       "district": "แกลง",
-      "phone": "038672654",
+      "phone": "038675222",
       "google_map_link": "https://maps.app.goo.gl/pk16aW7TiFAtfKyG7"
     },
     {
@@ -9395,7 +9407,7 @@
       "agency": "สสอ.วังจันทร์",
       "subdistrict": "ชุมแสง",
       "district": "วังจันทร์",
-      "phone": "",
+      "phone": "038666190",
       "google_map_link": "https://maps.app.goo.gl/2FxFmZaafnvhVotj7"
     },
     {
@@ -9427,7 +9439,7 @@
       "agency": "รพ.สต.บ้านเขาสิงห์โต",
       "subdistrict": "ป่ายุบใน",
       "district": "วังจันทร์",
-      "phone": "",
+      "phone": "081-7813408 หรือ 081-0612047",
       "google_map_link": "https://maps.app.goo.gl/Wmi4q8HSt1EGuigK6"
     },
     {
@@ -9443,7 +9455,7 @@
       "agency": "สสอ.บ้านค่าย",
       "subdistrict": "บ้านค่าย",
       "district": "บ้านค่าย",
-      "phone": "",
+      "phone": "038641305",
       "google_map_link": "https://maps.app.goo.gl/xvyd77gaoNtP1shr9"
     },
     {
@@ -9456,10 +9468,10 @@
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
-      "agency": "รพ.สต.เนินสว่าง",
-      "subdistrict": "เนินสว่าง",
+      "agency": "รพ.สต.บ้านเนินสว่าง",
+      "subdistrict": "บางบุตร",
       "district": "บ้านค่าย",
-      "phone": "038018010",
+      "phone": "038-018-010, 086-441-6544, 080-030-8820",
       "google_map_link": "https://maps.app.goo.gl/i2sRkGnjadua8Q8K9"
     },
     {
@@ -9467,7 +9479,7 @@
       "agency": "รพ.สต.บ้านหนองพะวา",
       "subdistrict": "บางบุตร",
       "district": "บ้านค่าย",
-      "phone": "",
+      "phone": "038-032-627",
       "google_map_link": "https://maps.app.goo.gl/u3XuBGruCd7vEsQA7"
     },
     {
@@ -9499,7 +9511,7 @@
       "agency": "รพ.สต.บ้านมาบยางพร",
       "subdistrict": "มาบยางพร",
       "district": "ปลวกแดง",
-      "phone": "038891599",
+      "phone": "038 891 599",
       "google_map_link": "https://maps.app.goo.gl/cgS1iAtkCgucaQTv8"
     },
     {
@@ -9528,10 +9540,10 @@
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
-      "agency": "รพ.สต.บึงตาต้า",
+      "agency": "รพ.สต.บ้านบึงตาต้า",
       "subdistrict": "หนองไร่",
       "district": "ปลวกแดง",
-      "phone": "",
+      "phone": "038-618386",
       "google_map_link": "https://maps.app.goo.gl/si9GUkXkAf3ijUC99"
     },
     {
@@ -9539,8 +9551,72 @@
       "agency": "รพ.สต.บ้านห้วยปราบ",
       "subdistrict": "มาบยางพร",
       "district": "ปลวกแดง",
-      "phone": "",
+      "phone": "0892707392",
       "google_map_link": "https://maps.app.goo.gl/ckWcoTHTihqX4yeTA"
+    },
+    {
+      "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
+      "agency": "รพ.สต.นาตาขวัญ",
+      "subdistrict": "นาตาขวัญ",
+      "district": "เมืองระยอง",
+      "phone": "038890338",
+      "google_map_link": ""
+    },
+    {
+      "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
+      "agency": "รพ.สต.บ้านแลง",
+      "subdistrict": "บ้านแลง",
+      "district": "เมืองระยอง",
+      "phone": "038914479",
+      "google_map_link": ""
+    },
+    {
+      "agency_type": "เทศบาล",
+      "agency": "ทม.เนินพระ",
+      "subdistrict": "เนินพระ",
+      "district": "เมืองระยอง",
+      "phone": "038623970",
+      "google_map_link": ""
+    },
+    {
+      "agency_type": "เทศบาล",
+      "agency": "ทต.ชากหมาก",
+      "subdistrict": "สำนักท้อน",
+      "district": "บ้านฉาง",
+      "phone": "038943000",
+      "google_map_link": ""
+    },
+    {
+      "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
+      "agency": "รพ.สต.พนานิคม",
+      "subdistrict": "พนานิคม",
+      "district": "นิคมพัฒนา",
+      "phone": "038-893-261 หรือ 038-038-233",
+      "google_map_link": ""
+    },
+    {
+      "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
+      "agency": "รพ.สต.บ้านพลงตาเอี่ยม",
+      "subdistrict": "พลงตาเอี่ยม",
+      "district": "วังจันทร์",
+      "phone": "0905233989",
+      "google_map_link": ""
+    },
+    {
+      "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
+      "agency": "รพ.สต.บ้านสันติสุข",
+      "subdistrict": "ชุมแสง",
+      "district": "วังจันทร์",
+      "phone": "098-868-0597",
+      "google_map_link": ""
+    },
+    {
+      "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
+      "agency": "รพ.สต.บ้านห้วยทับมอญ",
+      "subdistrict": "ห้วยทับมอญ",
+      "district": "เขาชะเมา",
+      "phone": "0854365978",
+      "google_map_link": ""
     }
   ],
   "ref_equipment": [
@@ -10318,13 +10394,13 @@
     },
     {
       "district": "ปลวกแดง",
-      "agency": "รพ.สต.บ้านมาบบางพร",
+      "agency": "รพ.สต.บ้านมาบยางพร",
       "budget_2564": 0,
       "budget_2565": 0,
-      "budget_2566": 0,
+      "budget_2566": 49800,
       "budget_2567": 0,
-      "budget_2568": 0,
-      "budget_2569": 0
+      "budget_2568": 59800,
+      "budget_2569": 98400
     },
     {
       "district": "ปลวกแดง",

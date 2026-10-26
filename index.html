@@ -5393,9 +5393,15 @@ function p2PhoneMap() {
   return m;
 }
 
+// "-" = not known yet. Some units list several numbers ("a, b" / "a หรือ b"):
+// each one gets its own tap-to-call link.
 function p2PhoneHtml(phone) {
-  if (!phone) return "<span style=\"color:var(--text-gray);\">☎ ยังไม่มีเบอร์ในระบบ</span>";
-  return "☎ <a href=\"tel:" + phone.replace(/[^d+]/g, "") + "\" onclick=\"event.stopPropagation();\" style=\"color:#0f766e;font-weight:600;\">" + phone + "</a>";
+  phone = String(phone || '').trim();
+  if (!phone || phone === '-') return "<span style=\"color:var(--text-gray);\">☎ -</span>";
+  var links = phone.split(/\s*(?:,|หรือ|\/)\s*/).filter(Boolean).map(function(p) {
+    return "<a href=\"tel:" + p.replace(/[^\d+]/g, "") + "\" onclick=\"event.stopPropagation();\" style=\"color:#0f766e;font-weight:600;white-space:nowrap;\">" + p + "</a>";
+  });
+  return "☎ " + links.join(", ");
 }
 
 var P2_STATUS_INFO = {

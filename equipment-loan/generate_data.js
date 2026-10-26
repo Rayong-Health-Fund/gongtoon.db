@@ -32,6 +32,11 @@ const OUTPUT_JSON = path.join(__dirname, 'data', 'dashboard_data.json');
 
 const STATUS_ROWS = { 'ยืมใช้งาน': 'borrowed', 'พร้อมให้ยืม': 'available', 'จำหน่าย': 'disposed', 'ชำรุด': 'damaged' };
 
+// Unit names misspelled in เอกสารแนบ 4 -> the official name (as used in the
+// working file and the service-map list)
+const UNIT_NAME_FIX = { 'รพ.สต.บ้านมาบบางพร': 'รพ.สต.บ้านมาบยางพร' };
+function unitName(s) { return UNIT_NAME_FIX[s] || s; }
+
 function text(v) { return String(v == null ? '' : v).replace(/\s+/g, ' ').trim(); }
 function num(v) { const n = Number(String(v == null ? '' : v).replace(/[^\d.-]/g, '')); return isFinite(n) ? n : 0; }
 function rowsOf(ws) { return XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' }); }
@@ -77,7 +82,7 @@ function readReport() {
         const m = text(r[1]).match(/^(.*?)\s*\(([^)]*)\)\s*$/);
         unit = {
           district,
-          agency: m ? m[1].trim() : text(r[1]),
+          agency: unitName(m ? m[1].trim() : text(r[1])),
           years: m ? m[2].trim() : '',
           budget: num(r[2]),
           qty: {}
