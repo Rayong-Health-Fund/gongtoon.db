@@ -8,6 +8,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="assets/js/p2-live-status.js"></script>
 <style>
 /* STABLE DESIGN - NO GLASSMORPHISM */
 :root {
@@ -4855,7 +4856,8 @@ window.openModal = function openModal(modalId) {
 
 // ═══════════════════════════════════════════════════════════
 // PROJECT 2 - ศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้าน
-// Live API: Google Apps Script (equipment / map / ref_equipment)
+// Data: equipment-loan/data/dashboard_data.json + live counts from the
+// borrow/return ledger Sheet (assets/js/p2-live-status.js)
 // ═══════════════════════════════════════════════════════════
 
 // Ready-made data file, refreshed from the Fund's own Excel/CSV files via
@@ -4880,17 +4882,17 @@ function p2Text(v) { return String(v !== null && v !== undefined ? v : '').trim(
 
 var p2DataLoadingPromise = null;
 var p2DataLoaded = false;
+var p2LiveInfo = { ok: false, updatedAt: '' };
 
 function ensureP2DataLoaded() {
   if (p2DataLoaded) return Promise.resolve();
   if (p2DataLoadingPromise) return p2DataLoadingPromise;
 
-  p2DataLoadingPromise = fetch(P2_STATIC_URL)
-    .then(function(res) {
-      if (!res.ok) throw new Error('P2 data file HTTP ' + res.status);
-      return res.json();
-    })
+  // loadP2Data (assets/js/p2-live-status.js) reads P2_STATIC_URL and swaps in
+  // the latest equipment counts from the borrow/return ledger Sheet.
+  p2DataLoadingPromise = loadP2Data()
     .then(function(json) {
+      p2LiveInfo = json.live || { ok: false, updatedAt: '' };
       var equipmentRows = Array.isArray(json.equipment) ? json.equipment : [];
       var mapRows       = Array.isArray(json.map) ? json.map : [];
       var refRows       = Array.isArray(json.ref_equipment) ? json.ref_equipment : [];
@@ -5725,7 +5727,12 @@ function _renderP2UI() {
   var st = document.getElementById('p2SummaryText');
   if (st) st.innerHTML = '<strong>สรุปข้อมูล:</strong> ' + p2UnitSummary.length + ' หน่วยบริการ, ' + p2DistrictCount + ' อำเภอ, '
     + 'งบประมาณรวม ฿' + p2BudgetTotal.toLocaleString() + ' · อุปกรณ์ที่มีอยู่ ' + totalItems.toLocaleString() + ' ชิ้น ('
-    + p2GroupData.length + ' ประเภท) · ข้อมูลตามเอกสารแนบ 4';
+    + p2GroupData.length + ' ประเภท) · '
+    + (p2LiveInfo.ok
+      ? 'งบประมาณตามเอกสารแนบ 4 · สถานะอุปกรณ์อัปเดตจากหน่วยบริการ'
+        + (p2LiveInfo.updatedAt ? ' ล่าสุด ' + new Date(p2LiveInfo.updatedAt.replace(' ', 'T') + '+07:00')
+          .toLocaleString('th-TH', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' น.' : '')
+      : 'ข้อมูลตามเอกสารแนบ 4');
 
   // ── Populate district + unit filters ──
   var invDistSel = document.getElementById("p2InvDistrictFilter");
@@ -7450,7 +7457,7 @@ function updateBudgetPills() {
 
   Promise.all([
     get('home-improvement/data/dashboard_data.json'),
-    get('equipment-loan/data/dashboard_data.json'),
+    loadP2Data().catch(function() { return null; }),
     get('network-capacity/data/dashboard_data.json'),
     get('device-repair/data/dashboard_data.json')
   ]).then(function(d) {

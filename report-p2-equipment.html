@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>บันทึกยืม-คืนอุปกรณ์</title>
+<link rel="icon" type="image/jpeg" href="assets/img/logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site-nav.css">
+<link rel="stylesheet" href="assets/css/report-forms.css">
+</head>
+<body>
+
+<div id="demoBar" class="rf-demo-bar rf-hidden">
+  <b>โหมดทดลอง</b>ยังไม่ได้เชื่อมกับ Google Sheet ข้อมูลที่กดส่งจะเก็บไว้ในเครื่องนี้เท่านั้น ไม่ถูกส่งไปที่กองทุน
+  <button type="button" class="rf-btn small ghost" id="demoReset" style="margin-left:8px">ล้างข้อมูลทดลอง</button>
+</div>
+
+<div id="siteNav"></div>
+<script src="assets/js/site-nav.js"></script>
+
+<main class="rf-wrap">
+  <div class="rf-hero">
+    <div class="rf-crumb"><a href="report-forms.html">← แบบฟอร์มทั้งหมด</a></div>
+    <h1>♿ บันทึกการยืม-คืนอุปกรณ์</h1>
+    <p>โครงการศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้าน · สำหรับเจ้าหน้าที่ประจำหน่วยบริการ</p>
+  </div>
+
+  <div class="rf-note info">
+    กรอก<b>เฉพาะอุปกรณ์ที่มีการเปลี่ยนแปลง</b> เช่น สัปดาห์นี้มีคนยืมเตียง 1 หลัง และคืนรถเข็น 2 คัน ก็กรอกแค่ 2 รายการนี้
+    ระบบจะนำไปบวกลบกับยอดเดิมให้เอง
+  </div>
+
+  <form id="reportForm" novalidate autocomplete="on">
+    <!-- 1. ผู้กรอก -->
+    <section class="rf-card">
+      <h2><span class="rf-step">1</span>ข้อมูลผู้กรอก</h2>
+      <p class="rf-sub">ใช้สำหรับให้เจ้าหน้าที่กองทุนติดต่อกลับเมื่อต้องการตรวจสอบข้อมูล ไม่แสดงบนเว็บไซต์</p>
+      <div class="rf-grid">
+        <div class="rf-field">
+          <label for="rName">ชื่อ-นามสกุล <span class="req">*</span></label>
+          <input class="rf-input" id="rName" name="name" autocomplete="name" maxlength="100" required>
+        </div>
+        <div class="rf-field">
+          <label for="rPosition">ตำแหน่ง <span class="req">*</span></label>
+          <input class="rf-input" id="rPosition" name="position" autocomplete="organization-title" maxlength="100" required>
+        </div>
+        <div class="rf-field">
+          <label for="rPhone">เบอร์โทรที่ติดต่อได้ <span class="req">*</span></label>
+          <input class="rf-input" id="rPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="15" required>
+          <div class="hint">เบอร์หน่วยงานหรือเบอร์มือถือก็ได้</div>
+        </div>
+        <div class="rf-field">
+          <label for="rEmail">อีเมล <span class="req">*</span></label>
+          <input class="rf-input" id="rEmail" name="email" type="email" inputmode="email" autocomplete="email" maxlength="120" required>
+        </div>
+      </div>
+      <label class="rf-check"><input type="checkbox" id="rRemember" checked> จำข้อมูลผู้กรอกและหน่วยบริการไว้ในเครื่องนี้ ครั้งหน้าไม่ต้องกรอกใหม่</label>
+    </section>
+
+    <!-- 2. หน่วยบริการ -->
+    <section class="rf-card">
+      <h2><span class="rf-step">2</span>หน่วยบริการ</h2>
+      <p class="rf-sub">เลือกอำเภอก่อน แล้วเลือกหน่วยบริการของท่าน</p>
+      <div class="rf-grid">
+        <div class="rf-field">
+          <label for="uDistrict">อำเภอ <span class="req">*</span></label>
+          <select class="rf-select" id="uDistrict" required><option value="">— เลือกอำเภอ —</option></select>
+        </div>
+        <div class="rf-field">
+          <label for="uUnit">หน่วยบริการ <span class="req">*</span></label>
+          <select class="rf-select" id="uUnit" required disabled><option value="">— เลือกอำเภอก่อน —</option></select>
+        </div>
+      </div>
+      <div id="stockBox" class="rf-hidden" style="margin-top:14px">
+        <div style="font-weight:700;margin-bottom:6px">ยอดอุปกรณ์ปัจจุบันของหน่วย <span id="stockAsOf" style="font-weight:400;color:var(--rf-muted);font-size:.9rem"></span></div>
+        <div class="rf-table-wrap">
+          <table class="rf-table">
+            <thead><tr><th>อุปกรณ์</th><th class="num">พร้อมให้ยืม</th><th class="num">ยืมใช้งาน</th><th class="num">ชำรุด</th></tr></thead>
+            <tbody id="stockBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="stockMsg"></div>
+    </section>
+
+    <!-- 3. รายการที่เปลี่ยน -->
+    <section class="rf-card" id="linesCard">
+      <h2><span class="rf-step">3</span>รายการที่มีการยืม คืน หรือชำรุด</h2>
+      <p class="rf-sub">เพิ่มทีละรายการ ส่งพร้อมกันได้หลายรายการ</p>
+      <div class="rf-field" style="max-width:260px;margin-bottom:12px">
+        <label for="eventDate">วันที่เกิดรายการ <span class="req">*</span></label>
+        <input class="rf-input" id="eventDate" type="date" required>
+        <div class="hint">ถ้าเกิดต่างวันกัน ให้ส่งแยกเป็นวันละครั้ง</div>
+      </div>
+      <div class="rf-example" aria-label="ตัวอย่างการกรอก">
+        <div class="rf-example-head">💡 ตัวอย่างการกรอก <span>(กรอกไม่ได้ ใช้ดูเป็นแบบเท่านั้น)</span></div>
+        <ol class="rf-example-steps">
+          <li>เลือก<b>อุปกรณ์</b>ที่มีการเปลี่ยนแปลง</li>
+          <li>เลือกว่า<b>เกิดอะไรขึ้น</b> เช่น ยืมออก หรือรับคืน</li>
+          <li>ใส่<b>จำนวน</b>ชิ้น</li>
+          <li>ถ้ามีอุปกรณ์อื่นอีก กด <b>＋ เพิ่มรายการ</b> แล้วทำซ้ำ</li>
+        </ol>
+        <div class="rf-example-caption">สัปดาห์นี้มีผู้มายืมเตียงผู้ป่วย 1 หลัง และมีผู้นำรถเข็นมาคืน 2 คัน (สภาพดี):</div>
+        <div class="rf-line rf-example-line" aria-hidden="true">
+          <div class="rf-field"><label>อุปกรณ์</label><div class="rf-fake">22. เตียงผู้ป่วยสามไกร์ราวสไลด์พร้อมเบาะและเสาน้ำเกลือ</div></div>
+          <div class="rf-field"><label>การเปลี่ยนแปลง</label><div class="rf-fake">ยืมออก</div></div>
+          <div class="rf-field"><label>จำนวน (ชิ้น)</label><div class="rf-fake">1</div></div>
+          <span class="rf-link-btn" style="visibility:hidden">✕ ลบ</span>
+          <div class="rf-effect">→ พร้อมให้ยืม ลด 1 · ยืมใช้งาน เพิ่ม 1</div>
+        </div>
+        <div class="rf-line rf-example-line" aria-hidden="true">
+          <div class="rf-field"><label>อุปกรณ์</label><div class="rf-fake">11. รถเข็นแบบ ชนิดเบา</div></div>
+          <div class="rf-field"><label>การเปลี่ยนแปลง</label><div class="rf-fake">รับคืน (สภาพดี)</div></div>
+          <div class="rf-field"><label>จำนวน (ชิ้น)</label><div class="rf-fake">2</div></div>
+          <span class="rf-link-btn" style="visibility:hidden">✕ ลบ</span>
+          <div class="rf-effect">→ ยืมใช้งาน ลด 2 · พร้อมให้ยืม เพิ่ม 2</div>
+        </div>
+      </div>
+      <div class="rf-lines-head">กรอกรายการของหน่วยท่านด้านล่างนี้ ↓</div>
+      <div id="lines"></div>
+      <button type="button" class="rf-btn ghost" id="addLine" disabled>＋ เพิ่มรายการ</button>
+      <details style="margin-top:12px;font-size:.92rem;color:var(--rf-muted)">
+        <summary style="cursor:pointer;font-weight:600">ควรเลือกแบบไหน?</summary>
+        <ul style="margin:6px 0 0;padding-left:20px">
+          <li><b>ยืมออก</b> มีผู้มายืมอุปกรณ์ไป</li>
+          <li><b>รับคืน (สภาพดี)</b> ได้คืนแล้ว พร้อมให้คนอื่นยืมต่อ</li>
+          <li><b>รับคืน (ชำรุด)</b> ได้คืนแล้วแต่เสีย ต้องซ่อม</li>
+          <li><b>พบชำรุด (ในคลัง)</b> ของที่อยู่ในหน่วยเสียเอง โดยไม่ได้ถูกยืม</li>
+          <li><b>ซ่อมเสร็จ</b> ของที่ชำรุดซ่อมแล้ว กลับมาให้ยืมได้</li>
+          <li><b>จำหน่าย</b> ของที่ชำรุดซ่อมไม่ได้ ตัดออกจากบัญชี</li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- 4. ตรวจทานและส่ง -->
+    <section class="rf-card">
+      <h2><span class="rf-step">4</span>ตรวจทานและส่ง</h2>
+      <div class="rf-field">
+        <label for="note">หมายเหตุ (ถ้ามี)</label>
+        <textarea class="rf-textarea" id="note" maxlength="500" placeholder="เช่น ไม้เท้าชำรุดที่ขา รอส่งซ่อม"></textarea>
+        <div class="hint">ห้ามกรอกชื่อหรือเลขบัตรประชาชนของผู้ยืม</div>
+      </div>
+      <div class="rf-hp" aria-hidden="true"><label>เว็บไซต์<input id="website" tabindex="-1" autocomplete="off"></label></div>
+      <div id="review" class="rf-hidden" style="margin-top:14px">
+        <div style="font-weight:700;margin-bottom:6px">ยอดหลังบันทึก</div>
+        <div class="rf-table-wrap">
+          <table class="rf-table">
+            <thead><tr><th>อุปกรณ์</th><th class="num">พร้อมให้ยืม</th><th class="num">ยืมใช้งาน</th><th class="num">ชำรุด</th><th class="num">จำหน่าย</th></tr></thead>
+            <tbody id="reviewBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <label class="rf-check"><input type="checkbox" id="confirm"> ข้าพเจ้าตรวจสอบแล้วว่าข้อมูลถูกต้อง</label>
+      <div id="formMsg"></div>
+      <button type="submit" class="rf-btn big" id="submitBtn" style="margin-top:12px">ส่งข้อมูล</button>
+    </section>
+  </form>
+
+  <section class="rf-card rf-hidden" id="doneCard">
+    <h2>✅ บันทึกเรียบร้อย</h2>
+    <p id="doneText"></p>
+    <div class="rf-table-wrap">
+      <table class="rf-table">
+        <thead><tr><th>อุปกรณ์</th><th class="num">พร้อมให้ยืม</th><th class="num">ยืมใช้งาน</th><th class="num">ชำรุด</th></tr></thead>
+        <tbody id="doneBody"></tbody>
+      </table>
+    </div>
+    <p style="font-size:.92rem;color:var(--rf-muted)">ตัวเลขบนหน้าเว็บไซต์จะอัปเดตภายในประมาณ 5 นาที · ถ้ากรอกผิด แจ้งเลขอ้างอิงนี้กับเจ้าหน้าที่กองทุนเพื่อยกเลิกรายการ</p>
+    <button type="button" class="rf-btn" id="again">บันทึกรายการถัดไป</button>
+  </section>
+</main>
+
+<div class="rf-pop-back rf-hidden" id="donePop" role="dialog" aria-modal="true" aria-labelledby="donePopTitle">
+  <div class="rf-pop">
+    <div class="ico">⏳</div>
+    <h3 id="donePopTitle">ส่งข้อมูลเรียบร้อยแล้ว</h3>
+    <p>ตัวเลขบนหน้าเว็บไซต์จะอัปเดตภายใน <b>ประมาณ 5 นาที</b><br>ถ้าเปิดดูทันทีอาจยังเห็นยอดเดิม กรุณารอสักครู่</p>
+    <button type="button" class="rf-btn" id="donePopOk">รับทราบ</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ลิงก์ Web App ของ Apps Script (form-backend/p2_equipment_ledger.gs)
+  // ว่างไว้ = โหมดทดลอง: ใช้ยอดจากไฟล์ข้อมูลของเว็บ และเก็บรายการที่ส่งไว้ในเครื่องนี้
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbzOT9XT_OOjfaBy14AoCLDE69l0JeZC-9ibX7f0XF6cVbcP6SRnWU6sm_pxv8JwtvAHrQ/exec';
+  var DATA_URL = 'equipment-loan/data/dashboard_data.json';
+  // วันแรกที่บันทึกรายการได้ (สัปดาห์หลังประชุมคณะอนุกรรมการฯ) — เมื่อเชื่อม Sheet แล้ว
+  // ใช้วันที่จากแท็บ "ตั้งค่า" ของ Sheet แทน
+  var START_DATE = '2026-10-12';
+  var DEMO_KEY = 'p2-report-demo-ledger';
+  var REMEMBER_KEY = 'p2-report-reporter';
+
+  var ACTIONS = {
+    'ยืมออก':           { from: 'available', to: 'borrowed' },
+    'รับคืน (สภาพดี)':   { from: 'borrowed',  to: 'available' },
+    'รับคืน (ชำรุด)':    { from: 'borrowed',  to: 'damaged' },
+    'พบชำรุด (ในคลัง)': { from: 'available', to: 'damaged' },
+    'ซ่อมเสร็จ':         { from: 'damaged',   to: 'available' },
+    'จำหน่าย':           { from: 'damaged',   to: 'disposed' }
+  };
+  var LABEL = { available: 'พร้อมให้ยืม', borrowed: 'ยืมใช้งาน', damaged: 'ชำรุด', disposed: 'จำหน่าย' };
+  var DEMO = !ENDPOINT;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var data = null;        // dashboard_data.json
+  var asOf = '';          // วันที่ของยอดตั้งต้น
+  var stock = null;       // [{no,name,available,borrowed,damaged,disposed}] ของหน่วยที่เลือก
+  var lineSeq = 0;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function today() {
+    var d = new Date(Date.now() + 7 * 3600e3);
+    return d.toISOString().slice(0, 10);
+  }
+  function store(key, val) {
+    try { if (val === undefined) return JSON.parse(localStorage.getItem(key) || 'null'); localStorage.setItem(key, JSON.stringify(val)); }
+    catch (e) { return null; }
+  }
+  function msg(el, kind, html) { $(el).innerHTML = html ? '<div class="rf-note ' + kind + '">' + html + '</div>' : ''; }
+
+  // ── ข้อมูลตั้งต้น ──
+  function baselineFor(district, unit) {
+    var names = data.ref_equipment.map(function (r) { return r.equipment_name; });
+    return data.equipment.filter(function (e) { return e.district === district && e.agency === unit; })
+      .map(function (e) {
+        return { no: names.indexOf(e.equipment_name) + 1, name: e.equipment_name, available: e.available_qty || 0,
+          borrowed: e.borrowed_qty || 0, damaged: e.damaged_qty || 0, disposed: e.disposed_qty || 0 };
+      }).sort(function (a, b) { return a.no - b.no; });
+  }
+  function applyLines(items, lines) {
+    var byNo = {};
+    var copy = items.map(function (it) { var c = Object.assign({}, it); byNo[c.no] = c; return c; });
+    var errors = lines.map(function (ln) {
+      var it = byNo[ln.itemNo], act = ACTIONS[ln.action];
+      if (!it || !act || !(ln.qty >= 1)) return null;
+      if (it[act.from] < ln.qty) return it.name + ' มี "' + LABEL[act.from] + '" เหลือ ' + it[act.from] + ' ชิ้น ไม่พอ';
+      it[act.from] -= ln.qty; it[act.to] += ln.qty;
+      return '';
+    });
+    return { items: copy, errors: errors };
+  }
+
+  // โหมดทดลอง: ยอดปัจจุบัน = ยอดตั้งต้น + รายการที่เคยกดส่งในเครื่องนี้
+  function demoStock(district, unit) {
+    var items = baselineFor(district, unit);
+    (store(DEMO_KEY) || []).forEach(function (b) {
+      if (b.district === district && b.unit === unit) items = applyLines(items, b.lines).items;
+    });
+    return items;
+  }
+
+  function loadStock(district, unit) {
+    if (DEMO) return Promise.resolve({ items: demoStock(district, unit), asOf: asOf });
+    var url = ENDPOINT + '?district=' + encodeURIComponent(district) + '&unit=' + encodeURIComponent(unit);
+    return fetch(url).then(function (r) { return r.json(); }).then(function (res) {
+      if (!res.ok) throw new Error(res.error || 'โหลดยอดไม่สำเร็จ');
+      return res;
+    });
+  }
+
+  // ── หน่วยบริการ ──
+  function fillDistricts() {
+    data.overview.forEach(function (o) {
+      $('uDistrict').insertAdjacentHTML('beforeend', '<option>' + esc(o.district) + '</option>');
+    });
+  }
+  function fillUnits(district) {
+    var sel = $('uUnit');
+    sel.innerHTML = '<option value="">' + (district ? '— เลือกหน่วยบริการ —' : '— เลือกอำเภอก่อน —') + '</option>';
+    data.units.filter(function (u) { return u.district === district; }).forEach(function (u) {
+      sel.insertAdjacentHTML('beforeend', '<option>' + esc(u.agency) + '</option>');
+    });
+    sel.disabled = !district;
+  }
+  function onUnitChange() {
+    var district = $('uDistrict').value, unit = $('uUnit').value;
+    stock = null;
+    $('lines').innerHTML = '';
+    $('addLine').disabled = true;
+    $('stockBox').classList.add('rf-hidden');
+    updateReview();
+    if (!unit) return;
+    msg('stockMsg', 'info', 'กำลังโหลดยอดอุปกรณ์ของหน่วย…');
+    loadStock(district, unit).then(function (res) {
+      if ($('uUnit').value !== unit) return;
+      // ไม่แสดงอุปกรณ์ที่ไม่มีชิ้นไหนให้ยืม/คืน/ซ่อมได้แล้ว (เช่น จำหน่ายหมดแล้ว)
+      stock = res.items.filter(function (it) { return it.available + it.borrowed + it.damaged > 0; });
+      if (res.asOf) { asOf = res.asOf; $('eventDate').min = asOf; }
+      msg('stockMsg');
+      renderStock();
+      $('addLine').disabled = !stock.length;
+      if (!stock.length) msg('stockMsg', 'warn', 'ไม่พบรายการอุปกรณ์ของหน่วยนี้ กรุณาติดต่อกองทุน');
+      else addLine();
+    }).catch(function (err) {
+      msg('stockMsg', 'bad', 'โหลดยอดอุปกรณ์ไม่สำเร็จ: ' + esc(err.message) + ' กรุณาลองใหม่อีกครั้ง');
+    });
+  }
+  function renderStock() {
+    $('stockAsOf').textContent = DEMO ? '(ยอดจากเว็บไซต์ + รายการทดลอง)' : '';
+    $('stockBody').innerHTML = stock.map(function (it) {
+      return '<tr><td>' + esc(it.no + '. ' + it.name) + '</td><td class="num">' + it.available +
+        '</td><td class="num">' + it.borrowed + '</td><td class="num">' + it.damaged + '</td></tr>';
+    }).join('');
+    $('stockBox').classList.remove('rf-hidden');
+  }
+
+  // ── รายการที่เปลี่ยน ──
+  function addLine() {
+    var id = 'ln' + (++lineSeq);
+    var opts = stock.map(function (it) { return '<option value="' + it.no + '">' + esc(it.no + '. ' + it.name) + '</option>'; }).join('');
+    var acts = Object.keys(ACTIONS).map(function (a) { return '<option>' + esc(a) + '</option>'; }).join('');
+    $('lines').insertAdjacentHTML('beforeend',
+      '<div class="rf-line" id="' + id + '">' +
+        '<div class="rf-field"><label>อุปกรณ์</label><select class="rf-select" data-k="item"><option value="">— เลือกอุปกรณ์ —</option>' + opts + '</select></div>' +
+        '<div class="rf-field"><label>การเปลี่ยนแปลง</label><select class="rf-select" data-k="action"><option value="">— เลือก —</option>' + acts + '</select></div>' +
+        '<div class="rf-field"><label>จำนวน (ชิ้น)</label><input class="rf-input" data-k="qty" type="number" inputmode="numeric" min="1" max="500" step="1" value="1"></div>' +
+        '<button type="button" class="rf-link-btn" data-k="remove" aria-label="ลบรายการนี้">✕ ลบ</button>' +
+        '<div class="rf-effect"></div>' +
+      '</div>');
+    var el = $(id);
+    el.addEventListener('input', updateReview);
+    el.addEventListener('change', updateReview);
+    el.querySelector('[data-k=remove]').addEventListener('click', function () { el.remove(); updateReview(); });
+    updateReview();
+  }
+  function readLines() {
+    return Array.prototype.map.call(document.querySelectorAll('#lines .rf-line'), function (el) {
+      var q = el.querySelector('[data-k=qty]').value;
+      return { el: el, itemNo: Number(el.querySelector('[data-k=item]').value) || 0,
+        action: el.querySelector('[data-k=action]').value,
+        qty: /^\d+$/.test(q) ? Number(q) : NaN };
+    });
+  }
+  function updateReview() {
+    if (!stock) { $('review').classList.add('rf-hidden'); return { ok: false }; }
+    var lines = readLines();
+    var res = applyLines(stock, lines);
+    var ok = lines.length > 0;
+    lines.forEach(function (ln, i) {
+      var eff = ln.el.querySelector('.rf-effect');
+      var problem = '';
+      if (!ln.itemNo) problem = 'เลือกอุปกรณ์';
+      else if (!ln.action) problem = 'เลือกการเปลี่ยนแปลง';
+      else if (!(ln.qty >= 1 && ln.qty <= 500)) problem = 'จำนวนต้องเป็นเลข 1-500';
+      else if (res.errors[i]) problem = res.errors[i];
+      ln.el.classList.toggle('has-error', !!problem && !!(ln.itemNo && ln.action));
+      if (problem) {
+        ok = false;
+        eff.className = 'rf-effect' + (ln.itemNo && ln.action ? ' bad' : '');
+        eff.textContent = ln.itemNo && ln.action ? '⚠ ' + problem : problem;
+      } else {
+        var act = ACTIONS[ln.action];
+        eff.className = 'rf-effect';
+        eff.textContent = '→ ' + LABEL[act.from] + ' ลด ' + ln.qty + ' · ' + LABEL[act.to] + ' เพิ่ม ' + ln.qty;
+      }
+    });
+    var touched = {};
+    lines.forEach(function (ln) { if (ln.itemNo) touched[ln.itemNo] = true; });
+    var before = {};
+    stock.forEach(function (it) { before[it.no] = it; });
+    var rows = res.items.filter(function (it) { return touched[it.no]; }).map(function (it) {
+      var b = before[it.no];
+      var cell = function (k) {
+        return '<td class="num' + (b[k] !== it[k] ? ' changed' : '') + '">' + (b[k] !== it[k] ? b[k] + ' → ' + it[k] : it[k]) + '</td>';
+      };
+      return '<tr><td>' + esc(it.no + '. ' + it.name) + '</td>' + cell('available') + cell('borrowed') + cell('damaged') + cell('disposed') + '</tr>';
+    });
+    $('reviewBody').innerHTML = rows.join('');
+    $('review').classList.toggle('rf-hidden', !rows.length);
+    return { ok: ok, lines: lines, items: res.items };
+  }
+
+  // ── ส่งข้อมูล ──
+  function reporter() {
+    return { name: $('rName').value.trim(), position: $('rPosition').value.trim(),
+      phone: $('rPhone').value.replace(/[^\d]/g, ''), email: $('rEmail').value.trim() };
+  }
+  function validate() {
+    var r = reporter(), problems = [];
+    var mark = function (id, bad, text) { $(id).classList.toggle('invalid', bad); if (bad) problems.push(text); };
+    mark('rName', !r.name, 'กรอกชื่อ-นามสกุล');
+    mark('rPosition', !r.position, 'กรอกตำแหน่ง');
+    mark('rPhone', !/^0\d{8,9}$/.test(r.phone), 'เบอร์โทรต้องเป็นตัวเลข 9-10 หลัก ขึ้นต้นด้วย 0');
+    mark('rEmail', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email), 'กรอกอีเมลให้ถูกต้อง');
+    mark('uUnit', !$('uUnit').value, 'เลือกหน่วยบริการ');
+    var d = $('eventDate').value;
+    mark('eventDate', !d || d > today() || (asOf && d < asOf), 'วันที่เกิดรายการต้องอยู่ระหว่าง ' + asOf + ' ถึงวันนี้');
+    var rv = updateReview();
+    if (stock && !rv.ok) problems.push(rv.lines && rv.lines.length ? 'แก้ไขรายการอุปกรณ์ที่มีเครื่องหมาย ⚠ หรือยังเลือกไม่ครบ' : 'เพิ่มรายการอุปกรณ์อย่างน้อย 1 รายการ');
+    if (!$('confirm').checked) problems.push('ติ๊กยืนยันว่าตรวจสอบข้อมูลแล้ว');
+    return { problems: problems, review: rv };
+  }
+
+  function submit(ev) {
+    ev.preventDefault();
+    var v = validate();
+    if (v.problems.length) {
+      msg('formMsg', 'bad', 'ยังส่งไม่ได้:<ul style="margin:4px 0 0;padding-left:20px"><li>' + v.problems.map(esc).join('</li><li>') + '</li></ul>');
+      return;
+    }
+    var payload = {
+      reporter: reporter(), district: $('uDistrict').value, unit: $('uUnit').value,
+      eventDate: $('eventDate').value, note: $('note').value.trim(), website: $('website').value,
+      lines: v.review.lines.map(function (ln) { return { itemNo: ln.itemNo, action: ln.action, qty: ln.qty }; })
+    };
+    if ($('rRemember').checked) store(REMEMBER_KEY, { reporter: payload.reporter, district: payload.district, unit: payload.unit });
+    else store(REMEMBER_KEY, null);
+
+    $('submitBtn').disabled = true;
+    $('submitBtn').textContent = 'กำลังส่ง…';
+    msg('formMsg');
+    send(payload).then(function (res) {
+      if (!res.ok) throw new Error(res.error);
+      showDone(payload, res);
+    }).catch(function (err) {
+      msg('formMsg', 'bad', 'ส่งไม่สำเร็จ: ' + esc(err.message || 'เชื่อมต่อไม่ได้') + '<br>ข้อมูลที่กรอกยังอยู่ในหน้านี้ กดส่งใหม่ได้');
+    }).then(function () {
+      $('submitBtn').disabled = false;
+      $('submitBtn').textContent = 'ส่งข้อมูล';
+    });
+  }
+
+  function send(payload) {
+    if (DEMO) {
+      // จำลองการตรวจของเซิร์ฟเวอร์: หักล้างกับยอดล่าสุดอีกครั้งก่อนบันทึก
+      var cur = demoStock(payload.district, payload.unit);
+      var res = applyLines(cur, payload.lines);
+      var bad = res.errors.filter(Boolean)[0];
+      if (bad) return Promise.resolve({ ok: false, error: bad });
+      var ledger = store(DEMO_KEY) || [];
+      var batch = 'DEMO-' + (ledger.length + 1);
+      ledger.push(Object.assign({ batch: batch, savedAt: new Date().toISOString() }, payload));
+      store(DEMO_KEY, ledger);
+      return new Promise(function (ok) { setTimeout(function () { ok({ ok: true, batch: batch, items: res.items }); }, 400); });
+    }
+    // text/plain = ไม่ต้องขออนุญาตข้ามโดเมนก่อนส่ง (Apps Script รับได้ทันที)
+    return fetch(ENDPOINT, { method: 'POST', body: JSON.stringify(payload) }).then(function (r) { return r.json(); });
+  }
+
+  function showDone(payload, res) {
+    $('reportForm').classList.add('rf-hidden');
+    $('doneCard').classList.remove('rf-hidden');
+    $('doneText').innerHTML = 'หน่วยบริการ <b>' + esc(payload.unit) + '</b> บันทึก ' + payload.lines.length +
+      ' รายการ · เลขอ้างอิง <b>' + esc(res.batch) + '</b>';
+    var touched = {};
+    payload.lines.forEach(function (l) { touched[l.itemNo] = true; });
+    $('doneBody').innerHTML = res.items.filter(function (it) { return touched[it.no]; }).map(function (it) {
+      return '<tr><td>' + esc(it.no + '. ' + it.name) + '</td><td class="num">' + it.available +
+        '</td><td class="num">' + it.borrowed + '</td><td class="num">' + it.damaged + '</td></tr>';
+    }).join('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    $('donePop').classList.remove('rf-hidden');
+    $('donePopOk').focus();
+  }
+  function closePop() { $('donePop').classList.add('rf-hidden'); }
+
+  function again() {
+    $('doneCard').classList.add('rf-hidden');
+    $('reportForm').classList.remove('rf-hidden');
+    $('note').value = '';
+    $('confirm').checked = false;
+    msg('formMsg');
+    onUnitChange();
+  }
+
+  // ── เริ่มต้น ──
+  if (DEMO) $('demoBar').classList.remove('rf-hidden');
+  $('demoReset').addEventListener('click', function () {
+    if (confirm('ล้างรายการทดลองทั้งหมดในเครื่องนี้?')) { store(DEMO_KEY, []); onUnitChange(); }
+  });
+  $('eventDate').value = today();
+  $('eventDate').max = today();
+  $('uDistrict').addEventListener('change', function () { fillUnits(this.value); onUnitChange(); });
+  $('uUnit').addEventListener('change', onUnitChange);
+  $('addLine').addEventListener('click', addLine);
+  $('reportForm').addEventListener('submit', submit);
+  $('again').addEventListener('click', again);
+  $('donePopOk').addEventListener('click', closePop);
+  $('donePop').addEventListener('click', function (e) { if (e.target === this) closePop(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePop(); });
+
+  fetch(DATA_URL).then(function (r) { return r.json(); }).then(function (json) {
+    data = json;
+    asOf = START_DATE;
+    $('eventDate').min = asOf;
+    fillDistricts();
+    var saved = store(REMEMBER_KEY);
+    if (saved) {
+      $('rName').value = saved.reporter.name || '';
+      $('rPosition').value = saved.reporter.position || '';
+      $('rPhone').value = saved.reporter.phone || '';
+      $('rEmail').value = saved.reporter.email || '';
+      if (saved.district) {
+        $('uDistrict').value = saved.district;
+        fillUnits(saved.district);
+        $('uUnit').value = saved.unit || '';
+        onUnitChange();
+      }
+    }
+  }).catch(function () {
+    msg('stockMsg', 'bad', 'โหลดรายชื่อหน่วยบริการไม่สำเร็จ กรุณารีเฟรชหน้านี้');
+  });
+})();
+</script>
+</body>
+</html>

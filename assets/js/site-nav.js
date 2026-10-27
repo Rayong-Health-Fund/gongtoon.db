@@ -8,7 +8,8 @@
   var LINKS = [
     { href: 'index.html', icon: '🏠', label: 'หน้าหลัก', desc: 'ภาพรวมทุกโครงการ' },
     { href: 'project-summary.html', icon: '📊', label: 'สรุปโครงการ', desc: 'สรุปหน้าเดียว พิมพ์ได้' },
-    { href: 'documents-download.html', icon: '📄', label: 'ดาวโหลดเอกสาร', desc: 'หลักเกณฑ์และเอกสารประกอบ' }
+    { href: 'documents-download.html', icon: '📄', label: 'ดาวโหลดเอกสาร', desc: 'หลักเกณฑ์และเอกสารประกอบ' },
+    { href: 'report-forms.html', icon: '📝', label: 'แบบฟอร์ม', desc: 'สำหรับเจ้าหน้าที่หน่วยบริการ', also: 'report-' }
   ];
   var ABOUT = [
     { href: 'about.html#history', label: '📜 ประวัติความเป็นมา' },
@@ -23,7 +24,10 @@
   // Compare without ".html" — some hosts serve /about for about.html.
   function bare(p) { return (p || '').toLowerCase().replace(/\.html$/, '') || 'index'; }
   var page = bare(location.pathname.split('/').pop());
-  function isActive(href) { return bare(href.split('#')[0]) === page; }
+  function isActive(href) {
+    var l = LINKS.filter(function (x) { return x.href === href; })[0];
+    return bare(href.split('#')[0]) === page || !!(l && l.also && page.indexOf(l.also) === 0);
+  }
 
   var brand = '<a class="sn-brand" href="index.html"><img src="assets/img/logo.jpg" alt="โลโก้กองทุน">' +
     '<span><b>กองทุนหลักประกันสุขภาพ</b><small>จังหวัดระยอง</small></span></a>';
