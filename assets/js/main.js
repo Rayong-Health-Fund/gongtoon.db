@@ -375,13 +375,10 @@ function p4BuildData(devicesRows, fundingRows) {
 function renderProject4Dashboard() {
   // Ready-made data file, refreshed from the Fund's own Excel/CSV files via
   // device-repair/generate_data.js (which runs this same p4BuildData logic
-  // ahead of time). Already in the exact shape p4LiveData needs, so no
-  // normalizing here — just read the file.
-  fetch('device-repair/data/dashboard_data.json')
-    .then(function(res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
-    })
+  // ahead of time), plus fiscal years logged by repair centres through the
+  // repair-center ledger (assets/js/p4-live-status.js). Already in the exact
+  // shape p4LiveData needs, so no normalizing here.
+  fetchP4Data()
     .then(function(liveData) {
     window.p4LiveData  = liveData;
     window.p4ApiState  = 'ready';
@@ -427,7 +424,13 @@ function renderProject4Dashboard() {
     if (elAlert) elAlert.innerHTML =
       '<strong>สรุปข้อมูล:</strong> ' + totalCats + ' กลุ่มอุปกรณ์, ' +
       totalYears + ' ปีงบประมาณ, ' + totalDistricts + ' อำเภอ, ' +
-      totalCenters + ' ศูนย์ซ่อม';
+      totalCenters + ' ศูนย์ซ่อม' +
+      (liveData.live && liveData.live.ok
+        ? ' · ปีงบ 2566-2569 ตามเอกสารแนบ 5 · ตั้งแต่ปีงบ 2570 อัปเดตจากศูนย์ซ่อม' +
+          (liveData.live.inProgress ? ' (กำลังซ่อม ' + liveData.live.inProgress.toLocaleString() + ' ชิ้น)' : '') +
+          (liveData.live.updatedAt ? ' ล่าสุด ' + new Date(liveData.live.updatedAt.replace(' ', 'T') + '+07:00')
+            .toLocaleString('th-TH', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' น.' : '')
+        : '');
 
     // If accordion was already opened with fallback data, re-render with live data
     if (window.p4Initialized) {

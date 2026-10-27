@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="assets/js/p2-live-status.js"></script>
+<script src="assets/js/p4-live-status.js"></script>
 <style>
 /* STABLE DESIGN - NO GLASSMORPHISM */
 :root {
@@ -7459,7 +7460,7 @@ function updateBudgetPills() {
     get('home-improvement/data/dashboard_data.json'),
     loadP2Data().catch(function() { return null; }),
     get('network-capacity/data/dashboard_data.json'),
-    get('device-repair/data/dashboard_data.json')
+    fetchP4Data().catch(function() { return null; })
   ]).then(function(d) {
     var total = 0, complete = true;
 

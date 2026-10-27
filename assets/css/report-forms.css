@@ -140,6 +140,27 @@ body {
 .rf-photos-info { font-size: 0.85rem; color: var(--rf-muted); margin-top: 6px; }
 .rf-photos-err { color: var(--rf-bad); font-weight: 600; }
 
+/* mode switch (report-p4-repair.html) */
+.rf-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+@media (max-width: 560px) { .rf-tabs { grid-template-columns: 1fr; } }
+.rf-tab {
+  font: inherit; text-align: left; cursor: pointer; border-radius: 12px; padding: 12px 14px;
+  border: 1.5px solid var(--rf-line); background: var(--rf-card); color: var(--rf-ink);
+}
+.rf-tab b { display: block; font-size: 1rem; }
+.rf-tab span { display: block; font-size: 0.85rem; color: var(--rf-muted); }
+.rf-tab[aria-selected="true"] { border-color: var(--rf-primary); background: var(--rf-primary-soft); box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.15); }
+.rf-tab .badge { display: inline-block; margin-left: 4px; background: var(--rf-warn); color: #fff; border-radius: 999px; padding: 0 8px; font-size: 0.8rem; }
+.rf-radios { display: flex; flex-wrap: wrap; gap: 8px; }
+.rf-radios label {
+  display: flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid var(--rf-line);
+  border-radius: 10px; padding: 8px 12px; font-weight: 600;
+}
+.rf-radios input { accent-color: var(--rf-primary); width: 18px; height: 18px; }
+.rf-radios label:has(input:checked) { border-color: var(--rf-primary); background: var(--rf-primary-soft); }
+.rf-newitem { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; border-radius: 10px; background: #f8fafc; }
+@media (max-width: 720px) { .rf-newitem { grid-template-columns: 1fr; } }
+
 /* small popup shown after a successful submit */
 .rf-pop-back {
   position: fixed; inset: 0; z-index: 3000; background: rgba(15, 23, 42, 0.45);

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>บันทึกงานศูนย์ซ่อม</title>
+<link rel="icon" type="image/jpeg" href="assets/img/logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site-nav.css">
+<link rel="stylesheet" href="assets/css/report-forms.css">
+</head>
+<body>
+
+<div id="demoBar" class="rf-demo-bar rf-hidden">
+  <b>โหมดทดลอง</b>ยังไม่ได้เชื่อมกับ Google Sheet ข้อมูลที่กดส่งจะเก็บไว้ในเครื่องนี้เท่านั้น ไม่ถูกส่งไปที่กองทุน
+  <button type="button" class="rf-btn small ghost" id="demoReset" style="margin-left:8px">ล้างข้อมูลทดลอง</button>
+</div>
+
+<div id="siteNav"></div>
+<script src="assets/js/site-nav.js"></script>
+<script src="assets/js/report-photos.js"></script>
+
+<main class="rf-wrap">
+  <div class="rf-hero">
+    <div class="rf-crumb"><a href="report-forms.html">← แบบฟอร์มทั้งหมด</a></div>
+    <h1>🔧 บันทึกงานศูนย์ซ่อม</h1>
+    <p>ศูนย์ซ่อมบำรุง ดัดแปลงและจัดทำเฉพาะอุปกรณ์เครื่องช่วยความพิการ · สำหรับเจ้าหน้าที่ประจำศูนย์ซ่อม</p>
+  </div>
+
+  <div class="rf-note info">
+    <b>รับงานซ่อมใหม่</b> เมื่อรับอุปกรณ์เข้ามา (ถ่ายรูปก่อนซ่อม) → <b>อัปเดตงานซ่อม</b> ระหว่างซ่อมและเมื่อซ่อมเสร็จ (ถ่ายรูปหลังซ่อม)
+    · <b>อะไหล่</b> ใช้บันทึกการซื้อเข้าและเบิกใช้ ยอดคงเหลือระบบคำนวณให้เอง
+  </div>
+
+  <form id="reportForm" novalidate autocomplete="on">
+    <!-- 1. ผู้กรอก -->
+    <section class="rf-card">
+      <h2><span class="rf-step">1</span>ข้อมูลผู้กรอก</h2>
+      <p class="rf-sub">ใช้สำหรับให้เจ้าหน้าที่กองทุนติดต่อกลับเมื่อต้องการตรวจสอบข้อมูล ไม่แสดงบนเว็บไซต์</p>
+      <div class="rf-grid">
+        <div class="rf-field">
+          <label for="rName">ชื่อ-นามสกุล <span class="req">*</span></label>
+          <input class="rf-input" id="rName" autocomplete="name" maxlength="100">
+        </div>
+        <div class="rf-field">
+          <label for="rPosition">ตำแหน่ง <span class="req">*</span></label>
+          <input class="rf-input" id="rPosition" autocomplete="organization-title" maxlength="100">
+        </div>
+        <div class="rf-field">
+          <label for="rPhone">เบอร์โทรที่ติดต่อได้ <span class="req">*</span></label>
+          <input class="rf-input" id="rPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="15">
+          <div class="hint">เบอร์หน่วยงานหรือเบอร์มือถือก็ได้</div>
+        </div>
+        <div class="rf-field">
+          <label for="rEmail">อีเมล <span class="req">*</span></label>
+          <input class="rf-input" id="rEmail" type="email" inputmode="email" autocomplete="email" maxlength="120">
+        </div>
+      </div>
+      <label class="rf-check"><input type="checkbox" id="rRemember" checked> จำข้อมูลผู้กรอกและศูนย์ซ่อมไว้ในเครื่องนี้ ครั้งหน้าไม่ต้องกรอกใหม่</label>
+    </section>
+
+    <!-- 2. ศูนย์ซ่อม -->
+    <section class="rf-card">
+      <h2><span class="rf-step">2</span>ศูนย์ซ่อม</h2>
+      <div class="rf-grid">
+        <div class="rf-field">
+          <label for="uDistrict">อำเภอ <span class="req">*</span></label>
+          <select class="rf-select" id="uDistrict"><option value="">— เลือกอำเภอ —</option></select>
+        </div>
+        <div class="rf-field">
+          <label for="uCenter">ศูนย์ซ่อม <span class="req">*</span></label>
+          <select class="rf-select" id="uCenter" disabled><option value="">— เลือกอำเภอก่อน —</option></select>
+        </div>
+      </div>
+      <div id="centerMsg"></div>
+      <details id="partsBox" class="rf-hidden" style="margin-top:12px">
+        <summary style="cursor:pointer;font-weight:700">ดูอะไหล่คงเหลือของศูนย์ (<span id="partsCount">0</span> รายการ)</summary>
+        <div class="rf-table-wrap" style="margin-top:8px;max-height:320px;overflow:auto">
+          <table class="rf-table">
+            <thead><tr><th>กลุ่มอุปกรณ์</th><th>อะไหล่</th><th class="num">คงเหลือ</th></tr></thead>
+            <tbody id="partsBody"></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <!-- 3. เลือกงาน -->
+    <section class="rf-card rf-hidden" id="workCard">
+      <h2><span class="rf-step">3</span>บันทึกอะไร</h2>
+      <div class="rf-tabs" role="tablist">
+        <button type="button" class="rf-tab" role="tab" data-mode="open" aria-selected="true"><b>🔧 รับงานซ่อมใหม่</b><span>รับอุปกรณ์เข้ามาซ่อม</span></button>
+        <button type="button" class="rf-tab" role="tab" data-mode="update" aria-selected="false"><b>🔄 อัปเดตงานซ่อม <span class="badge" id="openBadge">0</span></b><span>กำลังซ่อม / ซ่อมเสร็จ</span></button>
+        <button type="button" class="rf-tab" role="tab" data-mode="parts" aria-selected="false"><b>📦 อะไหล่</b><span>ซื้อเข้า / เบิกใช้</span></button>
+      </div>
+
+      <!-- A. รับงานซ่อมใหม่ -->
+      <div data-panel="open">
+        <div class="rf-grid">
+          <div class="rf-field">
+            <label for="oCategory">ประเภทอุปกรณ์ <span class="req">*</span></label>
+            <select class="rf-select" id="oCategory"><option value="">— เลือกประเภท —</option></select>
+          </div>
+          <div class="rf-field">
+            <label for="oQty">จำนวน <span id="oUnit" style="font-weight:400;color:var(--rf-muted)"></span> <span class="req">*</span></label>
+            <input class="rf-input" id="oQty" type="number" inputmode="numeric" min="1" max="500" step="1" value="1">
+            <div class="hint">ปกติ 1 ใบงานต่ออุปกรณ์ 1 ชิ้น เพื่อให้รูปก่อนและหลังซ่อมตรงกัน</div>
+          </div>
+          <div class="rf-field" style="grid-column:1/-1">
+            <label for="oSymptom">อาการเสีย / สิ่งที่ต้องซ่อม <span class="req">*</span></label>
+            <textarea class="rf-textarea" id="oSymptom" maxlength="300" placeholder="เช่น ล้อหลังหลุด เบาะนั่งขาด เบรกไม่จับ"></textarea>
+          </div>
+          <div class="rf-field">
+            <label for="oAsset">รหัสหรือเลขครุภัณฑ์ของอุปกรณ์ (ถ้ามี)</label>
+            <input class="rf-input" id="oAsset" maxlength="60" placeholder="เช่น WC-0123">
+          </div>
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;font-weight:600">ข้อมูลผู้รับบริการ (ไม่บังคับ · เห็นเฉพาะกองทุน)</summary>
+          <div class="rf-grid" style="margin-top:8px">
+            <div class="rf-field"><label for="oRName">ชื่อ-นามสกุลผู้รับบริการ</label><input class="rf-input" id="oRName" maxlength="100"></div>
+            <div class="rf-field"><label for="oRAddr">ที่อยู่ (หมู่บ้าน/ตำบล)</label><input class="rf-input" id="oRAddr" maxlength="200"></div>
+          </div>
+        </details>
+        <div class="rf-field" style="margin-top:14px">
+          <label>รูปก่อนซ่อม <span class="req">*</span></label>
+          <div class="hint" style="margin:0 0 8px">ถ่ายให้เห็นอุปกรณ์และจุดที่เสีย อย่างน้อย 1 รูป</div>
+          <div id="openPhotos"></div>
+        </div>
+      </div>
+
+      <!-- B. อัปเดตงานซ่อม -->
+      <div data-panel="update" class="rf-hidden">
+        <div id="noJobs" class="rf-note warn rf-hidden">ศูนย์นี้ยังไม่มีใบงานที่ค้างอยู่ ถ้ารับอุปกรณ์เข้ามาใหม่ ให้เลือก "รับงานซ่อมใหม่"</div>
+        <div id="updateFields">
+          <div class="rf-field">
+            <label for="uJob">ใบงาน <span class="req">*</span></label>
+            <select class="rf-select" id="uJob"><option value="">— เลือกใบงาน —</option></select>
+            <div class="hint" id="uJobInfo"></div>
+          </div>
+          <div class="rf-field" style="margin-top:12px">
+            <label>สถานะ <span class="req">*</span></label>
+            <div class="rf-radios" id="uStatus">
+              <label><input type="radio" name="uStatus" value="กำลังซ่อม"> 🛠️ กำลังซ่อม</label>
+              <label><input type="radio" name="uStatus" value="ซ่อมเสร็จ"> ✅ ซ่อมเสร็จ / ส่งคืน</label>
+              <label><input type="radio" name="uStatus" value="ซ่อมไม่ได้"> ⛔ ซ่อมไม่ได้</label>
+            </div>
+          </div>
+          <div class="rf-field" style="margin-top:14px">
+            <label id="uPhotoLabel">รูป</label>
+            <div class="hint" id="uPhotoHint" style="margin:0 0 8px">เลือกสถานะก่อน</div>
+            <div id="updatePhotos"></div>
+          </div>
+          <div class="rf-field" style="margin-top:14px">
+            <label>อะไหล่ที่ใช้กับงานนี้ (ถ้ามี)</label>
+            <div class="hint" style="margin:0 0 8px">ระบบจะหักยอดคงเหลือให้ ไม่ต้องไปบันทึก "เบิกใช้" ซ้ำ</div>
+            <div id="usedLines"></div>
+            <button type="button" class="rf-btn ghost small" id="addUsed">＋ เพิ่มอะไหล่ที่ใช้</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- C. อะไหล่ -->
+      <div data-panel="parts" class="rf-hidden">
+        <div class="rf-example" aria-label="ตัวอย่าง">
+          <div class="rf-example-head">💡 ตัวอย่าง <span>(ใช้ดูเป็นแบบเท่านั้น)</span></div>
+          <ol class="rf-example-steps">
+            <li>ซื้อสีกันสนิมเข้ามา 2 ถัง → เลือกอะไหล่ "สีกันสนิม ขนาด 17.5 ลิตร" · <b>ซื้อเข้า</b> · 2</li>
+            <li>ใช้สีไปครึ่งถัง (ไม่ได้ผูกกับใบงาน) → เลือกอะไหล่เดิม · <b>เบิกใช้</b> · 0.5</li>
+            <li>ซื้ออะไหล่ที่ไม่มีในรายการ → เลือก "➕ อะไหล่รายการใหม่" แล้วกรอกชื่อ หน่วยนับ และเลขที่/วันที่ MOU ที่อนุมัติ</li>
+          </ol>
+        </div>
+        <div id="partLines"></div>
+        <button type="button" class="rf-btn ghost" id="addPart">＋ เพิ่มรายการ</button>
+      </div>
+    </section>
+
+    <!-- 4. ส่ง -->
+    <section class="rf-card rf-hidden" id="submitCard">
+      <h2><span class="rf-step">4</span>ตรวจทานและส่ง</h2>
+      <div class="rf-grid">
+        <div class="rf-field">
+          <label for="eventDate">วันที่เกิดรายการ <span class="req">*</span></label>
+          <input class="rf-input" id="eventDate" type="date">
+        </div>
+      </div>
+      <div class="rf-field" style="margin-top:12px">
+        <label for="note">หมายเหตุ (ถ้ามี)</label>
+        <textarea class="rf-textarea" id="note" maxlength="500"></textarea>
+      </div>
+      <div class="rf-hp" aria-hidden="true"><label>เว็บไซต์<input id="website" tabindex="-1" autocomplete="off"></label></div>
+      <div id="review" class="rf-hidden" style="margin-top:14px">
+        <div style="font-weight:700;margin-bottom:6px">อะไหล่คงเหลือหลังบันทึก</div>
+        <div class="rf-table-wrap"><table class="rf-table"><thead><tr><th>อะไหล่</th><th class="num">คงเหลือ</th></tr></thead><tbody id="reviewBody"></tbody></table></div>
+      </div>
+      <label class="rf-check rf-hidden" id="photoConsentRow"><input type="checkbox" id="photoConsent"> ถ้าในรูปมีผู้ป่วยหรือบุคคลอื่น ได้รับความยินยอมแล้ว <span style="color:var(--rf-bad)">*</span></label>
+      <label class="rf-check"><input type="checkbox" id="confirm"> ข้าพเจ้าตรวจสอบแล้วว่าข้อมูลถูกต้อง</label>
+      <div id="formMsg"></div>
+      <button type="submit" class="rf-btn big" id="submitBtn" style="margin-top:12px">ส่งข้อมูล</button>
+    </section>
+  </form>
+
+  <section class="rf-card rf-hidden" id="doneCard">
+    <h2>✅ บันทึกเรียบร้อย</h2>
+    <div id="doneText"></div>
+    <button type="button" class="rf-btn" id="again" style="margin-top:12px">บันทึกรายการถัดไป</button>
+  </section>
+</main>
+
+<div class="rf-pop-back rf-hidden" id="donePop" role="dialog" aria-modal="true" aria-labelledby="donePopTitle">
+  <div class="rf-pop">
+    <div class="ico">⏳</div>
+    <h3 id="donePopTitle">ส่งข้อมูลเรียบร้อยแล้ว</h3>
+    <p>ตัวเลขบนหน้าเว็บไซต์จะอัปเดตภายใน <b>ประมาณ 5 นาที</b><br>ถ้าเปิดดูทันทีอาจยังเห็นยอดเดิม กรุณารอสักครู่</p>
+    <button type="button" class="rf-btn" id="donePopOk">รับทราบ</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ลิงก์ Web App ของ Apps Script (form-backend/p4_repair_ledger.gs)
+  // ว่างไว้ = โหมดทดลอง: ใช้ยอดจากไฟล์ข้อมูลของเว็บ และเก็บรายการที่ส่งไว้ในเครื่องนี้
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbzx4N5-yv2mZgyMNAUV3e5fK4jEx91UXn6Ad0WOXaFbL6h8L2HUARiRWKWqJbKA7vkeLA/exec';
+  var DATA_URL = 'device-repair/data/dashboard_data.json';
+  var START_DATE = '2026-10-12';
+  var DEMO_KEY = 'p4-report-demo';
+  var REMEMBER_KEY = 'p4-report-reporter';
+  var DEMO = !ENDPOINT;
+  var NEW_PART = '__new__';
+
+  var $ = function (id) { return document.getElementById(id); };
+  var data = null, asOf = START_DATE;
+  var info = null;   // { categories, parts, jobs } ของศูนย์ที่เลือก
+  var mode = 'open';
+  var seq = 0;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function today() { return new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10); }
+  function r2(n) { return Math.round((Number(n) || 0) * 100) / 100; }
+  function thDate(iso) {
+    var d = new Date(iso + 'T00:00:00+07:00');
+    return isNaN(d) ? iso : d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+  }
+  function store(key, val) {
+    try { if (val === undefined) return JSON.parse(localStorage.getItem(key) || 'null'); localStorage.setItem(key, JSON.stringify(val)); }
+    catch (e) { return null; }
+  }
+  function msg(el, kind, html) { $(el).innerHTML = html ? '<div class="rf-note ' + kind + '">' + html + '</div>' : ''; }
+
+  // ── โหมดทดลอง: จำลองสคริปต์ใน Sheet ด้วยไฟล์ข้อมูลของเว็บ + รายการที่ส่งในเครื่องนี้ ──
+  function demoBase(district, center) {
+    var latest = {};
+    Object.keys(data.data_by_year).sort().forEach(function (y) {
+      data.data_by_year[y].forEach(function (r) {
+        if (r.unit !== center) return;
+        var k = r.category + ' › ' + r.equipment;
+        latest[k] = { key: k, category: r.category, name: r.equipment, unitType: r.unit_type, remaining: r2(r.remaining) };
+      });
+    });
+    var cats = {};
+    data.repairs.forEach(function (r) { if (!cats[r.category]) cats[r.category] = r.unit_type; });
+    return { parts: latest, categories: data.categories.map(function (c) { return { name: c, unitType: cats[c] || 'ชิ้น' }; }) };
+  }
+  function demoState(district, center) {
+    var base = demoBase(district, center), parts = base.parts, jobs = {}, order = [];
+    (store(DEMO_KEY) || []).forEach(function (b) {
+      if (b.center !== center) return;
+      (b.partRows || []).forEach(function (p) {
+        var it = parts[p.key] || (parts[p.key] = { key: p.key, category: p.category, name: p.name, unitType: p.unitType, remaining: 0 });
+        it.remaining = r2(it.remaining + (p.action === 'ซื้อเข้า' ? p.qty : -p.qty));
+      });
+      if (b.job) {
+        if (b.job.status === 'รับงานซ่อม') { jobs[b.job.id] = Object.assign({}, b.job, { open: true }); order.push(b.job.id); }
+        else if (jobs[b.job.id]) { jobs[b.job.id].status = b.job.status; jobs[b.job.id].open = b.job.status === 'กำลังซ่อม'; }
+      }
+    });
+    return {
+      categories: base.categories,
+      parts: Object.keys(parts).map(function (k) { return parts[k]; }).sort(function (a, b) { return (a.category + a.name).localeCompare(b.category + b.name, 'th'); }),
+      jobs: order.map(function (id) { return jobs[id]; }).filter(function (j) { return j.open; })
+    };
+  }
+  function demoPost(p) {
+    var st = demoState(p.district, p.center);
+    var byKey = {};
+    st.parts.forEach(function (it) { byKey[it.key] = Object.assign({}, it); });
+    var partRows = [], lines = p.kind === 'parts' ? p.lines : (p.parts || []).map(function (l) { return { key: l.key, action: 'เบิกใช้', qty: l.qty }; });
+    for (var i = 0; i < lines.length; i++) {
+      var ln = lines[i], it;
+      if (ln.newItem) {
+        var k = ln.newItem.category + ' › ' + ln.newItem.name;
+        if (byKey[k]) return { ok: false, error: '"' + ln.newItem.name + '" มีอยู่ในรายการแล้ว' };
+        it = byKey[k] = { key: k, category: ln.newItem.category, name: ln.newItem.name, unitType: ln.newItem.unitType, remaining: 0 };
+      } else it = byKey[ln.key];
+      if (ln.action === 'เบิกใช้' && it.remaining + 1e-9 < ln.qty) return { ok: false, error: it.name + ' คงเหลือไม่พอ' };
+      it.remaining = r2(it.remaining + (ln.action === 'ซื้อเข้า' ? ln.qty : -ln.qty));
+      partRows.push({ key: it.key, category: it.category, name: it.name, unitType: it.unitType, action: ln.action, qty: ln.qty });
+    }
+    var all = store(DEMO_KEY) || [], job = null, jobId = '';
+    if (p.kind === 'open') {
+      var n = all.filter(function (b) { return b.job && b.job.status === 'รับงานซ่อม'; }).length + 1;
+      jobId = 'R70-' + ('000' + n).slice(-4);
+      var cat = st.categories.filter(function (c) { return c.name === p.category; })[0];
+      job = { id: jobId, status: 'รับงานซ่อม', category: p.category, qty: p.qty, unitType: cat ? cat.unitType : '', opened: p.eventDate, symptom: p.symptom, assetCode: p.assetCode };
+    } else if (p.kind === 'update') {
+      jobId = p.jobId;
+      job = { id: jobId, status: p.status };
+    }
+    all.push({ center: p.center, job: job, partRows: partRows });
+    store(DEMO_KEY, all);
+    var after = demoState(p.district, p.center);
+    return { ok: true, batch: 'DEMO-' + all.length, jobId: jobId, photos: (p.photos || []).length, parts: after.parts, jobs: after.jobs };
+  }
+
+  function loadCenter(district, center) {
+    if (DEMO) return Promise.resolve(Object.assign({ asOf: START_DATE, features: { photos: 5 } }, demoState(district, center)));
+    var url = ENDPOINT + '?district=' + encodeURIComponent(district) + '&center=' + encodeURIComponent(center);
+    return fetch(url).then(function (r) { return r.json(); }).then(function (res) {
+      if (!res.ok) throw new Error(res.error || 'โหลดข้อมูลไม่สำเร็จ');
+      return res;
+    });
+  }
+
+  // ── ศูนย์ซ่อม ──
+  function fillDistricts() {
+    var seen = {};
+    data.units.forEach(function (u) {
+      if (seen[u.district]) return;
+      seen[u.district] = true;
+      $('uDistrict').insertAdjacentHTML('beforeend', '<option>' + esc(u.district) + '</option>');
+    });
+  }
+  function fillCenters(district) {
+    var sel = $('uCenter');
+    sel.innerHTML = '<option value="">' + (district ? '— เลือกศูนย์ซ่อม —' : '— เลือกอำเภอก่อน —') + '</option>';
+    data.units.filter(function (u) { return u.district === district; }).forEach(function (u) {
+      sel.insertAdjacentHTML('beforeend', '<option value="' + esc(u.unit) + '">' + esc(u.unit) + '</option>');
+    });
+    sel.disabled = !district;
+  }
+  function onCenterChange() {
+    var district = $('uDistrict').value, center = $('uCenter').value;
+    info = null;
+    ['workCard', 'submitCard', 'partsBox'].forEach(function (id) { $(id).classList.add('rf-hidden'); });
+    if (!center) return;
+    msg('centerMsg', 'info', 'กำลังโหลดข้อมูลของศูนย์…');
+    loadCenter(district, center).then(function (res) {
+      if ($('uCenter').value !== center) return;
+      applyInfo(res);
+      msg('centerMsg');
+      ['workCard', 'submitCard', 'partsBox'].forEach(function (id) { $(id).classList.remove('rf-hidden'); });
+      resetWork();
+    }).catch(function (err) {
+      msg('centerMsg', 'bad', 'โหลดข้อมูลไม่สำเร็จ: ' + esc(err.message) + ' กรุณาลองใหม่');
+    });
+  }
+  function applyInfo(res) {
+    // คำตอบหลังส่งข้อมูลไม่มีรายการประเภทงานซ่อม ใช้ของเดิมต่อ
+    info = { categories: res.categories || (info && info.categories) || [], parts: res.parts || [], jobs: res.jobs || [] };
+    if (res.asOf) { asOf = res.asOf; $('eventDate').min = asOf; }
+    $('partsCount').textContent = info.parts.length;
+    $('partsBody').innerHTML = info.parts.map(function (p) {
+      return '<tr><td>' + esc(p.category) + '</td><td>' + esc(p.name) + '</td><td class="num">' + r2(p.remaining) + ' ' + esc(p.unitType) + '</td></tr>';
+    }).join('');
+    $('openBadge').textContent = info.jobs.length;
+    $('oCategory').innerHTML = '<option value="">— เลือกประเภท —</option>' + info.categories.map(function (c) {
+      return '<option value="' + esc(c.name) + '">' + esc(c.name) + '</option>';
+    }).join('');
+    $('uJob').innerHTML = '<option value="">— เลือกใบงาน —</option>' + info.jobs.map(function (j) {
+      return '<option value="' + esc(j.id) + '">' + esc(j.id + ' · ' + j.category + ' ' + j.qty + ' ' + j.unitType +
+        ' · รับ ' + thDate(j.opened) + (j.status === 'กำลังซ่อม' ? ' · กำลังซ่อม' : '')) + '</option>';
+    }).join('');
+    $('noJobs').classList.toggle('rf-hidden', info.jobs.length > 0);
+    $('updateFields').classList.toggle('rf-hidden', info.jobs.length === 0);
+  }
+
+  // ── โหมด ──
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll('.rf-tab').forEach(function (t) { t.setAttribute('aria-selected', String(t.getAttribute('data-mode') === m)); });
+    document.querySelectorAll('[data-panel]').forEach(function (p) { p.classList.toggle('rf-hidden', p.getAttribute('data-panel') !== m); });
+    if (m === 'parts' && !$('partLines').children.length) addPartLine();
+    refresh();
+  }
+  function resetWork() {
+    $('oCategory').value = ''; $('oQty').value = 1; $('oSymptom').value = ''; $('oAsset').value = '';
+    $('oRName').value = ''; $('oRAddr').value = ''; $('oUnit').textContent = '';
+    $('uJob').value = ''; $('uJobInfo').textContent = '';
+    document.querySelectorAll('input[name=uStatus]').forEach(function (r) { r.checked = false; });
+    $('usedLines').innerHTML = ''; $('partLines').innerHTML = '';
+    openPhotos.clear(); updatePhotos.clear();
+    $('photoConsent').checked = false; $('confirm').checked = false; $('note').value = '';
+    setMode(mode);
+  }
+
+  function partOptions(withNew) {
+    var groups = {};
+    info.parts.forEach(function (p) { (groups[p.category] = groups[p.category] || []).push(p); });
+    return '<option value="">— เลือกอะไหล่ —</option>' + Object.keys(groups).map(function (g) {
+      return '<optgroup label="' + esc(g) + '">' + groups[g].map(function (p) {
+        return '<option value="' + esc(p.key) + '">' + esc(p.name + ' (เหลือ ' + r2(p.remaining) + ' ' + p.unitType + ')') + '</option>';
+      }).join('') + '</optgroup>';
+    }).join('') + (withNew ? '<option value="' + NEW_PART + '">➕ อะไหล่รายการใหม่ (ไม่มีในรายการ)</option>' : '');
+  }
+
+  function addUsedLine() {
+    var id = 'u' + (++seq);
+    $('usedLines').insertAdjacentHTML('beforeend',
+      '<div class="rf-line" id="' + id + '" data-kind="used" style="grid-template-columns:2fr 120px auto">' +
+        '<div class="rf-field"><label>อะไหล่</label><select class="rf-select" data-k="key">' + partOptions(false) + '</select></div>' +
+        '<div class="rf-field"><label>จำนวนที่ใช้</label><input class="rf-input" data-k="qty" type="number" inputmode="decimal" min="0.01" step="0.01" value="1"></div>' +
+        '<button type="button" class="rf-link-btn" data-k="remove">✕ ลบ</button>' +
+        '<div class="rf-effect"></div></div>');
+    bindLine(id);
+  }
+  function addPartLine() {
+    var id = 'p' + (++seq);
+    var cats = info.categories.map(function (c) { return '<option>' + esc(c.name) + '</option>'; }).join('');
+    $('partLines').insertAdjacentHTML('beforeend',
+      '<div class="rf-line" id="' + id + '" data-kind="part">' +
+        '<div class="rf-field"><label>อะไหล่</label><select class="rf-select" data-k="key">' + partOptions(true) + '</select></div>' +
+        '<div class="rf-field"><label>การเปลี่ยนแปลง</label><select class="rf-select" data-k="action"><option value="">— เลือก —</option><option>ซื้อเข้า</option><option>เบิกใช้</option></select></div>' +
+        '<div class="rf-field"><label>จำนวน</label><input class="rf-input" data-k="qty" type="number" inputmode="decimal" min="0.01" step="0.01" value="1"></div>' +
+        '<button type="button" class="rf-link-btn" data-k="remove">✕ ลบ</button>' +
+        '<div class="rf-newitem rf-hidden">' +
+          '<div class="rf-field"><label>กลุ่มอุปกรณ์ *</label><select class="rf-select" data-k="nCat"><option value="">— เลือก —</option>' + cats + '</select></div>' +
+          '<div class="rf-field"><label>ชื่ออะไหล่ *</label><input class="rf-input" data-k="nName" maxlength="150" placeholder="เช่น ยางใน 24 นิ้ว"></div>' +
+          '<div class="rf-field"><label>หน่วยนับ *</label><input class="rf-input" data-k="nUnit" maxlength="30" placeholder="เช่น เส้น ชุด ถัง"></div>' +
+          '<div class="rf-field"><label>อ้างอิง MOU ที่อนุมัติ *</label><input class="rf-input" data-k="nMou" maxlength="120" placeholder="เช่น MOU เลขที่ 12/2570 ลว. 1 ต.ค. 69"></div>' +
+        '</div>' +
+        '<div class="rf-effect"></div></div>');
+    bindLine(id);
+  }
+  function bindLine(id) {
+    var el = $(id);
+    el.addEventListener('input', refresh);
+    el.addEventListener('change', refresh);
+    el.querySelector('[data-k=remove]').addEventListener('click', function () { el.remove(); refresh(); });
+    refresh();
+  }
+
+  function val(el, k) { var x = el.querySelector('[data-k=' + k + ']'); return x ? x.value.trim() : ''; }
+  function readLines(container) {
+    return Array.prototype.map.call($(container).querySelectorAll('.rf-line'), function (el) {
+      var q = val(el, 'qty');
+      return { el: el, key: val(el, 'key'), action: el.getAttribute('data-kind') === 'used' ? 'เบิกใช้' : val(el, 'action'),
+        qty: /^\d+(\.\d{1,2})?$/.test(q) ? Number(q) : NaN,
+        isNew: val(el, 'key') === NEW_PART,
+        newItem: { category: val(el, 'nCat'), name: val(el, 'nName'), unitType: val(el, 'nUnit'), mou: val(el, 'nMou') } };
+    });
+  }
+
+  // ตรวจรายการอะไหล่ หักล้างกับยอดคงเหลือ แสดงผลใต้แต่ละบรรทัด
+  function checkLines(lines) {
+    var stock = {};
+    info.parts.forEach(function (p) { stock[p.key] = { name: p.name, unitType: p.unitType, before: p.remaining, now: p.remaining }; });
+    var ok = true;
+    lines.forEach(function (ln) {
+      var eff = ln.el.querySelector('.rf-effect'), problem = '', ready = false;
+      var box = ln.el.querySelector('.rf-newitem');
+      if (box) box.classList.toggle('rf-hidden', !ln.isNew);
+      if (!ln.key) problem = 'เลือกอะไหล่';
+      else if (!ln.action) problem = 'เลือกซื้อเข้าหรือเบิกใช้';
+      else if (!(ln.qty > 0 && ln.qty <= 500)) problem = 'จำนวนต้องมากกว่า 0 (ทศนิยมได้ 2 ตำแหน่ง เช่น 0.5)';
+      else if (ln.isNew) {
+        var n = ln.newItem;
+        if (ln.action !== 'ซื้อเข้า') problem = 'อะไหล่รายการใหม่ต้องเป็น "ซื้อเข้า"';
+        else if (!n.category || !n.name || !n.unitType) problem = 'กรอกกลุ่มอุปกรณ์ ชื่ออะไหล่ และหน่วยนับ';
+        else if (!n.mou) problem = 'ระบุเลขที่หรือวันที่ MOU ที่กองทุนอนุมัติให้ซื้อรายการนี้';
+        else { ready = true; eff.className = 'rf-effect'; eff.textContent = '→ เพิ่มรายการใหม่ คงเหลือ ' + ln.qty + ' ' + n.unitType; }
+      } else {
+        var s = stock[ln.key];
+        if (ln.action === 'เบิกใช้' && s.now + 1e-9 < ln.qty) problem = s.name + ' คงเหลือ ' + r2(s.now) + ' ' + s.unitType + ' ไม่พอ';
+        else {
+          var from = s.now;
+          s.now = r2(s.now + (ln.action === 'ซื้อเข้า' ? ln.qty : -ln.qty));
+          ready = true; eff.className = 'rf-effect';
+          eff.textContent = '→ คงเหลือ ' + r2(from) + ' → ' + s.now + ' ' + s.unitType;
+        }
+      }
+      var touched = ln.key && ln.action && ln.qty > 0;
+      ln.el.classList.toggle('has-error', !!problem && !!touched);
+      if (problem) { ok = false; eff.className = 'rf-effect' + (touched ? ' bad' : ''); eff.textContent = (touched ? '⚠ ' : '') + problem; }
+      ln.ready = ready;
+    });
+    var changed = Object.keys(stock).filter(function (k) { return stock[k].now !== stock[k].before; });
+    $('reviewBody').innerHTML = changed.map(function (k) {
+      var s = stock[k];
+      return '<tr><td>' + esc(s.name) + '</td><td class="num changed">' + r2(s.before) + ' → ' + s.now + ' ' + esc(s.unitType) + '</td></tr>';
+    }).join('');
+    $('review').classList.toggle('rf-hidden', !changed.length);
+    return ok;
+  }
+
+  function status() { var r = document.querySelector('input[name=uStatus]:checked'); return r ? r.value : ''; }
+  function activePhotos() { return mode === 'open' ? openPhotos : mode === 'update' ? updatePhotos : null; }
+
+  function refresh() {
+    if (!info) return;
+    // หน่วยนับของประเภทงานซ่อม
+    var cat = info.categories.filter(function (c) { return c.name === $('oCategory').value; })[0];
+    $('oUnit').textContent = cat ? '(' + cat.unitType + ')' : '';
+    // ใบงาน
+    var job = info.jobs.filter(function (j) { return j.id === $('uJob').value; })[0];
+    $('uJobInfo').textContent = job ? 'อาการ: ' + job.symptom + (job.assetCode ? ' · รหัส ' + job.assetCode : '') : '';
+    var s = status();
+    $('uPhotoLabel').innerHTML = s === 'ซ่อมเสร็จ' ? 'รูปหลังซ่อม <span class="req">*</span>' : s === 'กำลังซ่อม' ? 'รูประหว่างซ่อม (ไม่บังคับ)' : s ? 'รูป (ไม่บังคับ)' : 'รูป';
+    $('uPhotoHint').textContent = s === 'ซ่อมเสร็จ' ? 'ถ่ายให้เห็นอุปกรณ์หลังซ่อมเสร็จ อย่างน้อย 1 รูป' : s ? 'แนบได้ถ้าต้องการ' : 'เลือกสถานะก่อน';
+    // อะไหล่
+    if (mode === 'update') checkLines(readLines('usedLines'));
+    else if (mode === 'parts') checkLines(readLines('partLines'));
+    else $('review').classList.add('rf-hidden');
+    var ap = activePhotos();
+    $('photoConsentRow').classList.toggle('rf-hidden', !(ap && ap.count()));
+  }
+
+  // ── ส่ง ──
+  function reporter() {
+    return { name: $('rName').value.trim(), position: $('rPosition').value.trim(),
+      phone: $('rPhone').value.replace(/[^\d]/g, ''), email: $('rEmail').value.trim() };
+  }
+  function validate() {
+    var r = reporter(), problems = [];
+    var mark = function (id, bad, text) { $(id).classList.toggle('invalid', bad); if (bad) problems.push(text); };
+    mark('rName', !r.name, 'กรอกชื่อ-นามสกุล');
+    mark('rPosition', !r.position, 'กรอกตำแหน่ง');
+    mark('rPhone', !/^0\d{8,9}$/.test(r.phone), 'เบอร์โทรต้องเป็นตัวเลข 9-10 หลัก ขึ้นต้นด้วย 0');
+    mark('rEmail', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email), 'กรอกอีเมลให้ถูกต้อง');
+    mark('uCenter', !$('uCenter').value, 'เลือกศูนย์ซ่อม');
+    var d = $('eventDate').value;
+    mark('eventDate', !d || d > today() || d < asOf, 'วันที่เกิดรายการต้องอยู่ระหว่าง ' + asOf + ' ถึงวันนี้');
+    var ap = activePhotos();
+    if (mode === 'open') {
+      mark('oCategory', !$('oCategory').value, 'เลือกประเภทอุปกรณ์');
+      mark('oQty', !/^\d+$/.test($('oQty').value) || +$('oQty').value < 1 || +$('oQty').value > 500, 'จำนวนต้องเป็นเลขจำนวนเต็ม 1-500');
+      mark('oSymptom', !$('oSymptom').value.trim(), 'กรอกอาการเสีย');
+      if (!openPhotos.count()) problems.push('แนบรูปก่อนซ่อมอย่างน้อย 1 รูป');
+    } else if (mode === 'update') {
+      if (!info.jobs.length) problems.push('ศูนย์นี้ยังไม่มีใบงานที่ค้างอยู่');
+      mark('uJob', !$('uJob').value, 'เลือกใบงาน');
+      if (!status()) problems.push('เลือกสถานะของงานซ่อม');
+      if (status() === 'ซ่อมเสร็จ' && !updatePhotos.count()) problems.push('แนบรูปหลังซ่อมอย่างน้อย 1 รูป');
+      var job = info.jobs.filter(function (j) { return j.id === $('uJob').value; })[0];
+      if (job && d && d < job.opened) problems.push('วันที่ต้องไม่ก่อนวันรับงาน (' + thDate(job.opened) + ')');
+      var used = readLines('usedLines');
+      if (used.length && !checkLines(used)) problems.push('แก้ไขรายการอะไหล่ที่ใช้ที่มีเครื่องหมาย ⚠ หรือยังเลือกไม่ครบ');
+    } else {
+      var lines = readLines('partLines');
+      if (!lines.length) problems.push('เพิ่มรายการอะไหล่อย่างน้อย 1 รายการ');
+      else if (!checkLines(lines)) problems.push('แก้ไขรายการอะไหล่ที่มีเครื่องหมาย ⚠ หรือยังเลือกไม่ครบ');
+    }
+    if (ap && ap.busy()) problems.push('รอให้ระบบเตรียมรูปเสร็จก่อน');
+    if (ap && ap.count() && !$('photoConsent').checked) problems.push('ติ๊กยืนยันการยินยอม หากในรูปมีผู้ป่วยหรือบุคคลอื่น');
+    if (!$('confirm').checked) problems.push('ติ๊กยืนยันว่าตรวจสอบข้อมูลแล้ว');
+    return problems;
+  }
+
+  function payload() {
+    var ap = activePhotos();
+    var p = { kind: mode, reporter: reporter(), district: $('uDistrict').value, center: $('uCenter').value,
+      eventDate: $('eventDate').value, note: $('note').value.trim(), website: $('website').value,
+      photos: ap ? ap.list() : [], photoConsent: !!(ap && ap.count() && $('photoConsent').checked) };
+    if (mode === 'open') {
+      p.category = $('oCategory').value; p.qty = Number($('oQty').value);
+      p.symptom = $('oSymptom').value.trim(); p.assetCode = $('oAsset').value.trim();
+      p.recipient = { name: $('oRName').value.trim(), address: $('oRAddr').value.trim() };
+    } else if (mode === 'update') {
+      p.jobId = $('uJob').value; p.status = status();
+      p.parts = readLines('usedLines').map(function (l) { return { key: l.key, qty: l.qty }; });
+    } else {
+      p.lines = readLines('partLines').map(function (l) {
+        return l.isNew ? { action: 'ซื้อเข้า', qty: l.qty, newItem: l.newItem } : { key: l.key, action: l.action, qty: l.qty };
+      });
+    }
+    return p;
+  }
+
+  function submit(ev) {
+    ev.preventDefault();
+    var problems = validate();
+    if (problems.length) {
+      msg('formMsg', 'bad', 'ยังส่งไม่ได้:<ul style="margin:4px 0 0;padding-left:20px"><li>' + problems.map(esc).join('</li><li>') + '</li></ul>');
+      return;
+    }
+    var p = payload();
+    if ($('rRemember').checked) store(REMEMBER_KEY, { reporter: p.reporter, district: p.district, center: p.center });
+    else store(REMEMBER_KEY, null);
+    $('submitBtn').disabled = true;
+    $('submitBtn').textContent = p.photos.length ? 'กำลังส่ง (พร้อมรูป ' + p.photos.length + ' รูป)…' : 'กำลังส่ง…';
+    msg('formMsg');
+    var send = DEMO ? new Promise(function (ok) { setTimeout(function () { ok(demoPost(p)); }, 400); })
+      : fetch(ENDPOINT, { method: 'POST', body: JSON.stringify(p) }).then(function (r) { return r.json(); });
+    send.then(function (res) {
+      if (!res.ok) throw new Error(res.error);
+      showDone(p, res);
+    }).catch(function (err) {
+      msg('formMsg', 'bad', 'ส่งไม่สำเร็จ: ' + esc(err.message || 'เชื่อมต่อไม่ได้') + '<br>ข้อมูลที่กรอกยังอยู่ในหน้านี้ กดส่งใหม่ได้');
+    }).then(function () {
+      $('submitBtn').disabled = false;
+      $('submitBtn').textContent = 'ส่งข้อมูล';
+    });
+  }
+
+  function showDone(p, res) {
+    var html;
+    if (p.kind === 'open') {
+      html = '<p>รับงานซ่อมแล้ว · <b>เลขใบงาน ' + esc(res.jobId) + '</b></p>' +
+        '<div class="rf-note info">เขียนเลขใบงาน <b>' + esc(res.jobId) + '</b> ติดไว้ที่อุปกรณ์ จะได้เลือกใบงานถูกตอนอัปเดตสถานะ</div>';
+    } else if (p.kind === 'update') {
+      html = '<p>อัปเดตใบงาน <b>' + esc(res.jobId) + '</b> เป็น "<b>' + esc(p.status) + '</b>"' +
+        (p.parts.length ? ' · หักอะไหล่ ' + p.parts.length + ' รายการ' : '') + '</p>';
+    } else {
+      html = '<p>บันทึกอะไหล่ ' + p.lines.length + ' รายการ</p>';
+    }
+    if (p.photos.length) html += '<p>แนบรูป ' + (Number(res.photos) || 0) + ' รูป</p>';
+    if (p.photos.length && Number(res.photos) < p.photos.length) {
+      html += '<div class="rf-note warn">รายการบันทึกแล้ว แต่รูปไม่ถูกบันทึกครบ กรุณาส่งรูปให้กองทุนทางอื่น พร้อมแจ้งเลขอ้างอิง</div>';
+    }
+    html += '<p style="font-size:.92rem;color:var(--rf-muted)">เลขอ้างอิง ' + esc(res.batch) + ' · ถ้ากรอกผิด แจ้งเลขนี้กับเจ้าหน้าที่กองทุนเพื่อยกเลิกรายการ</p>';
+    $('doneText').innerHTML = html;
+    applyInfo(res);
+    $('reportForm').classList.add('rf-hidden');
+    $('doneCard').classList.remove('rf-hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    $('donePop').classList.remove('rf-hidden');
+    $('donePopOk').focus();
+  }
+  function closePop() { $('donePop').classList.add('rf-hidden'); }
+  function again() {
+    $('doneCard').classList.add('rf-hidden');
+    $('reportForm').classList.remove('rf-hidden');
+    msg('formMsg');
+    resetWork();
+  }
+
+  // ── เริ่มต้น ──
+  var openPhotos = ReportPhotos.attach($('openPhotos'), { max: 5, onChange: function () { refresh(); } });
+  var updatePhotos = ReportPhotos.attach($('updatePhotos'), { max: 5, onChange: function () { refresh(); } });
+  if (DEMO) $('demoBar').classList.remove('rf-hidden');
+  $('demoReset').addEventListener('click', function () {
+    if (confirm('ล้างรายการทดลองทั้งหมดในเครื่องนี้?')) { store(DEMO_KEY, []); onCenterChange(); }
+  });
+  $('eventDate').value = today();
+  $('eventDate').max = today();
+  $('eventDate').min = START_DATE;
+  document.querySelectorAll('.rf-tab').forEach(function (t) { t.addEventListener('click', function () { setMode(t.getAttribute('data-mode')); }); });
+  ['oCategory', 'uJob'].forEach(function (id) { $(id).addEventListener('change', refresh); });
+  $('uStatus').addEventListener('change', refresh);
+  $('addUsed').addEventListener('click', addUsedLine);
+  $('addPart').addEventListener('click', addPartLine);
+  $('uDistrict').addEventListener('change', function () { fillCenters(this.value); onCenterChange(); });
+  $('uCenter').addEventListener('change', onCenterChange);
+  $('reportForm').addEventListener('submit', submit);
+  $('again').addEventListener('click', again);
+  $('donePopOk').addEventListener('click', closePop);
+  $('donePop').addEventListener('click', function (e) { if (e.target === this) closePop(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePop(); });
+
+  fetch(DATA_URL).then(function (r) { return r.json(); }).then(function (json) {
+    data = json;
+    fillDistricts();
+    var saved = store(REMEMBER_KEY);
+    if (saved) {
+      $('rName').value = saved.reporter.name || '';
+      $('rPosition').value = saved.reporter.position || '';
+      $('rPhone').value = saved.reporter.phone || '';
+      $('rEmail').value = saved.reporter.email || '';
+      if (saved.district) {
+        $('uDistrict').value = saved.district;
+        fillCenters(saved.district);
+        $('uCenter').value = saved.center || '';
+        onCenterChange();
+      }
+    }
+  }).catch(function () {
+    msg('centerMsg', 'bad', 'โหลดรายชื่อศูนย์ซ่อมไม่สำเร็จ กรุณารีเฟรชหน้านี้');
+  });
+})();
+</script>
+</body>
+</html>
