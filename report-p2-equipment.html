@@ -19,6 +19,7 @@
 
 <div id="siteNav"></div>
 <script src="assets/js/site-nav.js"></script>
+<script src="assets/js/report-photos.js"></script>
 
 <main class="rf-wrap">
   <div class="rf-hero">
@@ -137,6 +138,12 @@
     <!-- 4. ตรวจทานและส่ง -->
     <section class="rf-card">
       <h2><span class="rf-step">4</span>ตรวจทานและส่ง</h2>
+      <div class="rf-field rf-hidden" id="photoField" style="margin-bottom:14px">
+        <label>แนบรูป (ไม่บังคับ)</label>
+        <div class="hint" style="margin:0 0 8px">เช่น รูปผู้ป่วยคู่กับอุปกรณ์ที่ยืม หรือรูปอุปกรณ์ที่ชำรุด · ถ้ามีผู้ยืมหลายคน แนะนำให้ส่งแยกทีละคนพร้อมรูปของแต่ละคน · รูปเห็นเฉพาะเจ้าหน้าที่กองทุน ไม่แสดงบนเว็บไซต์</div>
+        <div id="photoBox"></div>
+        <label class="rf-check rf-hidden" id="photoConsentRow"><input type="checkbox" id="photoConsent"> ผู้ป่วยหรือญาติยินยอมให้ถ่ายรูปและส่งรูปให้กองทุนแล้ว <span class="req" style="color:var(--rf-bad)">*</span></label>
+      </div>
       <div class="rf-field">
         <label for="note">หมายเหตุ (ถ้ามี)</label>
         <textarea class="rf-textarea" id="note" maxlength="500" placeholder="เช่น ไม้เท้าชำรุดที่ขา รอส่งซ่อม"></textarea>
@@ -293,6 +300,7 @@
       // ไม่แสดงอุปกรณ์ที่ไม่มีชิ้นไหนให้ยืม/คืน/ซ่อมได้แล้ว (เช่น จำหน่ายหมดแล้ว)
       stock = res.items.filter(function (it) { return it.available + it.borrowed + it.damaged > 0; });
       if (res.asOf) { asOf = res.asOf; $('eventDate').min = asOf; }
+      if (!DEMO) enablePhotos(res.features && res.features.photos || 0);
       msg('stockMsg');
       renderStock();
       $('addLine').disabled = !stock.length;
@@ -394,6 +402,8 @@
     mark('eventDate', !d || d > today() || (asOf && d < asOf), 'วันที่เกิดรายการต้องอยู่ระหว่าง ' + asOf + ' ถึงวันนี้');
     var rv = updateReview();
     if (stock && !rv.ok) problems.push(rv.lines && rv.lines.length ? 'แก้ไขรายการอุปกรณ์ที่มีเครื่องหมาย ⚠ หรือยังเลือกไม่ครบ' : 'เพิ่มรายการอุปกรณ์อย่างน้อย 1 รายการ');
+    if (photos.busy()) problems.push('รอให้ระบบเตรียมรูปเสร็จก่อน');
+    if (photosEnabled && photos.count() && !$('photoConsent').checked) problems.push('ติ๊กยืนยันว่าผู้ป่วยหรือญาติยินยอมให้ถ่ายรูป');
     if (!$('confirm').checked) problems.push('ติ๊กยืนยันว่าตรวจสอบข้อมูลแล้ว');
     return { problems: problems, review: rv };
   }
@@ -408,13 +418,15 @@
     var payload = {
       reporter: reporter(), district: $('uDistrict').value, unit: $('uUnit').value,
       eventDate: $('eventDate').value, note: $('note').value.trim(), website: $('website').value,
+      photos: photosEnabled ? photos.list() : [],
+      photoConsent: photosEnabled && photos.count() > 0 && $('photoConsent').checked,
       lines: v.review.lines.map(function (ln) { return { itemNo: ln.itemNo, action: ln.action, qty: ln.qty }; })
     };
+    $('submitBtn').textContent = payload.photos.length ? 'กำลังส่ง (พร้อมรูป ' + payload.photos.length + ' รูป)…' : 'กำลังส่ง…';
     if ($('rRemember').checked) store(REMEMBER_KEY, { reporter: payload.reporter, district: payload.district, unit: payload.unit });
     else store(REMEMBER_KEY, null);
 
     $('submitBtn').disabled = true;
-    $('submitBtn').textContent = 'กำลังส่ง…';
     msg('formMsg');
     send(payload).then(function (res) {
       if (!res.ok) throw new Error(res.error);
@@ -447,8 +459,12 @@
   function showDone(payload, res) {
     $('reportForm').classList.add('rf-hidden');
     $('doneCard').classList.remove('rf-hidden');
+    var sent = payload.photos.length, saved = Number(res.photos) || 0;
     $('doneText').innerHTML = 'หน่วยบริการ <b>' + esc(payload.unit) + '</b> บันทึก ' + payload.lines.length +
-      ' รายการ · เลขอ้างอิง <b>' + esc(res.batch) + '</b>';
+      ' รายการ' + (saved ? ' · แนบรูป ' + saved + ' รูป' : '') + ' · เลขอ้างอิง <b>' + esc(res.batch) + '</b>' +
+      (sent && saved < sent
+        ? '<div class="rf-note warn">รายการบันทึกแล้ว แต่รูปไม่ถูกบันทึก กรุณาส่งรูปให้กองทุนทางอื่น พร้อมแจ้งเลขอ้างอิงนี้</div>'
+        : '');
     var touched = {};
     payload.lines.forEach(function (l) { touched[l.itemNo] = true; });
     $('doneBody').innerHTML = res.items.filter(function (it) { return touched[it.no]; }).map(function (it) {
@@ -466,11 +482,23 @@
     $('reportForm').classList.remove('rf-hidden');
     $('note').value = '';
     $('confirm').checked = false;
+    photos.clear();
+    $('photoConsent').checked = false;
     msg('formMsg');
     onUnitChange();
   }
 
   // ── เริ่มต้น ──
+  // ช่องแนบรูปแสดงเมื่อสคริปต์ใน Sheet รองรับแล้ว (ส่ง features.photos มากับยอดของหน่วย)
+  var photosEnabled = false;
+  var photos = ReportPhotos.attach($('photoBox'), { max: 5, onChange: function (n) {
+    $('photoConsentRow').classList.toggle('rf-hidden', !n);
+  } });
+  function enablePhotos(max) {
+    photosEnabled = max > 0;
+    $('photoField').classList.toggle('rf-hidden', !photosEnabled);
+  }
+  if (DEMO) enablePhotos(5);
   if (DEMO) $('demoBar').classList.remove('rf-hidden');
   $('demoReset').addEventListener('click', function () {
     if (confirm('ล้างรายการทดลองทั้งหมดในเครื่องนี้?')) { store(DEMO_KEY, []); onUnitChange(); }
