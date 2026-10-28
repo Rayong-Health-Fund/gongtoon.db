@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>บันทึกโครงการเครือข่ายบริการ</title>
+<link rel="icon" type="image/jpeg" href="assets/img/logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site-nav.css">
+<link rel="stylesheet" href="assets/css/report-forms.css">
+</head>
+<body>
+
+<div id="siteNav"></div>
+<script src="assets/js/site-nav.js"></script>
+<script src="assets/js/report-photos.js"></script>
+
+<main class="rf-wrap">
+  <div class="rf-hero">
+    <div class="rf-crumb"><a href="report-forms.html">← แบบฟอร์มทั้งหมด</a></div>
+    <h1>🤝 บันทึกโครงการพัฒนาเครือข่ายบริการ</h1>
+    <p>โครงการพัฒนาศักยภาพเครือข่ายบริการเพื่อฟื้นฟูสมรรถภาพฯ · สำหรับเจ้าหน้าที่หน่วยบริการ</p>
+  </div>
+
+  <div class="rf-guide">
+    <div class="rf-guide-head">📋 วิธีใช้งาน (ประมาณ 1 นาที) ทำตามลำดับข้อ 1 ถึง 4</div>
+    <ol>
+      <li><b>ข้อมูลผู้กรอก</b> กรอกครั้งแรกครั้งเดียว ครั้งต่อไประบบจำให้</li>
+      <li><b>เลือกหน่วยบริการ</b> แล้วข้อ 3–4 จะแสดงขึ้นมา</li>
+      <li><b>งาน</b> ลงทะเบียนโครงการใหม่ที่ได้รับอนุมัติ หรือรายงานสถานะของโครงการ (จัดกิจกรรม / กิจกรรมเสร็จสิ้น)</li>
+      <li><b>ตรวจทานและกดส่ง</b> ถ้ายังขาดอะไร ระบบจะบอกให้</li>
+    </ol>
+    <div class="hint" style="margin-top:6px">รายงานผลฉบับสมบูรณ์ส่งเป็นรูปเล่มให้กองทุนตามปกติ · เมื่อกองทุนได้รับรูปเล่มแล้ว สถานะบนเว็บจะเปลี่ยนเป็น "เสร็จเรียบร้อย"</div>
+  </div>
+
+  <div id="setupWarn"></div>
+
+  <form id="reportForm" novalidate autocomplete="on">
+    <section class="rf-card">
+      <h2><span class="rf-step">1</span>ข้อมูลผู้กรอก</h2>
+      <p class="rf-sub">ใช้สำหรับให้เจ้าหน้าที่กองทุนติดต่อกลับเมื่อต้องการตรวจสอบข้อมูล ไม่แสดงบนเว็บไซต์</p>
+      <div class="rf-grid">
+        <div class="rf-field"><label for="rName">ชื่อ-นามสกุล <span class="req">*</span></label><input class="rf-input" id="rName" autocomplete="name" maxlength="100"></div>
+        <div class="rf-field"><label for="rPosition">ตำแหน่ง <span class="req">*</span></label><input class="rf-input" id="rPosition" autocomplete="organization-title" maxlength="100"></div>
+        <div class="rf-field"><label for="rPhone">เบอร์โทรที่ติดต่อได้ <span class="req">*</span></label><input class="rf-input" id="rPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="15"><div class="hint">เบอร์หน่วยงานหรือเบอร์มือถือก็ได้</div></div>
+        <div class="rf-field"><label for="rEmail">อีเมล <span class="req">*</span></label><input class="rf-input" id="rEmail" type="email" inputmode="email" autocomplete="email" maxlength="120"></div>
+      </div>
+      <label class="rf-check"><input type="checkbox" id="rRemember" checked> จำข้อมูลผู้กรอกและหน่วยบริการไว้ในเครื่องนี้ ครั้งหน้าไม่ต้องกรอกใหม่</label>
+    </section>
+
+    <section class="rf-card">
+      <h2><span class="rf-step">2</span>เลือกหน่วยบริการ</h2>
+      <p class="rf-sub">เลือก<b>อำเภอ</b>ก่อน แล้วเลือก<b>หน่วยบริการ</b>ของท่าน · ถ้าไม่มีในรายการ เลือก "หน่วยบริการอื่น" แล้วพิมพ์ชื่อ</p>
+      <div class="rf-grid">
+        <div class="rf-field"><label for="uDistrict">อำเภอ <span class="req">*</span></label><select class="rf-select" id="uDistrict"><option value="">— เลือกอำเภอ —</option></select></div>
+        <div class="rf-field"><label for="uUnit">หน่วยบริการ <span class="req">*</span></label><select class="rf-select" id="uUnit" disabled><option value="">— เลือกอำเภอก่อน —</option></select></div>
+        <div class="rf-field rf-hidden" id="otherUnitBox"><label for="uOther">ชื่อหน่วยบริการ <span class="req">*</span></label><input class="rf-input" id="uOther" maxlength="100" placeholder="เช่น รพ.สต.บ้านหนองกระบอก"></div>
+      </div>
+      <div id="unitMsg"></div>
+    </section>
+
+    <div class="rf-locked" id="lockedCard">👆 <b>เลือกอำเภอและหน่วยบริการในข้อ 2 ก่อน</b><br>แล้วข้อ 3 งาน · ข้อ 4 ส่งข้อมูล จะแสดงขึ้นที่นี่</div>
+
+    <div id="workArea" class="rf-hidden">
+      <section class="rf-card">
+        <h2><span class="rf-step">3</span>งาน</h2>
+        <p class="rf-ask">ครั้งนี้จะบันทึกอะไร? เลือก 1 ข้อ</p>
+        <div class="rf-choice">
+          <label><input type="radio" name="jobKind" value="register"><b>📝 ลงทะเบียนโครงการใหม่</b><span>โครงการที่ได้รับอนุมัติ ยังไม่เคยบันทึก</span></label>
+          <label><input type="radio" name="jobKind" value="update"><b>📅 รายงานสถานะโครงการ <span class="rf-badge" id="openBadge">0</span></b><span>จัดกิจกรรม / กิจกรรมเสร็จสิ้น / ยกเลิก</span></label>
+        </div>
+
+        <div data-panel="register" class="rf-hidden">
+          <div class="rf-grid">
+            <div class="rf-field" style="grid-column:1/-1"><label for="pName">ชื่อโครงการ <span class="req">*</span></label><textarea class="rf-textarea" id="pName" maxlength="300" placeholder="ตามที่ได้รับอนุมัติ"></textarea></div>
+            <div class="rf-field"><label for="pFy">ปีงบประมาณ <span class="req">*</span></label><select class="rf-select" id="pFy"></select></div>
+            <div class="rf-field"><label for="pBudget">งบที่อนุมัติ (บาท) <span class="req">*</span></label><input class="rf-input" id="pBudget" type="number" inputmode="decimal" min="1" step="0.01"></div>
+            <div class="rf-field"><label for="pPeriod">ระยะเวลาดำเนินการ (ถ้ามี)</label><input class="rf-input" id="pPeriod" maxlength="100" placeholder="เช่น พ.ย. 69 – มี.ค. 70"></div>
+            <div class="rf-field"><label for="pTarget">กลุ่มเป้าหมาย (ถ้ามี)</label><input class="rf-input" id="pTarget" maxlength="200" placeholder="เช่น อสม. และ CG 40 คน"></div>
+          </div>
+        </div>
+
+        <div data-panel="update" class="rf-hidden">
+          <div id="noProjects" class="rf-note warn rf-hidden">หน่วยนี้ยังไม่มีโครงการที่บันทึกไว้ ให้เลือก "ลงทะเบียนโครงการใหม่" ก่อน</div>
+          <div id="updateFields">
+            <div class="rf-field">
+              <label>เลือกโครงการ <span class="req">*</span></label>
+              <div class="hint" style="margin:0 0 8px">แตะการ์ดของโครงการที่ต้องการรายงาน</div>
+              <div class="rf-choice rf-jobs" id="projectCards"></div>
+            </div>
+            <div class="rf-field" style="margin-top:12px">
+              <label>รายงานอะไร <span class="req">*</span></label>
+              <div class="rf-radios">
+                <label><input type="radio" name="uStatus" value="รายงานกิจกรรม"> 📅 จัดกิจกรรมแล้ว</label>
+                <label><input type="radio" name="uStatus" value="กิจกรรมเสร็จสิ้น"> ✅ กิจกรรมทั้งหมดเสร็จสิ้น</label>
+                <label><input type="radio" name="uStatus" value="ยกเลิกโครงการ"> ⛔ ยกเลิกโครงการ</label>
+              </div>
+              <div class="hint" id="statusHint"></div>
+            </div>
+            <div class="rf-grid rf-hidden" id="activityBox" style="margin-top:12px">
+              <div class="rf-field" style="grid-column:1/-1"><label for="aName">ชื่อกิจกรรม <span class="req">*</span></label><input class="rf-input" id="aName" maxlength="200" placeholder="เช่น อบรมฟื้นฟูความรู้ CG วันที่ 1"></div>
+            </div>
+            <div class="rf-grid rf-hidden" id="peopleBox" style="margin-top:12px">
+              <div class="rf-field"><label for="aPeople">จำนวนผู้เข้าร่วม (คน) (ถ้ามี)</label><input class="rf-input" id="aPeople" type="number" inputmode="numeric" min="0" step="1"></div>
+              <div class="rf-field rf-hidden" id="spentBox"><label for="aSpent">งบที่ใช้จริง (บาท) (ถ้ามี)</label><input class="rf-input" id="aSpent" type="number" inputmode="decimal" min="0" step="0.01"></div>
+            </div>
+            <div class="rf-field rf-hidden" id="dropBox" style="margin-top:12px"><label for="dropReason">เหตุผลที่ยกเลิกโครงการ <span class="req">*</span></label><textarea class="rf-textarea" id="dropReason" maxlength="300"></textarea></div>
+            <div class="rf-field rf-hidden" id="attachBox" style="margin-top:14px">
+              <label>รูปกิจกรรม (ไม่บังคับ)</label>
+              <div class="hint" style="margin:0 0 8px">ครั้งละไม่เกิน 10 รูป</div>
+              <div id="actPhotos"></div>
+              <label style="margin-top:12px;display:block">ไฟล์ PDF (ไม่บังคับ) เช่น กำหนดการ รายชื่อผู้เข้าร่วม</label>
+              <input type="file" id="pdfInput" accept="application/pdf" multiple class="rf-input" style="padding:8px">
+              <div class="hint" id="pdfInfo">ไม่เกิน 3 ไฟล์ ไฟล์ละไม่เกิน 10 MB</div>
+              <label for="link" style="margin-top:12px;display:block">ลิงก์อัลบั้ม / Google Drive (ไม่บังคับ)</label>
+              <input class="rf-input" id="link" type="url" inputmode="url" maxlength="500" placeholder="https://drive.google.com/...">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="rf-card">
+        <h2><span class="rf-step">4</span>ตรวจทานและส่ง</h2>
+        <div class="rf-grid"><div class="rf-field"><label for="eventDate">วันที่เกิดรายการ <span class="req">*</span></label><input class="rf-input" id="eventDate" type="date"></div></div>
+        <div class="rf-field" style="margin-top:12px"><label for="note">หมายเหตุ (ถ้ามี)</label><textarea class="rf-textarea" id="note" maxlength="500"></textarea></div>
+        <div class="rf-hp" aria-hidden="true"><label>เว็บไซต์<input id="website" tabindex="-1" autocomplete="off"></label></div>
+        <label class="rf-check rf-hidden" id="photoConsentRow"><input type="checkbox" id="photoConsent"> ถ้าในรูปมีบุคคล ได้รับความยินยอมแล้ว <span style="color:var(--rf-bad)">*</span></label>
+        <label class="rf-check"><input type="checkbox" id="confirm"> ข้าพเจ้าตรวจสอบแล้วว่าข้อมูลถูกต้อง</label>
+        <div id="formMsg"></div>
+        <button type="submit" class="rf-btn big" id="submitBtn" style="margin-top:12px">ส่งข้อมูล</button>
+      </section>
+    </div>
+  </form>
+
+  <section class="rf-card rf-hidden" id="doneCard">
+    <h2>✅ บันทึกเรียบร้อย</h2>
+    <div id="doneText"></div>
+    <button type="button" class="rf-btn" id="again" style="margin-top:12px">บันทึกรายการถัดไป</button>
+  </section>
+</main>
+
+<div class="rf-pop-back rf-hidden" id="donePop" role="dialog" aria-modal="true" aria-labelledby="donePopTitle">
+  <div class="rf-pop">
+    <div class="ico">⏳</div>
+    <h3 id="donePopTitle">ส่งข้อมูลเรียบร้อยแล้ว</h3>
+    <p>ข้อมูลบนหน้าเว็บไซต์จะอัปเดตภายใน <b>ประมาณ 5 นาที</b><br>ถ้าเปิดดูทันทีอาจยังเห็นข้อมูลเดิม กรุณารอสักครู่</p>
+    <button type="button" class="rf-btn" id="donePopOk">รับทราบ</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ลิงก์ Web App ของ Apps Script (form-backend/p3_network_ledger.gs)
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbxmp-ELFRMYOiylCTvq5_002gkbyiP-LoiQuUDq9G9fD0NXT395Lkxyjo46O9sV_dmH/exec';
+  var DATA_URL = 'network-capacity/data/dashboard_data.json';
+  var START_DATE = '2026-10-12';
+  var REMEMBER_KEY = 'p3-report-reporter';
+  var OTHER = '__other';
+  var MAX_PHOTOS = 10, MAX_PDF = 3, MAX_PDF_BYTES = 10 * 1024 * 1024;
+  var DISTRICTS = ['เมืองระยอง', 'บ้านฉาง', 'นิคมพัฒนา', 'บ้านค่าย', 'แกลง', 'วังจันทร์', 'ปลวกแดง', 'เขาชะเมา'];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var units = {}, asOf = START_DATE, projects = null, pdfs = [];
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function today() { return new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10); }
+  function fiscalYear(iso) { var m = iso.match(/^(\d{4})-(\d{2})/); return Number(m[1]) + 543 + (Number(m[2]) >= 10 ? 1 : 0); }
+  function thDate(iso) { var d = new Date(iso + 'T00:00:00+07:00'); return isNaN(d) ? iso : d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }); }
+  function store(key, val) { try { if (val === undefined) return JSON.parse(localStorage.getItem(key) || 'null'); localStorage.setItem(key, JSON.stringify(val)); } catch (e) { return null; } }
+  function msg(el, kind, html) { $(el).innerHTML = html ? '<div class="rf-note ' + kind + '">' + html + '</div>' : ''; }
+  function radio(name) { var r = document.querySelector('input[name=' + name + ']:checked'); return r ? r.value : ''; }
+  function unit() { return $('uUnit').value === OTHER ? $('uOther').value.trim() : $('uUnit').value; }
+  function normDistrict(d) { return d === 'เมือง' ? 'เมืองระยอง' : d; }
+
+  function fillUnits(district) {
+    var sel = $('uUnit');
+    sel.innerHTML = '<option value="">' + (district ? '— เลือกหน่วยบริการ —' : '— เลือกอำเภอก่อน —') + '</option>' +
+      (units[district] || []).map(function (u) { return '<option>' + esc(u) + '</option>'; }).join('') +
+      (district ? '<option value="' + OTHER + '">➕ หน่วยบริการอื่น (ไม่มีในรายการ)</option>' : '');
+    sel.disabled = !district;
+    $('otherUnitBox').classList.add('rf-hidden');
+  }
+  function showWork(on) { $('workArea').classList.toggle('rf-hidden', !on); $('lockedCard').classList.toggle('rf-hidden', on); }
+  var timer = null;
+  function onUnitChange() {
+    $('otherUnitBox').classList.toggle('rf-hidden', $('uUnit').value !== OTHER);
+    projects = null; showWork(false);
+    var d = $('uDistrict').value, u = unit();
+    if (!d || !u) return;
+    clearTimeout(timer);
+    timer = setTimeout(function () { loadProjects(d, u); }, $('uUnit').value === OTHER ? 600 : 0);
+  }
+  function loadProjects(d, u) {
+    if (!ENDPOINT) {
+      applyProjects([]);
+      msg('unitMsg', 'warn', 'ยังไม่ได้เชื่อมกับ Google Sheet (หน้าทดลอง) ดูหน้าตาแบบฟอร์มได้ แต่ยังส่งข้อมูลไม่ได้');
+      showWork(true); resetWork(); return;
+    }
+    msg('unitMsg', 'info', 'กำลังโหลดข้อมูลของหน่วย… (ประมาณ 5 วินาที)');
+    fetch(ENDPOINT + '?district=' + encodeURIComponent(d) + '&unit=' + encodeURIComponent(u))
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res.ok) throw new Error(res.error || 'โหลดข้อมูลไม่สำเร็จ');
+        if (unit() !== u) return;
+        if (res.asOf) { asOf = res.asOf; $('eventDate').min = asOf; }
+        applyProjects(res.projects || []);
+        msg('unitMsg', 'ok', '✓ โหลดข้อมูลของหน่วยแล้ว เลื่อนลงไปทำข้อ 3 ต่อได้เลย');
+        showWork(true); resetWork();
+      }).catch(function (err) { msg('unitMsg', 'bad', 'โหลดข้อมูลไม่สำเร็จ: ' + esc(err.message) + ' กรุณาลองใหม่'); });
+  }
+  var TAGS = { 'อยู่ระหว่างดำเนินการ': ['work', '🛠️ อยู่ระหว่างดำเนินการ'], 'รอรายงานผล': ['wait', '📑 รอรายงานผล'], 'เสร็จเรียบร้อย': ['done', '✅ เสร็จเรียบร้อย'] };
+  function applyProjects(list) {
+    projects = list;
+    $('openBadge').textContent = list.filter(function (p) { return p.webStatus !== 'เสร็จเรียบร้อย'; }).length;
+    $('noProjects').classList.toggle('rf-hidden', list.length > 0);
+    $('updateFields').classList.toggle('rf-hidden', list.length === 0);
+    $('projectCards').innerHTML = list.map(function (p) {
+      var t = TAGS[p.webStatus] || ['wait', p.webStatus];
+      return '<label><input type="radio" name="project" value="' + esc(p.code) + '">' +
+        '<b>' + esc(p.code) + ' <span class="rf-tag ' + t[0] + '">' + t[1] + '</span></b>' +
+        '<span class="rf-job-line">' + esc(p.name) + '</span>' +
+        '<span class="rf-job-line">ปีงบ ' + esc(p.fy) + ' · งบ ' + Number(p.budget || 0).toLocaleString('th-TH') + ' บาท' +
+        (p.activities ? ' · รายงานกิจกรรมแล้ว ' + p.activities + ' ครั้ง' : '') + (p.participants ? ' · ผู้เข้าร่วม ' + p.participants + ' คน' : '') + '</span>' +
+        (p.lastActivity ? '<span class="rf-job-line">ล่าสุด: ' + esc(p.lastActivity) + '</span>' : '') + '</label>';
+    }).join('');
+  }
+  function project() { var c = radio('project'); return (projects || []).filter(function (p) { return p.code === c; })[0]; }
+
+  function resetWork() {
+    ['jobKind', 'project', 'uStatus'].forEach(function (n) { document.querySelectorAll('input[name=' + n + ']').forEach(function (r) { r.checked = false; }); });
+    ['pName', 'pBudget', 'pPeriod', 'pTarget', 'aName', 'aPeople', 'aSpent', 'dropReason', 'link', 'note'].forEach(function (id) { $(id).value = ''; });
+    $('pFy').value = String(fiscalYear(today()));
+    photos.clear(); pdfs = []; $('pdfInput').value = ''; showPdfs();
+    $('photoConsent').checked = false; $('confirm').checked = false;
+    refresh();
+  }
+  function refresh() {
+    if (!photos) return; // called once while the photo box is still being set up
+    var kind = radio('jobKind'), s = radio('uStatus'), p = project();
+    document.querySelectorAll('[data-panel]').forEach(function (el) { el.classList.toggle('rf-hidden', el.getAttribute('data-panel') !== kind); });
+    var closed = p && p.webStatus === 'เสร็จเรียบร้อย', finished = p && p.status === 'กิจกรรมเสร็จสิ้น';
+    document.querySelectorAll('input[name=uStatus]').forEach(function (r) {
+      var allowed = !closed && !(finished && r.value === 'ยกเลิกโครงการ');
+      r.disabled = !allowed; r.parentNode.style.opacity = allowed ? '' : '.45';
+      if (!allowed && r.checked) r.checked = false;
+    });
+    s = radio('uStatus');
+    $('statusHint').textContent = closed ? 'โครงการนี้เสร็จเรียบร้อยแล้ว (กองทุนได้รับรายงานผลแล้ว)' :
+      finished ? 'แจ้งกิจกรรมเสร็จสิ้นแล้ว · รายงานกิจกรรมเพิ่มได้ · รอกองทุนรับรูปเล่มรายงานผล' :
+      s === 'กิจกรรมเสร็จสิ้น' ? 'หลังส่ง สถานะบนเว็บจะเป็น "รอรายงานผล" จนกว่ากองทุนจะได้รับรูปเล่ม' : '';
+    $('activityBox').classList.toggle('rf-hidden', s !== 'รายงานกิจกรรม');
+    $('peopleBox').classList.toggle('rf-hidden', !(s === 'รายงานกิจกรรม' || s === 'กิจกรรมเสร็จสิ้น'));
+    $('spentBox').classList.toggle('rf-hidden', s !== 'กิจกรรมเสร็จสิ้น');
+    $('dropBox').classList.toggle('rf-hidden', s !== 'ยกเลิกโครงการ');
+    $('attachBox').classList.toggle('rf-hidden', !(s === 'รายงานกิจกรรม' || s === 'กิจกรรมเสร็จสิ้น'));
+    $('photoConsentRow').classList.toggle('rf-hidden', !(photos.count() && !$('attachBox').classList.contains('rf-hidden')));
+  }
+
+  // ── PDF ──
+  function showPdfs(err) {
+    $('pdfInfo').innerHTML = err ? '<span class="rf-photos-err">' + esc(err) + '</span>'
+      : pdfs.length ? 'แนบแล้ว: ' + pdfs.map(function (f) { return esc(f.name); }).join(', ') : 'ไม่เกิน 3 ไฟล์ ไฟล์ละไม่เกิน 10 MB';
+  }
+  function readPdfs() {
+    var files = Array.prototype.slice.call($('pdfInput').files || []);
+    pdfs = [];
+    if (files.length > MAX_PDF) { $('pdfInput').value = ''; return showPdfs('เลือกได้ไม่เกิน ' + MAX_PDF + ' ไฟล์'); }
+    var bad = files.filter(function (f) { return f.type !== 'application/pdf' || f.size > MAX_PDF_BYTES; })[0];
+    if (bad) { $('pdfInput').value = ''; return showPdfs(bad.name + ': ต้องเป็น PDF ไม่เกิน 10 MB'); }
+    Promise.all(files.map(function (f) {
+      return new Promise(function (ok, no) { var r = new FileReader(); r.onload = function () { ok({ name: f.name, type: 'application/pdf', data: String(r.result).split(',')[1] }); }; r.onerror = no; r.readAsDataURL(f); });
+    })).then(function (list) { pdfs = list; showPdfs(); }, function () { showPdfs('อ่านไฟล์ไม่สำเร็จ'); });
+  }
+
+  // ── ส่ง ──
+  function reporter() { return { name: $('rName').value.trim(), position: $('rPosition').value.trim(), phone: $('rPhone').value.replace(/[^\d]/g, ''), email: $('rEmail').value.trim() }; }
+  function validate() {
+    var r = reporter(), problems = [];
+    var mark = function (id, bad, text) { $(id).classList.toggle('invalid', bad); if (bad) problems.push(text); };
+    mark('rName', !r.name, 'ข้อ 1: กรอกชื่อ-นามสกุล');
+    mark('rPosition', !r.position, 'ข้อ 1: กรอกตำแหน่ง');
+    mark('rPhone', !/^0\d{8,9}$/.test(r.phone), 'ข้อ 1: เบอร์โทรต้องเป็นตัวเลข 9-10 หลัก ขึ้นต้นด้วย 0');
+    mark('rEmail', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email), 'ข้อ 1: กรอกอีเมลให้ถูกต้อง');
+    mark('uUnit', !unit(), 'ข้อ 2: เลือกหน่วยบริการ');
+    var kind = radio('jobKind'), s = radio('uStatus'), p = project(), d = $('eventDate').value;
+    if (!kind) problems.push('ข้อ 3: เลือกว่าจะลงทะเบียนโครงการใหม่ หรือรายงานสถานะ');
+    if (kind === 'register') {
+      mark('pName', $('pName').value.trim().length < 5, 'ข้อ 3: กรอกชื่อโครงการ');
+      mark('pBudget', !(+$('pBudget').value > 0), 'ข้อ 3: กรอกงบที่อนุมัติ');
+    } else if (kind === 'update') {
+      if (!p) problems.push('ข้อ 3: แตะเลือกการ์ดโครงการ');
+      if (!s) problems.push('ข้อ 3: เลือกว่าจะรายงานอะไร');
+      if (s === 'รายงานกิจกรรม') mark('aName', !$('aName').value.trim(), 'ข้อ 3: กรอกชื่อกิจกรรม');
+      if (s === 'ยกเลิกโครงการ') mark('dropReason', !$('dropReason').value.trim(), 'ข้อ 3: กรอกเหตุผลที่ยกเลิก');
+      var link = $('link').value.trim();
+      mark('link', !!link && !/^https:\/\/\S+$/.test(link), 'ข้อ 3: ลิงก์ต้องขึ้นต้นด้วย https://');
+      if (p && p.registered && d && d < p.registered) problems.push('ข้อ 4: วันที่ต้องไม่ก่อนวันลงทะเบียน (' + thDate(p.registered) + ')');
+    }
+    mark('eventDate', !d || d > today() || d < asOf, 'ข้อ 4: วันที่เกิดรายการต้องอยู่ระหว่าง ' + thDate(asOf) + ' ถึงวันนี้');
+    var withAttach = kind === 'update' && (s === 'รายงานกิจกรรม' || s === 'กิจกรรมเสร็จสิ้น');
+    if (withAttach && photos.busy()) problems.push('รอให้ระบบเตรียมรูปเสร็จก่อน');
+    if (withAttach && photos.count() && !$('photoConsent').checked) problems.push('ข้อ 4: ติ๊กยืนยันการยินยอม หากในรูปมีบุคคล');
+    if (!$('confirm').checked) problems.push('ข้อ 4: ติ๊กยืนยันว่าตรวจสอบข้อมูลแล้ว');
+    if (!ENDPOINT) problems.push('หน้านี้ยังไม่ได้เชื่อมกับ Google Sheet จึงยังส่งข้อมูลไม่ได้');
+    return problems;
+  }
+  function payload() {
+    var kind = radio('jobKind'), s = radio('uStatus');
+    var p = { kind: kind, reporter: reporter(), district: $('uDistrict').value, unit: unit(), eventDate: $('eventDate').value,
+      note: $('note').value.trim(), website: $('website').value };
+    if (kind === 'register') {
+      p.name = $('pName').value.trim(); p.fiscalYear = $('pFy').value; p.budget = Number($('pBudget').value);
+      p.period = $('pPeriod').value.trim(); p.target = $('pTarget').value.trim();
+    } else {
+      var withAttach = s === 'รายงานกิจกรรม' || s === 'กิจกรรมเสร็จสิ้น';
+      p.code = radio('project'); p.status = s;
+      p.activity = s === 'รายงานกิจกรรม' ? $('aName').value.trim() : '';
+      p.participants = withAttach ? $('aPeople').value.trim() : '';
+      p.budgetActual = s === 'กิจกรรมเสร็จสิ้น' ? $('aSpent').value.trim() : '';
+      p.reason = s === 'ยกเลิกโครงการ' ? $('dropReason').value.trim() : '';
+      p.photos = withAttach ? photos.list() : [];
+      p.photoConsent = withAttach && photos.count() > 0 && $('photoConsent').checked;
+      p.files = withAttach ? pdfs : [];
+      p.link = withAttach ? $('link').value.trim() : '';
+    }
+    return p;
+  }
+  function submit(ev) {
+    ev.preventDefault();
+    var problems = validate();
+    if (problems.length) {
+      msg('formMsg', 'bad', 'ยังส่งไม่ได้ กรุณาแก้ตามนี้:<ul style="margin:4px 0 0;padding-left:20px"><li>' + problems.map(esc).join('</li><li>') + '</li></ul>');
+      return;
+    }
+    var p = payload();
+    if ($('rRemember').checked) store(REMEMBER_KEY, { reporter: p.reporter, district: p.district, unit: $('uUnit').value, other: $('uOther').value.trim() });
+    else store(REMEMBER_KEY, null);
+    var n = (p.photos || []).length + (p.files || []).length;
+    $('submitBtn').disabled = true;
+    $('submitBtn').textContent = n ? 'กำลังส่ง (พร้อมไฟล์ ' + n + ' ไฟล์ อาจใช้เวลาสักครู่)…' : 'กำลังส่ง…';
+    msg('formMsg');
+    fetch(ENDPOINT, { method: 'POST', body: JSON.stringify(p) }).then(function (r) { return r.json(); }).then(function (res) {
+      if (!res.ok) throw new Error(res.error);
+      showDone(p, res);
+    }).catch(function (err) {
+      msg('formMsg', 'bad', 'ส่งไม่สำเร็จ: ' + esc(err.message || 'เชื่อมต่อไม่ได้') + '<br>ข้อมูลที่กรอกยังอยู่ในหน้านี้ กดส่งใหม่ได้');
+    }).then(function () { $('submitBtn').disabled = false; $('submitBtn').textContent = 'ส่งข้อมูล'; });
+  }
+  function showDone(p, res) {
+    var html = p.kind === 'register'
+      ? '<p>ลงทะเบียนโครงการแล้ว · <b>รหัสโครงการ ' + esc(res.code) + '</b></p><div class="rf-note info">✏️ จดรหัส <b>' + esc(res.code) +
+        '</b> ไว้ · ทุกครั้งที่จัดกิจกรรม กลับมาเลือก "รายงานสถานะโครงการ" · เมื่อกิจกรรมทั้งหมดเสร็จ เลือก "กิจกรรมทั้งหมดเสร็จสิ้น" แล้วส่งรูปเล่มรายงานผลให้กองทุน</div>'
+      : '<p>รายงานโครงการ <b>' + esc(res.code) + '</b>: ' + esc(p.status) + '</p>' +
+        (res.photos || res.files ? '<p>แนบรูป ' + (res.photos || 0) + ' รูป · ไฟล์ ' + (res.files || 0) + ' ไฟล์</p>' : '') +
+        (p.status === 'กิจกรรมเสร็จสิ้น' ? '<div class="rf-note info">📑 กรุณาส่งรูปเล่มรายงานผลให้กองทุน เมื่อกองทุนได้รับแล้ว สถานะบนเว็บจะเปลี่ยนเป็น "เสร็จเรียบร้อย"</div>' : '');
+    html += '<p style="font-size:.92rem;color:var(--rf-muted)">เลขอ้างอิง ' + esc(res.batch) + ' · ถ้ากรอกผิด แจ้งเลขนี้กับเจ้าหน้าที่กองทุนเพื่อยกเลิกรายการ</p>';
+    $('doneText').innerHTML = html;
+    applyProjects(res.projects || projects || []);
+    $('reportForm').classList.add('rf-hidden');
+    document.querySelector('.rf-guide').classList.add('rf-hidden');
+    $('doneCard').classList.remove('rf-hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    $('donePop').classList.remove('rf-hidden'); $('donePopOk').focus();
+  }
+  function closePop() { $('donePop').classList.add('rf-hidden'); }
+
+  // ── เริ่มต้น ──
+  var photos = ReportPhotos.attach($('actPhotos'), { max: MAX_PHOTOS, onChange: function () { refresh(); } });
+  if (!ENDPOINT) msg('setupWarn', 'warn', '<b>หน้าทดลอง</b> ยังไม่ได้เชื่อมกับ Google Sheet ดูหน้าตาแบบฟอร์มได้ แต่ยังส่งข้อมูลไม่ได้');
+  var fy = fiscalYear(today());
+  [fy - 1, fy, fy + 1].forEach(function (y) { $('pFy').insertAdjacentHTML('beforeend', '<option>' + y + '</option>'); });
+  DISTRICTS.forEach(function (d) { $('uDistrict').insertAdjacentHTML('beforeend', '<option>' + d + '</option>'); });
+  $('eventDate').value = today(); $('eventDate').max = today(); $('eventDate').min = START_DATE;
+  $('workArea').addEventListener('change', refresh);
+  $('pdfInput').addEventListener('change', readPdfs);
+  $('uDistrict').addEventListener('change', function () { fillUnits(this.value); onUnitChange(); });
+  $('uUnit').addEventListener('change', onUnitChange);
+  $('uOther').addEventListener('input', onUnitChange);
+  $('reportForm').addEventListener('submit', submit);
+  $('again').addEventListener('click', function () {
+    $('doneCard').classList.add('rf-hidden'); $('reportForm').classList.remove('rf-hidden');
+    document.querySelector('.rf-guide').classList.remove('rf-hidden');
+    msg('formMsg'); resetWork(); $('workArea').scrollIntoView({ behavior: 'smooth' });
+  });
+  $('donePopOk').addEventListener('click', closePop);
+  $('donePop').addEventListener('click', function (e) { if (e.target === this) closePop(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePop(); });
+
+  fetch(DATA_URL).then(function (r) { return r.json(); }).then(function (json) {
+    (json.records || []).forEach(function (r) {
+      var d = normDistrict(r.d), list = units[d] || (units[d] = []);
+      if (list.indexOf(r.u) < 0) list.push(r.u);
+    });
+    Object.keys(units).forEach(function (d) { units[d].sort(function (a, b) { return a.localeCompare(b, 'th'); }); });
+    var saved = store(REMEMBER_KEY);
+    if (saved) {
+      $('rName').value = saved.reporter.name || ''; $('rPosition').value = saved.reporter.position || '';
+      $('rPhone').value = saved.reporter.phone || ''; $('rEmail').value = saved.reporter.email || '';
+      if (saved.district) { $('uDistrict').value = saved.district; fillUnits(saved.district); $('uUnit').value = saved.unit || ''; $('uOther').value = saved.other || ''; onUnitChange(); }
+    }
+  }).catch(function () { msg('unitMsg', 'bad', 'โหลดรายชื่อหน่วยบริการไม่สำเร็จ กรุณารีเฟรชหน้านี้'); });
+})();
+</script>
+</body>
+</html>

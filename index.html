@@ -10,6 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="assets/js/p1-live-status.js"></script>
 <script src="assets/js/p2-live-status.js"></script>
+<script src="assets/js/p3-live-status.js"></script>
 <script src="assets/js/p4-live-status.js"></script>
 <style>
 /* STABLE DESIGN - NO GLASSMORPHISM */
@@ -2995,6 +2996,7 @@ document.addEventListener('click', function(e) {
                 <option value="all">ทั้งหมด</option>
                 <option value="เสร็จเรียบร้อย">เสร็จเรียบร้อย</option>
                 <option value="อยู่ระหว่างดำเนินการ">อยู่ระหว่างดำเนินการ</option>
+                <option value="รอรายงานผล">รอรายงานผล</option>
               </select>
             </div>
           </div>
@@ -7033,11 +7035,9 @@ function loadP3Data(retriesLeft) {
   if (window.p3DataLoaded) { initP3(); return; }
   window.p3DataLoading = true;
 
-  fetch(P3_STATIC_URL)
-    .then(function(res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
-    })
+  // fetchP3Data (assets/js/p3-live-status.js) reads P3_STATIC_URL and applies
+  // project statuses / new projects from the network ledger Sheet.
+  fetchP3Data()
     .then(function(json) {
       p3Records = Array.isArray(json.records) ? json.records : [];
       window.p3DataLoaded  = true;
@@ -7208,17 +7208,20 @@ function renderP3StatusChart(){
   destroyP3Chart("status");
   var ctx=document.getElementById("p3ChartStatus");
   if(!ctx)return;
+  var p3StatusLabels=["เสร็จเรียบร้อย","อยู่ระหว่างดำเนินการ","รอรายงานผล"];
+  var p3StatusCounts=p3StatusLabels.map(function(s){ return p3Records.filter(function(r){ return r.s===s; }).length; });
+  var p3StatusTotal=p3Records.length||1;
   p3Charts["status"]=new Chart(ctx,{
     type:"pie",
     data:{
-      labels:["เสร็จเรียบร้อย","อยู่ระหว่างดำเนินการ"],
-      datasets:[{data:[20,10],backgroundColor:["#10b981","#f59e0b"],hoverOffset:4}]
+      labels:p3StatusLabels,
+      datasets:[{data:p3StatusCounts,backgroundColor:["#10b981","#f59e0b","#6366f1"],hoverOffset:4}]
     },
     options:{
       responsive:true,maintainAspectRatio:false,
       plugins:{
         legend:{position:"bottom",labels:{font:{size:9},boxWidth:10,padding:6}},
-        tooltip:{callbacks:{label:function(c){return c.label+": "+c.parsed+" โครงการ ("+((c.parsed/30)*100).toFixed(0)+"%)";}}}
+        tooltip:{callbacks:{label:function(c){return c.label+": "+c.parsed+" โครงการ ("+((c.parsed/p3StatusTotal)*100).toFixed(0)+"%)";}}}
       }
     }
   });
@@ -7292,6 +7295,8 @@ function renderP3Page(){
   pageRecs.forEach(function(r,i){
     var statusBadge=r.s==="เสร็จเรียบร้อย"
       ?'<span class="badge-status badge-success" style="font-size:0.68rem;padding:2px 6px;">✓ เสร็จ</span>'
+      :r.s==="รอรายงานผล"
+      ?'<span class="badge-status badge-info" style="font-size:0.68rem;padding:2px 6px;">📑 รอรายงานผล</span>'
       :'<span class="badge-status badge-warning" style="font-size:0.68rem;padding:2px 6px;">⏳ ดำเนิน</span>';
     var tr=document.createElement("tr");
     tr.innerHTML=
@@ -7460,7 +7465,7 @@ function updateBudgetPills() {
   Promise.all([
     fetchP1Data().catch(function() { return null; }),
     loadP2Data().catch(function() { return null; }),
-    get('network-capacity/data/dashboard_data.json'),
+    fetchP3Data().catch(function() { return null; }),
     fetchP4Data().catch(function() { return null; })
   ]).then(function(d) {
     var total = 0, complete = true;
