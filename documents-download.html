@@ -262,36 +262,85 @@ body.gov-contrast a { color: #ffe066 !important; }
   border-top: 1px solid var(--border-light);
 }
 
+.document-download + .document-download {
+  margin-top: 0.75rem;
+  padding-top: 0;
+  border-top: none;
+}
+
+/* ปุ่มดาวน์โหลด: สีและไอคอนตามประเภทไฟล์ (ดูจากนามสกุลไฟล์ใน href) */
 .download-btn {
+  --type-color: var(--primary-blue);
+  --type-tint: #f0fdfa;
   flex: 1;
-  background: linear-gradient(135deg, var(--primary-blue), #15b981);
-  color: white;
-  border: none;
-  padding: 0.7rem 1.2rem;
-  border-radius: 10px;
-  font-weight: 600;
+  background: #fff;
+  color: var(--type-color);
+  border: 2px solid var(--type-color);
+  padding: 0.55rem 0.9rem;
+  border-radius: 12px;
+  font-weight: 700;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   text-decoration: none;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   font-family: 'Sarabun', sans-serif;
+  white-space: nowrap;
 }
 
-.download-btn:hover {
+.download-btn::before {
+  content: '';
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  background: center / contain no-repeat;
+  border-radius: 6px;
+}
+
+.download-btn::after {
+  content: '⬇';
+  margin-left: auto;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--type-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.download-btn[href$=".pdf"] {
+  --type-color: #d32f2f;
+  --type-tint: #fdecea;
+}
+.download-btn[href$=".pdf"]::before { background-image: url('assets/img/icon-pdf.webp'); }
+
+.download-btn[href$=".docx"] {
+  --type-color: #185abd;
+  --type-tint: #e8f0fc;
+}
+.download-btn[href$=".docx"]::before { background-image: url('assets/img/icon-word.jpg'); }
+
+.download-btn:hover,
+.download-btn:focus-visible {
+  background: var(--type-tint);
+  color: var(--type-color);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(15, 118, 110, 0.3);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--type-color) 25%, transparent);
   text-decoration: none;
-  color: white;
 }
 
 .file-size {
   font-size: 0.85rem;
   color: var(--text-gray);
   align-self: center;
+  min-width: 4.5em;
+  text-align: right;
 }
 
 /* CATEGORY SECTION */
@@ -432,6 +481,11 @@ body.gov-contrast a { color: #ffe066 !important; }
   .document-icon { width: 48px; height: 48px; font-size: 1.5rem; }
   .document-title { font-size: 1rem; }
   .hero-title { font-size: 1.2rem; }
+  .document-download { gap: 0.6rem; }
+  .download-btn { gap: 0.5rem; padding: 0.5rem 0.6rem; font-size: 0.9rem; }
+  .download-btn::before { width: 28px; height: 28px; }
+  .download-btn::after { width: 26px; height: 26px; }
+  .file-size { min-width: 0; font-size: 0.8rem; }
 }
 </style>
 <link rel="stylesheet" href="assets/css/site-nav.css">
@@ -482,12 +536,12 @@ body.gov-contrast a { color: #ffe066 !important; }
             <span class="badge-tag important">เอกสารหลัก</span>
           </div>
           <div class="document-download">
-            <a href="documents/pdf/หลักเกณฑ์ขอรับงบจัดบริการกองทุนหลักประกันสุขภาพจังหวัดระยอง%20พ.ศ.%202569.pdf" class="download-btn" download>📥 PDF</a>
+            <a href="documents/pdf/หลักเกณฑ์ขอรับงบจัดบริการกองทุนหลักประกันสุขภาพจังหวัดระยอง%20พ.ศ.%202569.pdf" class="download-btn" download>ดาวน์โหลด PDF</a>
             <span class="file-size">250 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/หลักเกณฑ์ขอรับงบจัดบริการกองทุนหลักประกันสุขภาพจังหวัดระยอง%20พ.ศ.%202569.docx" class="download-btn" download>📥 Word</a>
-            <span class="file-size">108 KB</span>
+            <a href="documents/word/เอกสารแนบ%206%20หลักเกณฑ์ขอรับงบจัดบริการกองทุนหลักประกันสุขภาพจังหวัดระยอง%20พ.ศ.%202569.docx" class="download-btn" download="หลักเกณฑ์ขอรับงบจัดบริการกองทุนหลักประกันสุขภาพจังหวัดระยอง พ.ศ. 2569.docx">ดาวน์โหลด Word</a>
+            <span class="file-size">109 KB</span>
           </div>
         </div>
       </div>
@@ -502,11 +556,11 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์สำหรับกิจกรรมสร้างเสริมสุขภาพ ป้องกันโรค และการรักษาระดับปฐมภูมิเชิงรุก</p>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%201%20สร้างเสริม%20ป้องกัน%20รักษาปฐมภูมิเชิงรุก.pdf" class="download-btn" download="สร้างเสริม ป้องกัน รักษาปฐมภูมิเชิงรุก.pdf">📥 PDF</a>
+            <a href="documents/pdf/เอกสารแนบ%201%20สร้างเสริม%20ป้องกัน%20รักษาปฐมภูมิเชิงรุก.pdf" class="download-btn" download="สร้างเสริม ป้องกัน รักษาปฐมภูมิเชิงรุก.pdf">ดาวน์โหลด PDF</a>
             <span class="file-size">146 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.1%20สร้างเสริม%20ป้องกัน%20รักษาปฐมภูมิเชิงรุก.docx" class="download-btn" download="สร้างเสริม ป้องกัน รักษาปฐมภูมิเชิงรุก.docx">📥 Word</a>
+            <a href="documents/word/เอกสารแนบ%206.1%20สร้างเสริม%20ป้องกัน%20รักษาปฐมภูมิเชิงรุก.docx" class="download-btn" download="สร้างเสริม ป้องกัน รักษาปฐมภูมิเชิงรุก.docx">ดาวน์โหลด Word</a>
             <span class="file-size">76 KB</span>
           </div>
         </div>
@@ -522,12 +576,12 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์โครงการศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้าน</p>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%202%20ศูนย์สาธิต.pdf" class="download-btn" download="ศูนย์สาธิตและยืมอุปกรณ์ฯ.pdf">📥 PDF</a>
-            <span class="file-size">342 KB</span>
+            <a href="documents/pdf/เอกสารแนบ%202%20ศูนย์สาธิต.pdf" class="download-btn" download="ศูนย์สาธิตและยืมอุปกรณ์ฯ.pdf">ดาวน์โหลด PDF</a>
+            <span class="file-size">391 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.2%20ศูนย์สาธิต.docx" class="download-btn" download="ศูนย์สาธิตและยืมอุปกรณ์ฯ.docx">📥 Word</a>
-            <span class="file-size">145 KB</span>
+            <a href="documents/word/เอกสารแนบ%206.2%20ศูนย์สาธิต.docx" class="download-btn" download="ศูนย์สาธิตและยืมอุปกรณ์ฯ.docx">ดาวน์โหลด Word</a>
+            <span class="file-size">149 KB</span>
           </div>
         </div>
       </div>
@@ -542,11 +596,11 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์โครงการศูนย์ซ่อมบำรุง ดัดแปลงและจัดทำเฉพาะอุปกรณ์เครื่องช่วยความพิการ</p>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%203%20ซ่อมบำรุง.pdf" class="download-btn" download="ศูนย์ซ่อมบำรุงอุปกรณ์ฯ.pdf">📥 PDF</a>
+            <a href="documents/pdf/เอกสารแนบ%203%20ซ่อมบำรุง.pdf" class="download-btn" download="ศูนย์ซ่อมบำรุงอุปกรณ์ฯ.pdf">ดาวน์โหลด PDF</a>
             <span class="file-size">204 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.3%20ซ่อมบำรุง.docx" class="download-btn" download="ศูนย์ซ่อมบำรุงอุปกรณ์ฯ.docx">📥 Word</a>
+            <a href="documents/word/เอกสารแนบ%206.3%20ซ่อมบำรุง.docx" class="download-btn" download="ศูนย์ซ่อมบำรุงอุปกรณ์ฯ.docx">ดาวน์โหลด Word</a>
             <span class="file-size">83 KB</span>
           </div>
         </div>
@@ -562,12 +616,12 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์โครงการปรับสภาพแวดล้อมที่อยู่อาศัยสำหรับคนพิการ ผู้สูงอายุ และผู้ที่มีภาวะพึ่งพิง</p>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%204%20ปรับสภาพบ้าน.pdf" class="download-btn" download="ปรับสภาพแวดล้อมที่อยู่อาศัยฯ.pdf">📥 PDF</a>
+            <a href="documents/pdf/เอกสารแนบ%204%20ปรับสภาพบ้าน.pdf" class="download-btn" download="ปรับสภาพแวดล้อมที่อยู่อาศัยฯ.pdf">ดาวน์โหลด PDF</a>
             <span class="file-size">462 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.4%20ปรับสภาพบ้าน.docx" class="download-btn" download="ปรับสภาพแวดล้อมที่อยู่อาศัยฯ.docx">📥 Word</a>
-            <span class="file-size">253 KB</span>
+            <a href="documents/word/เอกสารแนบ%206.4%20ปรับสภาพบ้าน.docx" class="download-btn" download="ปรับสภาพแวดล้อมที่อยู่อาศัยฯ.docx">ดาวน์โหลด Word</a>
+            <span class="file-size">254 KB</span>
           </div>
         </div>
       </div>
@@ -582,11 +636,11 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์การจัดตั้งศูนย์พัฒนาและฟื้นฟูคุณภาพชีวิตผู้สูงอายุและคนพิการ</p>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%205%20จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.pdf" class="download-btn" download="จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.pdf">📥 PDF</a>
+            <a href="documents/pdf/เอกสารแนบ%205%20จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.pdf" class="download-btn" download="จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.pdf">ดาวน์โหลด PDF</a>
             <span class="file-size">520 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.5%20จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.docx" class="download-btn" download="จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.docx">📥 Word</a>
+            <a href="documents/word/เอกสารแนบ%206.5%20จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.docx" class="download-btn" download="จัดตั้งศูนย์ฟื้นฟูสมรรถภาพ.docx">ดาวน์โหลด Word</a>
             <span class="file-size">1.0 MB</span>
           </div>
         </div>
@@ -602,11 +656,11 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์โครงการพัฒนาศักยภาพเครือข่ายบริการเพื่อฟื้นฟูสมรรถภาพผู้พิการและผู้สูงอายุ</p>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%206%20พัฒนาศักยภาพ.pdf" class="download-btn" download="พัฒนาศักยภาพเครือข่ายบริการ.pdf">📥 PDF</a>
+            <a href="documents/pdf/เอกสารแนบ%206%20พัฒนาศักยภาพ.pdf" class="download-btn" download="พัฒนาศักยภาพเครือข่ายบริการ.pdf">ดาวน์โหลด PDF</a>
             <span class="file-size">178 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.6%20พัฒนาศักยภาพ.docx" class="download-btn" download="พัฒนาศักยภาพเครือข่ายบริการ.docx">📥 Word</a>
+            <a href="documents/word/เอกสารแนบ%206.6%20พัฒนาศักยภาพ.docx" class="download-btn" download="พัฒนาศักยภาพเครือข่ายบริการ.docx">ดาวน์โหลด Word</a>
             <span class="file-size">78 KB</span>
           </div>
         </div>
@@ -622,12 +676,119 @@ body.gov-contrast a { color: #ffe066 !important; }
         <div class="document-body">
           <p class="document-description">หลักเกณฑ์การดำเนินงานด้านโรคติดต่อและสาธารณภัย</p>
           <div class="document-download">
-            <a href="documents/pdf/เอกสารแนบ%207%20โรคติดต่อและภัยพิบัติ.pdf" class="download-btn" download="โรคติดต่อและภัยพิบัติ.pdf">📥 PDF</a>
-            <span class="file-size">171 KB</span>
+            <a href="documents/pdf/เอกสารแนบ%207%20โรคติดต่อและภัยพิบัติ.pdf" class="download-btn" download="โรคติดต่อและภัยพิบัติ.pdf">ดาวน์โหลด PDF</a>
+            <span class="file-size">172 KB</span>
           </div>
           <div class="document-download">
-            <a href="documents/word/เอกสารแนบ%206.7%20โรคติดต่อและภัยพิบัติ.docx" class="download-btn" download="โรคติดต่อและภัยพิบัติ.docx">📥 Word</a>
-            <span class="file-size">75 KB</span>
+            <a href="documents/word/เอกสารแนบ%206.7%20โรคติดต่อและภัยพิบัติ.docx" class="download-btn" download="โรคติดต่อและภัยพิบัติ.docx">ดาวน์โหลด Word</a>
+            <span class="file-size">76 KB</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION: คำสั่งและประกาศกองทุนฯ -->
+  <section class="category-section">
+    <h2 class="category-title">📜 คำสั่งและประกาศกองทุนฯ</h2>
+    <div class="document-grid">
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📢</div>
+          <div>
+            <div class="document-title">ประกาศคณะกรรมการหลักประกันสุขภาพแห่งชาติ เรื่อง หลักเกณฑ์เพื่อสนับสนุนให้ อบจ. ดำเนินงานและบริหารจัดการระบบหลักประกันสุขภาพฯ พ.ศ. 2569</div>
+            <div class="document-meta">ประกาศ • มกราคม 2569</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">ประกาศหลักเกณฑ์ระดับประเทศ ซึ่งเป็นฐานอำนาจในการดำเนินงานกองทุนหลักประกันสุขภาพระดับจังหวัด</p>
+          <div class="document-badges">
+            <span class="badge-tag important">ประกาศ</span>
+          </div>
+          <div class="document-download">
+            <a href="documents/pdf/ประกาศกองทุน%20ปี%2069%20(ลงนามแล้ว).pdf" class="download-btn" download="ประกาศกองทุน ปี 69 (ลงนามแล้ว).pdf">ดาวน์โหลด PDF</a>
+            <span class="file-size">4.8 MB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📑</div>
+          <div>
+            <div class="document-title">คำสั่งแต่งตั้งคณะกรรมการกองทุนหลักประกันสุขภาพจังหวัดระยอง</div>
+            <div class="document-meta">คำสั่ง อบจ.ระยอง ที่ 3598/2569 • 30 เม.ย. 2569</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">รายชื่อและอำนาจหน้าที่ของคณะกรรมการกองทุนหลักประกันสุขภาพจังหวัดระยอง</p>
+          <div class="document-download">
+            <a href="documents/pdf/คำสั่งแต่งตั้ง/คำสั่งคณะกรรมการกองทุนฯ%20ปี%202569.pdf" class="download-btn" download="คำสั่งคณะกรรมการกองทุนฯ ปี 2569.pdf">ดาวน์โหลด PDF</a>
+            <span class="file-size">299 KB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📑</div>
+          <div>
+            <div class="document-title">คำสั่งแต่งตั้งคณะอนุกรรมการกองทุนหลักประกันสุขภาพจังหวัดระยอง</div>
+            <div class="document-meta">คำสั่งกองทุนฯ ที่ 4/2569 • 2 ก.ค. 2569</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">รายชื่อและอำนาจหน้าที่ของคณะอนุกรรมการกองทุนหลักประกันสุขภาพจังหวัดระยอง</p>
+          <div class="document-download">
+            <a href="documents/pdf/คำสั่งแต่งตั้ง/คำสั่งแต่งตั้งอนุกรรมการกองทุนฯ%20ปี%202569.pdf" class="download-btn" download="คำสั่งแต่งตั้งอนุกรรมการกองทุนฯ ปี 2569.pdf">ดาวน์โหลด PDF</a>
+            <span class="file-size">119 KB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📑</div>
+          <div>
+            <div class="document-title">คำสั่งแต่งตั้งคณะอนุกรรมการในแต่ละด้านของกองทุนหลักประกันสุขภาพจังหวัดระยอง</div>
+            <div class="document-meta">คำสั่งกองทุนฯ ที่ 7/2569 • 27 ส.ค. 2569</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">คณะอนุกรรมการรายด้าน เช่น ด้านการวางแผน ตรวจสอบ กลั่นกรอง และประเมินผลโครงการ</p>
+          <div class="document-download">
+            <a href="documents/pdf/คำสั่งแต่งตั้ง/คำสั่งคณะอนุกรรมการกองทุนฯ%20ในแต่ละด้าน%20ปี%202569.pdf" class="download-btn" download="คำสั่งคณะอนุกรรมการกองทุนฯ ในแต่ละด้าน ปี 2569.pdf">ดาวน์โหลด PDF</a>
+            <span class="file-size">262 KB</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION: คู่มือกองทุนฯ -->
+  <section class="category-section">
+    <h2 class="category-title">📘 คู่มือกองทุนฯ</h2>
+    <div class="document-grid">
+
+      <div class="document-card">
+        <div class="document-header">
+          <div class="document-icon">📘</div>
+          <div>
+            <div class="document-title">คู่มือกองทุนหลักประกันสุขภาพจังหวัดระยอง ฉบับสมบูรณ์</div>
+            <div class="document-meta">คู่มือ • 162 หน้า</div>
+          </div>
+        </div>
+        <div class="document-body">
+          <p class="document-description">รวมระเบียบ หลักเกณฑ์ เอกสารแนบท้าย แนวคิดและหลักการของระบบหลักประกันสุขภาพ และแบบฟอร์มที่เกี่ยวข้องไว้ในเล่มเดียว</p>
+          <div class="document-badges">
+            <span class="badge-tag new">ใหม่</span>
+          </div>
+          <div class="document-download">
+            <a href="documents/pdf/คู่มือกองทุนฯ%20ฉบับสมบูรณ์.pdf" class="download-btn" download="คู่มือกองทุนฯ ฉบับสมบูรณ์.pdf">ดาวน์โหลด PDF</a>
+            <span class="file-size">12.9 MB</span>
           </div>
         </div>
       </div>
@@ -665,7 +826,7 @@ body.gov-contrast a { color: #ffe066 !important; }
     </div>
   </div>
   <div style="max-width: 1200px; margin: 1rem auto; padding: 0 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; text-align: center; font-size: 0.8rem; opacity: 0.6;">
-    © 2568 กองทุนหลักประกันสุขภาพจังหวัดระยอง · ปรับปรุงล่าสุด 17 สิงหาคม 2569
+    © 2568 กองทุนหลักประกันสุขภาพจังหวัดระยอง · ปรับปรุงล่าสุด 28 ตุลาคม 2569
   </div>
 </footer>
 
