@@ -153,13 +153,23 @@ function readMap() {
   const rows = parseCsv(fs.readFileSync(MAP_CSV, 'utf8').replace(/^﻿/, ''));
   const idx = {};
   rows[0].forEach((h, i) => { idx[h.trim()] = i; });
+  // "lat, lon" — kept only when it lands inside Rayong (the site uses it to
+  // measure distance to nearby units)
+  const latLon = s => {
+    const m = String(s || '').match(/(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/);
+    if (!m) return {};
+    const lat = +m[1], lon = +m[2];
+    if (lat < 12.4 || lat > 13.3 || lon < 100.8 || lon > 102) return {};
+    return { lat: +lat.toFixed(5), lon: +lon.toFixed(5) };
+  };
   return rows.slice(1).map(c => ({
     agency_type: text(c[idx['ประเภท_หน่วยงาน']]),
     agency: text(c[idx['ชื่อ_หน่วยงาน']]),
     subdistrict: text(c[idx['ชื่อ_ตำบล']]),
     district: text(c[idx['ชื่อ_อำเภอ']]),
     phone: text(c[idx['เบอร์โทร']]),
-    google_map_link: text(c[idx['link_google_map']])
+    google_map_link: text(c[idx['link_google_map']]),
+    ...latLon(c[idx['location_ละติจูด,ลองติจูด']])
   })).filter(r => r.agency);
 }
 

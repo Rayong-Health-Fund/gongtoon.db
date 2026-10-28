@@ -2,7 +2,7 @@
   "ok": true,
   "project": "P2",
   "source": "เอกสารแนบ 4 รายงานศูนย์สาธิต.xlsx",
-  "generatedAt": "2026-10-26T09:17:52.078Z",
+  "generatedAt": "2026-10-28T08:43:54.815Z",
   "overview": [
     {
       "district": "เมืองระยอง",
@@ -8976,7 +8976,9 @@
       "subdistrict": "ท่าประดู่",
       "district": "เมืองระยอง",
       "phone": "038611104",
-      "google_map_link": "https://maps.app.goo.gl/x7ypYXDBCfHKyqUm8"
+      "google_map_link": "https://maps.app.goo.gl/x7ypYXDBCfHKyqUm8",
+      "lat": 12.68234,
+      "lon": 101.27647
     },
     {
       "agency_type": "โรงพยาบาล",
@@ -8984,7 +8986,9 @@
       "subdistrict": "ห้วยโป่ง",
       "district": "เมืองระยอง",
       "phone": "038684444",
-      "google_map_link": "https://maps.app.goo.gl/FwZBL9JLZx3am5es8"
+      "google_map_link": "https://maps.app.goo.gl/FwZBL9JLZx3am5es8",
+      "lat": 12.73078,
+      "lon": 101.1364
     },
     {
       "agency_type": "สำนักงานสาธารณสุขอำเภอ",
@@ -8992,15 +8996,19 @@
       "subdistrict": "เนินพระ",
       "district": "เมืองระยอง",
       "phone": "038614435",
-      "google_map_link": "https://maps.app.goo.gl/PtQ8f3tvGSG9rJjYA"
+      "google_map_link": "https://maps.app.goo.gl/PtQ8f3tvGSG9rJjYA",
+      "lat": 12.68319,
+      "lon": 101.23727
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
       "agency": "รพ.สต.กะเฉด",
-      "subdistrict": "มาบข่า",
+      "subdistrict": "กะเฉด",
       "district": "เมืองระยอง",
       "phone": "038634222",
-      "google_map_link": "https://maps.app.goo.gl/scSrzCWTTkBhvGpV9"
+      "google_map_link": "https://maps.app.goo.gl/scSrzCWTTkBhvGpV9",
+      "lat": 12.72817,
+      "lon": 101.48862
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9008,7 +9016,9 @@
       "subdistrict": "แกลง",
       "district": "เมืองระยอง",
       "phone": "038648588",
-      "google_map_link": "https://maps.app.goo.gl/verN7HsCeySiZ3faA"
+      "google_map_link": "https://maps.app.goo.gl/verN7HsCeySiZ3faA",
+      "lat": 12.6424,
+      "lon": 101.50611
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9016,7 +9026,9 @@
       "subdistrict": "สำนักท้อน",
       "district": "บ้านฉาง",
       "phone": "038030433",
-      "google_map_link": "https://maps.app.goo.gl/H7iiJYeoTkRXnH2m6"
+      "google_map_link": "https://maps.app.goo.gl/H7iiJYeoTkRXnH2m6",
+      "lat": 12.70531,
+      "lon": 100.99661
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9024,7 +9036,9 @@
       "subdistrict": "บ้านแลง",
       "district": "เมืองระยอง",
       "phone": "038626275",
-      "google_map_link": "https://maps.app.goo.gl/7nVEntNKHYvVV9vp8"
+      "google_map_link": "https://maps.app.goo.gl/7nVEntNKHYvVV9vp8",
+      "lat": 12.68576,
+      "lon": 101.34161
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9032,7 +9046,9 @@
       "subdistrict": "สำนักทอง",
       "district": "เมืองระยอง",
       "phone": "038031631",
-      "google_map_link": "https://maps.app.goo.gl/SQMfH9MwNhP9Qm4z7"
+      "google_map_link": "https://maps.app.goo.gl/SQMfH9MwNhP9Qm4z7",
+      "lat": 12.70676,
+      "lon": 101.47026
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9040,7 +9056,9 @@
       "subdistrict": "เพ",
       "district": "เมืองระยอง",
       "phone": "038652613",
-      "google_map_link": "https://maps.app.goo.gl/z3iCVyfTLEJD7f1t8"
+      "google_map_link": "https://maps.app.goo.gl/z3iCVyfTLEJD7f1t8",
+      "lat": 12.62149,
+      "lon": 101.42802
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9048,7 +9066,9 @@
       "subdistrict": "เพ",
       "district": "เมืองระยอง",
       "phone": "038644123",
-      "google_map_link": "https://maps.app.goo.gl/RKzc8of4Nk99vjEv7"
+      "google_map_link": "https://maps.app.goo.gl/RKzc8of4Nk99vjEv7",
+      "lat": 12.57063,
+      "lon": 101.46451
     },
     {
       "agency_type": "ศูนย์บริการสาธารณสุข",
@@ -9056,7 +9076,9 @@
       "subdistrict": "ท่าประดู่",
       "district": "เมืองระยอง",
       "phone": "038620111, 038611345",
-      "google_map_link": "https://maps.app.goo.gl/EQr4U3K9r1Qe6TH39"
+      "google_map_link": "https://maps.app.goo.gl/EQr4U3K9r1Qe6TH39",
+      "lat": 12.67513,
+      "lon": 101.27865
     },
     {
       "agency_type": "โรงพยาบาล",
@@ -9064,7 +9086,9 @@
       "subdistrict": "มะขามคู่",
       "district": "นิคมพัฒนา",
       "phone": "038038050",
-      "google_map_link": "https://maps.app.goo.gl/ERYrvujia4nK2wgD8"
+      "google_map_link": "https://maps.app.goo.gl/ERYrvujia4nK2wgD8",
+      "lat": 12.87021,
+      "lon": 101.14226
     },
     {
       "agency_type": "สำนักงานสาธารณสุขอำเภอ",
@@ -9072,7 +9096,9 @@
       "subdistrict": "นิคมพัฒนา",
       "district": "นิคมพัฒนา",
       "phone": "038636827",
-      "google_map_link": "https://maps.app.goo.gl/5NKEDpWrN89q66Ca8"
+      "google_map_link": "https://maps.app.goo.gl/5NKEDpWrN89q66Ca8",
+      "lat": 12.82993,
+      "lon": 101.20511
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9080,7 +9106,9 @@
       "subdistrict": "มาบข่า",
       "district": "นิคมพัฒนา",
       "phone": "038637917",
-      "google_map_link": "https://maps.app.goo.gl/A2MjCJzWPmWBJT8FA"
+      "google_map_link": "https://maps.app.goo.gl/A2MjCJzWPmWBJT8FA",
+      "lat": 12.76607,
+      "lon": 101.21294
     },
     {
       "agency_type": "โรงพยาบาล",
@@ -9088,7 +9116,9 @@
       "subdistrict": "พลา",
       "district": "บ้านฉาง",
       "phone": "038603838",
-      "google_map_link": "https://maps.app.goo.gl/iWzbo3darsCvDLTu6"
+      "google_map_link": "https://maps.app.goo.gl/iWzbo3darsCvDLTu6",
+      "lat": 12.72615,
+      "lon": 101.04331
     },
     {
       "agency_type": "สำนักงานสาธารณสุขอำเภอ",
@@ -9096,7 +9126,9 @@
       "subdistrict": "พลา",
       "district": "บ้านฉาง",
       "phone": "038601142",
-      "google_map_link": "https://maps.app.goo.gl/VXphNcYcm546hPsH6"
+      "google_map_link": "https://maps.app.goo.gl/VXphNcYcm546hPsH6",
+      "lat": 12.71934,
+      "lon": 101.04305
     },
     {
       "agency_type": "ศูนย์บริการสาธารณสุข",
@@ -9104,7 +9136,9 @@
       "subdistrict": "สำนักท้อน",
       "district": "บ้านฉาง",
       "phone": "",
-      "google_map_link": "https://maps.app.goo.gl/FJV1A1td9mgwyHz98"
+      "google_map_link": "https://maps.app.goo.gl/FJV1A1td9mgwyHz98",
+      "lat": 12.71374,
+      "lon": 101.0173
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9112,7 +9146,9 @@
       "subdistrict": "สำนักท้อน",
       "district": "บ้านฉาง",
       "phone": "038030484",
-      "google_map_link": "https://maps.app.goo.gl/KbM7pXct14uTN1CXA"
+      "google_map_link": "https://maps.app.goo.gl/KbM7pXct14uTN1CXA",
+      "lat": 12.72024,
+      "lon": 101.00681
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9120,7 +9156,9 @@
       "subdistrict": "สำนักท้อน",
       "district": "บ้านฉาง",
       "phone": "038-963-431",
-      "google_map_link": "https://maps.app.goo.gl/9KbRYLw4q2EBT1as7"
+      "google_map_link": "https://maps.app.goo.gl/9KbRYLw4q2EBT1as7",
+      "lat": 12.77016,
+      "lon": 101.01938
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9128,7 +9166,9 @@
       "subdistrict": "บ้านฉาง",
       "district": "บ้านฉาง",
       "phone": "038696088",
-      "google_map_link": "https://maps.app.goo.gl/74mRZT5duNgwf9DKA"
+      "google_map_link": "https://maps.app.goo.gl/74mRZT5duNgwf9DKA",
+      "lat": 12.75326,
+      "lon": 101.03974
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9136,7 +9176,9 @@
       "subdistrict": "สำนักท้อน",
       "district": "บ้านฉาง",
       "phone": "038963337",
-      "google_map_link": "https://maps.app.goo.gl/TxRkjmTQFCj28BEm7"
+      "google_map_link": "https://maps.app.goo.gl/TxRkjmTQFCj28BEm7",
+      "lat": 12.74317,
+      "lon": 101.01353
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9144,7 +9186,9 @@
       "subdistrict": "สำนักท้อน",
       "district": "บ้านฉาง",
       "phone": "038030625",
-      "google_map_link": "https://maps.app.goo.gl/AwmWyPd54Mnw5LXV9"
+      "google_map_link": "https://maps.app.goo.gl/AwmWyPd54Mnw5LXV9",
+      "lat": 12.80343,
+      "lon": 101.05244
     },
     {
       "agency_type": "โรงพยาบาล",
@@ -9152,7 +9196,9 @@
       "subdistrict": "ห้วยทับมอญ",
       "district": "เขาชะเมา",
       "phone": "038996022",
-      "google_map_link": "https://maps.app.goo.gl/wyGPZvBQ5kK9vvwu8"
+      "google_map_link": "https://maps.app.goo.gl/wyGPZvBQ5kK9vvwu8",
+      "lat": 12.98822,
+      "lon": 101.67332
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9160,7 +9206,9 @@
       "subdistrict": "ชำฆ้อ",
       "district": "เขาชะเมา",
       "phone": "-",
-      "google_map_link": "https://maps.app.goo.gl/DsnxC75VDZH8eZ8a8"
+      "google_map_link": "https://maps.app.goo.gl/DsnxC75VDZH8eZ8a8",
+      "lat": 12.94096,
+      "lon": 101.67278
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9168,7 +9216,9 @@
       "subdistrict": "ห้วยทับมอญ",
       "district": "เขาชะเมา",
       "phone": "-",
-      "google_map_link": "https://maps.app.goo.gl/hR64pRUnMbYV85an8"
+      "google_map_link": "https://maps.app.goo.gl/hR64pRUnMbYV85an8",
+      "lat": 13.00796,
+      "lon": 101.7161
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9176,7 +9226,9 @@
       "subdistrict": "เขาน้อย",
       "district": "เขาชะเมา",
       "phone": "-",
-      "google_map_link": "https://maps.app.goo.gl/DByjxN3xe9dWXLN69"
+      "google_map_link": "https://maps.app.goo.gl/DByjxN3xe9dWXLN69",
+      "lat": 13.10184,
+      "lon": 101.6
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9184,7 +9236,9 @@
       "subdistrict": "น้ำเป็น",
       "district": "เขาชะเมา",
       "phone": "038-894265",
-      "google_map_link": "https://maps.app.goo.gl/RGo3A37vmM5jWP4e8"
+      "google_map_link": "https://maps.app.goo.gl/RGo3A37vmM5jWP4e8",
+      "lat": 12.86274,
+      "lon": 101.73753
     },
     {
       "agency_type": "สถานีอนามัย",
@@ -9192,7 +9246,9 @@
       "subdistrict": "น้ำเป็น",
       "district": "เขาชะเมา",
       "phone": "-",
-      "google_map_link": "https://maps.app.goo.gl/GoAzRpfHDdAAHxoQ7"
+      "google_map_link": "https://maps.app.goo.gl/GoAzRpfHDdAAHxoQ7",
+      "lat": 12.94777,
+      "lon": 101.79475
     },
     {
       "agency_type": "โรงพยาบาล",
@@ -9200,7 +9256,9 @@
       "subdistrict": "ทางเกวียน",
       "district": "แกลง",
       "phone": "038677534",
-      "google_map_link": "https://maps.app.goo.gl/fRVTxr61x6wnokCz9"
+      "google_map_link": "https://maps.app.goo.gl/fRVTxr61x6wnokCz9",
+      "lat": 12.78578,
+      "lon": 101.67069
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9208,7 +9266,9 @@
       "subdistrict": "กองดิน",
       "district": "แกลง",
       "phone": "038806363",
-      "google_map_link": "https://maps.app.goo.gl/WWR19UJGUcXz584Z6"
+      "google_map_link": "https://maps.app.goo.gl/WWR19UJGUcXz584Z6",
+      "lat": 12.78345,
+      "lon": 101.8087
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9216,7 +9276,9 @@
       "subdistrict": "บ้านนา",
       "district": "แกลง",
       "phone": "0870565795",
-      "google_map_link": "https://maps.app.goo.gl/6QCjy1vssFvYbbrv9"
+      "google_map_link": "https://maps.app.goo.gl/6QCjy1vssFvYbbrv9",
+      "lat": 12.83081,
+      "lon": 101.66939
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9224,15 +9286,19 @@
       "subdistrict": "กร่ำ",
       "district": "แกลง",
       "phone": "038-657457",
-      "google_map_link": "https://maps.app.goo.gl/sfa7dzMcubg4wXps5"
+      "google_map_link": "https://maps.app.goo.gl/sfa7dzMcubg4wXps5",
+      "lat": 12.65841,
+      "lon": 101.63827
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
       "agency": "รพ.สต.บ้านสองพี่น้อง",
-      "subdistrict": "ห้วยยาง",
+      "subdistrict": "สองสลึง",
       "district": "แกลง",
-      "phone": "032787446",
-      "google_map_link": "https://maps.app.goo.gl/2jF8pYyoGBwU86PUA"
+      "phone": "087-603-1863",
+      "google_map_link": "https://maps.app.goo.gl/zj8cimDaS85TZn3m8",
+      "lat": 12.76186,
+      "lon": 101.54891
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9240,7 +9306,9 @@
       "subdistrict": "ชากโดน",
       "district": "แกลง",
       "phone": "038-632-249",
-      "google_map_link": "https://maps.app.goo.gl/ZRNRW7pXZc9YR7i86"
+      "google_map_link": "https://maps.app.goo.gl/ZRNRW7pXZc9YR7i86",
+      "lat": 12.69948,
+      "lon": 101.6056
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9248,7 +9316,9 @@
       "subdistrict": "วังหว้า",
       "district": "แกลง",
       "phone": "038944550",
-      "google_map_link": "https://maps.app.goo.gl/UgZs1chtazyZCCMT9"
+      "google_map_link": "https://maps.app.goo.gl/UgZs1chtazyZCCMT9",
+      "lat": 12.78097,
+      "lon": 101.56683
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9256,7 +9326,9 @@
       "subdistrict": "ทุ่งควายกิน",
       "district": "แกลง",
       "phone": "038669432",
-      "google_map_link": "https://maps.app.goo.gl/KYxUmQqJyJc8YEe3A"
+      "google_map_link": "https://maps.app.goo.gl/KYxUmQqJyJc8YEe3A",
+      "lat": 12.80415,
+      "lon": 101.74058
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9264,7 +9336,9 @@
       "subdistrict": "ทุ่งควายกิน",
       "district": "แกลง",
       "phone": "038-669-502",
-      "google_map_link": "https://maps.app.goo.gl/vFzU5ofCdGgwA4ki9"
+      "google_map_link": "https://maps.app.goo.gl/vFzU5ofCdGgwA4ki9",
+      "lat": 12.7806,
+      "lon": 101.71293
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9272,7 +9346,9 @@
       "subdistrict": "กองดิน",
       "district": "แกลง",
       "phone": "038668936",
-      "google_map_link": "https://maps.app.goo.gl/PH7xZoP3v7Lcw5v88"
+      "google_map_link": "https://maps.app.goo.gl/PH7xZoP3v7Lcw5v88",
+      "lat": 12.81502,
+      "lon": 101.76967
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9280,7 +9356,9 @@
       "subdistrict": "วังหว้า",
       "district": "แกลง",
       "phone": "038671911",
-      "google_map_link": "https://maps.app.goo.gl/XUJb6xHok19exwR97"
+      "google_map_link": "https://maps.app.goo.gl/XUJb6xHok19exwR97",
+      "lat": 12.7509,
+      "lon": 101.62005
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9288,7 +9366,9 @@
       "subdistrict": "ห้วยยาง",
       "district": "แกลง",
       "phone": "038632303",
-      "google_map_link": "https://maps.app.goo.gl/GLnznSBepT6K5nkE8"
+      "google_map_link": "https://maps.app.goo.gl/GLnznSBepT6K5nkE8",
+      "lat": 12.73613,
+      "lon": 101.59323
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9296,7 +9376,9 @@
       "subdistrict": "เนินฆ้อ",
       "district": "แกลง",
       "phone": "038 697 015",
-      "google_map_link": "https://maps.app.goo.gl/eUxs8GfpXqkQFYdG8"
+      "google_map_link": "https://maps.app.goo.gl/eUxs8GfpXqkQFYdG8",
+      "lat": 12.69313,
+      "lon": 101.66904
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9304,7 +9386,9 @@
       "subdistrict": "ชากพง",
       "district": "แกลง",
       "phone": "038638459",
-      "google_map_link": "https://maps.app.goo.gl/d11RmAUEqJf3GN276"
+      "google_map_link": "https://maps.app.goo.gl/d11RmAUEqJf3GN276",
+      "lat": 12.65114,
+      "lon": 101.56501
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9312,7 +9396,9 @@
       "subdistrict": "เนินฆ้อ",
       "district": "แกลง",
       "phone": "038-670-708",
-      "google_map_link": "https://maps.app.goo.gl/qm5u7vNLW8S1hsjL7"
+      "google_map_link": "https://maps.app.goo.gl/qm5u7vNLW8S1hsjL7",
+      "lat": 12.71126,
+      "lon": 101.61905
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9320,7 +9406,9 @@
       "subdistrict": "กระแสบน",
       "district": "แกลง",
       "phone": "038992120",
-      "google_map_link": "https://maps.app.goo.gl/gqDWu8YQWZdWtna77"
+      "google_map_link": "https://maps.app.goo.gl/gqDWu8YQWZdWtna77",
+      "lat": 12.84399,
+      "lon": 101.62659
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9328,7 +9416,9 @@
       "subdistrict": "เนินฆ้อ",
       "district": "แกลง",
       "phone": "038 020 330",
-      "google_map_link": "https://maps.app.goo.gl/XNkZuq4b4LgMaM4s8"
+      "google_map_link": "https://maps.app.goo.gl/XNkZuq4b4LgMaM4s8",
+      "lat": 12.72582,
+      "lon": 101.63534
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9336,7 +9426,9 @@
       "subdistrict": "พังราด",
       "district": "แกลง",
       "phone": "038661504",
-      "google_map_link": "https://maps.app.goo.gl/6iYaqhiugweBzwPx6"
+      "google_map_link": "https://maps.app.goo.gl/6iYaqhiugweBzwPx6",
+      "lat": 12.72922,
+      "lon": 101.75186
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9344,7 +9436,9 @@
       "subdistrict": "ทางเกวียน",
       "district": "แกลง",
       "phone": "0892404288",
-      "google_map_link": "https://maps.app.goo.gl/UUsfW2fNbrdFvAgg9"
+      "google_map_link": "https://maps.app.goo.gl/UUsfW2fNbrdFvAgg9",
+      "lat": 12.83003,
+      "lon": 101.52242
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9352,15 +9446,19 @@
       "subdistrict": "สองสลึง",
       "district": "แกลง",
       "phone": "038-993-362",
-      "google_map_link": "https://maps.app.goo.gl/VfAnSNSXo8tHoCZk8"
+      "google_map_link": "https://maps.app.goo.gl/VfAnSNSXo8tHoCZk8",
+      "lat": 12.79874,
+      "lon": 101.53583
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
       "agency": "รพ.สต.สองสลึง",
       "subdistrict": "สองสลึง",
       "district": "แกลง",
-      "phone": "0876031863",
-      "google_map_link": "https://maps.app.goo.gl/GS2ME57McUhYzcGH7"
+      "phone": "-",
+      "google_map_link": "https://maps.app.goo.gl/GS2ME57McUhYzcGH7",
+      "lat": 12.71368,
+      "lon": 101.56164
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9368,7 +9466,9 @@
       "subdistrict": "กระแสบน",
       "district": "แกลง",
       "phone": "038017506",
-      "google_map_link": "https://maps.app.goo.gl/wFQQdcgVvCoZRz5t5"
+      "google_map_link": "https://maps.app.goo.gl/wFQQdcgVvCoZRz5t5",
+      "lat": 12.94137,
+      "lon": 101.60619
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9376,7 +9476,9 @@
       "subdistrict": "คลองปูน",
       "district": "แกลง",
       "phone": "038661506",
-      "google_map_link": "https://maps.app.goo.gl/vxmQJ1nwTtoyzKf27"
+      "google_map_link": "https://maps.app.goo.gl/vxmQJ1nwTtoyzKf27",
+      "lat": 12.75016,
+      "lon": 101.73076
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9384,7 +9486,9 @@
       "subdistrict": "ปากน้ำกระแส",
       "district": "แกลง",
       "phone": "038-661-371",
-      "google_map_link": "https://maps.app.goo.gl/DpjZ4a6udtxKSJBK9"
+      "google_map_link": "https://maps.app.goo.gl/DpjZ4a6udtxKSJBK9",
+      "lat": 12.71406,
+      "lon": 101.70783
     },
     {
       "agency_type": "ศูนย์บริการสาธารณสุข",
@@ -9392,7 +9496,9 @@
       "subdistrict": "ทางเกวียน",
       "district": "แกลง",
       "phone": "038675222",
-      "google_map_link": "https://maps.app.goo.gl/pk16aW7TiFAtfKyG7"
+      "google_map_link": "https://maps.app.goo.gl/pk16aW7TiFAtfKyG7",
+      "lat": 12.77938,
+      "lon": 101.65155
     },
     {
       "agency_type": "โรงพยาบาล",
@@ -9400,7 +9506,9 @@
       "subdistrict": "ชุมแสง",
       "district": "วังจันทร์",
       "phone": "038666174",
-      "google_map_link": "https://maps.app.goo.gl/UAQuNZ5AXbKFnuGk7"
+      "google_map_link": "https://maps.app.goo.gl/UAQuNZ5AXbKFnuGk7",
+      "lat": 12.94034,
+      "lon": 101.52925
     },
     {
       "agency_type": "สำนักงานสาธารณสุขอำเภอ",
@@ -9408,7 +9516,9 @@
       "subdistrict": "ชุมแสง",
       "district": "วังจันทร์",
       "phone": "038666190",
-      "google_map_link": "https://maps.app.goo.gl/2FxFmZaafnvhVotj7"
+      "google_map_link": "https://maps.app.goo.gl/2FxFmZaafnvhVotj7",
+      "lat": 12.93569,
+      "lon": 101.51939
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9416,7 +9526,9 @@
       "subdistrict": "ป่ายุบใน",
       "district": "วังจันทร์",
       "phone": "038015158",
-      "google_map_link": "https://maps.app.goo.gl/rZSC3fBnKPeNe39T6"
+      "google_map_link": "https://maps.app.goo.gl/rZSC3fBnKPeNe39T6",
+      "lat": 13.03694,
+      "lon": 101.43515
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9424,15 +9536,19 @@
       "subdistrict": "ป่ายุบใน",
       "district": "วังจันทร์",
       "phone": "038626053",
-      "google_map_link": "https://maps.app.goo.gl/CmRnWV9Wsr41vQMr9"
+      "google_map_link": "https://maps.app.goo.gl/CmRnWV9Wsr41vQMr9",
+      "lat": 12.88258,
+      "lon": 101.55737
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
       "agency": "รพ.สต.บ้านเขาตาอิ๋น",
-      "subdistrict": "คลองกิ่ว",
+      "subdistrict": "ชุมแสง",
       "district": "วังจันทร์",
       "phone": "038666642",
-      "google_map_link": "https://maps.app.goo.gl/sVhe4wA7wsyJENsaA"
+      "google_map_link": "https://maps.app.goo.gl/sVhe4wA7wsyJENsaA",
+      "lat": 12.9185,
+      "lon": 101.49653
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9440,7 +9556,9 @@
       "subdistrict": "ป่ายุบใน",
       "district": "วังจันทร์",
       "phone": "081-7813408 หรือ 081-0612047",
-      "google_map_link": "https://maps.app.goo.gl/Wmi4q8HSt1EGuigK6"
+      "google_map_link": "https://maps.app.goo.gl/Wmi4q8HSt1EGuigK6",
+      "lat": 13.04626,
+      "lon": 101.53138
     },
     {
       "agency_type": "โรงพยาบาล",
@@ -9448,7 +9566,9 @@
       "subdistrict": "หนองละลอก",
       "district": "บ้านค่าย",
       "phone": "038641005",
-      "google_map_link": "https://maps.app.goo.gl/YkT5XqFz59adb8EaA"
+      "google_map_link": "https://maps.app.goo.gl/YkT5XqFz59adb8EaA",
+      "lat": 12.77881,
+      "lon": 101.29283
     },
     {
       "agency_type": "สำนักงานสาธารณสุขอำเภอ",
@@ -9456,7 +9576,9 @@
       "subdistrict": "บ้านค่าย",
       "district": "บ้านค่าย",
       "phone": "038641305",
-      "google_map_link": "https://maps.app.goo.gl/xvyd77gaoNtP1shr9"
+      "google_map_link": "https://maps.app.goo.gl/xvyd77gaoNtP1shr9",
+      "lat": 12.77738,
+      "lon": 101.29383
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9464,7 +9586,9 @@
       "subdistrict": "หนองตะพาน",
       "district": "บ้านค่าย",
       "phone": "038025232",
-      "google_map_link": "https://maps.app.goo.gl/fCpmQMsHtSBVXwPw5"
+      "google_map_link": "https://maps.app.goo.gl/fCpmQMsHtSBVXwPw5",
+      "lat": 12.74908,
+      "lon": 101.26336
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9472,7 +9596,9 @@
       "subdistrict": "บางบุตร",
       "district": "บ้านค่าย",
       "phone": "038-018-010, 086-441-6544, 080-030-8820",
-      "google_map_link": "https://maps.app.goo.gl/i2sRkGnjadua8Q8K9"
+      "google_map_link": "https://maps.app.goo.gl/i2sRkGnjadua8Q8K9",
+      "lat": 12.95763,
+      "lon": 101.4417
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9480,7 +9606,9 @@
       "subdistrict": "บางบุตร",
       "district": "บ้านค่าย",
       "phone": "038-032-627",
-      "google_map_link": "https://maps.app.goo.gl/u3XuBGruCd7vEsQA7"
+      "google_map_link": "https://maps.app.goo.gl/u3XuBGruCd7vEsQA7",
+      "lat": 12.83263,
+      "lon": 101.3439
     },
     {
       "agency_type": "โรงพยาบาล",
@@ -9488,7 +9616,9 @@
       "subdistrict": "ปลวกแดง",
       "district": "ปลวกแดง",
       "phone": "033650413",
-      "google_map_link": "https://maps.app.goo.gl/o9SKoSzyD1MKh7rv9"
+      "google_map_link": "https://maps.app.goo.gl/o9SKoSzyD1MKh7rv9",
+      "lat": 12.97077,
+      "lon": 101.2191
     },
     {
       "agency_type": "สำนักงานสาธารณสุขอำเภอ",
@@ -9496,7 +9626,9 @@
       "subdistrict": "ปลวกแดง",
       "district": "ปลวกแดง",
       "phone": "038659069",
-      "google_map_link": "https://maps.app.goo.gl/edjh9mBkvHYV5QDHA"
+      "google_map_link": "https://maps.app.goo.gl/edjh9mBkvHYV5QDHA",
+      "lat": 12.97437,
+      "lon": 101.21322
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9504,7 +9636,9 @@
       "subdistrict": "ตาสิทธิ์",
       "district": "ปลวกแดง",
       "phone": "0838586253",
-      "google_map_link": "https://maps.app.goo.gl/jrRuXP7ZAyJL5wit5"
+      "google_map_link": "https://maps.app.goo.gl/jrRuXP7ZAyJL5wit5",
+      "lat": 13.0551,
+      "lon": 101.201
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9512,7 +9646,9 @@
       "subdistrict": "มาบยางพร",
       "district": "ปลวกแดง",
       "phone": "038 891 599",
-      "google_map_link": "https://maps.app.goo.gl/cgS1iAtkCgucaQTv8"
+      "google_map_link": "https://maps.app.goo.gl/cgS1iAtkCgucaQTv8",
+      "lat": 12.99113,
+      "lon": 101.13303
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9520,7 +9656,9 @@
       "subdistrict": "หนองไร่",
       "district": "ปลวกแดง",
       "phone": "0892493434",
-      "google_map_link": "https://maps.app.goo.gl/jM3Xx7aZGXf8jqud9"
+      "google_map_link": "https://maps.app.goo.gl/jM3Xx7aZGXf8jqud9",
+      "lat": 13.00865,
+      "lon": 101.35961
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9528,7 +9666,9 @@
       "subdistrict": "หนองไร่",
       "district": "ปลวกแดง",
       "phone": "0871496499",
-      "google_map_link": "https://maps.app.goo.gl/bQZVgBqjvCRpn9566"
+      "google_map_link": "https://maps.app.goo.gl/bQZVgBqjvCRpn9566",
+      "lat": 12.97474,
+      "lon": 101.37918
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9536,7 +9676,9 @@
       "subdistrict": "ละหาร",
       "district": "ปลวกแดง",
       "phone": "038961237",
-      "google_map_link": "https://maps.app.goo.gl/728bjT99fKdAiPtQ6"
+      "google_map_link": "https://maps.app.goo.gl/728bjT99fKdAiPtQ6",
+      "lat": 12.9458,
+      "lon": 101.31222
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9544,7 +9686,9 @@
       "subdistrict": "หนองไร่",
       "district": "ปลวกแดง",
       "phone": "038-618386",
-      "google_map_link": "https://maps.app.goo.gl/si9GUkXkAf3ijUC99"
+      "google_map_link": "https://maps.app.goo.gl/si9GUkXkAf3ijUC99",
+      "lat": 13.04138,
+      "lon": 101.30973
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",
@@ -9552,7 +9696,9 @@
       "subdistrict": "มาบยางพร",
       "district": "ปลวกแดง",
       "phone": "0892707392",
-      "google_map_link": "https://maps.app.goo.gl/ckWcoTHTihqX4yeTA"
+      "google_map_link": "https://maps.app.goo.gl/ckWcoTHTihqX4yeTA",
+      "lat": 13.02115,
+      "lon": 101.11445
     },
     {
       "agency_type": "โรงพยาบาลส่งเสริมสุขภาพตำบล",

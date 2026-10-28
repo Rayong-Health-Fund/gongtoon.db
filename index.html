@@ -10,6 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="assets/js/p1-live-status.js"></script>
 <script src="assets/js/p2-live-status.js"></script>
+<script src="assets/js/p2-area.js"></script>
 <script src="assets/js/p3-live-status.js"></script>
 <script src="assets/js/p4-live-status.js"></script>
 <style>
@@ -1266,6 +1267,11 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
 .p2-loc-chip:hover { border-color: #0f766e; color: #0f766e; }
 .p2-loc-chip.active { background: #0f766e; border-color: #0f766e; color: #fff; font-weight: 700; }
 @media (max-width: 600px) { .p2-loc-label { min-width: 100%; } }
+/* P2 "nearby area" cards shown after the searched ตำบล / unit */
+.p2-near-card { background: #fafaf9; }
+.p2-near-note { grid-column: 1 / -1; padding: 0.7rem 0.9rem; border-radius: 10px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; font-size: 0.8rem; line-height: 1.55; }
+.p2-near-hint { margin-top: 0.45rem; font-size: 0.7rem; color: #075985; }
+.p2-near-tag { display: inline-block; margin-bottom: 4px; padding: 1px 8px; border-radius: 999px; background: #e0f2fe; color: #075985; font-size: 0.68rem; font-weight: 700; }
 /* P2 no results */
 .p2-no-results {
   text-align: center;
@@ -2837,6 +2843,10 @@ document.addEventListener('click', function(e) {
               <select class="year-select" id="p2InvDistrictFilter" onchange="p2OnInvDistrictChange()"><option value="all">ทุกอำเภอ</option></select>
             </div>
             <div class="filter-group">
+              <label class="filter-label">ตำบล</label>
+              <select class="year-select" id="p2TambonFilter" onchange="p2OnTambonChange()"><option value="all">ทุกตำบล</option></select>
+            </div>
+            <div class="filter-group">
               <label class="filter-label">หน่วยบริการ</label>
               <select class="year-select" id="p2UnitFilter" onchange="filterP2Cards()"><option value="all">ทุกหน่วย</option></select>
             </div>
@@ -2851,7 +2861,7 @@ document.addEventListener('click', function(e) {
             </div>
           </div>
           <div class="p1-acc-search-sticky">
-            <input type="text" class="modal-search-input" id="p2GroupSearch" placeholder="🔍 ค้นหา เช่น  รถเข็น รพ.สต.กะเฉด  หรือ  ไม้เท้า บ้านฉาง" onkeyup="filterP2Cards()">
+            <input type="text" class="modal-search-input" id="p2GroupSearch" placeholder="🔍 ค้นหา เช่น  รถเข็น เชิงเนิน  หรือ  ไม้เท้า รพ.สต.กะเฉด  (พิมพ์ชื่อตำบลได้เลย)" onkeyup="filterP2Cards()">
           </div>
           <div id="p2CardCount" style="font-size:0.8rem;color:var(--text-gray);margin-bottom:0.75rem;"></div>
           <div class="equip-group-grid" id="p2GroupGrid"></div>
@@ -5047,7 +5057,9 @@ function buildP2DatasetsFromApi(opts) {
       tambon:   p2Text(row.subdistrict),
       district: p2Text(row.district),
       phone:    p2Text(row.phone),
-      map_link: p2Text(row.google_map_link)
+      map_link: p2Text(row.google_map_link),
+      lat:      Number(row.lat) || null,
+      lon:      Number(row.lon) || null
     };
   }).filter(function(u){ return !!u.name; });
 
@@ -5230,7 +5242,9 @@ function p2Norm(s) { return String(s || '').toLowerCase().replace(/[\s.]+/g, '')
 function p2ParseSearch(raw) {
   var text = String(raw || '').toLowerCase()
     // join "รพ.สต. กะเฉด" / "รพ. แกลง" into one word before splitting
-    .replace(/(รพ\.?\s*สต\.?|รพ\.|สสอ\.|ทต\.|ทน\.|ทม\.|สอน\.)\s+/g, '$1');
+    .replace(/(รพ\.?\s*สต\.?|รพ\.|สสอ\.|ทต\.|ทน\.|ทม\.|สอน\.)\s+/g, '$1')
+    // and "ต. เชิงเนิน" / "ตำบล เชิงเนิน"
+    .replace(/(^|\s)(ต\.|ตำบล)\s+/g, '$1$2');
   var tokens = text.split(/\s+/).map(p2Norm).filter(Boolean);
   var units = [];
   if (tokens.length) {
@@ -5246,19 +5260,52 @@ function p2ParseSearch(raw) {
       }
     });
   }
-  return { units: units, keywords: tokens.filter(Boolean) };
+  // (c) a ตำบล name among the leftovers ("เชิงเนิน", "ต.แกลง")
+  var tambon = null;
+  tokens = tokens.filter(function(tok) {
+    if (!tok || tambon) return !!tok;
+    var t = p2TambonFromToken(tok);
+    if (t) { tambon = t; return false; }
+    return true;
+  });
+  return { units: units, tambon: tambon, keywords: tokens };
 }
 
+// f.area is set when the viewer asked for a place — a ตำบล (dropdown or
+// typed) or a unit name typed in the search box. Its `units` map holds the
+// units in that place plus units in nearby ตำบล (near: true, with km).
 function p2CurrentFilters() {
   var distEl = document.getElementById("p2InvDistrictFilter");
-  return {
+  var f = {
     year:     document.getElementById("p2YearFilter").value,
     district: distEl ? distEl.value : "all",
     unit:     document.getElementById("p2UnitFilter").value,
     status:   document.getElementById("p2StatusFilter").value,
-    search:   p2ParseSearch(document.getElementById("p2GroupSearch").value)
+    search:   p2ParseSearch(document.getElementById("p2GroupSearch").value),
+    area:     null
   };
+  var tEl = document.getElementById("p2TambonFilter");
+  var picked = tEl && tEl.value !== "all" ? tEl.value.split("|") : null;   // "อำเภอ|ตำบล"
+  var tambon = picked ? p2TambonFind(picked[1], picked[0]) : f.search.tambon;
+  if (tambon) {
+    f.area = { tambon: tambon, label: "ต." + tambon.name + " อ." + tambon.district,
+               units: p2AreaUnits(tambon, tambon) };
+  } else if (f.search.units.length) {
+    var place = p2UnitPlace(f.search.units[0]);
+    if (place) f.area = { tambon: null, label: f.search.units.join(", "),
+                          units: p2AreaUnits(place, null, f.search.units) };
+  }
+  return f;
 }
+
+// Everyday words → words used in the official equipment names
+var P2_SEARCH_SYNONYMS = {
+  'รถเข็น':     ['รถนั่งคนพิการ'],
+  'วีลแชร์':    ['รถเข็น', 'รถนั่งคนพิการ'],
+  'wheelchair': ['รถเข็น', 'รถนั่งคนพิการ'],
+  'วอคเกอร์':   ['walker'],
+  'วอล์คเกอร์': ['walker']
+};
 
 // Items of one equipment group that pass every filter + the search box
 function p2FilterItems(grp, f) {
@@ -5266,14 +5313,21 @@ function p2FilterItems(grp, f) {
   var kws = f.search.keywords, sUnits = f.search.units;
   return grp.items.filter(function(item) {
     if (f.year     !== "all" && String(item.year) !== f.year)     return false;
-    if (f.district !== "all" && item.district     !== f.district) return false;
     if (f.unit     !== "all" && item.unit         !== f.unit)     return false;
     if (f.status   !== "all" && item.status       !== f.status)   return false;
-    if (sUnits.length && sUnits.indexOf(item.unit) < 0)          return false;
+    if (f.area) {
+      // the place + its neighbours, even across อำเภอ borders
+      if (!f.area.units[item.unit]) return false;
+    } else {
+      if (f.district !== "all" && item.district !== f.district) return false;
+      if (sUnits.length && sUnits.indexOf(item.unit) < 0)      return false;
+    }
     if (kws.length) {
       var itemText = p2Norm(item.unit + " " + item.district);
       for (var k = 0; k < kws.length; k++) {
-        if (grpText.indexOf(kws[k]) < 0 && itemText.indexOf(kws[k]) < 0) return false;
+        var alts = [kws[k]].concat(P2_SEARCH_SYNONYMS[kws[k]] || []);
+        var hit = alts.some(function(w) { return grpText.indexOf(w) > -1 || itemText.indexOf(w) > -1; });
+        if (!hit) return false;
       }
     }
     return true;
@@ -5292,8 +5346,54 @@ function p2CountStatus(items) {
 
 // District dropdown on the รายการอุปกรณ์ tab narrows the unit dropdown
 function p2OnInvDistrictChange() {
+  p2FillTambonFilter();
   p2FillUnitFilter();
   filterP2Cards();
+}
+
+// Picking a ตำบล also picks its อำเภอ, so the viewer learns where it is
+function p2OnTambonChange() {
+  var tEl = document.getElementById("p2TambonFilter");
+  var distEl = document.getElementById("p2InvDistrictFilter");
+  if (tEl && distEl && tEl.value !== "all") {
+    distEl.value = tEl.value.split("|")[0];
+    p2FillUnitFilter();
+  }
+  var unitSel = document.getElementById("p2UnitFilter");
+  if (unitSel) unitSel.value = "all";
+  filterP2Cards();
+}
+
+// Every Rayong ตำบล (not only those with a unit), grouped by อำเภอ, with how
+// many service units are in it. Value is "อำเภอ|ตำบล".
+function p2FillTambonFilter() {
+  var tEl = document.getElementById("p2TambonFilter");
+  if (!tEl || typeof P2_TAMBON === "undefined") return;
+  var distEl = document.getElementById("p2InvDistrictFilter");
+  var dist = distEl ? distEl.value : "all";
+  var prev = tEl.value;
+  var count = {};
+  (p2UnitsList || []).forEach(function(name) {
+    var p = p2UnitPlace(name);
+    if (p) count[p.district + "|" + p.tambon] = (count[p.district + "|" + p.tambon] || 0) + 1;
+  });
+  var byDist = {};
+  P2_TAMBON.forEach(function(t) {
+    if (dist !== "all" && t.district !== dist) return;
+    (byDist[t.district] = byDist[t.district] || []).push(t);
+  });
+  var html = '<option value="all">ทุกตำบล</option>';
+  Object.keys(byDist).sort(function(a, b) { return a.localeCompare(b, 'th'); }).forEach(function(d) {
+    html += '<optgroup label="อ.' + d + '">';
+    byDist[d].sort(function(a, b) { return a.name.localeCompare(b.name, 'th'); }).forEach(function(t) {
+      var k = t.district + "|" + t.name, n = count[k] || 0;
+      html += '<option value="' + k + '">' + t.name + (n ? ' (' + n + ' หน่วย)' : ' (ไม่มีหน่วย)') + '</option>';
+    });
+    html += '</optgroup>';
+  });
+  tEl.innerHTML = html;
+  tEl.value = prev;
+  if (tEl.value !== prev) tEl.value = "all";
 }
 
 // Unit dropdown grouped by district (alphabetical), so a unit is easy to find
@@ -5361,7 +5461,7 @@ function filterP2Cards() {
   }
 
   // Searching / picking an อำเภอ or หน่วย → one card per service unit instead
-  var unitMode = !!document.getElementById("p2GroupSearch").value.trim() || f.district !== "all" || f.unit !== "all" || f.status !== "all";
+  var unitMode = !!document.getElementById("p2GroupSearch").value.trim() || f.district !== "all" || f.unit !== "all" || f.status !== "all" || !!f.area;
   var unitGrid = document.getElementById("p2UnitCardGrid");
   if (grid) grid.style.display = unitMode ? "none" : "";
   if (unitGrid) unitGrid.style.display = unitMode ? "" : "none";
@@ -5374,7 +5474,14 @@ function filterP2Cards() {
         (stInfo ? "แสดงเฉพาะ: <strong style=\"color:" + stInfo.color + ";\">" + stInfo.label + "</strong>"
                 : "หน่วยที่มีของพร้อมให้บริการแสดงก่อน");
       if (f.unit !== "all") msg2 += " · 🏥 หน่วย: <strong>" + f.unit + "</strong>";
-      if (f.search.units.length) msg2 += " · 🏥 เฉพาะหน่วย: <strong>" + f.search.units.join(", ") + "</strong>";
+      if (f.area) {
+        msg2 = "📍 <strong>" + f.area.label + "</strong>: " +
+          (n.ownCards ? "พบ " + n.ownCards + " รายการในพื้นที่นี้"
+                      : "<span style=\"color:#b45309;\">ไม่พบในพื้นที่นี้</span>") +
+          (n.nearCards ? " · และ " + n.nearCards + " รายการจาก<strong>พื้นที่ใกล้เคียง</strong> (เรียงจากใกล้ไปไกล)" : "") +
+          (stInfo ? " · แสดงเฉพาะ: <strong style=\"color:" + stInfo.color + ";\">" + stInfo.label + "</strong>" : "") +
+          (f.unit !== "all" ? " · 🏥 หน่วย: <strong>" + f.unit + "</strong>" : "");
+      }
       msg2 += " · <a href=\"#\" onclick=\"p2ShowStatus('all');return false;\" style=\"color:#0f766e;font-weight:600;\">✕ ล้างตัวกรอง</a>";
       countEl2.innerHTML = msg2;
     }
@@ -5429,7 +5536,9 @@ function p2ShowStatus(status, unit) {
   document.getElementById("p2GroupSearch").value = "";
   document.getElementById("p2YearFilter").value = "all";
   var distEl = document.getElementById("p2InvDistrictFilter");
-  if (distEl) { distEl.value = "all"; p2FillUnitFilter(); }
+  if (distEl) { distEl.value = "all"; p2FillTambonFilter(); p2FillUnitFilter(); }
+  var tambonEl = document.getElementById("p2TambonFilter");
+  if (tambonEl) tambonEl.value = "all";
   document.getElementById("p2UnitFilter").value = unit || "all";
   document.getElementById("p2StatusFilter").value = status || "all";
   var ov = document.getElementById("p2DetailOverlay");
@@ -5448,22 +5557,57 @@ function p2RenderUnitCards(f) {
     var byUnit = {}, order = [];
     p2FilterItems(grp, f).forEach(function(item) {
       var u = byUnit[item.unit];
-      if (!u) { u = byUnit[item.unit] = { grpIdx: grpIdx, name: grp.name, unit: item.unit, district: item.district, ready: 0, inuse: 0, broken: 0 }; order.push(u); }
+      if (!u) {
+        var a = f.area && f.area.units[item.unit];
+        u = byUnit[item.unit] = { grpIdx: grpIdx, name: grp.name, unit: item.unit, district: item.district,
+                                  near: !!(a && a.near), km: a ? a.km : 0, approx: !!(a && a.approx),
+                                  ready: 0, inuse: 0, broken: 0 };
+        order.push(u);
+      }
       if (item.status === "พร้อม") u.ready++;
       else if (item.status === "ชำรุด") u.broken++;
       else u.inuse++;
     });
     order.forEach(function(u) { rows.push(u); unitSet[u.unit] = 1; });
   });
+  // Searched place first; nearby areas after it, nearest first
   rows.sort(function(a, b) {
-    return (b.ready > 0) - (a.ready > 0) || b.ready - a.ready ||
+    return (a.near - b.near) || (a.near && b.near && a.km - b.km) ||
+           (b.ready > 0) - (a.ready > 0) || b.ready - a.ready ||
            b.inuse - a.inuse || b.broken - a.broken ||
            a.name.localeCompare(b.name, 'th') || a.unit.localeCompare(b.unit, 'th');
   });
 
   var statusInfo = P2_STATUS_INFO[f.status];
   if (unitGrid) {
+    var noteShown = false;
     unitGrid.innerHTML = rows.map(function(u) {
+      // Before the first nearby card: units normally lend only inside their
+      // own area, so the patient goes through their own area's staff
+      var note = "";
+      if (u.near && !noteShown) {
+        noteShown = true;
+        note = "<div class=\"p2-near-note\">" +
+          "<div style=\"font-weight:700;margin-bottom:2px;\">ℹ️ หน่วยบริการในพื้นที่ใกล้เคียง (นอกเขต)</div>" +
+          "ปกติหน่วยบริการแต่ละแห่งให้ยืมได้เฉพาะผู้ป่วยในเขตของตนเอง หากต้องการยืมจากหน่วยด้านล่าง " +
+          "แนะนำให้ผู้ป่วยหรือญาติ<strong>ติดต่อเจ้าหน้าที่ รพ.สต. / หน่วยบริการในเขตของตนเอง</strong> " +
+          "เพื่อช่วยประสานกับหน่วยบริการใกล้เคียงให้" +
+          (typeof P2_OPEN_LENDERS !== "undefined" ? P2_OPEN_LENDERS.map(function(o) {
+            var km = f.area && f.area.tambon && o.lat ? Math.max(1, Math.round(p2DistKm(f.area.tambon, o))) : 0;
+            return "<div style=\"margin-top:4px;\">✅ ยกเว้น <strong>" + o.name + "</strong> " + o.where +
+              (o.note ? " (" + o.note + ")" : "") + " ให้ยืมได้ทุกพื้นที่" +
+              (km ? " · ห่างประมาณ " + km + " กม." : "") +
+              "<div style=\"margin-top:2px;\">" +
+                (o.phone ? "ติดต่อ " + (o.contact ? o.contact + " " : "") + p2PhoneHtml(o.phone) : "") +
+                (o.map ? " · <a href=\"" + o.map + "\" target=\"_blank\" rel=\"noopener\" onclick=\"event.stopPropagation();\" style=\"color:#0f766e;font-weight:600;\">🗺️ ดูแผนที่</a>" : "") +
+              "</div></div>";
+          }).join("") : "") +
+          "</div>";
+      }
+      return note + p2UnitCardHtml(u);
+    }).join("");
+  }
+  function p2UnitCardHtml(u) {
       var total = u.ready + u.inuse + u.broken;
       var border, head;
       if (statusInfo && f.status !== "พร้อม") {
@@ -5474,11 +5618,13 @@ function p2RenderUnitCards(f) {
         border = u.ready > 0 ? "#10b981" : (u.inuse > 0 ? "#f59e0b" : "#ef4444");
         head = u.ready > 0 ? "✅ พร้อมให้บริการ " + u.ready + " ชิ้น" : "⏳ ยังไม่มีพร้อมให้บริการ";
       }
-      return "<div class=\"equip-group-card\" style=\"border-left:4px solid " + border + ";\" onclick=\"openP2Detail(" + u.grpIdx + ")\">" +
+      var place = p2UnitPlace(u.unit);
+      return "<div class=\"equip-group-card" + (u.near ? " p2-near-card" : "") + "\" style=\"border-left:4px solid " + border + ";\" onclick=\"openP2Detail(" + u.grpIdx + ")\">" +
+          (u.near ? "<span class=\"p2-near-tag\" title=\"ระยะทางโดยประมาณ วัดเป็นเส้นตรง ไม่ใช่ระยะทางขับรถ\">📍 พื้นที่ใกล้เคียง" + (u.approx ? "" : " · ~" + Math.max(1, Math.round(u.km)) + " กม.") + "</span>" : "") +
           "<div style=\"font-size:0.72rem;font-weight:700;color:" + border + ";margin-bottom:2px;\">" + head + "</div>" +
           "<div class=\"equip-group-name\">" + u.name + "</div>" +
           "<div style=\"font-weight:600;font-size:0.85rem;margin-top:4px;\">🏥 " + u.unit + "</div>" +
-          "<div style=\"font-size:0.75rem;color:var(--text-gray);\">อ." + u.district + "</div>" +
+          "<div style=\"font-size:0.75rem;color:var(--text-gray);\">" + (place && place.tambon ? "ต." + place.tambon + " " : "") + "อ." + u.district + "</div>" +
           "<div style=\"font-size:0.85rem;margin-top:4px;\">" + p2PhoneHtml(phoneOf[u.unit]) + "</div>" +
           "<div class=\"equip-group-stats\" style=\"margin-top:0.5rem;\">" +
             p2Pill("total", total + " ชิ้น", "openP2Detail(" + u.grpIdx + ",'all')") +
@@ -5486,10 +5632,12 @@ function p2RenderUnitCards(f) {
             (u.inuse  > 0 ? p2Pill("inuse",  "⟳ " + u.inuse + " ใช้งาน", "openP2Detail(" + u.grpIdx + ",'ใช้งานอยู่')") : "") +
             (u.broken > 0 ? p2Pill("broken", "✕ " + u.broken + " ชำรุด", "openP2Detail(" + u.grpIdx + ",'ชำรุด')") : "") +
           "</div>" +
+          (u.near ? "<div class=\"p2-near-hint\">ℹ️ ยืมผ่านเจ้าหน้าที่ในเขตของท่าน</div>" : "") +
         "</div>";
-    }).join("");
   }
-  return { cards: rows.length, units: Object.keys(unitSet).length };
+  var nearCards = rows.filter(function(u) { return u.near; }).length;
+  return { cards: rows.length, units: Object.keys(unitSet).length,
+           ownCards: rows.length - nearCards, nearCards: nearCards };
 }
 
 // Popup state: which equipment type, status, and location narrowing
@@ -5746,6 +5894,7 @@ function _renderP2UI() {
     invDistSel.innerHTML = '<option value="all">ทุกอำเภอ</option>' +
       dists.map(function(d){ return '<option value="' + d + '">' + d + '</option>'; }).join('');
   }
+  p2FillTambonFilter();
   p2FillUnitFilter();
 
   // ── Build equipment group cards ──
