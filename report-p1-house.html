@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>บันทึกงานปรับสภาพบ้าน</title>
+<link rel="icon" type="image/jpeg" href="assets/img/logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site-nav.css">
+<link rel="stylesheet" href="assets/css/report-forms.css">
+</head>
+<body>
+
+<div id="siteNav"></div>
+<script src="assets/js/site-nav.js"></script>
+<script src="assets/js/report-photos.js"></script>
+
+<main class="rf-wrap">
+  <div class="rf-hero">
+    <div class="rf-crumb"><a href="report-forms.html">← แบบฟอร์มทั้งหมด</a></div>
+    <h1>🏠 บันทึกงานปรับสภาพบ้าน</h1>
+    <p>โครงการปรับสภาพแวดล้อมที่อยู่อาศัยสำหรับคนพิการ ผู้สูงอายุ ผู้ป่วยระยะกึ่งเฉียบพลัน และผู้ที่มีภาวะพึ่งพิง · สำหรับเจ้าหน้าที่ อปท.</p>
+  </div>
+
+  <div class="rf-guide">
+    <div class="rf-guide-head">📋 วิธีใช้งาน ทำตามลำดับข้อ 1 ถึง 5</div>
+    <ol>
+      <li><b>ข้อมูลผู้กรอก</b> กรอกครั้งแรกครั้งเดียว ครั้งต่อไประบบจำให้</li>
+      <li><b>เลือกหน่วยดำเนินการ</b> (อปท. ของท่าน) แล้วข้อ 3–5 จะแสดงขึ้นมา</li>
+      <li><b>งาน</b> ลงทะเบียนบ้านหลังใหม่ (ถ่ายรูปก่อนปรับ) หรืออัปเดตบ้านที่ทำอยู่ (รูประหว่างทำ / หลังปรับ / เพิ่มรูป)</li>
+      <li><b>รูปเพิ่มเติม</b> (ไม่บังคับ) ใส่ลิงก์อัลบั้ม หรือส่งทาง LINE กองทุน</li>
+      <li><b>ตรวจทานและกดส่ง</b> ถ้ายังขาดอะไร ระบบจะบอกให้</li>
+    </ol>
+    <div class="hint" style="margin-top:6px">รูปต้องมีครบ 3 ขั้น (ก่อนปรับ · ระหว่างทำ · หลังปรับ) อย่างน้อยขั้นละ 1 รูป จึงแจ้งแล้วเสร็จได้ · ส่งได้ครั้งละไม่เกิน 10 รูป แล้วกลับมา "เพิ่มรูป" ได้เรื่อย ๆ</div>
+  </div>
+
+  <div id="setupWarn"></div>
+
+  <form id="reportForm" novalidate autocomplete="on">
+    <!-- 1. ผู้กรอก -->
+    <section class="rf-card">
+      <h2><span class="rf-step">1</span>ข้อมูลผู้กรอก</h2>
+      <p class="rf-sub">ใช้สำหรับให้เจ้าหน้าที่กองทุนติดต่อกลับเมื่อต้องการตรวจสอบข้อมูล ไม่แสดงบนเว็บไซต์</p>
+      <div class="rf-grid">
+        <div class="rf-field"><label for="rName">ชื่อ-นามสกุล <span class="req">*</span></label><input class="rf-input" id="rName" autocomplete="name" maxlength="100"></div>
+        <div class="rf-field"><label for="rPosition">ตำแหน่ง <span class="req">*</span></label><input class="rf-input" id="rPosition" autocomplete="organization-title" maxlength="100"></div>
+        <div class="rf-field"><label for="rPhone">เบอร์โทรที่ติดต่อได้ <span class="req">*</span></label><input class="rf-input" id="rPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="15"><div class="hint">เบอร์หน่วยงานหรือเบอร์มือถือก็ได้</div></div>
+        <div class="rf-field"><label for="rEmail">อีเมล <span class="req">*</span></label><input class="rf-input" id="rEmail" type="email" inputmode="email" autocomplete="email" maxlength="120"></div>
+      </div>
+      <label class="rf-check"><input type="checkbox" id="rRemember" checked> จำข้อมูลผู้กรอกและหน่วยดำเนินการไว้ในเครื่องนี้ ครั้งหน้าไม่ต้องกรอกใหม่</label>
+    </section>
+
+    <!-- 2. หน่วยดำเนินการ -->
+    <section class="rf-card">
+      <h2><span class="rf-step">2</span>เลือกหน่วยดำเนินการ</h2>
+      <p class="rf-sub">เลือก<b>อำเภอ</b>ก่อน แล้วเลือก <b>อปท.</b> ของท่าน · ถ้าไม่มีในรายการ เลือก "อปท. อื่น" แล้วพิมพ์ชื่อ</p>
+      <div class="rf-grid">
+        <div class="rf-field"><label for="uDistrict">อำเภอ <span class="req">*</span></label><select class="rf-select" id="uDistrict"><option value="">— เลือกอำเภอ —</option></select></div>
+        <div class="rf-field"><label for="uAgency">หน่วยดำเนินการ (อปท.) <span class="req">*</span></label><select class="rf-select" id="uAgency" disabled><option value="">— เลือกอำเภอก่อน —</option></select></div>
+        <div class="rf-field rf-hidden" id="otherAgencyBox"><label for="uOther">ชื่อ อปท. <span class="req">*</span></label><input class="rf-input" id="uOther" maxlength="100" placeholder="เช่น อบต.ห้วยยาง"><div class="hint">ใช้ชื่อย่อ อบต. / ทต. / ทม. / ทน. นำหน้า</div></div>
+      </div>
+      <div id="unitMsg"></div>
+    </section>
+
+    <div class="rf-locked" id="lockedCard">👆 <b>เลือกอำเภอและหน่วยดำเนินการในข้อ 2 ก่อน</b><br>แล้วข้อ 3 งาน · ข้อ 4 รูปเพิ่มเติม · ข้อ 5 ส่งข้อมูล จะแสดงขึ้นที่นี่</div>
+
+    <div id="workArea" class="rf-hidden">
+      <!-- 3. งาน -->
+      <section class="rf-card">
+        <h2><span class="rf-step">3</span>งาน</h2>
+        <p class="rf-ask">ครั้งนี้จะบันทึกอะไร? เลือก 1 ข้อ</p>
+        <div class="rf-choice">
+          <label><input type="radio" name="jobKind" value="register"><b>🏠 ลงทะเบียนบ้านหลังใหม่</b><span>บ้านที่ได้รับอนุมัติ ยังไม่เคยบันทึก</span></label>
+          <label><input type="radio" name="jobKind" value="update"><b>🔄 อัปเดตบ้านที่ลงทะเบียนแล้ว <span class="rf-badge" id="openBadge">0</span></b><span>ความคืบหน้า / แล้วเสร็จ / เพิ่มรูป</span></label>
+        </div>
+
+        <!-- 3A ลงทะเบียน -->
+        <div data-panel="register" class="rf-hidden">
+          <div class="rf-note info">ชื่อและที่อยู่ของผู้รับบริการเห็นเฉพาะเจ้าหน้าที่กองทุน · บนเว็บไซต์แสดงชื่อแบบปิดบางส่วน เช่น "นางส*** ใ***"</div>
+          <div class="rf-grid">
+            <div class="rf-field"><label for="pTitle">คำนำหน้า <span class="req">*</span></label>
+              <select class="rf-select" id="pTitle"><option value="">— เลือก —</option><option>นาย</option><option>นาง</option><option>นางสาว</option><option>เด็กชาย</option><option>เด็กหญิง</option></select></div>
+            <div class="rf-field"><label for="pAge">อายุ (ปี) <span class="req">*</span></label><input class="rf-input" id="pAge" type="number" inputmode="numeric" min="0" max="120" step="1"></div>
+            <div class="rf-field"><label for="pFirst">ชื่อผู้รับบริการ <span class="req">*</span></label><input class="rf-input" id="pFirst" maxlength="60"></div>
+            <div class="rf-field"><label for="pLast">นามสกุล <span class="req">*</span></label><input class="rf-input" id="pLast" maxlength="60"></div>
+            <div class="rf-field" style="grid-column:1/-1"><label for="pAddress">ที่อยู่ของบ้านที่ปรับสภาพ <span class="req">*</span></label><input class="rf-input" id="pAddress" maxlength="300" placeholder="บ้านเลขที่ หมู่ ตำบล"></div>
+          </div>
+          <div class="rf-field" style="margin-top:12px">
+            <label>กลุ่มผู้รับบริการ <span class="req">*</span> <span style="font-weight:400;color:var(--rf-muted)">(เลือกได้มากกว่า 1)</span></label>
+            <div class="rf-radios" id="pGroups">
+              <label><input type="checkbox" value="elderly"> ผู้สูงอายุ</label>
+              <label><input type="checkbox" value="disabled"> ผู้พิการ</label>
+              <label><input type="checkbox" value="imc"> ผู้ป่วยระยะกึ่งเฉียบพลัน (IMC)</label>
+              <label><input type="checkbox" value="palliative"> ผู้ป่วยระยะท้าย</label>
+              <label><input type="checkbox" value="dependent"> ผู้ที่มีภาวะพึ่งพิง</label>
+            </div>
+          </div>
+          <div class="rf-field rf-hidden" id="disBox" style="margin-top:12px">
+            <label>ประเภทความพิการ <span class="req">*</span></label>
+            <div class="rf-radios" id="pDisability">
+              <label><input type="checkbox" value="ป.1"> ป.1 การเห็น</label>
+              <label><input type="checkbox" value="ป.2"> ป.2 การได้ยิน/สื่อความหมาย</label>
+              <label><input type="checkbox" value="ป.3"> ป.3 การเคลื่อนไหว/ร่างกาย</label>
+              <label><input type="checkbox" value="ป.4"> ป.4 จิตใจ/พฤติกรรม</label>
+              <label><input type="checkbox" value="ป.5"> ป.5 สติปัญญา</label>
+              <label><input type="checkbox" value="ป.6"> ป.6 การเรียนรู้</label>
+              <label><input type="checkbox" value="ป.7"> ป.7 ออทิสติก</label>
+            </div>
+          </div>
+          <div class="rf-grid" style="margin-top:12px">
+            <div class="rf-field"><label for="bApproved">งบที่อนุมัติ (บาท) <span class="req">*</span></label><input class="rf-input" id="bApproved" type="number" inputmode="decimal" min="1" step="0.01" placeholder="เช่น 40000"></div>
+          </div>
+          <div class="rf-field" style="margin-top:12px">
+            <label>รายการที่จะปรับ <span class="req">*</span> <span style="font-weight:400;color:var(--rf-muted)">(เลือกได้มากกว่า 1)</span></label>
+            <div class="rf-radios" id="pItems">
+              <label><input type="checkbox" value="ห้องน้ำ/ส้วม"> ห้องน้ำ/ส้วม</label>
+              <label><input type="checkbox" value="ราวจับ"> ราวจับ</label>
+              <label><input type="checkbox" value="ทางลาด"> ทางลาด</label>
+              <label><input type="checkbox" value="พื้น/ปรับระดับพื้น"> พื้น/ปรับระดับพื้น</label>
+              <label><input type="checkbox" value="ประตู/ทางเดิน"> ประตู/ทางเดิน</label>
+              <label><input type="checkbox" value="หลังคา/ผนัง"> หลังคา/ผนัง</label>
+              <label><input type="checkbox" value="ไฟฟ้า/แสงสว่าง"> ไฟฟ้า/แสงสว่าง</label>
+              <label><input type="checkbox" value="__other"> อื่น ๆ</label>
+            </div>
+            <input class="rf-input rf-hidden" id="pItemOther" maxlength="80" placeholder="ระบุรายการอื่น ๆ" style="margin-top:8px">
+          </div>
+          <div class="rf-field" style="margin-top:14px">
+            <label>รูปก่อนปรับ <span class="req">*</span></label>
+            <div class="hint" style="margin:0 0 8px">ถ่ายให้เห็นสภาพบ้านจุดที่จะปรับ อย่างน้อย 1 รูป (สูงสุด 10 รูปต่อครั้ง)</div>
+            <div id="regBefore"></div>
+          </div>
+        </div>
+
+        <!-- 3B อัปเดต -->
+        <div data-panel="update" class="rf-hidden">
+          <div id="noHouses" class="rf-note warn rf-hidden">หน่วยนี้ยังไม่มีบ้านที่ลงทะเบียนผ่านแบบฟอร์ม ให้เลือก "ลงทะเบียนบ้านหลังใหม่" ก่อน</div>
+          <div id="updateFields">
+            <div class="rf-field">
+              <label>เลือกบ้าน <span class="req">*</span></label>
+              <div class="hint" style="margin:0 0 8px">แตะการ์ดของบ้านที่ต้องการอัปเดต · ดูรหัสบ้านที่ได้ตอนลงทะเบียน</div>
+              <div class="rf-choice rf-jobs" id="houseCards"></div>
+            </div>
+            <div class="rf-field" style="margin-top:12px">
+              <label>อัปเดตอะไร <span class="req">*</span></label>
+              <div class="rf-radios" id="uStatus">
+                <label><input type="radio" name="uStatus" value="กำลังดำเนินการ"> 🛠️ ความคืบหน้า (กำลังดำเนินการ)</label>
+                <label><input type="radio" name="uStatus" value="แล้วเสร็จ"> ✅ แล้วเสร็จ</label>
+                <label><input type="radio" name="uStatus" value="เพิ่มรูป"> 📷 เพิ่มรูปอย่างเดียว</label>
+                <label><input type="radio" name="uStatus" value="ยกเลิกโครงการ"> ⛔ ยกเลิกโครงการ</label>
+              </div>
+              <div class="hint" id="statusHint"></div>
+            </div>
+            <div class="rf-grid rf-hidden" id="doneBox" style="margin-top:12px">
+              <div class="rf-field"><label for="bActual">งบที่ใช้จริง (บาท) <span class="req">*</span></label><input class="rf-input" id="bActual" type="number" inputmode="decimal" min="1" step="0.01"></div>
+            </div>
+            <div class="rf-field rf-hidden" id="dropBox" style="margin-top:12px"><label for="dropReason">เหตุผลที่ยกเลิกโครงการ <span class="req">*</span></label><textarea class="rf-textarea" id="dropReason" maxlength="300" placeholder="เช่น ผู้รับบริการย้ายที่อยู่ / เสียชีวิต"></textarea></div>
+            <div class="rf-field rf-hidden" id="upBeforeBox" style="margin-top:14px"><label>รูปก่อนปรับ (เพิ่มเติม)</label><div id="upBefore"></div></div>
+            <div class="rf-field rf-hidden" id="upDuringBox" style="margin-top:14px"><label id="upDuringLabel">รูประหว่างทำ</label><div class="hint" id="upDuringHint" style="margin:0 0 8px"></div><div id="upDuring"></div></div>
+            <div class="rf-field rf-hidden" id="upAfterBox" style="margin-top:14px"><label id="upAfterLabel">รูปหลังปรับ</label><div class="hint" id="upAfterHint" style="margin:0 0 8px"></div><div id="upAfter"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. รูปเพิ่มเติม -->
+      <section class="rf-card">
+        <h2><span class="rf-step">4</span>รูปเพิ่มเติม (ไม่บังคับ)</h2>
+        <p class="rf-sub">ถ้ามีรูปมากกว่าที่แนบได้ เลือกได้ 3 ทาง: กลับมา "เพิ่มรูปอย่างเดียว" ได้เรื่อย ๆ · ใส่ลิงก์อัลบั้มด้านล่าง · หรือส่งทาง LINE กองทุน <b>095-818-0720</b> พร้อมแจ้งรหัสบ้าน</p>
+        <div class="rf-field"><label for="photoLink">ลิงก์ Google Drive / อัลบั้มรูป</label><input class="rf-input" id="photoLink" type="url" inputmode="url" maxlength="500" placeholder="https://drive.google.com/..."><div class="hint">ตั้งค่าแชร์ให้ "ทุกคนที่มีลิงก์ดูได้" เพื่อให้กองทุนเปิดดูได้</div></div>
+      </section>
+
+      <!-- 5. ส่ง -->
+      <section class="rf-card">
+        <h2><span class="rf-step">5</span>ตรวจทานและส่ง</h2>
+        <div class="rf-grid">
+          <div class="rf-field"><label for="eventDate">วันที่เกิดรายการ <span class="req">*</span></label><input class="rf-input" id="eventDate" type="date"></div>
+        </div>
+        <div class="rf-field" style="margin-top:12px"><label for="note">หมายเหตุ (ถ้ามี)</label><textarea class="rf-textarea" id="note" maxlength="500"></textarea></div>
+        <div class="rf-hp" aria-hidden="true"><label>เว็บไซต์<input id="website" tabindex="-1" autocomplete="off"></label></div>
+        <div class="hint" id="photoTotal" style="margin-top:10px"></div>
+        <label class="rf-check rf-hidden" id="photoConsentRow"><input type="checkbox" id="photoConsent"> ผู้รับบริการหรือญาติยินยอมให้ถ่ายรูปและส่งรูปให้กองทุนแล้ว <span style="color:var(--rf-bad)">*</span></label>
+        <label class="rf-check"><input type="checkbox" id="confirm"> ข้าพเจ้าตรวจสอบแล้วว่าข้อมูลถูกต้อง</label>
+        <div id="formMsg"></div>
+        <button type="submit" class="rf-btn big" id="submitBtn" style="margin-top:12px">ส่งข้อมูล</button>
+      </section>
+    </div>
+  </form>
+
+  <section class="rf-card rf-hidden" id="doneCard">
+    <h2>✅ บันทึกเรียบร้อย</h2>
+    <div id="doneText"></div>
+    <button type="button" class="rf-btn" id="again" style="margin-top:12px">บันทึกรายการถัดไป</button>
+  </section>
+</main>
+
+<div class="rf-pop-back rf-hidden" id="donePop" role="dialog" aria-modal="true" aria-labelledby="donePopTitle">
+  <div class="rf-pop">
+    <div class="ico">⏳</div>
+    <h3 id="donePopTitle">ส่งข้อมูลเรียบร้อยแล้ว</h3>
+    <p>ตัวเลขบนหน้าเว็บไซต์จะอัปเดตภายใน <b>ประมาณ 5 นาที</b><br>ถ้าเปิดดูทันทีอาจยังเห็นข้อมูลเดิม กรุณารอสักครู่</p>
+    <button type="button" class="rf-btn" id="donePopOk">รับทราบ</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ลิงก์ Web App ของ Apps Script (form-backend/p1_house_ledger.gs)
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwmH-Hch5JCJd7TzVh-1O11q_9Bdoqw3aON3SQ7HIU_pjdwt_3bL8OwLNyR17AsImy9/exec';
+  var DATA_URL = 'home-improvement/data/dashboard_data.json';
+  var START_DATE = '2026-10-12';
+  var REMEMBER_KEY = 'p1-report-reporter';
+  var OTHER = '__other';
+  var MAX_PHOTOS = 10;
+  var DISTRICTS = [['เมือง', 'เมืองระยอง'], ['บ้านฉาง', 'บ้านฉาง'], ['นิคมพัฒนา', 'นิคมพัฒนา'], ['บ้านค่าย', 'บ้านค่าย'],
+    ['แกลง', 'แกลง'], ['วังจันทร์', 'วังจันทร์'], ['ปลวกแดง', 'ปลวกแดง'], ['เขาชะเมา', 'เขาชะเมา']];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var agencies = {}, asOf = START_DATE, houses = null;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+  }
+  function today() { return new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10); }
+  function thDate(iso) { var d = new Date(iso + 'T00:00:00+07:00'); return isNaN(d) ? iso : d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }); }
+  function store(key, val) {
+    try { if (val === undefined) return JSON.parse(localStorage.getItem(key) || 'null'); localStorage.setItem(key, JSON.stringify(val)); }
+    catch (e) { return null; }
+  }
+  function msg(el, kind, html) { $(el).innerHTML = html ? '<div class="rf-note ' + kind + '">' + html + '</div>' : ''; }
+  function radio(name) { var r = document.querySelector('input[name=' + name + ']:checked'); return r ? r.value : ''; }
+  function checked(id) { return Array.prototype.map.call(document.querySelectorAll('#' + id + ' input:checked'), function (x) { return x.value; }); }
+  function agency() { return $('uAgency').value === OTHER ? $('uOther').value.trim() : $('uAgency').value; }
+
+  // ── หน่วยดำเนินการ ──
+  function fillDistricts() {
+    DISTRICTS.forEach(function (d) { $('uDistrict').insertAdjacentHTML('beforeend', '<option value="' + d[0] + '">' + d[1] + '</option>'); });
+  }
+  function fillAgencies(district) {
+    var sel = $('uAgency');
+    sel.innerHTML = '<option value="">' + (district ? '— เลือก อปท. —' : '— เลือกอำเภอก่อน —') + '</option>' +
+      (agencies[district] || []).map(function (a) { return '<option>' + esc(a) + '</option>'; }).join('') +
+      (district ? '<option value="' + OTHER + '">➕ อปท. อื่น (ไม่มีในรายการ)</option>' : '');
+    sel.disabled = !district;
+    $('otherAgencyBox').classList.add('rf-hidden');
+  }
+  function showWork(on) {
+    $('workArea').classList.toggle('rf-hidden', !on);
+    $('lockedCard').classList.toggle('rf-hidden', on);
+  }
+  var loadTimer = null;
+  function onUnitChange() {
+    $('otherAgencyBox').classList.toggle('rf-hidden', $('uAgency').value !== OTHER);
+    houses = null;
+    showWork(false);
+    var d = $('uDistrict').value, a = agency();
+    if (!d || !a) return;
+    clearTimeout(loadTimer);
+    loadTimer = setTimeout(function () { loadHouses(d, a); }, $('uAgency').value === OTHER ? 600 : 0);
+  }
+  function loadHouses(d, a) {
+    if (!ENDPOINT) {
+      applyHouses([]);
+      msg('unitMsg', 'warn', 'ยังไม่ได้เชื่อมกับ Google Sheet (หน้าทดลอง) ดูหน้าตาแบบฟอร์มได้ แต่ยังส่งข้อมูลไม่ได้');
+      showWork(true); resetWork();
+      return;
+    }
+    msg('unitMsg', 'info', 'กำลังโหลดข้อมูลของหน่วย… (ประมาณ 5 วินาที)');
+    fetch(ENDPOINT + '?district=' + encodeURIComponent(d) + '&agency=' + encodeURIComponent(a))
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res.ok) throw new Error(res.error || 'โหลดข้อมูลไม่สำเร็จ');
+        if (agency() !== a) return;
+        if (res.asOf) { asOf = res.asOf; $('eventDate').min = asOf; }
+        applyHouses(res.houses || []);
+        msg('unitMsg', 'ok', '✓ โหลดข้อมูลของหน่วยแล้ว เลื่อนลงไปทำข้อ 3 ต่อได้เลย');
+        showWork(true); resetWork();
+      }).catch(function (err) { msg('unitMsg', 'bad', 'โหลดข้อมูลไม่สำเร็จ: ' + esc(err.message) + ' กรุณาลองใหม่'); });
+  }
+  function applyHouses(list) {
+    houses = list;
+    var open = list.filter(function (h) { return h.status !== 'แล้วเสร็จ'; }).length;
+    $('openBadge').textContent = open;
+    $('noHouses').classList.toggle('rf-hidden', list.length > 0);
+    $('updateFields').classList.toggle('rf-hidden', list.length === 0);
+    var tags = { 'ลงทะเบียน': ['wait', '⏳ ยังไม่เริ่ม'], 'กำลังดำเนินการ': ['work', '🛠️ กำลังดำเนินการ'], 'แล้วเสร็จ': ['done', '✅ แล้วเสร็จ'] };
+    $('houseCards').innerHTML = list.map(function (h) {
+      var t = tags[h.status] || ['wait', h.status];
+      var p = h.photos || {};
+      var full = p.before && p.during && p.after;
+      return '<label><input type="radio" name="house" value="' + esc(h.refCode) + '">' +
+        '<b>' + esc(h.refCode) + ' <span class="rf-tag ' + t[0] + '">' + t[1] + '</span></b>' +
+        '<span class="rf-job-line">' + esc(h.maskedName) + ' · อายุ ' + esc(h.age) + ' ปี · ' + esc(h.group) + '</span>' +
+        '<span class="rf-job-line">ปรับ: ' + esc(h.items) + '</span>' +
+        '<span class="rf-job-line">ลงทะเบียน ' + esc(thDate(h.registered)) + (h.completed ? ' · เสร็จ ' + esc(thDate(h.completed)) : '') +
+        ' · รูป ก่อน ' + (p.before || 0) + ' / ระหว่าง ' + (p.during || 0) + ' / หลัง ' + (p.after || 0) + (full ? ' ✓' : '') + '</span></label>';
+    }).join('');
+  }
+  function house() { var id = radio('house'); return (houses || []).filter(function (h) { return h.refCode === id; })[0]; }
+
+  function resetWork() {
+    ['jobKind', 'house', 'uStatus'].forEach(function (n) { document.querySelectorAll('input[name=' + n + ']').forEach(function (r) { r.checked = false; }); });
+    document.querySelectorAll('#pGroups input, #pDisability input, #pItems input').forEach(function (x) { x.checked = false; });
+    ['pTitle', 'pAge', 'pFirst', 'pLast', 'pAddress', 'bApproved', 'pItemOther', 'bActual', 'dropReason', 'photoLink', 'note'].forEach(function (id) { $(id).value = ''; });
+    boxes.forEach(function (b) { b.clear(); });
+    $('photoConsent').checked = false; $('confirm').checked = false;
+    refresh();
+  }
+
+  // ── แสดง/ซ่อนตามที่เลือก ──
+  function refresh() {
+    var kind = radio('jobKind');
+    document.querySelectorAll('[data-panel]').forEach(function (p) { p.classList.toggle('rf-hidden', p.getAttribute('data-panel') !== kind); });
+    $('disBox').classList.toggle('rf-hidden', checked('pGroups').indexOf('disabled') < 0);
+    $('pItemOther').classList.toggle('rf-hidden', checked('pItems').indexOf(OTHER) < 0);
+
+    var h = house(), s = radio('uStatus');
+    var finished = h && h.status === 'แล้วเสร็จ';
+    document.querySelectorAll('input[name=uStatus]').forEach(function (r) {
+      var allowed = !finished || r.value === 'เพิ่มรูป';
+      r.disabled = !allowed;
+      r.parentNode.style.opacity = allowed ? '' : '.45';
+      if (!allowed && r.checked) r.checked = false;
+    });
+    s = radio('uStatus');
+    var noDuring = h && !(h.photos && h.photos.during);
+    $('statusHint').textContent = finished ? 'บ้านหลังนี้แล้วเสร็จแล้ว อัปเดตได้เฉพาะ "เพิ่มรูปอย่างเดียว"' : '';
+    $('doneBox').classList.toggle('rf-hidden', s !== 'แล้วเสร็จ');
+    $('dropBox').classList.toggle('rf-hidden', s !== 'ยกเลิกโครงการ');
+    $('upBeforeBox').classList.toggle('rf-hidden', s !== 'เพิ่มรูป');
+    $('upDuringBox').classList.toggle('rf-hidden', !(s === 'กำลังดำเนินการ' || s === 'เพิ่มรูป' || (s === 'แล้วเสร็จ' && noDuring)));
+    $('upAfterBox').classList.toggle('rf-hidden', !(s === 'แล้วเสร็จ' || s === 'เพิ่มรูป'));
+    $('upDuringLabel').innerHTML = s === 'กำลังดำเนินการ' || (s === 'แล้วเสร็จ' && noDuring) ? 'รูประหว่างทำ <span class="req">*</span>' : 'รูประหว่างทำ';
+    $('upDuringHint').textContent = s === 'แล้วเสร็จ' && noDuring ? 'บ้านหลังนี้ยังไม่มีรูประหว่างทำ ต้องแนบอย่างน้อย 1 รูปในครั้งนี้'
+      : s === 'กำลังดำเนินการ' ? 'อย่างน้อย 1 รูป' : '';
+    $('upAfterLabel').innerHTML = s === 'แล้วเสร็จ' ? 'รูปหลังปรับ <span class="req">*</span>' : 'รูปหลังปรับ';
+    $('upAfterHint').textContent = s === 'แล้วเสร็จ' ? 'ถ่ายให้เห็นจุดที่ปรับเสร็จแล้ว อย่างน้อย 1 รูป' : '';
+
+    var n = photoCount();
+    $('photoConsentRow').classList.toggle('rf-hidden', !n);
+    $('photoTotal').innerHTML = n ? 'แนบรูปครั้งนี้รวม <b>' + n + '</b>/' + MAX_PHOTOS + ' รูป' + (n > MAX_PHOTOS ? ' <span class="rf-photos-err">เกินกำหนด ลบบางรูปแล้วส่งเพิ่มภายหลัง</span>' : '') : '';
+  }
+  function activeBoxes() {
+    var kind = radio('jobKind'), s = radio('uStatus');
+    if (kind === 'register') return { before: regBefore };
+    if (kind !== 'update') return {};
+    var out = {};
+    if (!$('upBeforeBox').classList.contains('rf-hidden')) out.before = upBefore;
+    if (!$('upDuringBox').classList.contains('rf-hidden')) out.during = upDuring;
+    if (!$('upAfterBox').classList.contains('rf-hidden')) out.after = upAfter;
+    return out;
+  }
+  function photoCount() { var b = activeBoxes(); return Object.keys(b).reduce(function (s, k) { return s + b[k].count(); }, 0); }
+
+  // ── ส่ง ──
+  function reporter() { return { name: $('rName').value.trim(), position: $('rPosition').value.trim(), phone: $('rPhone').value.replace(/[^\d]/g, ''), email: $('rEmail').value.trim() }; }
+  function validate() {
+    var r = reporter(), problems = [];
+    var mark = function (id, bad, text) { $(id).classList.toggle('invalid', bad); if (bad) problems.push(text); };
+    mark('rName', !r.name, 'ข้อ 1: กรอกชื่อ-นามสกุล');
+    mark('rPosition', !r.position, 'ข้อ 1: กรอกตำแหน่ง');
+    mark('rPhone', !/^0\d{8,9}$/.test(r.phone), 'ข้อ 1: เบอร์โทรต้องเป็นตัวเลข 9-10 หลัก ขึ้นต้นด้วย 0');
+    mark('rEmail', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email), 'ข้อ 1: กรอกอีเมลให้ถูกต้อง');
+    mark('uAgency', !agency(), 'ข้อ 2: เลือกหน่วยดำเนินการ');
+    var kind = radio('jobKind'), s = radio('uStatus'), h = house(), d = $('eventDate').value;
+    if (!kind) problems.push('ข้อ 3: เลือกว่าจะลงทะเบียนบ้านใหม่ หรืออัปเดตบ้าน');
+    if (kind === 'register') {
+      mark('pTitle', !$('pTitle').value, 'ข้อ 3: เลือกคำนำหน้า');
+      mark('pFirst', !$('pFirst').value.trim(), 'ข้อ 3: กรอกชื่อผู้รับบริการ');
+      mark('pLast', !$('pLast').value.trim(), 'ข้อ 3: กรอกนามสกุล');
+      mark('pAge', !/^\d{1,3}$/.test($('pAge').value) || +$('pAge').value > 120, 'ข้อ 3: กรอกอายุ (ตัวเลข)');
+      mark('pAddress', !$('pAddress').value.trim(), 'ข้อ 3: กรอกที่อยู่');
+      if (!checked('pGroups').length) problems.push('ข้อ 3: เลือกกลุ่มผู้รับบริการ');
+      if (checked('pGroups').indexOf('disabled') >= 0 && !checked('pDisability').length) problems.push('ข้อ 3: เลือกประเภทความพิการ');
+      mark('bApproved', !(+$('bApproved').value > 0), 'ข้อ 3: กรอกงบที่อนุมัติ');
+      var items = checked('pItems');
+      if (!items.length) problems.push('ข้อ 3: เลือกรายการที่จะปรับ');
+      if (items.indexOf(OTHER) >= 0) mark('pItemOther', !$('pItemOther').value.trim(), 'ข้อ 3: ระบุรายการอื่น ๆ');
+      if (!regBefore.count()) problems.push('ข้อ 3: แนบรูปก่อนปรับอย่างน้อย 1 รูป');
+    } else if (kind === 'update') {
+      if (!h) problems.push('ข้อ 3: แตะเลือกการ์ดบ้าน');
+      if (!s) problems.push('ข้อ 3: เลือกว่าจะอัปเดตอะไร');
+      if (s === 'กำลังดำเนินการ' && !upDuring.count()) problems.push('ข้อ 3: แนบรูประหว่างทำอย่างน้อย 1 รูป');
+      if (s === 'แล้วเสร็จ') {
+        mark('bActual', !(+$('bActual').value > 0), 'ข้อ 3: กรอกงบที่ใช้จริง');
+        if (!upAfter.count()) problems.push('ข้อ 3: แนบรูปหลังปรับอย่างน้อย 1 รูป');
+        if (h && !(h.photos && h.photos.during) && !upDuring.count()) problems.push('ข้อ 3: บ้านนี้ยังไม่มีรูประหว่างทำ แนบอย่างน้อย 1 รูป');
+      }
+      if (s === 'ยกเลิกโครงการ') mark('dropReason', !$('dropReason').value.trim(), 'ข้อ 3: กรอกเหตุผลที่ยกเลิกโครงการ');
+      if (s === 'เพิ่มรูป' && !photoCount() && !$('photoLink').value.trim()) problems.push('ข้อ 3: แนบรูปอย่างน้อย 1 รูป หรือใส่ลิงก์อัลบั้มในข้อ 4');
+      if (h && d && d < h.registered) problems.push('ข้อ 5: วันที่ต้องไม่ก่อนวันลงทะเบียน (' + thDate(h.registered) + ')');
+    }
+    var link = $('photoLink').value.trim();
+    mark('photoLink', !!link && !/^https:\/\/\S+$/.test(link), 'ข้อ 4: ลิงก์ต้องขึ้นต้นด้วย https://');
+    mark('eventDate', !d || d > today() || d < asOf, 'ข้อ 5: วันที่เกิดรายการต้องอยู่ระหว่าง ' + thDate(asOf) + ' ถึงวันนี้');
+    var n = photoCount();
+    if (n > MAX_PHOTOS) problems.push('แนบรูปได้ครั้งละไม่เกิน ' + MAX_PHOTOS + ' รูป (ส่งเพิ่มภายหลังด้วย "เพิ่มรูปอย่างเดียว")');
+    if (boxes.some(function (b) { return b.busy(); })) problems.push('รอให้ระบบเตรียมรูปเสร็จก่อน');
+    if (n && !$('photoConsent').checked) problems.push('ข้อ 5: ติ๊กยืนยันว่าผู้รับบริการหรือญาติยินยอมให้ถ่ายรูป');
+    if (!$('confirm').checked) problems.push('ข้อ 5: ติ๊กยืนยันว่าตรวจสอบข้อมูลแล้ว');
+    if (!ENDPOINT) problems.push('หน้านี้ยังไม่ได้เชื่อมกับ Google Sheet จึงยังส่งข้อมูลไม่ได้');
+    return problems;
+  }
+
+  function payload() {
+    var kind = radio('jobKind'), b = activeBoxes(), photos = {};
+    Object.keys(b).forEach(function (k) { photos[k] = b[k].list(); });
+    var p = { kind: kind, reporter: reporter(), district: $('uDistrict').value, agency: agency(), eventDate: $('eventDate').value,
+      note: $('note').value.trim(), website: $('website').value, photoLink: $('photoLink').value.trim(),
+      photos: photos, photoConsent: photoCount() > 0 && $('photoConsent').checked };
+    if (kind === 'register') {
+      var items = checked('pItems').filter(function (x) { return x !== OTHER; });
+      if (checked('pItems').indexOf(OTHER) >= 0) items.push($('pItemOther').value.trim());
+      p.person = { name: $('pTitle').value + $('pFirst').value.trim() + ' ' + $('pLast').value.trim(), age: Number($('pAge').value),
+        groups: checked('pGroups'), disability: checked('pGroups').indexOf('disabled') >= 0 ? checked('pDisability') : [],
+        address: $('pAddress').value.trim() };
+      p.budgetApproved = Number($('bApproved').value);
+      p.items = items;
+    } else {
+      p.refCode = radio('house'); p.status = radio('uStatus');
+      if (p.status === 'แล้วเสร็จ') p.budgetActual = Number($('bActual').value);
+      if (p.status === 'ยกเลิกโครงการ') p.reason = $('dropReason').value.trim();
+    }
+    return p;
+  }
+
+  function submit(ev) {
+    ev.preventDefault();
+    var problems = validate();
+    if (problems.length) {
+      msg('formMsg', 'bad', 'ยังส่งไม่ได้ กรุณาแก้ตามนี้:<ul style="margin:4px 0 0;padding-left:20px"><li>' + problems.map(esc).join('</li><li>') + '</li></ul>');
+      return;
+    }
+    var p = payload();
+    if ($('rRemember').checked) store(REMEMBER_KEY, { reporter: p.reporter, district: p.district, agency: $('uAgency').value, other: $('uOther').value.trim() });
+    else store(REMEMBER_KEY, null);
+    var n = photoCount();
+    $('submitBtn').disabled = true;
+    $('submitBtn').textContent = n ? 'กำลังส่ง (พร้อมรูป ' + n + ' รูป อาจใช้เวลาสักครู่)…' : 'กำลังส่ง…';
+    msg('formMsg');
+    fetch(ENDPOINT, { method: 'POST', body: JSON.stringify(p) }).then(function (r) { return r.json(); }).then(function (res) {
+      if (!res.ok) throw new Error(res.error);
+      showDone(p, res, n);
+    }).catch(function (err) {
+      msg('formMsg', 'bad', 'ส่งไม่สำเร็จ: ' + esc(err.message || 'เชื่อมต่อไม่ได้') + '<br>ข้อมูลที่กรอกยังอยู่ในหน้านี้ กดส่งใหม่ได้');
+    }).then(function () { $('submitBtn').disabled = false; $('submitBtn').textContent = 'ส่งข้อมูล'; });
+  }
+
+  function showDone(p, res, n) {
+    var html = '';
+    if (p.kind === 'register') {
+      html = '<p>ลงทะเบียนบ้านแล้ว · <b>รหัสบ้าน ' + esc(res.refCode) + '</b></p>' +
+        '<div class="rf-note info">✏️ จดรหัสบ้าน <b>' + esc(res.refCode) + '</b> ไว้ · ระหว่างทำ กลับมาเลือก "อัปเดตบ้าน" แล้วแนบรูประหว่างทำ · ' +
+        'เมื่อเสร็จ เลือก "แล้วเสร็จ" แนบรูปหลังปรับและใส่งบที่ใช้จริง</div>';
+    } else {
+      html = '<p>อัปเดตบ้าน <b>' + esc(res.refCode) + '</b>: ' + esc(p.status) + '</p>';
+    }
+    if (n) html += '<p>แนบรูป ' + (Number(res.photos) || 0) + ' รูป</p>';
+    if (n && Number(res.photos) < n) html += '<div class="rf-note warn">รายการบันทึกแล้ว แต่รูปไม่ถูกบันทึกครบ กรุณาส่งรูปทาง LINE กองทุน พร้อมแจ้งรหัสบ้าน</div>';
+    html += '<p style="font-size:.92rem;color:var(--rf-muted)">เลขอ้างอิง ' + esc(res.batch) + ' · ถ้ากรอกผิด แจ้งเลขนี้กับเจ้าหน้าที่กองทุนเพื่อยกเลิกรายการ</p>';
+    $('doneText').innerHTML = html;
+    applyHouses(res.houses || houses || []);
+    $('reportForm').classList.add('rf-hidden');
+    document.querySelector('.rf-guide').classList.add('rf-hidden');
+    $('doneCard').classList.remove('rf-hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    $('donePop').classList.remove('rf-hidden');
+    $('donePopOk').focus();
+  }
+  function closePop() { $('donePop').classList.add('rf-hidden'); }
+
+  // ── เริ่มต้น ──
+  var regBefore = ReportPhotos.attach($('regBefore'), { max: MAX_PHOTOS, onChange: function () { refresh(); } });
+  var upBefore = ReportPhotos.attach($('upBefore'), { max: MAX_PHOTOS, onChange: function () { refresh(); } });
+  var upDuring = ReportPhotos.attach($('upDuring'), { max: MAX_PHOTOS, onChange: function () { refresh(); } });
+  var upAfter = ReportPhotos.attach($('upAfter'), { max: MAX_PHOTOS, onChange: function () { refresh(); } });
+  var boxes = [regBefore, upBefore, upDuring, upAfter];
+  if (!ENDPOINT) msg('setupWarn', 'warn', '<b>หน้าทดลอง</b> ยังไม่ได้เชื่อมกับ Google Sheet ดูหน้าตาแบบฟอร์มได้ แต่ยังส่งข้อมูลไม่ได้');
+  $('eventDate').value = today(); $('eventDate').max = today(); $('eventDate').min = START_DATE;
+  $('workArea').addEventListener('change', refresh);
+  $('workArea').addEventListener('input', function (e) { if (e.target.id === 'photoLink') return; refresh(); });
+  $('uDistrict').addEventListener('change', function () { fillAgencies(this.value); onUnitChange(); });
+  $('uAgency').addEventListener('change', onUnitChange);
+  $('uOther').addEventListener('input', onUnitChange);
+  $('reportForm').addEventListener('submit', submit);
+  $('again').addEventListener('click', function () {
+    $('doneCard').classList.add('rf-hidden'); $('reportForm').classList.remove('rf-hidden');
+    document.querySelector('.rf-guide').classList.remove('rf-hidden');
+    msg('formMsg'); resetWork(); $('workArea').scrollIntoView({ behavior: 'smooth' });
+  });
+  $('donePopOk').addEventListener('click', closePop);
+  $('donePop').addEventListener('click', function (e) { if (e.target === this) closePop(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePop(); });
+
+  fetch(DATA_URL).then(function (r) { return r.json(); }).then(function (json) {
+    (json.records || []).forEach(function (r) {
+      var list = agencies[r.district] || (agencies[r.district] = []);
+      if (list.indexOf(r.agency) < 0) list.push(r.agency);
+    });
+    Object.keys(agencies).forEach(function (d) { agencies[d].sort(function (a, b) { return a.localeCompare(b, 'th'); }); });
+    fillDistricts();
+    var saved = store(REMEMBER_KEY);
+    if (saved) {
+      $('rName').value = saved.reporter.name || ''; $('rPosition').value = saved.reporter.position || '';
+      $('rPhone').value = saved.reporter.phone || ''; $('rEmail').value = saved.reporter.email || '';
+      if (saved.district) {
+        $('uDistrict').value = saved.district; fillAgencies(saved.district);
+        $('uAgency').value = saved.agency || ''; $('uOther').value = saved.other || '';
+        onUnitChange();
+      }
+    }
+  }).catch(function () { msg('unitMsg', 'bad', 'โหลดรายชื่อหน่วยดำเนินการไม่สำเร็จ กรุณารีเฟรชหน้านี้'); });
+})();
+</script>
+</body>
+</html>

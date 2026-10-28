@@ -178,6 +178,7 @@ body {
 .rf-choice label .rf-tag { display: inline-block; margin-left: 6px; border-radius: 999px; padding: 0 8px; font-size: 0.8rem; font-weight: 700; vertical-align: middle; }
 .rf-tag.wait { background: #fffaeb; color: var(--rf-warn); }
 .rf-tag.work { background: #eff8ff; color: #175cd3; }
+.rf-tag.done { background: var(--rf-ok-soft); color: var(--rf-ok); }
 .rf-choice label .rf-badge {
   display: inline-block; margin-left: 4px; background: var(--rf-warn); color: #fff;
   border-radius: 999px; padding: 0 8px; font-size: 0.8rem; vertical-align: middle;
