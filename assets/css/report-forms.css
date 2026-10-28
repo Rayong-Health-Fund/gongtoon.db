@@ -140,17 +140,7 @@ body {
 .rf-photos-info { font-size: 0.85rem; color: var(--rf-muted); margin-top: 6px; }
 .rf-photos-err { color: var(--rf-bad); font-weight: 600; }
 
-/* mode switch (report-p4-repair.html) */
-.rf-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
-@media (max-width: 560px) { .rf-tabs { grid-template-columns: 1fr; } }
-.rf-tab {
-  font: inherit; text-align: left; cursor: pointer; border-radius: 12px; padding: 12px 14px;
-  border: 1.5px solid var(--rf-line); background: var(--rf-card); color: var(--rf-ink);
-}
-.rf-tab b { display: block; font-size: 1rem; }
-.rf-tab span { display: block; font-size: 0.85rem; color: var(--rf-muted); }
-.rf-tab[aria-selected="true"] { border-color: var(--rf-primary); background: var(--rf-primary-soft); box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.15); }
-.rf-tab .badge { display: inline-block; margin-left: 4px; background: var(--rf-warn); color: #fff; border-radius: 999px; padding: 0 8px; font-size: 0.8rem; }
+/* status radios and new-part fields (report-p4-repair.html) */
 .rf-radios { display: flex; flex-wrap: wrap; gap: 8px; }
 .rf-radios label {
   display: flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid var(--rf-line);
@@ -160,6 +150,38 @@ body {
 .rf-radios label:has(input:checked) { border-color: var(--rf-primary); background: var(--rf-primary-soft); }
 .rf-newitem { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; border-radius: 10px; background: #f8fafc; }
 @media (max-width: 720px) { .rf-newitem { grid-template-columns: 1fr; } }
+
+/* "how to use" box and the placeholder shown until a unit is picked */
+.rf-guide { background: var(--rf-card); border: 1.5px solid #99f6e4; border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; }
+.rf-guide-head { font-weight: 800; color: var(--rf-primary); margin-bottom: 6px; }
+.rf-guide ol { margin: 0; padding-left: 22px; font-size: 0.95rem; }
+.rf-guide li { margin: 2px 0; }
+.rf-locked {
+  border: 2px dashed #cbd5e1; border-radius: 14px; padding: 22px 16px; text-align: center;
+  color: var(--rf-muted); background: #f8fafc; margin-bottom: 16px; font-size: 1rem;
+}
+.rf-locked b { color: var(--rf-ink); }
+.rf-choice { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-bottom: 12px; }
+.rf-choice label {
+  display: block; cursor: pointer; border: 1.5px solid var(--rf-line); border-radius: 12px; padding: 10px 12px; background: var(--rf-card);
+}
+.rf-choice label b { display: block; }
+.rf-choice label span { display: block; font-size: 0.85rem; color: var(--rf-muted); }
+.rf-choice input { position: absolute; opacity: 0; pointer-events: none; }
+.rf-choice label:has(input:checked) { border-color: var(--rf-primary); background: var(--rf-primary-soft); box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.15); }
+.rf-choice label:has(input:focus-visible) { outline: 2px solid var(--rf-primary); outline-offset: 2px; }
+.rf-ask { font-weight: 700; margin: 0 0 8px; }
+/* pending repair tickets as tappable cards */
+.rf-choice.rf-jobs { grid-template-columns: 1fr; }
+.rf-choice label .rf-job-line { color: var(--rf-ink); font-size: 0.9rem; }
+.rf-choice label .rf-job-line + .rf-job-line { color: var(--rf-muted); }
+.rf-choice label .rf-tag { display: inline-block; margin-left: 6px; border-radius: 999px; padding: 0 8px; font-size: 0.8rem; font-weight: 700; vertical-align: middle; }
+.rf-tag.wait { background: #fffaeb; color: var(--rf-warn); }
+.rf-tag.work { background: #eff8ff; color: #175cd3; }
+.rf-choice label .rf-badge {
+  display: inline-block; margin-left: 4px; background: var(--rf-warn); color: #fff;
+  border-radius: 999px; padding: 0 8px; font-size: 0.8rem; vertical-align: middle;
+}
 
 /* small popup shown after a successful submit */
 .rf-pop-back {

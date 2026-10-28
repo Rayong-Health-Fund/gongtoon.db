@@ -28,9 +28,14 @@
     <p>โครงการศูนย์สาธิตและยืมอุปกรณ์เครื่องช่วยความพิการฟื้นฟูสมรรถภาพที่บ้าน · สำหรับเจ้าหน้าที่ประจำหน่วยบริการ</p>
   </div>
 
-  <div class="rf-note info">
-    กรอก<b>เฉพาะอุปกรณ์ที่มีการเปลี่ยนแปลง</b> เช่น สัปดาห์นี้มีคนยืมเตียง 1 หลัง และคืนรถเข็น 2 คัน ก็กรอกแค่ 2 รายการนี้
-    ระบบจะนำไปบวกลบกับยอดเดิมให้เอง
+  <div class="rf-guide">
+    <div class="rf-guide-head">📋 วิธีใช้งาน (ประมาณ 1 นาที) ทำตามลำดับข้อ 1 ถึง 4</div>
+    <ol>
+      <li><b>ข้อมูลผู้กรอก</b> กรอกครั้งแรกครั้งเดียว ครั้งต่อไประบบจำให้</li>
+      <li><b>เลือกหน่วยบริการ</b> แล้วจะเห็นยอดอุปกรณ์ปัจจุบันของหน่วย</li>
+      <li><b>ใส่รายการที่เปลี่ยน</b> กรอกเฉพาะอุปกรณ์ที่มีการยืม คืน หรือชำรุด เช่น สัปดาห์นี้มีคนยืมเตียง 1 หลัง และคืนรถเข็น 2 คัน ก็กรอกแค่ 2 รายการนี้ ระบบบวกลบกับยอดเดิมให้เอง</li>
+      <li><b>ตรวจทานและกดส่ง</b> ถ้ายังขาดอะไร ระบบจะบอกให้</li>
+    </ol>
   </div>
 
   <form id="reportForm" novalidate autocomplete="on">
@@ -63,7 +68,7 @@
     <!-- 2. หน่วยบริการ -->
     <section class="rf-card">
       <h2><span class="rf-step">2</span>หน่วยบริการ</h2>
-      <p class="rf-sub">เลือกอำเภอก่อน แล้วเลือกหน่วยบริการของท่าน</p>
+      <p class="rf-sub">เลือก<b>อำเภอ</b>ก่อน แล้วเลือก<b>หน่วยบริการ</b>ของท่าน · หลังเลือกแล้ว รายการอุปกรณ์ในข้อ 3 จะพร้อมให้กรอก</p>
       <div class="rf-grid">
         <div class="rf-field">
           <label for="uDistrict">อำเภอ <span class="req">*</span></label>
@@ -119,7 +124,8 @@
           <div class="rf-effect">→ ยืมใช้งาน ลด 2 · พร้อมให้ยืม เพิ่ม 2</div>
         </div>
       </div>
-      <div class="rf-lines-head">กรอกรายการของหน่วยท่านด้านล่างนี้ ↓</div>
+      <div class="rf-locked" id="pickUnitFirst">👆 <b>เลือกอำเภอและหน่วยบริการในข้อ 2 ก่อน</b><br>แล้วช่องกรอกรายการอุปกรณ์ของหน่วยท่านจะแสดงขึ้นที่นี่</div>
+      <div class="rf-lines-head rf-hidden" id="linesHead">กรอกรายการของหน่วยท่านด้านล่างนี้ ↓</div>
       <div id="lines"></div>
       <button type="button" class="rf-btn ghost" id="addLine" disabled>＋ เพิ่มรายการ</button>
       <details style="margin-top:12px;font-size:.92rem;color:var(--rf-muted)">
@@ -286,9 +292,15 @@
     });
     sel.disabled = !district;
   }
+  function showLines(on) {
+    $('pickUnitFirst').classList.toggle('rf-hidden', on);
+    $('linesHead').classList.toggle('rf-hidden', !on);
+    $('addLine').classList.toggle('rf-hidden', !on);
+  }
   function onUnitChange() {
     var district = $('uDistrict').value, unit = $('uUnit').value;
     stock = null;
+    showLines(false);
     $('lines').innerHTML = '';
     $('addLine').disabled = true;
     $('stockBox').classList.add('rf-hidden');
@@ -301,7 +313,8 @@
       stock = res.items.filter(function (it) { return it.available + it.borrowed + it.damaged > 0; });
       if (res.asOf) { asOf = res.asOf; $('eventDate').min = asOf; }
       if (!DEMO) enablePhotos(res.features && res.features.photos || 0);
-      msg('stockMsg');
+      msg('stockMsg', 'ok', '✓ โหลดยอดของหน่วยแล้ว เลื่อนลงไปกรอกรายการในข้อ 3 ต่อได้เลย');
+      showLines(true);
       renderStock();
       $('addLine').disabled = !stock.length;
       if (!stock.length) msg('stockMsg', 'warn', 'ไม่พบรายการอุปกรณ์ของหน่วยนี้ กรุณาติดต่อกองทุน');
@@ -503,6 +516,7 @@
   $('demoReset').addEventListener('click', function () {
     if (confirm('ล้างรายการทดลองทั้งหมดในเครื่องนี้?')) { store(DEMO_KEY, []); onUnitChange(); }
   });
+  showLines(false);
   $('eventDate').value = today();
   $('eventDate').max = today();
   $('uDistrict').addEventListener('change', function () { fillUnits(this.value); onUnitChange(); });
