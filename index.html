@@ -6031,6 +6031,12 @@ function switchTab4(tab, btnEl) {
   if (tab === 'centers') loadP4Centers();
 }
 
+// ศูนย์ซ่อมที่อุปกรณ์สำหรับซ่อมหมดแล้ว (คงเหลือ 0 ชิ้น) — กองทุนแจ้งให้แสดงว่า
+// ไม่มีบริการในปัจจุบัน. ใส่ชื่อเต็มตามข้อมูล; ลบออกเมื่อกลับมาให้บริการ.
+var P4_NO_SERVICE = ['องค์การบริหารส่วนตำบลวังหว้า'];
+var P4_NO_SERVICE_TAG = '<span class="p4-cf-tag" style="color:#b91c1c;background:#fef2f2;border-color:#fecaca;">ไม่มีบริการในปัจจุบัน</span>';
+function p4NoService(unit) { return P4_NO_SERVICE.indexOf(unit) !== -1; }
+
 // Built straight from the same device data already loaded for the main
 // tabs (district/unit/category are on every row there) instead of a
 // separate live call — one less network round trip for the same info.
@@ -6071,8 +6077,10 @@ function renderP4Centers(rows) {
       + '<h6 style="font-size:0.92rem;font-weight:700;color:#6d28d9;margin-bottom:0.5rem;">📍 อำเภอ' + d + '</h6>';
     Object.keys(byDistrict[d]).sort(function(a,b){ return a.localeCompare(b,'th'); }).forEach(function(center) {
       var cats = byDistrict[d][center];
-      html += '<div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:0.6rem 0.9rem;margin-bottom:0.5rem;">'
-        + '<div style="font-weight:700;font-size:0.85rem;">🏥 ' + center + '</div>'
+      var off = p4NoService(center);
+      html += '<div style="background:' + (off ? '#f9fafb;border:1px solid #e5e7eb' : '#faf5ff;border:1px solid #e9d5ff') + ';border-radius:8px;padding:0.6rem 0.9rem;margin-bottom:0.5rem;">'
+        + '<div style="font-weight:700;font-size:0.85rem;' + (off ? 'color:#6b7280;' : '') + '">🏥 ' + center + (off ? ' ' + P4_NO_SERVICE_TAG : '') + '</div>'
+        + (off ? '<div style="font-size:0.75rem;color:#b91c1c;margin-top:0.2rem;">อุปกรณ์สำหรับซ่อมหมดแล้ว (คงเหลือ 0 ชิ้น)</div>' : '')
         + '<div style="font-size:0.75rem;color:#6b7280;margin-top:0.2rem;">ซ่อม/ดัดแปลง: ' + (cats.length ? cats.join(', ') : 'ไม่ระบุประเภท') + '</div>'
         + '</div>';
     });
@@ -6169,7 +6177,7 @@ function initP4() {
     });
     Object.keys(unitSet).sort().forEach(function(u) {
       var opt = document.createElement("option");
-      opt.value = u; opt.textContent = u;
+      opt.value = u; opt.textContent = u + (p4NoService(u) ? ' (ไม่มีบริการในปัจจุบัน)' : '');
       unitSel.appendChild(opt);
     });
   }
@@ -6521,7 +6529,7 @@ function renderP4Summary() {
 
           return (
             '<tr class="p4-drill2-main">' +
-              '<td><button class="p4-summ-drillbtn2" onclick="p4SummToggleDrill2(this)">▶</button> ' + u + '</td>' +
+              '<td><button class="p4-summ-drillbtn2" onclick="p4SummToggleDrill2(this)">▶</button> ' + u + (p4NoService(u) ? ' ' + P4_NO_SERVICE_TAG : '') + '</td>' +
               '<td>' + ud.count + ' รายการ</td><td>' + catCnt + ' กลุ่ม</td>' +
               '<td>' + fmt(ud.buy) + ' ชิ้น</td><td>' + fmt(ud.paid) + ' ชิ้น</td>' +
               '<td><strong>' + fmt(ud.rem) + ' ชิ้น</strong></td>' +
@@ -6665,7 +6673,7 @@ function renderP4Summary() {
 
           return (
             '<tr class="p4-drill2-main">' +
-              '<td><button class="p4-summ-drillbtn2" onclick="p4SummToggleDrill2(this)">▶</button> ' + u + '</td>' +
+              '<td><button class="p4-summ-drillbtn2" onclick="p4SummToggleDrill2(this)">▶</button> ' + u + (p4NoService(u) ? ' ' + P4_NO_SERVICE_TAG : '') + '</td>' +
               '<td>' + (ud.dist || '—') + '</td>' +
               '<td>' + ud.count + ' รายการ</td>' +
               '<td>' + fmt(ud.buy) + ' ชิ้น</td><td>' + fmt(ud.paid) + ' ชิ้น</td>' +
