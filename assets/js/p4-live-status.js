@@ -5,8 +5,9 @@
 // log work through report-p4-repair.html; the ledger Sheet publishes two tabs
 // with no reporter/recipient details:
 //   "อะไหล่คงเหลือ" — carried / bought / used / remaining per centre, part and year
-//   "สรุปงานซ่อม"   — repairs finished / not fixable per centre, category and year,
-//                    plus the job-sheet numbers in each row ("เลขใบงาน")
+//   "สรุปงานซ่อม"   — equipment received for repair ("รับซ่อม") per centre, category
+//                    and fiscal year of intake, plus the job-sheet numbers in each row
+//                    ("เลขใบงาน"); older versions of the tab had "ซ่อมเสร็จ" instead
 // Those years are merged into the same shape the page already reads
 // (data_by_year, available_years, repairs[].by_year). One job sheet = one
 // person served, so cases are counted as distinct job-sheet numbers (a sheet
@@ -86,7 +87,8 @@
       var fy = String(r['ปีงบประมาณ'] || '').trim();
       if (!r['ศูนย์ซ่อม'] || !/^25\d\d$/.test(fy)) return;
       years[fy] = true;
-      var done = num(r['ซ่อมเสร็จ']);
+      // ตั้งแต่รุ่น 4 นับตอนรับซ่อม ("รับซ่อม") · แท็บรุ่นก่อนมีแต่ "ซ่อมเสร็จ"
+      var done = num(r['รับซ่อม'] !== undefined ? r['รับซ่อม'] : r['ซ่อมเสร็จ']);
       inProgress += num(r['กำลังซ่อม']);
       failed += num(r['ซ่อมไม่ได้']);
       String(r['เลขใบงาน'] || '').split(/\s+/).forEach(function (id) {

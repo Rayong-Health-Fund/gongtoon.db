@@ -28,9 +28,9 @@
     <ol>
       <li><b>ข้อมูลผู้กรอก</b> กรอกครั้งแรกครั้งเดียว ครั้งต่อไประบบจำให้</li>
       <li><b>เลือกศูนย์ซ่อม</b> แล้วข้อ 3–6 จะแสดงขึ้นมา</li>
-      <li><b>งานซ่อมที่จบแล้ว</b> ถ่ายรูปใบงาน เลือกว่าซ่อมอะไร แล้วแนบรูปก่อน/หลังซ่อม (ส่งครั้งเดียวเมื่อซ่อมจบ)</li>
-      <li><b>อะไหล่ที่เบิกใช้</b> ตอบ "ไม่ได้เบิก" หรือใส่รายการที่เบิก</li>
-      <li><b>อะไหล่ที่ซื้อเข้า</b> ตอบ "ไม่ได้ซื้อ" หรือใส่รายการที่ซื้อ</li>
+      <li><b>งานซ่อม</b> รับซ่อมใบงานใหม่ (รูปใบงาน + รูปก่อนซ่อม) หรือกลับมาเพิ่มรูประหว่าง/หลังซ่อมในใบงานเดิม</li>
+      <li><b>อะไหล่ที่เบิกใช้</b> ใส่รายการที่เบิก หรือติ๊ก "ไม่ได้เบิกอะไหล่"</li>
+      <li><b>อะไหล่ที่ซื้อเข้า</b> ใส่เฉพาะเมื่อซื้อ ถ้าไม่ได้ซื้อข้ามได้เลย</li>
       <li><b>ตรวจทานและกดส่ง</b> ถ้ายังขาดอะไร ระบบจะบอกให้</li>
     </ol>
   </div>
@@ -90,87 +90,90 @@
       </details>
     </section>
 
-    <div class="rf-locked" id="lockedCard">👆 <b>เลือกอำเภอและศูนย์ซ่อมในข้อ 2 ก่อน</b><br>แล้วข้อ 3 งานซ่อมที่จบแล้ว · ข้อ 4 อะไหล่ที่เบิกใช้ · ข้อ 5 อะไหล่ที่ซื้อเข้า · ข้อ 6 ส่งข้อมูล จะแสดงขึ้นที่นี่</div>
+    <div class="rf-locked" id="lockedCard">👆 <b>เลือกอำเภอและศูนย์ซ่อมในข้อ 2 ก่อน</b><br>แล้วข้อ 3 งานซ่อม · ข้อ 4 อะไหล่ที่เบิกใช้ · ข้อ 5 อะไหล่ที่ซื้อเข้า · ข้อ 6 ส่งข้อมูล จะแสดงขึ้นที่นี่</div>
 
     <div id="workArea" class="rf-hidden">
-      <!-- 3. งานซ่อมที่เสร็จแล้ว -->
+      <!-- 3. งานซ่อม -->
       <section class="rf-card">
-        <h2><span class="rf-step">3</span>งานซ่อมที่จบแล้ว</h2>
-        <p class="rf-sub">รายงานเมื่อ<b>ซ่อมจบแล้วเท่านั้น</b> (ซ่อมเสร็จ หรือซ่อมไม่ได้) · ส่ง 1 ครั้งต่อใบงาน 1 ใบ · งานที่ยังซ่อมอยู่ ไม่ต้องรายงาน</p>
-        <p class="rf-ask">ครั้งนี้มีใบงานที่ซ่อมจบแล้วจะรายงานไหม?</p>
+        <h2><span class="rf-step">3</span>งานซ่อม</h2>
+        <p class="rf-ask">ครั้งนี้ทำอะไร? เลือก 1 ข้อ</p>
         <div class="rf-choice" id="jobChoice">
-          <label><input type="radio" name="jobKind" value="report"><b>🧾 มี รายงานใบงาน 1 ใบ</b><span>แนบรูปใบงานและรูปการซ่อม</span></label>
-          <label><input type="radio" name="jobKind" value="none"><b>📦 ไม่มี</b><span>บันทึกเฉพาะอะไหล่ (ข้อ 4–5)</span></label>
+          <label><input type="radio" name="jobKind" value="intake"><b>🆕 รับซ่อม (ใบงานใหม่)</b><span>รับของเข้ามาซ่อมวันนี้</span></label>
+          <label><input type="radio" name="jobKind" value="photos"><b>📷 เพิ่มรูปในใบงานเดิม <span class="rf-badge" id="mineBadge">0</span></b><span>รูประหว่างซ่อม / หลังซ่อม</span></label>
+          <label><input type="radio" name="jobKind" value="none"><b>📦 เฉพาะอะไหล่ที่ซื้อเข้า</b><span>ไม่มีงานซ่อม</span></label>
         </div>
 
-        <div data-panel="report" class="rf-hidden">
+        <!-- 3A รับซ่อม -->
+        <div data-panel="intake" class="rf-hidden">
           <div class="rf-field" style="margin-top:6px">
-            <label>3.1 รูปใบงาน <span class="req">*</span></label>
-            <div class="hint" style="margin:0 0 8px">ถ่ายใบงานกระดาษให้เห็นทั้งแผ่นและอ่านออก · ใบงานมีหลายหน้า แนบได้ถึง 3 รูป · ไม่ต้องพิมพ์อาการเสียหรือชื่อผู้รับบริการ</div>
+            <label>3.1 รูปใบงานรับซ่อม <span class="req">*</span></label>
+            <div class="hint" style="margin:0 0 8px">ถ่ายใบงานกระดาษให้เห็นทั้งแผ่นและอ่านออก · ใบงานมีหลายหน้า แนบได้ถึง 3 รูป</div>
             <div id="sheetPhotos"></div>
           </div>
-
           <div class="rf-field" style="margin-top:16px">
-            <label>3.2 ซ่อมอะไรไปบ้าง <span class="req">*</span></label>
-            <div class="hint" style="margin:0 0 8px">เลือกประเภทอุปกรณ์และจำนวนตามใบงาน · ใบงานเดียวซ่อมหลายอย่าง กด "＋ เพิ่มอุปกรณ์"</div>
+            <label>3.2 รับซ่อมอะไร <span class="req">*</span></label>
+            <div class="hint" style="margin:0 0 8px">เลือกประเภทอุปกรณ์และจำนวนตามใบงาน · ใบงานเดียวมีหลายอย่าง กด "＋ เพิ่มอุปกรณ์"</div>
             <div id="itemLines"></div>
             <button type="button" class="rf-btn ghost small" id="addItem">＋ เพิ่มอุปกรณ์</button>
           </div>
-
           <div class="rf-field" style="margin-top:16px">
-            <label>3.3 ผลการซ่อม <span class="req">*</span></label>
-            <div class="rf-radios" id="rResult">
-              <label><input type="radio" name="rResult" value="ซ่อมเสร็จ"> ✅ ซ่อมเสร็จ</label>
-              <label><input type="radio" name="rResult" value="ซ่อมไม่ได้"> ⛔ ซ่อมไม่ได้</label>
-            </div>
+            <label for="recipient">3.3 ชื่อ-นามสกุลผู้มาใช้บริการ <span class="req">*</span></label>
+            <input class="rf-input" id="recipient" maxlength="100" placeholder="เช่น นางสมศรี ใจดี" autocomplete="off">
+            <div class="hint">เห็นเฉพาะเจ้าหน้าที่กองทุน ไม่แสดงบนเว็บไซต์</div>
           </div>
-
           <div class="rf-field" style="margin-top:16px">
-            <label>3.4 รูปการซ่อม</label>
-            <div class="rf-photo-stage">
-              <div class="rf-photo-stage-head">ก่อนซ่อม <span class="req">*</span> <span class="hint">ให้เห็นอุปกรณ์และจุดที่เสีย</span></div>
-              <div id="beforePhotos"></div>
+            <label>3.4 รูปก่อนซ่อม <span class="req">*</span></label>
+            <div class="hint" style="margin:0 0 8px">ให้เห็นอุปกรณ์และจุดที่เสีย · รูประหว่างซ่อมและหลังซ่อม กลับมาเพิ่มทีหลังได้ที่ "📷 เพิ่มรูปในใบงานเดิม"</div>
+            <div id="beforePhotos"></div>
+          </div>
+        </div>
+
+        <!-- 3B เพิ่มรูปในใบงานเดิม -->
+        <div data-panel="photos" class="rf-hidden">
+          <div class="rf-field" style="margin-top:6px">
+            <label>3.1 เลือกใบงาน <span class="req">*</span></label>
+            <div class="rf-radios" id="jobFilter" style="margin-bottom:8px">
+              <label><input type="radio" name="jobFilter" value="mine" checked> 👤 ที่ฉันกรอก</label>
+              <label><input type="radio" name="jobFilter" value="all"> 🏢 ทั้งศูนย์</label>
             </div>
+            <div class="hint" style="margin:0 0 8px">ดูเลขใบงานที่เขียนไว้มุมใบงานกระดาษ · ใบงานที่มีรูปหลังซ่อมแล้วจะแสดงต่ออีก 30 วัน</div>
+            <div id="noJobs" class="rf-note warn rf-hidden"></div>
+            <div class="rf-choice rf-jobs" id="jobCards"></div>
+          </div>
+          <div class="rf-field" style="margin-top:16px">
+            <label>3.2 รูปการซ่อม</label>
+            <div class="hint" style="margin:0 0 8px">แนบอย่างน้อย 1 รูป หรือเพิ่มอะไหล่ที่เบิกใช้ในข้อ 4</div>
             <div class="rf-photo-stage">
-              <div class="rf-photo-stage-head">ระหว่างซ่อม <span class="hint">(ไม่บังคับ)</span></div>
+              <div class="rf-photo-stage-head">ระหว่างซ่อม</div>
               <div id="duringPhotos"></div>
             </div>
             <div class="rf-photo-stage">
-              <div class="rf-photo-stage-head" id="afterHead">หลังซ่อม <span class="req">*</span> <span class="hint">ให้เห็นอุปกรณ์ที่ซ่อมเสร็จ</span></div>
+              <div class="rf-photo-stage-head">หลังซ่อม <span class="hint">ให้เห็นอุปกรณ์ที่ซ่อมเสร็จ</span></div>
               <div id="afterPhotos"></div>
             </div>
           </div>
+        </div>
+
+        <div data-panel="none" class="rf-hidden">
+          <div class="rf-note info" style="margin-top:6px">บันทึกอะไหล่ที่ซื้อเข้าในข้อ 5 ได้เลย · ถ้ามีเบิกอะไหล่ใช้งานทั่วไปที่ไม่ผูกกับใบงาน ใส่ในข้อ 4</div>
         </div>
       </section>
 
       <!-- 4. เบิกใช้ -->
       <section class="rf-card">
         <h2><span class="rf-step">4</span>อะไหล่ที่เบิกใช้</h2>
-        <p class="rf-ask">ครั้งนี้มีการเบิกอะไหล่ออกไปใช้ไหม?</p>
-        <div class="rf-choice">
-          <label><input type="radio" name="usedAny" value="no"><b>ไม่ได้เบิกใช้</b><span>ข้ามไปข้อ 5</span></label>
-          <label><input type="radio" name="usedAny" value="yes"><b>เบิกใช้อะไหล่</b><span>ใส่รายการและจำนวนที่ใช้</span></label>
-        </div>
-        <div id="usedBox" class="rf-hidden">
-          <div class="hint" id="usedHint" style="margin:0 0 8px">จำนวนใส่ทศนิยมได้ เช่น ใช้สีไปครึ่งถัง ใส่ 0.5</div>
-          <div id="usedLines"></div>
-          <button type="button" class="rf-btn ghost small" id="addUsed">＋ เพิ่มอะไหล่ที่เบิกใช้</button>
-        </div>
+        <div class="hint" id="usedHint" style="margin:0 0 8px">จำนวนใส่ทศนิยมได้ เช่น ใช้สีไปครึ่งถัง ใส่ 0.5</div>
+        <div id="usedLines"></div>
+        <button type="button" class="rf-btn ghost small" id="addUsed">＋ เพิ่มอะไหล่ที่เบิกใช้</button>
+        <label class="rf-check" id="noUsedRow"><input type="checkbox" id="noUsed"> ครั้งนี้ไม่ได้เบิกอะไหล่</label>
       </section>
 
       <!-- 5. ซื้อเข้า -->
       <section class="rf-card">
-        <h2><span class="rf-step">5</span>อะไหล่ที่ซื้อเข้า</h2>
-        <p class="rf-ask">ครั้งนี้ได้ซื้ออะไหล่เข้ามาเก็บไว้ไหม?</p>
-        <div class="rf-choice">
-          <label><input type="radio" name="boughtAny" value="no"><b>ไม่ได้ซื้อเพิ่ม</b><span>ข้ามไปข้อ 6</span></label>
-          <label><input type="radio" name="boughtAny" value="yes"><b>ซื้ออะไหล่เข้า</b><span>ใส่รายการและจำนวนที่ซื้อ</span></label>
-        </div>
-        <div id="boughtBox" class="rf-hidden">
-          <div class="hint" style="margin:0 0 8px">ถ้าอะไหล่ไม่มีในรายการ เลือก "➕ อะไหล่รายการใหม่" แล้วกรอกชื่อ หน่วยนับ และเลขที่/วันที่ MOU ที่กองทุนอนุมัติ</div>
-          <div id="boughtLines"></div>
-          <button type="button" class="rf-btn ghost small" id="addBought">＋ เพิ่มอะไหล่ที่ซื้อเข้า</button>
-        </div>
+        <h2><span class="rf-step">5</span>อะไหล่ที่ซื้อเข้า <span class="rf-sub" style="font-weight:400">(ถ้าไม่ได้ซื้อ ข้ามได้เลย)</span></h2>
+        <div class="hint" id="boughtHint" style="margin:0 0 8px">ถ้าอะไหล่ไม่มีในรายการ เลือก "➕ อะไหล่รายการใหม่" แล้วกรอกชื่อ หน่วยนับ และเลขที่/วันที่ MOU ที่กองทุนอนุมัติ</div>
+        <div id="boughtLines"></div>
+        <button type="button" class="rf-btn ghost small" id="addBought">＋ เพิ่มอะไหล่ที่ซื้อเข้า</button>
       </section>
 
       <!-- 6. ส่ง -->
@@ -192,7 +195,7 @@
           <div style="font-weight:700;margin-bottom:6px">อะไหล่คงเหลือหลังบันทึก</div>
           <div class="rf-table-wrap"><table class="rf-table"><thead><tr><th>อะไหล่</th><th class="num">คงเหลือ</th></tr></thead><tbody id="reviewBody"></tbody></table></div>
         </div>
-        <label class="rf-check rf-hidden" id="photoConsentRow"><input type="checkbox" id="photoConsent"> ผู้รับบริการยินยอมให้ส่งรูปใบงาน (ที่มีชื่อและที่อยู่) และรูปที่มีผู้ป่วยหรือบุคคลอื่นให้กองทุนแล้ว <span style="color:var(--rf-bad)">*</span></label>
+        <label class="rf-check rf-hidden" id="photoConsentRow"><input type="checkbox" id="photoConsent"> ผู้รับบริการยินยอมให้ส่งรูปใบงานและรูปที่มีผู้ป่วยหรือบุคคลอื่นให้กองทุนแล้ว <span style="color:var(--rf-bad)">*</span></label>
         <label class="rf-check"><input type="checkbox" id="confirm"> ข้าพเจ้าตรวจสอบแล้วว่าข้อมูลถูกต้อง</label>
         <div id="formMsg"></div>
         <button type="submit" class="rf-btn big" id="submitBtn" style="margin-top:12px">ส่งข้อมูล</button>
@@ -227,8 +230,8 @@
 
   var $ = function (id) { return document.getElementById(id); };
   var data = null, asOf = START_DATE;
-  var info = null;   // { categories, parts } ของศูนย์ที่เลือก
-  var flowOk = true; // สคริปต์ใน Sheet รองรับรายงานใบงานครั้งเดียว (features.flow >= 3)
+  var info = null;   // { categories, parts, jobs } ของศูนย์ที่เลือก
+  var flowOk = true; // สคริปต์ใน Sheet รองรับรับซ่อม + เพิ่มรูปในใบงานเดิม (features.flow >= 4)
   var seq = 0;
 
   function esc(s) {
@@ -271,17 +274,20 @@
     $('lockedCard').classList.toggle('rf-hidden', on);
     $('partsBox').classList.toggle('rf-hidden', !on);
   }
+  function myPhone() { return $('rPhone').value.replace(/[^\d]/g, ''); }
   function onCenterChange() {
     var district = $('uDistrict').value, center = $('uCenter').value;
     info = null;
     showWork(false);
     if (!center) return;
     msg('centerMsg', 'info', 'กำลังโหลดข้อมูลของศูนย์… (ประมาณ 5 วินาที)');
-    var url = ENDPOINT + '?district=' + encodeURIComponent(district) + '&center=' + encodeURIComponent(center);
+    // ส่งเบอร์ผู้กรอกไปด้วย ระบบจะบอกว่าใบงานไหน "ฉันกรอก" (ไม่ส่งชื่อหรือเบอร์ใครกลับมา)
+    var url = ENDPOINT + '?district=' + encodeURIComponent(district) + '&center=' + encodeURIComponent(center) +
+      '&me=' + encodeURIComponent(myPhone());
     fetch(url).then(function (r) { return r.json(); }).then(function (res) {
       if (!res.ok) throw new Error(res.error || 'โหลดข้อมูลไม่สำเร็จ');
       if ($('uCenter').value !== center) return;
-      flowOk = !!(res.features && res.features.flow >= 3);
+      flowOk = !!(res.features && res.features.flow >= 4);
       msg('flowWarn', 'warn', flowOk ? '' : 'ระบบหลังบ้านกำลังอัปเดต ยังส่งข้อมูลไม่ได้ชั่วคราว กรุณาลองใหม่ภายหลังหรือติดต่อกองทุน');
       applyInfo(res);
       msg('centerMsg', 'ok', '✓ โหลดข้อมูลของศูนย์แล้ว เลื่อนลงไปทำข้อ 3 ต่อได้เลย');
@@ -292,25 +298,51 @@
     });
   }
   function applyInfo(res) {
-    info = { categories: res.categories || (info && info.categories) || [], parts: res.parts || [] };
+    info = { categories: res.categories || (info && info.categories) || [], parts: res.parts || [], jobs: res.jobs || [] };
     if (res.asOf) { asOf = res.asOf; $('eventDate').min = asOf; }
     $('partsCount').textContent = info.parts.length;
     $('partsBody').innerHTML = info.parts.map(function (p) {
       return '<tr><td>' + esc(p.category) + '</td><td>' + esc(p.name) + '</td><td class="num">' + r2(p.remaining) + ' ' + esc(p.unitType) + '</td></tr>';
     }).join('');
+    // ตัวเลขบนปุ่ม = ใบงานที่ฉันกรอกและยังไม่มีรูปหลังซ่อม
+    $('mineBadge').textContent = info.jobs.filter(function (j) { return j.mine && !j.done; }).length;
+    renderJobs();
+  }
+
+  // ── การ์ดใบงาน (เพิ่มรูปในใบงานเดิม) ──
+  function renderJobs() {
+    var picked = radio('job');
+    var mineOnly = radio('jobFilter') !== 'all';
+    var list = info.jobs.filter(function (j) { return !mineOnly || j.mine; });
+    var tick = function (n) { return n ? '✓' + (n > 1 ? n : '') : '–'; };
+    $('jobCards').innerHTML = list.map(function (j) {
+      var tag = j.failed ? '<span class="rf-tag wait">⛔ ซ่อมไม่ได้</span>'
+        : j.done ? '<span class="rf-tag done">✅ มีรูปหลังซ่อมแล้ว</span>' : '<span class="rf-tag work">🛠️ รอรูปหลังซ่อม</span>';
+      return '<label><input type="radio" name="job" value="' + esc(j.id) + '"' + (j.id === picked ? ' checked' : '') + '>' +
+        '<b>' + esc(j.id) + ' ' + tag + '</b>' +
+        '<span class="rf-job-line">' + esc(j.items) + '</span>' +
+        '<span class="rf-job-line">' + esc(j.recipient || '-') + ' · รับเมื่อ ' + esc(thDate(j.opened)) + '</span>' +
+        '<span class="rf-job-line">รูป: ก่อน ' + tick(j.photos.before) + ' · ระหว่าง ' + tick(j.photos.during) + ' · หลัง ' + tick(j.photos.after) + '</span></label>';
+    }).join('');
+    var empty = !list.length;
+    $('noJobs').classList.toggle('rf-hidden', !empty);
+    $('noJobs').innerHTML = !empty ? '' : mineOnly && info.jobs.length
+      ? 'ไม่พบใบงานที่เบอร์ ' + esc(myPhone() || '(ยังไม่ได้กรอก)') + ' เคยกรอก · กด "🏢 ทั้งศูนย์" เพื่อดูใบงานของเพื่อนร่วมงาน'
+      : 'ศูนย์นี้ยังไม่มีใบงาน ถ้ารับของเข้ามาซ่อม ให้เลือก "🆕 รับซ่อม (ใบงานใหม่)"';
   }
 
   function resetWork() {
-    ['jobKind', 'usedAny', 'boughtAny', 'rResult'].forEach(function (n) {
+    ['jobKind', 'job'].forEach(function (n) {
       document.querySelectorAll('input[name=' + n + ']').forEach(function (r) { r.checked = false; });
     });
     $('itemLines').innerHTML = ''; $('usedLines').innerHTML = ''; $('boughtLines').innerHTML = '';
+    $('recipient').value = ''; $('noUsed').checked = false;
     stagePhotos.forEach(function (s) { s.box.clear(); });
     $('photoConsent').checked = false; $('confirm').checked = false; $('note').value = '';
     refresh();
   }
 
-  // ── อุปกรณ์ที่ซ่อม (ข้อ 3.2) ──
+  // ── อุปกรณ์ที่รับซ่อม (ข้อ 3.2) ──
   function addItem() {
     var id = 'i' + (++seq);
     $('itemLines').insertAdjacentHTML('beforeend',
@@ -382,6 +414,7 @@
     el.addEventListener('input', refresh);
     el.addEventListener('change', refresh);
     el.querySelector('[data-k=remove]').addEventListener('click', function () { el.remove(); refresh(); });
+    if (kind === 'used') $('noUsed').checked = false;
     refresh();
   }
   function val(el, k) { var x = el.querySelector('[data-k=' + k + ']'); return x ? x.value.trim() : ''; }
@@ -433,43 +466,41 @@
     return ok;
   }
 
-  // รูปของรายงานใบงาน: นับรวมทุกขั้น (เฉพาะเมื่อเลือก "มี รายงานใบงาน")
-  function reportPhotos() { return radio('jobKind') === 'report' ? stagePhotos : []; }
-  function photoCount() { return reportPhotos().reduce(function (s, x) { return s + x.box.count(); }, 0); }
-  function photosBusy() { return reportPhotos().some(function (x) { return x.box.busy(); }); }
+  // รูปของประเภทที่เลือก: รับซ่อม = ใบงาน + ก่อนซ่อม · เพิ่มรูป = ระหว่าง + หลังซ่อม
+  function activePhotos() {
+    var kind = radio('jobKind');
+    return stagePhotos.filter(function (x) { return x.kind === kind; });
+  }
+  function photoCount() { return activePhotos().reduce(function (s, x) { return s + x.box.count(); }, 0); }
+  function photosBusy() { return activePhotos().some(function (x) { return x.box.busy(); }); }
   function stageBox(stage) { return stagePhotos.filter(function (x) { return x.stage === stage; })[0].box; }
+  function withJob(kind) { return kind === 'intake' || kind === 'photos'; }
 
   function refresh() {
     if (!info) return;
     var kind = radio('jobKind');
     document.querySelectorAll('[data-panel]').forEach(function (p) { p.classList.toggle('rf-hidden', p.getAttribute('data-panel') !== kind); });
-    if (kind === 'report' && !$('itemLines').children.length) { addItem(); return; }
+    if (kind === 'intake' && !$('itemLines').children.length) { addItem(); return; }
     checkItems(readItems());
-    var failed = radio('rResult') === 'ซ่อมไม่ได้';
-    $('afterHead').innerHTML = failed
-      ? 'หลังซ่อม <span class="hint">(ไม่บังคับ เมื่อซ่อมไม่ได้)</span>'
-      : 'หลังซ่อม <span class="req">*</span> <span class="hint">ให้เห็นอุปกรณ์ที่ซ่อมเสร็จ</span>';
-    $('eventDateLabel').innerHTML = (kind === 'report' ? 'วันที่ซ่อมเสร็จ / ปิดงาน' : 'วันที่เกิดรายการ') + ' <span class="req">*</span>';
-    $('eventDateHint').textContent = kind === 'report'
-      ? 'อะไหล่ที่ซื้อเข้าในครั้งนี้จะบันทึกเป็นวันเดียวกัน'
-      : 'ถ้าเกิดต่างวันกัน ให้ส่งแยกเป็นวันละครั้ง';
+    if (kind === 'photos') renderJobs();
+    $('eventDateLabel').innerHTML = (kind === 'intake' ? 'วันที่รับซ่อม' : kind === 'photos' ? 'วันที่ถ่ายรูป / เบิกอะไหล่' : 'วันที่ซื้อหรือเบิกอะไหล่') + ' <span class="req">*</span>';
+    $('eventDateHint').textContent = 'ถ้าเกิดต่างวันกัน ให้ส่งแยกเป็นวันละครั้ง';
 
-    var usedYes = radio('usedAny') === 'yes', boughtYes = radio('boughtAny') === 'yes';
-    $('usedBox').classList.toggle('rf-hidden', !usedYes);
-    $('boughtBox').classList.toggle('rf-hidden', !boughtYes);
-    if (usedYes && !$('usedLines').children.length) { addLine('usedLines', 'used'); return; }
-    if (boughtYes && !$('boughtLines').children.length) { addLine('boughtLines', 'bought'); return; }
-    $('usedHint').textContent = kind === 'report'
-      ? 'อะไหล่ที่ใช้ซ่อมตามใบงานนี้ ระบบจะผูกกับใบงานให้ · จำนวนใส่ทศนิยมได้ เช่น 0.5'
-      : 'เบิกใช้ทั่วไปที่ไม่ผูกกับใบงาน · จำนวนใส่ทศนิยมได้ เช่น 0.5';
-    checkLines(boughtYes ? readLines('boughtLines') : [], usedYes ? readLines('usedLines') : []);
+    // ข้อ 4: งานซ่อมต้องเพิ่มรายการ หรือติ๊ก "ไม่ได้เบิกอะไหล่" · เฉพาะอะไหล่ ไม่บังคับ
+    var usedLines = $('usedLines').children.length;
+    $('noUsedRow').classList.toggle('rf-hidden', !withJob(kind) || usedLines > 0);
+    if (usedLines) $('noUsed').checked = false;
+    $('usedHint').textContent = withJob(kind)
+      ? 'อะไหล่ที่ใช้กับใบงานนี้ ระบบผูกกับใบงานให้ · จำนวนใส่ทศนิยมได้ เช่น 0.5 · ถ้าไม่ได้เบิก ติ๊กช่องด้านล่าง'
+      : 'เบิกใช้ทั่วไปที่ไม่ผูกกับใบงาน (ถ้ามี) · จำนวนใส่ทศนิยมได้ เช่น 0.5';
+    checkLines(readLines('boughtLines'), readLines('usedLines'));
     $('photoConsentRow').classList.toggle('rf-hidden', !photoCount());
   }
 
   // ── ส่ง ──
   function reporter() {
     return { name: $('rName').value.trim(), position: $('rPosition').value.trim(),
-      phone: $('rPhone').value.replace(/[^\d]/g, ''), email: $('rEmail').value.trim() };
+      phone: myPhone(), email: $('rEmail').value.trim() };
   }
   function validate() {
     var r = reporter(), problems = [];
@@ -481,24 +512,25 @@
     mark('uCenter', !$('uCenter').value, 'ข้อ 2: เลือกศูนย์ซ่อม');
     var kind = radio('jobKind');
     var d = $('eventDate').value;
-    if (!kind) problems.push('ข้อ 3: เลือกว่าครั้งนี้มีงานซ่อมไหม');
-    if (kind === 'report') {
+    var used = readLines('usedLines'), bought = readLines('boughtLines');
+    if (!kind) problems.push('ข้อ 3: เลือกว่าครั้งนี้ทำอะไร');
+    if (kind === 'intake') {
       if (!stageBox('ใบงาน').count()) problems.push('ข้อ 3.1: แนบรูปใบงานอย่างน้อย 1 รูป');
       var items = readItems();
-      if (!items.length) problems.push('ข้อ 3.2: เพิ่มอุปกรณ์ที่ซ่อมอย่างน้อย 1 รายการ');
+      if (!items.length) problems.push('ข้อ 3.2: เพิ่มอุปกรณ์ที่รับซ่อมอย่างน้อย 1 รายการ');
       else if (!checkItems(items)) problems.push('ข้อ 3.2: แก้รายการอุปกรณ์ที่มีเครื่องหมาย ⚠ หรือยังเลือกไม่ครบ');
-      if (!radio('rResult')) problems.push('ข้อ 3.3: เลือกผลการซ่อม');
+      mark('recipient', !$('recipient').value.trim(), 'ข้อ 3.3: กรอกชื่อ-นามสกุลผู้มาใช้บริการ');
       if (!stageBox('ก่อนซ่อม').count()) problems.push('ข้อ 3.4: แนบรูปก่อนซ่อมอย่างน้อย 1 รูป');
-      if (radio('rResult') === 'ซ่อมเสร็จ' && !stageBox('หลังซ่อม').count()) problems.push('ข้อ 3.4: แนบรูปหลังซ่อมอย่างน้อย 1 รูป');
+    } else if (kind === 'photos') {
+      var job = info.jobs.filter(function (j) { return j.id === radio('job'); })[0];
+      if (!job) problems.push('ข้อ 3.1: แตะเลือกการ์ดใบงาน');
+      if (job && d && d < job.opened) problems.push('ข้อ 6: วันที่ต้องไม่ก่อนวันรับซ่อม (' + thDate(job.opened) + ')');
+      if (!photoCount() && !used.length) problems.push('ข้อ 3.2: แนบรูประหว่างซ่อมหรือหลังซ่อม อย่างน้อย 1 รูป (หรือเพิ่มอะไหล่ที่เบิกใช้ในข้อ 4)');
+    } else if (kind === 'none' && !used.length && !bought.length) {
+      problems.push('ข้อ 5: เพิ่มอะไหล่ที่ซื้อเข้า (หรืออะไหล่ที่เบิกใช้ในข้อ 4)');
     }
-    var usedAns = radio('usedAny'), boughtAns = radio('boughtAny');
-    if (!usedAns) problems.push('ข้อ 4: เลือกว่าเบิกใช้อะไหล่หรือไม่');
-    if (!boughtAns) problems.push('ข้อ 5: เลือกว่าซื้ออะไหล่เข้าหรือไม่');
-    var used = usedAns === 'yes' ? readLines('usedLines') : [], bought = boughtAns === 'yes' ? readLines('boughtLines') : [];
-    if (usedAns === 'yes' && !used.length) problems.push('ข้อ 4: เพิ่มรายการอะไหล่ที่เบิกใช้ หรือเลือก "ไม่ได้เบิกใช้"');
-    if (boughtAns === 'yes' && !bought.length) problems.push('ข้อ 5: เพิ่มรายการอะไหล่ที่ซื้อ หรือเลือก "ไม่ได้ซื้อเพิ่ม"');
-    if ((used.length || bought.length) && !checkLines(bought, used)) problems.push('ข้อ 4–5: แก้รายการอะไหล่ที่มีเครื่องหมาย ⚠ หรือยังเลือกไม่ครบ');
-    if (kind === 'none' && usedAns === 'no' && boughtAns === 'no') problems.push('ไม่มีอะไรให้บันทึก: ไม่มีงานซ่อม ไม่ได้เบิก และไม่ได้ซื้ออะไหล่');
+    if (withJob(kind) && !used.length && !$('noUsed').checked) problems.push('ข้อ 4: เพิ่มอะไหล่ที่เบิกใช้ หรือติ๊ก "ครั้งนี้ไม่ได้เบิกอะไหล่"');
+    if ((used.length || bought.length) && !checkLines(bought, used)) problems.push('ข้อ 4–5: แก้รายการอะไหล่ที่มีเครื่องหมาย ⚠ หรือยังเลือกไม่ครบ (ไม่ใช้ก็กด ✕ ลบ)');
     mark('eventDate', !d || d > today() || d < asOf, 'ข้อ 6: วันที่ต้องอยู่ระหว่าง ' + thDate(asOf) + ' ถึงวันนี้');
     if (photosBusy()) problems.push('รอให้ระบบเตรียมรูปเสร็จก่อน');
     if (photoCount() && !$('photoConsent').checked) problems.push('ข้อ 6: ติ๊กยืนยันการยินยอมของผู้รับบริการ');
@@ -510,19 +542,21 @@
   function payload() {
     var kind = radio('jobKind');
     var photos = [];
-    reportPhotos().forEach(function (x) {
+    activePhotos().forEach(function (x) {
       x.box.list().forEach(function (ph) { ph.stage = x.stage; photos.push(ph); });
     });
     var p = { kind: kind, reporter: reporter(), district: $('uDistrict').value, center: $('uCenter').value,
       eventDate: $('eventDate').value, note: $('note').value.trim(), website: $('website').value,
       photos: photos, photoConsent: !!(photos.length && $('photoConsent').checked),
-      used: radio('usedAny') === 'yes' ? readLines('usedLines').map(function (l) { return { key: l.key, qty: l.qty }; }) : [],
-      bought: radio('boughtAny') === 'yes' ? readLines('boughtLines').map(function (l) {
+      used: readLines('usedLines').map(function (l) { return { key: l.key, qty: l.qty }; }),
+      bought: readLines('boughtLines').map(function (l) {
         return l.isNew ? { qty: l.qty, newItem: l.newItem } : { key: l.key, qty: l.qty };
-      }) : [] };
-    if (kind === 'report') {
+      }) };
+    if (kind === 'intake') {
       p.items = readItems().map(function (it) { return { category: it.category, qty: it.qty }; });
-      p.result = radio('rResult');
+      p.recipient = { name: $('recipient').value.trim() };
+    } else if (kind === 'photos') {
+      p.jobId = radio('job');
     }
     return p;
   }
@@ -553,18 +587,20 @@
 
   function showDone(p, res) {
     var items = [];
-    if (p.kind === 'report') {
-      items.push('รายงานใบงาน <b>' + esc(res.jobId) + '</b> · ' + esc(p.result) + ' · ' + esc(p.items.map(function (it) {
+    if (p.kind === 'intake') {
+      items.push('รับซ่อมแล้ว <b>เลขใบงาน ' + esc(res.jobId) + '</b> · ' + esc(p.items.map(function (it) {
         var c = info.categories.filter(function (x) { return x.name === it.category; })[0];
         return it.category + ' ' + it.qty + ' ' + (c ? c.unitType : '');
       }).join(', ')));
     }
+    if (p.kind === 'photos') items.push('เพิ่มข้อมูลในใบงาน <b>' + esc(res.jobId) + '</b>');
     if (p.used.length) items.push('เบิกใช้อะไหล่ ' + p.used.length + ' รายการ' + (res.jobId ? ' (ผูกกับใบงาน ' + esc(res.jobId) + ')' : ''));
     if (p.bought.length) items.push('ซื้ออะไหล่เข้า ' + p.bought.length + ' รายการ');
     if (p.photos.length) items.push('แนบรูป ' + (Number(res.photos) || 0) + ' รูป');
     var html = '<ul style="margin:0 0 8px;padding-left:20px"><li>' + items.join('</li><li>') + '</li></ul>';
-    if (p.kind === 'report') {
-      html += '<div class="rf-note info">✏️ เขียนเลข <b>' + esc(res.jobId) + '</b> ไว้ที่มุมใบงานกระดาษ จะได้ค้นรูปใน Drive ของกองทุนเจอง่าย</div>';
+    if (p.kind === 'intake') {
+      html += '<div class="rf-note info">✏️ เขียนเลข <b>' + esc(res.jobId) + '</b> ไว้ที่มุมใบงานกระดาษ · ระหว่างซ่อมหรือซ่อมเสร็จ กลับมาที่หน้านี้ ' +
+        'เลือก "📷 เพิ่มรูปในใบงานเดิม" แล้วแตะการ์ดใบงานนี้</div>';
     }
     if (p.photos.length && Number(res.photos) < p.photos.length) {
       html += '<div class="rf-note warn">รายการบันทึกแล้ว แต่รูปไม่ถูกบันทึกครบ กรุณาส่งรูปให้กองทุนทางอื่น พร้อมแจ้งเลขอ้างอิง</div>';
@@ -590,13 +626,13 @@
   }
 
   // ── เริ่มต้น ──
-  // รูปแต่ละขั้น (จำนวนสูงสุดตรงกับ REPORT_STAGES ในสคริปต์) · รูปใบงานเก็บละเอียดกว่าเพื่อให้อ่านลายมือออก
+  // รูปแต่ละขั้น (จำนวนสูงสุดตรงกับ STAGE_LIMITS ในสคริปต์) · รูปใบงานเก็บละเอียดกว่าเพื่อให้อ่านลายมือออก
   var onPhotos = function () { refresh(); };
   var stagePhotos = [
-    { stage: 'ใบงาน', box: ReportPhotos.attach($('sheetPhotos'), { max: 3, maxSide: 2200, quality: 0.85, onChange: onPhotos }) },
-    { stage: 'ก่อนซ่อม', box: ReportPhotos.attach($('beforePhotos'), { max: 4, onChange: onPhotos }) },
-    { stage: 'ระหว่างซ่อม', box: ReportPhotos.attach($('duringPhotos'), { max: 4, onChange: onPhotos }) },
-    { stage: 'หลังซ่อม', box: ReportPhotos.attach($('afterPhotos'), { max: 4, onChange: onPhotos }) }
+    { kind: 'intake', stage: 'ใบงาน', box: ReportPhotos.attach($('sheetPhotos'), { max: 3, maxSide: 2200, quality: 0.85, onChange: onPhotos }) },
+    { kind: 'intake', stage: 'ก่อนซ่อม', box: ReportPhotos.attach($('beforePhotos'), { max: 4, onChange: onPhotos }) },
+    { kind: 'photos', stage: 'ระหว่างซ่อม', box: ReportPhotos.attach($('duringPhotos'), { max: 4, onChange: onPhotos }) },
+    { kind: 'photos', stage: 'หลังซ่อม', box: ReportPhotos.attach($('afterPhotos'), { max: 4, onChange: onPhotos }) }
   ];
   $('addItem').addEventListener('click', addItem);
   $('eventDate').value = today();
@@ -607,6 +643,18 @@
   $('addBought').addEventListener('click', function () { addLine('boughtLines', 'bought'); });
   $('uDistrict').addEventListener('change', function () { fillCenters(this.value); onCenterChange(); });
   $('uCenter').addEventListener('change', onCenterChange);
+  // แก้เบอร์โทรหลังเลือกศูนย์แล้ว: โหลดรายการใบงานใหม่ให้ "ที่ฉันกรอก" ถูกต้อง (ไม่ล้างสิ่งที่กรอกไว้)
+  $('rPhone').addEventListener('change', function () {
+    if (!info) return;
+    var center = $('uCenter').value;
+    fetch(ENDPOINT + '?district=' + encodeURIComponent($('uDistrict').value) + '&center=' + encodeURIComponent(center) +
+      '&me=' + encodeURIComponent(myPhone())).then(function (r) { return r.json(); }).then(function (res) {
+      if (!res.ok || !info || $('uCenter').value !== center) return;
+      info.jobs = res.jobs || [];
+      $('mineBadge').textContent = info.jobs.filter(function (j) { return j.mine && !j.done; }).length;
+      renderJobs();
+    }).catch(function () {});
+  });
   $('reportForm').addEventListener('submit', submit);
   $('again').addEventListener('click', again);
   $('donePopOk').addEventListener('click', closePop);
