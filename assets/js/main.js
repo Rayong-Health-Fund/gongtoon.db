@@ -427,7 +427,9 @@ function renderProject4Dashboard() {
       totalCenters + ' ศูนย์ซ่อม' +
       (liveData.live && liveData.live.ok
         ? ' · ปีงบ 2566-2569 ตามเอกสารแนบ 5 · ตั้งแต่ปีงบ 2570 อัปเดตจากศูนย์ซ่อม' +
-          (liveData.live.inProgress ? ' (กำลังซ่อม ' + liveData.live.inProgress.toLocaleString() + ' ชิ้น)' : '') +
+          (liveData.live.cases ? ' (ซ่อมให้ ' + liveData.live.cases.toLocaleString() + ' ราย' +
+            (liveData.live.failed ? ' · ซ่อมไม่ได้ ' + liveData.live.failed.toLocaleString() + ' ชิ้น' : '') + ')' : '') +
+          (liveData.live.inProgress ? ' (งานค้างแบบเดิม ' + liveData.live.inProgress.toLocaleString() + ' ชิ้น)' : '') +
           (liveData.live.updatedAt ? ' ล่าสุด ' + new Date(liveData.live.updatedAt.replace(' ', 'T') + '+07:00')
             .toLocaleString('th-TH', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' น.' : '')
         : '');

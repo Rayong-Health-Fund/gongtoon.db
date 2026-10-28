@@ -2,6 +2,7 @@
 //
 // Markup:  <div id="photoBox"></div>
 // Script:  var photos = ReportPhotos.attach(document.getElementById('photoBox'), { max: 5, onChange: fn });
+//          (optional maxSide / quality, e.g. { maxSide: 2200, quality: 0.85 } for document photos)
 //          photos.list()  -> [{ type: 'image/jpeg', data: '<base64>' }]  (ready to send)
 //          photos.clear()
 //
@@ -12,12 +13,12 @@
   var MAX_SIDE = 1600;
   var QUALITY = 0.8;
 
-  function shrink(file) {
+  function shrink(file, maxSide, quality) {
     return new Promise(function (resolve, reject) {
       var url = URL.createObjectURL(file);
       var img = new Image();
       img.onload = function () {
-        var scale = Math.min(1, MAX_SIDE / Math.max(img.naturalWidth, img.naturalHeight));
+        var scale = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
         var canvas = document.createElement('canvas');
         canvas.width = Math.round(img.naturalWidth * scale);
         canvas.height = Math.round(img.naturalHeight * scale);
@@ -26,7 +27,7 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         URL.revokeObjectURL(url);
-        resolve(canvas.toDataURL('image/jpeg', QUALITY));
+        resolve(canvas.toDataURL('image/jpeg', quality));
       };
       img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('เปิดไฟล์รูปไม่ได้')); };
       img.src = url;
@@ -36,6 +37,9 @@
   function attach(box, opts) {
     var max = (opts && opts.max) || 5;
     var onChange = (opts && opts.onChange) || function () {};
+    // documents (e.g. a handwritten job sheet) keep more detail so they stay readable
+    var maxSide = (opts && opts.maxSide) || MAX_SIDE;
+    var quality = (opts && opts.quality) || QUALITY;
     var items = []; // data URLs
     var busy = 0;
     var id = 'rp' + Math.random().toString(36).slice(2, 8);
@@ -76,7 +80,7 @@
       files.slice(0, Math.max(0, room)).forEach(function (f) {
         if (!/^image\//.test(f.type) && !/\.(jpe?g|png|heic|heif|webp)$/i.test(f.name)) { msg = 'ไฟล์ ' + f.name + ' ไม่ใช่รูปภาพ'; return; }
         busy++;
-        shrink(f).then(function (src) { items.push(src); }, function (err) { msg = f.name + ': ' + err.message; })
+        shrink(f, maxSide, quality).then(function (src) { items.push(src); }, function (err) { msg = f.name + ': ' + err.message; })
           .then(function () { busy--; render(msg); });
       });
       render(msg);

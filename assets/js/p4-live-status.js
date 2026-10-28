@@ -5,14 +5,18 @@
 // log work through report-p4-repair.html; the ledger Sheet publishes two tabs
 // with no reporter/recipient details:
 //   "อะไหล่คงเหลือ" — carried / bought / used / remaining per centre, part and year
-//   "สรุปงานซ่อม"   — repairs finished / in progress per centre, category and year
+//   "สรุปงานซ่อม"   — repairs finished / not fixable per centre, category and year,
+//                    plus the job-sheet numbers in each row ("เลขใบงาน")
 // Those years are merged into the same shape the page already reads
-// (data_by_year, available_years, repairs[].by_year).
+// (data_by_year, available_years, repairs[].by_year). One job sheet = one
+// person served, so cases are counted as distinct job-sheet numbers (a sheet
+// covering two kinds of equipment appears in two rows but counts once).
 //
 // If the Sheet can't be read, the Excel figures are used as before.
 //
 // Usage: fetchP4Data().then(function (json) { ... })
-//   json.live = { ok: true|false, updatedAt: 'yyyy-MM-dd HH:mm:ss' | '', inProgress: n }
+//   json.live = { ok: true|false, updatedAt: 'yyyy-MM-dd HH:mm:ss' | '', inProgress: n,
+//                 cases: n, failed: n, casesByYear: { '2570': n } }
 (function () {
   var DATA_URL = 'device-repair/data/dashboard_data.json';
   var BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRJaUWpK3WbLzRS7XTF1QUvIRoyZCH8FI2fHUU8n6FN4f2eqcCIb4R7IgZAG68emRAEKoYLTUcjPGLS/pub';
@@ -56,7 +60,7 @@
   }
 
   function merge(json, parts, repairs) {
-    var latest = '', inProgress = 0;
+    var latest = '', inProgress = 0, failed = 0, caseIds = {}, casesByYear = {};
     var districtOf = {};
     (json.units || []).forEach(function (u) { districtOf[u.unit] = u.district; });
 
@@ -84,6 +88,12 @@
       years[fy] = true;
       var done = num(r['ซ่อมเสร็จ']);
       inProgress += num(r['กำลังซ่อม']);
+      failed += num(r['ซ่อมไม่ได้']);
+      String(r['เลขใบงาน'] || '').split(/\s+/).forEach(function (id) {
+        if (!id || caseIds[id]) return;
+        caseIds[id] = true;
+        casesByYear[fy] = (casesByYear[fy] || 0) + 1;
+      });
       if (r['อัปเดตล่าสุด'] > latest) latest = r['อัปเดตล่าสุด'];
       var rep = json.repairs.filter(function (x) { return x.unit === r['ศูนย์ซ่อม'] && x.category === r['ประเภทอุปกรณ์']; })[0];
       if (!rep) {
@@ -97,7 +107,8 @@
     });
 
     json.available_years = Object.keys(years).sort().reverse();
-    json.live = { ok: true, updatedAt: latest, inProgress: inProgress };
+    json.live = { ok: true, updatedAt: latest, inProgress: inProgress, failed: failed,
+      cases: Object.keys(caseIds).length, casesByYear: casesByYear };
     return json;
   }
 
@@ -121,7 +132,7 @@
         try { return merge(JSON.parse(JSON.stringify(json)), both[1][0], both[1][1]); }
         catch (e) { console.warn('[P4] live ledger unreadable, using Excel figures:', e.message); }
       }
-      json.live = { ok: false, updatedAt: '', inProgress: 0 };
+      json.live = { ok: false, updatedAt: '', inProgress: 0, failed: 0, cases: 0, casesByYear: {} };
       return json;
     });
     cached.catch(function () { cached = null; });

@@ -139,6 +139,10 @@ body {
 .rf-photos-add { display: inline-block; }
 .rf-photos-info { font-size: 0.85rem; color: var(--rf-muted); margin-top: 6px; }
 .rf-photos-err { color: var(--rf-bad); font-weight: 600; }
+/* one box per repair stage (report-p4-repair.html) */
+.rf-photo-stage { border: 1.5px dashed var(--rf-line); border-radius: 12px; padding: 10px 12px; margin-top: 8px; background: var(--rf-bg); }
+.rf-photo-stage-head { font-weight: 700; margin-bottom: 8px; }
+.rf-photo-stage-head .hint { font-weight: 400; display: inline; margin: 0 0 0 4px; }
 
 /* status radios and new-part fields (report-p4-repair.html) */
 .rf-radios { display: flex; flex-wrap: wrap; gap: 8px; }
