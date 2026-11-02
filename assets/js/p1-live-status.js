@@ -106,7 +106,7 @@
         budget: Math.round(num(r['งบประมาณ']) * 100) / 100, sourceYearLabel: String(r['ปีงบประมาณ'] || '').trim(),
         projectStatus: r['สถานะ'] || 'กำลังดำเนินการ',
         disabilityTypes: String(r['ประเภทความพิการ'] || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean),
-        agency: agency
+        agency: agency, updatedAt: String(r['อัปเดตล่าสุด'] || '')
       });
       if (r['อัปเดตล่าสุด'] > latest) latest = r['อัปเดตล่าสุด'];
     });

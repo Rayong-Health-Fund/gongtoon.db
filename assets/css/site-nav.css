@@ -1,5 +1,5 @@
 /* Shared site header: one navbar for every public page (see assets/js/site-nav.js).
-   PC  (≥ 1200px): logo + horizontal menu, always visible.
+   PC  (≥ 1360px): logo + horizontal menu, always visible.
    Phone/tablet:  logo + big "☰ เมนู" button that opens a full-height side panel. */
 
 .sn-bar {
@@ -9,7 +9,7 @@
   font-family: 'Sarabun', Tahoma, sans-serif;
 }
 .sn-inner {
-  max-width: 1200px; margin: 0 auto; padding: 0.55rem 1.25rem;
+  max-width: 1360px; margin: 0 auto; padding: 0.55rem 1.25rem;
   display: flex; align-items: center; gap: 1rem;
 }
 .sn-brand { display: flex; align-items: center; gap: 0.65rem; text-decoration: none; color: #0f172a; min-width: 0; flex: none; }
@@ -69,7 +69,7 @@ body.sn-open { overflow: hidden; }
 .sn-contact { margin: auto 0.75rem 1rem; padding: 0.85rem 1rem; border-radius: 12px; background: #f8fafc; font-size: 0.95rem; color: #334155; }
 .sn-contact a { color: #0f766e; font-weight: 700; text-decoration: none; }
 
-@media (max-width: 1199px) {
+@media (max-width: 1359px) {
   .sn-links { display: none; }
   .sn-menu-btn { display: flex; }
   .sn-inner { padding: 0.5rem 0.9rem; }

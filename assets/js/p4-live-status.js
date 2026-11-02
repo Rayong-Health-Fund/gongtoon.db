@@ -74,7 +74,7 @@
       (byYear[fy] = byYear[fy] || []).push({
         district: r['อำเภอ'] || districtOf[r['ศูนย์ซ่อม']] || '', unit: r['ศูนย์ซ่อม'], category: r['กลุ่มอุปกรณ์'],
         equipment: r['อะไหล่'], unit_type: r['หน่วยนับ'], year: fy,
-        purchased: bought, used: used, remaining: num(r['คงเหลือ']), carryForward: !bought && !used
+        purchased: bought, used: used, remaining: num(r['คงเหลือ']), carryForward: !bought && !used, updated: String(r['อัปเดตล่าสุด'] || '')
       });
       if (r['อัปเดตล่าสุด'] > latest) latest = r['อัปเดตล่าสุด'];
     });
@@ -110,7 +110,8 @@
 
     json.available_years = Object.keys(years).sort().reverse();
     json.live = { ok: true, updatedAt: latest, inProgress: inProgress, failed: failed,
-      cases: Object.keys(caseIds).length, casesByYear: casesByYear };
+      cases: Object.keys(caseIds).length, casesByYear: casesByYear,
+      repairRows: repairs.filter(function (r) { return r['ศูนย์ซ่อม']; }) };
     return json;
   }
 

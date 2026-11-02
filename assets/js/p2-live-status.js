@@ -61,6 +61,7 @@
       e.borrowed_qty = s.borrowed;
       e.damaged_qty = s.damaged;
       e.disposed_qty = s.disposed;
+      e.updated = s.updated;
       e.total_supported_qty = s.available + s.borrowed + s.damaged;
       if (s.updated > latest) latest = s.updated;
     });

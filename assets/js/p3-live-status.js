@@ -60,10 +60,11 @@
       if (!y || !u || !n || !s) return;
       var existing = byKey[key(y, u, n)];
       if (existing) {
+        existing.updated = row['อัปเดตล่าสุด'] || '';
         if (existing.s !== s) { existing.s = s; updated++; }
         return;
       }
-      var rec = { y: y, d: row['อำเภอ'], u: u, b: num(row['งบประมาณ']), n: n, s: s };
+      var rec = { y: y, d: row['อำเภอ'], u: u, b: num(row['งบประมาณ']), n: n, s: s, code: row['รหัสโครงการ'] || '', updated: row['อัปเดตล่าสุด'] || '' };
       json.records.push(rec);
       byKey[key(y, u, n)] = rec;
       added++;

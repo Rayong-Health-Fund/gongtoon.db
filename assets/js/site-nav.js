@@ -9,6 +9,7 @@
     { href: 'index.html', icon: '🏠', label: 'หน้าหลัก', desc: 'ภาพรวมทุกโครงการ' },
     { href: 'project-summary.html', icon: '📊', label: 'สรุปโครงการ', desc: 'สรุปหน้าเดียว พิมพ์ได้' },
     { href: 'calendar.html', icon: '📅', label: 'ปฏิทิน', desc: 'ประชุม โครงการ ลงพื้นที่' },
+    { href: 'print-reports.html', icon: '🖨️', label: 'พิมพ์รายงาน', desc: 'ดาวน์โหลด Excel รายโครงการ' },
     { href: 'documents-download.html', icon: '📄', label: 'ดาวโหลดเอกสาร', desc: 'หลักเกณฑ์และเอกสารประกอบ' },
     { href: 'report-forms.html', icon: '📝', label: 'แบบฟอร์ม', desc: 'สำหรับเจ้าหน้าที่หน่วยบริการ', also: 'report-' }
   ];
