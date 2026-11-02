@@ -37,6 +37,15 @@ const STATUS_ROWS = { 'ยืมใช้งาน': 'borrowed', 'พร้อ�
 const UNIT_NAME_FIX = { 'รพ.สต.บ้านมาบบางพร': 'รพ.สต.บ้านมาบยางพร' };
 function unitName(s) { return UNIT_NAME_FIX[s] || s; }
 
+// Counts typed into the wrong item column in the source files, moved to the
+// right item (status counts and per-year purchases alike). Confirmed by the
+// unit itself.
+const ITEM_MOVES = [
+  // รพ.นิคมพัฒนา has no folding walkers, only non-folding ones (2026-11-02)
+  { district: 'นิคมพัฒนา', agency: 'รพ.นิคมพัฒนา',
+    from: 'เครื่องช่วยเดินชนิด 4 ขา(Walker) แบบพับได้', to: 'เครื่องช่วยเดิน ชนิด 4 ขา (Walker)' }
+];
+
 // Also collapses a Thai vowel/tone mark typed twice ("บ้้าน" -> "บ้าน")
 function text(v) {
   return String(v == null ? '' : v).replace(/\s+/g, ' ')
@@ -173,10 +182,30 @@ function readMap() {
   })).filter(r => r.agency);
 }
 
+function applyItemMoves(report, working) {
+  const itemOf = name => report.items.find(i => key(i) === key(name));
+  ITEM_MOVES.forEach(mv => {
+    const from = itemOf(mv.from), to = itemOf(mv.to);
+    const u = report.units.find(x => x.district === mv.district && x.agency === mv.agency);
+    if (!from || !to || !u) throw new Error('ITEM_MOVES: not found ' + JSON.stringify(mv));
+    const a = u.qty[from], b = u.qty[to];
+    Object.keys(a).forEach(k => { b[k] = (b[k] || 0) + a[k]; a[k] = 0; });
+
+    const w = working[mv.district + '|' + key(mv.agency)];
+    const fromYears = w && w.qtyByYear[key(from)];
+    if (fromYears) {
+      const toYears = w.qtyByYear[key(to)] || (w.qtyByYear[key(to)] = {});
+      Object.keys(fromYears).forEach(y => { toYears[y] = (toYears[y] || 0) + fromYears[y]; });
+      delete w.qtyByYear[key(from)];
+    }
+  });
+}
+
 function main() {
   const report = readReport();
   const working = readWorkingFile();
   const warnings = [];
+  applyItemMoves(report, working);
 
   const ref_equipment = report.items.map(name => {
     const m = name.match(/^(\d+)\.(.*)$/);

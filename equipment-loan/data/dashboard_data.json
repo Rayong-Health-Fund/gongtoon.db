@@ -2,7 +2,7 @@
   "ok": true,
   "project": "P2",
   "source": "เอกสารแนบ 4 รายงานศูนย์สาธิต.xlsx",
-  "generatedAt": "2026-10-28T08:43:54.815Z",
+  "generatedAt": "2026-11-02T07:34:53.677Z",
   "overview": [
     {
       "district": "เมืองระยอง",
@@ -3529,7 +3529,7 @@
     {
       "district": "นิคมพัฒนา",
       "agency": "รพ.นิคมพัฒนา",
-      "equipment_name": "เครื่องช่วยเดินชนิด 4 ขา(Walker) แบบพับได้",
+      "equipment_name": "เครื่องช่วยเดิน ชนิด 4 ขา (Walker)",
       "available_qty": 0,
       "active_qty": 0,
       "damaged_qty": 0,
