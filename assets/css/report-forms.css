@@ -139,6 +139,23 @@ body {
 .rf-photos-add { display: inline-block; }
 .rf-photos-info { font-size: 0.85rem; color: var(--rf-muted); margin-top: 6px; }
 .rf-photos-err { color: var(--rf-bad); font-weight: 600; }
+/* 13-digit national ID, one box per digit (report-p1-house.html) */
+.rf-field:has(> .rf-idbox) { min-width: 0; }
+.rf-idbox { display: flex; flex-wrap: nowrap; align-items: center; gap: 4px; margin-top: 2px; width: 100%; max-width: 470px; }
+.rf-idbox input {
+  /* boxes share the row equally (max 30px) so all 13 always fit on a phone */
+  flex: 1 1 0; width: 0; min-width: 0; max-width: 30px;
+  height: 42px; padding: 0; text-align: center; font: inherit; font-size: 1.15rem; font-weight: 700;
+  border: 1.5px solid var(--rf-line); border-radius: 8px; background: var(--rf-card); color: inherit;
+}
+.rf-idbox input:focus { outline: none; border-color: var(--rf-primary); box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15); }
+.rf-idbox.invalid input { border-color: var(--rf-bad); }
+.rf-idsep { flex: none; color: var(--rf-muted); font-weight: 700; padding: 0 1px; }
+@media (max-width: 420px) {
+  .rf-idbox { gap: 2px; }
+  .rf-idbox input { height: 38px; font-size: 1rem; border-radius: 6px; }
+  .rf-idsep { padding: 0; font-size: .8rem; }
+}
 /* one box per repair stage (report-p4-repair.html) */
 .rf-photo-stage { border: 1.5px dashed var(--rf-line); border-radius: 12px; padding: 10px 12px; margin-top: 8px; background: var(--rf-bg); }
 .rf-photo-stage-head { font-weight: 700; margin-bottom: 8px; }

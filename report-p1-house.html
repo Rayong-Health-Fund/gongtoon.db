@@ -37,6 +37,8 @@
 
   <div id="setupWarn"></div>
 
+  <div id="flowWarn"></div>
+
   <form id="reportForm" novalidate autocomplete="on">
     <!-- 1. ผู้กรอก -->
     <section class="rf-card">
@@ -77,13 +79,16 @@
 
         <!-- 3A ลงทะเบียน -->
         <div data-panel="register" class="rf-hidden">
-          <div class="rf-note info">ชื่อและที่อยู่ของผู้รับบริการเห็นเฉพาะเจ้าหน้าที่กองทุน · บนเว็บไซต์แสดงชื่อแบบปิดบางส่วน เช่น "นางส*** ใ***"</div>
+          <div class="rf-note info">ชื่อ ที่อยู่ และเลขบัตรประชาชนของผู้รับงบเห็นเฉพาะเจ้าหน้าที่กองทุน · บนเว็บไซต์แสดงชื่อแบบปิดบางส่วน เช่น "นางส*** ใ***" และไม่แสดงเลขบัตร</div>
           <div class="rf-grid">
             <div class="rf-field"><label for="pTitle">คำนำหน้า <span class="req">*</span></label>
               <select class="rf-select" id="pTitle"><option value="">— เลือก —</option><option>นาย</option><option>นาง</option><option>นางสาว</option><option>เด็กชาย</option><option>เด็กหญิง</option></select></div>
             <div class="rf-field"><label for="pAge">อายุ (ปี) <span class="req">*</span></label><input class="rf-input" id="pAge" type="number" inputmode="numeric" min="0" max="120" step="1"></div>
             <div class="rf-field"><label for="pFirst">ชื่อผู้รับบริการ <span class="req">*</span></label><input class="rf-input" id="pFirst" maxlength="60"></div>
             <div class="rf-field"><label for="pLast">นามสกุล <span class="req">*</span></label><input class="rf-input" id="pLast" maxlength="60"></div>
+            <div class="rf-field" style="grid-column:1/-1"><label for="pIdCard">เลขบัตรประชาชนผู้รับงบประมาณ (13 หลัก) <span class="req">*</span></label>
+              <div class="rf-idbox" id="pIdCard" role="group" aria-label="เลขบัตรประชาชน 13 หลัก"></div>
+              <div class="hint" id="pIdHint">กรอกตัวเลขทีละช่อง ระบบเลื่อนช่องให้เอง · เห็นเฉพาะเจ้าหน้าที่กองทุน ไม่แสดงบนเว็บไซต์</div></div>
             <div class="rf-field" style="grid-column:1/-1"><label for="pAddress">ที่อยู่ของบ้านที่ปรับสภาพ <span class="req">*</span></label><input class="rf-input" id="pAddress" maxlength="300" placeholder="บ้านเลขที่ หมู่ ตำบล"></div>
           </div>
           <div class="rf-field" style="margin-top:12px">
@@ -216,6 +221,7 @@
 
   var $ = function (id) { return document.getElementById(id); };
   var agencies = {}, asOf = START_DATE, houses = null;
+  var idCardOk = true; // สคริปต์ใน Sheet รับเลขบัตรประชาชนแล้ว (features.idCard)
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
@@ -230,6 +236,54 @@
   function radio(name) { var r = document.querySelector('input[name=' + name + ']:checked'); return r ? r.value : ''; }
   function checked(id) { return Array.prototype.map.call(document.querySelectorAll('#' + id + ' input:checked'), function (x) { return x.value; }); }
   function agency() { return $('uAgency').value === OTHER ? $('uOther').value.trim() : $('uAgency').value; }
+  // เลขบัตรประชาชนไทย 13 หลัก ตรวจหลักสุดท้าย (ตรงกับ validIdCard_ ในสคริปต์)
+  function idCells() { return Array.prototype.slice.call($('pIdCard').querySelectorAll('input')); }
+  function idDigits() { return idCells().map(function (c) { return c.value; }).join(''); }
+  // ช่องเลขบัตร 13 ช่อง จัดกลุ่มแบบบัตรประชาชน 1-4-5-2-1 · พิมพ์แล้วเลื่อนช่องถัดไป ลบแล้วถอยกลับ วางเลขทั้งชุดได้
+  function buildIdBox() {
+    var box = $('pIdCard'), html = '';
+    [1, 4, 5, 2, 1].forEach(function (n, g) {
+      if (g) html += '<span class="rf-idsep">-</span>';
+      for (var i = 0; i < n; i++) html += '<input inputmode="numeric" maxlength="1" autocomplete="off" aria-label="หลักที่">';
+    });
+    box.innerHTML = html;
+    var cells = idCells();
+    cells.forEach(function (c, i) {
+      c.setAttribute('aria-label', 'หลักที่ ' + (i + 1));
+      c.addEventListener('input', function () {
+        var d = c.value.replace(/[^\d]/g, '');
+        if (d.length > 1) { fillIdFrom(i, d); return; }
+        c.value = d;
+        if (d && cells[i + 1]) cells[i + 1].focus();
+      });
+      c.addEventListener('keydown', function (e) {
+        if (e.key === 'Backspace' && !c.value && cells[i - 1]) { cells[i - 1].value = ''; cells[i - 1].focus(); e.preventDefault(); refresh(); }
+        if (e.key === 'ArrowLeft' && cells[i - 1]) cells[i - 1].focus();
+        if (e.key === 'ArrowRight' && cells[i + 1]) cells[i + 1].focus();
+      });
+      c.addEventListener('paste', function (e) {
+        var t = ((e.clipboardData || window.clipboardData).getData('text') || '').replace(/[^\d]/g, '');
+        if (!t) return;
+        e.preventDefault();
+        fillIdFrom(i, t);
+      });
+      c.addEventListener('focus', function () { c.select(); });
+    });
+  }
+  function fillIdFrom(start, digits) {
+    var cells = idCells();
+    for (var k = 0; k < digits.length && start + k < cells.length; k++) cells[start + k].value = digits.charAt(k);
+    var next = cells[Math.min(start + digits.length, cells.length - 1)];
+    next.focus();
+    refresh();
+  }
+  function clearIdBox() { idCells().forEach(function (c) { c.value = ''; }); }
+  function validIdCard(id) {
+    if (!/^[1-8]\d{12}$/.test(id)) return false;
+    var sum = 0;
+    for (var i = 0; i < 12; i++) sum += Number(id.charAt(i)) * (13 - i);
+    return (11 - sum % 11) % 10 === Number(id.charAt(12));
+  }
 
   // ── หน่วยดำเนินการ ──
   function fillDistricts() {
@@ -271,6 +325,7 @@
         if (!res.ok) throw new Error(res.error || 'โหลดข้อมูลไม่สำเร็จ');
         if (agency() !== a) return;
         if (res.asOf) { asOf = res.asOf; $('eventDate').min = asOf; }
+        idCardOk = !!(res.features && res.features.idCard);
         applyHouses(res.houses || []);
         msg('unitMsg', 'ok', '✓ โหลดข้อมูลของหน่วยแล้ว เลื่อนลงไปทำข้อ 3 ต่อได้เลย');
         showWork(true); resetWork();
@@ -300,6 +355,7 @@
   function resetWork() {
     ['jobKind', 'house', 'uStatus'].forEach(function (n) { document.querySelectorAll('input[name=' + n + ']').forEach(function (r) { r.checked = false; }); });
     document.querySelectorAll('#pGroups input, #pDisability input, #pItems input').forEach(function (x) { x.checked = false; });
+    clearIdBox();
     ['pTitle', 'pAge', 'pFirst', 'pLast', 'pAddress', 'bApproved', 'pItemOther', 'bActual', 'dropReason', 'photoLink', 'note'].forEach(function (id) { $(id).value = ''; });
     boxes.forEach(function (b) { b.clear(); });
     $('photoConsent').checked = false; $('confirm').checked = false;
@@ -312,6 +368,13 @@
     document.querySelectorAll('[data-panel]').forEach(function (p) { p.classList.toggle('rf-hidden', p.getAttribute('data-panel') !== kind); });
     $('disBox').classList.toggle('rf-hidden', checked('pGroups').indexOf('disabled') < 0);
     $('pItemOther').classList.toggle('rf-hidden', checked('pItems').indexOf(OTHER) < 0);
+    var id = idDigits();
+    $('pIdHint').innerHTML = !id ? 'กรอกตัวเลขทีละช่อง ระบบเลื่อนช่องให้เอง · เห็นเฉพาะเจ้าหน้าที่กองทุน ไม่แสดงบนเว็บไซต์'
+      : id.length < 13 ? 'ใส่แล้ว ' + id.length + '/13 หลัก'
+      : validIdCard(id) ? '<span style="color:var(--rf-ok)">✓ เลขบัตรถูกต้อง</span> · ถ้าผู้รับรายนี้เคยได้รับงบมาก่อน ระบบจะนับเป็นการขอรับงบครั้งที่ 2, 3, … ให้เอง'
+      : '<span class="rf-photos-err">⚠ เลขบัตรไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง</span>';
+    msg('flowWarn', 'warn', idCardOk || kind !== 'register' ? '' :
+      'ระบบหลังบ้านกำลังอัปเดต ยังลงทะเบียนบ้านใหม่ไม่ได้ชั่วคราว (อัปเดตบ้านเดิมได้ตามปกติ) กรุณาลองใหม่ภายหลังหรือติดต่อกองทุน');
 
     var h = house(), s = radio('uStatus');
     var finished = h && h.status === 'แล้วเสร็จ';
@@ -367,6 +430,8 @@
       mark('pTitle', !$('pTitle').value, 'ข้อ 3: เลือกคำนำหน้า');
       mark('pFirst', !$('pFirst').value.trim(), 'ข้อ 3: กรอกชื่อผู้รับบริการ');
       mark('pLast', !$('pLast').value.trim(), 'ข้อ 3: กรอกนามสกุล');
+      mark('pIdCard', !validIdCard(idDigits()), 'ข้อ 3: กรอกเลขบัตรประชาชนผู้รับงบให้ถูกต้อง (13 หลัก)');
+      if (!idCardOk) problems.push('ระบบหลังบ้านกำลังอัปเดต ยังลงทะเบียนบ้านใหม่ไม่ได้ชั่วคราว');
       mark('pAge', !/^\d{1,3}$/.test($('pAge').value) || +$('pAge').value > 120, 'ข้อ 3: กรอกอายุ (ตัวเลข)');
       mark('pAddress', !$('pAddress').value.trim(), 'ข้อ 3: กรอกที่อยู่');
       if (!checked('pGroups').length) problems.push('ข้อ 3: เลือกกลุ่มผู้รับบริการ');
@@ -412,7 +477,7 @@
       if (checked('pItems').indexOf(OTHER) >= 0) items.push($('pItemOther').value.trim());
       p.person = { name: $('pTitle').value + $('pFirst').value.trim() + ' ' + $('pLast').value.trim(), age: Number($('pAge').value),
         groups: checked('pGroups'), disability: checked('pGroups').indexOf('disabled') >= 0 ? checked('pDisability') : [],
-        address: $('pAddress').value.trim() };
+        idCard: idDigits(), address: $('pAddress').value.trim() };
       p.budgetApproved = Number($('bApproved').value);
       p.items = items;
     } else {
@@ -448,7 +513,8 @@
   function showDone(p, res, n) {
     var html = '';
     if (p.kind === 'register') {
-      html = '<p>ลงทะเบียนบ้านแล้ว · <b>รหัสบ้าน ' + esc(res.refCode) + '</b></p>' +
+      html = '<p>ลงทะเบียนบ้านแล้ว · <b>รหัสบ้าน ' + esc(res.refCode) + '</b>' +
+        (res.round > 1 ? ' · บันทึกเป็นการขอรับงบ<b>ครั้งที่ ' + Number(res.round) + '</b> ของผู้รับรายนี้' : '') + '</p>' +
         '<div class="rf-note info">✏️ จดรหัสบ้าน <b>' + esc(res.refCode) + '</b> ไว้ · ระหว่างทำ กลับมาเลือก "อัปเดตบ้าน" แล้วแนบรูประหว่างทำ · ' +
         'เมื่อเสร็จ เลือก "แล้วเสร็จ" แนบรูปหลังปรับและใส่งบที่ใช้จริง</div>';
     } else {
@@ -476,6 +542,7 @@
   var boxes = [regBefore, upBefore, upDuring, upAfter];
   if (!ENDPOINT) msg('setupWarn', 'warn', '<b>หน้าทดลอง</b> ยังไม่ได้เชื่อมกับ Google Sheet ดูหน้าตาแบบฟอร์มได้ แต่ยังส่งข้อมูลไม่ได้');
   $('eventDate').value = today(); $('eventDate').max = today(); $('eventDate').min = START_DATE;
+  buildIdBox();
   $('workArea').addEventListener('change', refresh);
   $('workArea').addEventListener('input', function (e) { if (e.target.id === 'photoLink') return; refresh(); });
   $('uDistrict').addEventListener('change', function () { fillAgencies(this.value); onUnitChange(); });
