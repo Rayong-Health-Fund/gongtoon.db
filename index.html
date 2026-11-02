@@ -2230,6 +2230,34 @@ body.gov-contrast .hero { background: #000 !important; border-bottom: 2px solid 
 .summary-link-btn { display:flex; align-items:center; justify-content:center; gap:0.4rem; margin:0 0 0.9rem; padding:0.6rem 1rem; background:#f0fdfa; border:1.5px solid #14b8a6; border-radius:10px; color:#0f766e; font-weight:700; font-size:0.9rem; text-decoration:none; }
 .summary-link-btn:hover { background:#ccfbf1; color:#0f766e; }
 
+/* ── UPCOMING FUND ACTIVITIES strip (under the budget bar) ── */
+.ev-strip { max-width: 1100px; margin: 1rem auto 0; padding: 0 0.9rem; }
+.ev-strip-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; margin-bottom: 0.6rem; }
+.ev-strip-head h2 { font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0; }
+.ev-strip-head a { flex: none; font-size: 0.9rem; font-weight: 700; color: #0f766e; text-decoration: none; }
+.ev-strip-head a:hover { text-decoration: underline; }
+.ev-strip-demo { font-size: 0.72rem; font-weight: 700; background: #fef3c7; color: #92400e; border-radius: 999px; padding: 0.1rem 0.5rem; vertical-align: middle; }
+.ev-strip-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
+.ev-strip-empty { grid-column: 1 / -1; background: #fff; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 1rem; text-align: center; color: #94a3b8; font-size: 0.92rem; }
+.ev-card { display: flex; gap: 0.75rem; background: #fff; border: 1px solid #e2e8f0; border-top: 4px solid var(--c); border-radius: 12px; padding: 0.8rem; text-decoration: none; color: inherit; box-shadow: 0 2px 10px rgba(15,23,42,0.05); transition: transform 0.15s, box-shadow 0.15s; }
+.ev-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(15,23,42,0.1); color: inherit; }
+.ev-card-date { flex: none; width: 52px; text-align: center; background: var(--bg); color: var(--c); border-radius: 10px; padding: 0.35rem 0.2rem; align-self: flex-start; }
+.ev-card-date b { display: block; font-size: 1.45rem; line-height: 1.1; }
+.ev-card-date small { font-size: 0.75rem; font-weight: 700; }
+.ev-card-body { min-width: 0; }
+.ev-card-type { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; font-size: 0.78rem; font-weight: 700; color: var(--c); }
+.ev-when { font-size: 0.72rem; background: #f1f5f9; color: #475569; border-radius: 999px; padding: 0.05rem 0.5rem; }
+.ev-when.soon, .ev-when.cancel { background: #fee2e2; color: #b91c1c; }
+.ev-when.postpone { background: #fef3c7; color: #92400e; }
+.ev-card-title { font-size: 0.95rem; font-weight: 800; color: #0f172a; line-height: 1.35; margin: 0.2rem 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ev-card.cancelled .ev-card-title { text-decoration: line-through; color: #94a3b8; }
+.ev-card-meta { font-size: 0.8rem; color: #64748b; line-height: 1.5; }
+@media (max-width: 767px) {
+  /* phones: swipe sideways instead of squeezing three cards */
+  .ev-strip-row { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 0.4rem; -webkit-overflow-scrolling: touch; }
+  .ev-card { flex: 0 0 82%; scroll-snap-align: start; }
+}
+
 /* ── MOBILE HOME + readable tables on phones ── */
 .m-home, .m-show { display: none; }
 @media (max-width: 767px) {
@@ -2523,6 +2551,42 @@ document.addEventListener('click', function(e) {
     </div>
   </div>
 </div>
+
+<!-- ░░ UPCOMING FUND ACTIVITIES (data: assets/js/fund-events.js) ░░ -->
+<section class="ev-strip" id="evStrip" aria-label="กิจกรรมที่กำลังจะมาถึง">
+  <div class="ev-strip-head">
+    <h2>📅 กิจกรรมที่กำลังจะมาถึง <span id="evStripDemo" class="ev-strip-demo" style="display:none;">ตัวอย่าง</span></h2>
+    <a href="calendar.html">ดูปฏิทินทั้งหมด →</a>
+  </div>
+  <div class="ev-strip-row" id="evStripRow"><div class="ev-strip-empty">กำลังโหลด...</div></div>
+</section>
+<script src="assets/js/fund-events.js"></script>
+<script>
+(function () {
+  var FE = window.FundEvents;
+  function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+  FE.load().then(function (res) {
+    var row = document.getElementById('evStripRow');
+    if (res.demo) document.getElementById('evStripDemo').style.display = '';
+    if (!res.ok) { document.getElementById('evStrip').style.display = 'none'; return; }
+    var next = res.events.filter(function (ev) { return FE.daysUntil(ev) >= 0; }).slice(0, 3);
+    if (!next.length) { row.innerHTML = '<div class="ev-strip-empty">ยังไม่มีกิจกรรมในช่วงนี้</div>'; return; }
+    row.innerHTML = next.map(function (ev) {
+      var t = FE.typeOf(ev), d = FE.toDate(ev.start), n = FE.daysUntil(ev);
+      var when = FE.isCancelled(ev) ? '<span class="ev-when cancel">ยกเลิก</span>' :
+        FE.isPostponed(ev) ? '<span class="ev-when postpone">เลื่อน</span>' :
+        '<span class="ev-when' + (n <= 3 ? ' soon' : '') + '">' + FE.whenLabel(ev) + '</span>';
+      return '<a class="ev-card' + (FE.isCancelled(ev) ? ' cancelled' : '') + '" href="calendar.html?d=' + ev.start +
+        '" style="--c:' + t.color + ';--bg:' + t.bg + '">' +
+        '<div class="ev-card-date"><b>' + d.getDate() + '</b><small>' + FE.MONTHS_SHORT[d.getMonth()] + '</small></div>' +
+        '<div class="ev-card-body"><div class="ev-card-type">' + t.icon + ' ' + esc(ev.type || t.key) + when + '</div>' +
+        '<div class="ev-card-title">' + esc(ev.title) + '</div>' +
+        '<div class="ev-card-meta">' + [ev.time && '⏰ ' + esc(ev.time), ev.place && '📍 ' + esc(ev.place)].filter(Boolean).join('<br>') + '</div>' +
+        '</div></a>';
+    }).join('');
+  });
+})();
+</script>
 
 <!-- ░░ PHOTO GALLERY CAROUSEL ░░ -->
 <div class="gallery-carousel-section" id="galleryCarouselSection" style="display:none;">

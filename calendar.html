@@ -5,368 +5,233 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ปฏิทินกิจกรรม – กองทุนหลักประกันสุขภาพ จังหวัดระยอง</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site-nav.css">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Sarabun', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
-.navbar {
-  background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-}
-.navbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; color: #0f172a; text-decoration: none; }
-.navbar-logo { width: 38px; height: 38px; background: #059669; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: white; }
-.nav-back-btn { background: #f1f5f9; border: 1.5px solid #e2e8f0; color: #1e293b; padding: 0.35rem 0.9rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
 
-.hero { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); color: white; padding: 2.5rem 1.5rem; text-align: center; }
-.hero-title { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.4rem; }
+.hero { background: linear-gradient(135deg, #0f172a 0%, #115e59 60%, #0f766e 100%); color: #fff; padding: 1.75rem 1rem; text-align: center; }
+.hero-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.3rem; }
 .hero-subtitle { font-size: 0.95rem; opacity: 0.85; }
 
-.container { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 4rem; display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.5rem; }
-@media (max-width: 720px) { .container { grid-template-columns: 1fr; } }
+.wrap { max-width: 1050px; margin: 0 auto; padding: 1.25rem 1rem 4rem; }
+.demo-note { background: #fef3c7; border: 1px solid #fcd34d; color: #92400e; border-radius: 10px; padding: 0.6rem 0.9rem; font-size: 0.88rem; margin-bottom: 1rem; }
+.err-note { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 10px; padding: 0.6rem 0.9rem; font-size: 0.88rem; margin-bottom: 1rem; }
 
-.cal-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 1.25rem; }
-.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-.cal-header button { background: #f1f5f9; border: 1.5px solid #e2e8f0; border-radius: 8px; width: 32px; height: 32px; cursor: pointer; font-size: 1rem; }
-.cal-month-label { font-weight: 800; font-size: 1rem; color: #0f172a; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+.chip { display: inline-flex; align-items: center; gap: 0.3rem; border: 1.5px solid #e2e8f0; background: #fff; border-radius: 999px; padding: 0.35rem 0.8rem; font-family: inherit; font-size: 0.88rem; font-weight: 600; color: #475569; cursor: pointer; }
+.chip .dot { width: 9px; height: 9px; border-radius: 50%; }
+.chip.on { border-color: var(--c); background: var(--bg); color: var(--c); }
+
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 1.25rem; align-items: start; }
+@media (max-width: 820px) { .layout { grid-template-columns: 1fr; } }
+
+.cal-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 1rem; }
+@media (min-width: 821px) { .cal-card { position: sticky; top: 80px; } }
+.cal-header { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.75rem; }
+.cal-header button { background: #f1f5f9; border: 1.5px solid #e2e8f0; border-radius: 8px; min-width: 40px; height: 40px; cursor: pointer; font-size: 1.1rem; font-family: inherit; color: #1e293b; }
+.cal-month-label { font-weight: 800; font-size: 1.1rem; color: #0f172a; text-align: center; }
+.today-btn { display: block; margin: 0.75rem auto 0; background: none; border: none; color: #0f766e; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer; text-decoration: underline; }
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-.cal-dow { text-align: center; font-size: 0.7rem; font-weight: 700; color: #94a3b8; padding: 0.3rem 0; }
-.cal-day {
-  aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  border-radius: 12px; font-size: 1.1rem; color: #334155; position: relative; cursor: default; padding: 0.5rem;
-}
+.cal-dow { text-align: center; font-size: 0.78rem; font-weight: 700; color: #94a3b8; padding: 0.3rem 0; }
+.cal-dow.sun { color: #f43f5e; }
+.cal-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  border-radius: 10px; font-size: 1rem; color: #334155; border: 1.5px solid transparent; background: none; font-family: inherit; }
 .cal-day.empty { visibility: hidden; }
-.cal-day.holiday { background: #fef3c7 !important; font-weight: 700; color: #b45309; }
-.cal-day.holiday.has-event { background: linear-gradient(135deg, #fef3c7 0%, #f0fdf4 100%) !important; }
-.cal-day.today { background: #f0fdfa; font-weight: 800; color: #0f766e; border: 1.5px solid #5eead4; }
-.cal-day.has-event { background: #f0fdf4; font-weight: 700; color: #065f46; cursor: pointer; }
-.cal-day.has-event::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #10b981; position: absolute; bottom: 4px; }
+.cal-day.today { border-color: #5eead4; background: #f0fdfa; font-weight: 800; color: #0f766e; }
+.cal-day.has-event { font-weight: 700; cursor: pointer; background: #f8fafc; }
+.cal-day.has-event:hover { background: #e2e8f0; }
+.cal-day.selected { background: #0f766e !important; color: #fff; }
+.cal-dots { display: flex; gap: 2px; height: 6px; }
+.cal-dots i { width: 6px; height: 6px; border-radius: 50%; }
 
-.upcoming-title { font-size: 1rem; font-weight: 800; margin-bottom: 0.9rem; color: #0f172a; }
-.event-item {
-  background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 0.6rem;
+.list-title { font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem; }
+.status-msg { text-align: center; padding: 1.5rem; color: #94a3b8; font-size: 0.92rem; background: #fff; border-radius: 12px; }
+
+.ev { display: flex; gap: 0.85rem; background: #fff; border: 1px solid #e2e8f0; border-left: 5px solid var(--c); border-radius: 12px; padding: 0.85rem 1rem; margin-bottom: 0.7rem; }
+.ev.past { opacity: 0.6; }
+.ev.hl { box-shadow: 0 0 0 3px rgba(15,118,110,0.35); }
+.ev-date { flex: none; width: 56px; text-align: center; background: var(--bg); color: var(--c); border-radius: 10px; padding: 0.4rem 0.2rem; align-self: flex-start; }
+.ev-date b { display: block; font-size: 1.5rem; line-height: 1.1; }
+.ev-date small { font-size: 0.78rem; font-weight: 700; }
+.ev-body { min-width: 0; flex: 1; }
+.ev-top { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.25rem; }
+.tag { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 0.1rem 0.55rem; border-radius: 999px; background: var(--bg); color: var(--c); }
+.tag.when { background: #f1f5f9; color: #475569; }
+.tag.when.soon { background: #fee2e2; color: #b91c1c; }
+.tag.cancel { background: #fee2e2; color: #b91c1c; }
+.tag.postpone { background: #fef3c7; color: #92400e; }
+.ev-title { font-size: 1.02rem; font-weight: 800; color: #0f172a; line-height: 1.4; }
+.ev.cancelled .ev-title { text-decoration: line-through; color: #94a3b8; }
+.ev-rows { margin-top: 0.4rem; display: grid; gap: 0.2rem; font-size: 0.88rem; color: #475569; }
+.ev-rows div { display: flex; gap: 0.4rem; }
+.ev-rows span:first-child { flex: none; width: 1.3em; text-align: center; }
+.ev-detail { margin-top: 0.4rem; font-size: 0.86rem; color: #64748b; line-height: 1.55; }
+.ev-add { display: inline-block; margin-top: 0.5rem; font-size: 0.82rem; font-weight: 700; color: #0f766e; text-decoration: none; }
+.ev-add:hover { text-decoration: underline; }
+
+/* day popup (bottom sheet on phones) */
+.pop-bg { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 1200; }
+.pop { display: none; position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, calc(100% - 2rem));
+  max-height: 85vh; overflow-y: auto; background: #f8fafc; border-radius: 16px; padding: 1.1rem; z-index: 1201; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+.pop.show, .pop-bg.show { display: block; }
+.pop-head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; }
+.pop-head b { font-size: 1.1rem; color: #0f172a; }
+.pop-close { background: #e2e8f0; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 1.1rem; cursor: pointer; flex: none; }
+@media (max-width: 600px) {
+  .pop { top: auto; bottom: 0; left: 0; transform: none; width: 100%; border-radius: 18px 18px 0 0; max-height: 80vh; }
 }
-.event-date-badge {
-  display: inline-block; background: #f0fdf4; color: #065f46; font-size: 0.7rem; font-weight: 700;
-  padding: 0.15rem 0.55rem; border-radius: 8px; margin-bottom: 0.4rem;
-}
-.event-title { font-size: 0.88rem; font-weight: 700; color: #0f172a; }
-.event-meta { font-size: 0.76rem; color: #64748b; margin-top: 0.25rem; }
-.event-desc { font-size: 0.8rem; color: #475569; margin-top: 0.4rem; line-height: 1.6; }
-.status-msg { text-align: center; padding: 1.5rem; color: #94a3b8; font-size: 0.85rem; }
-
-/* Legend */
-.calendar-legend { display: flex; flex-direction: column; gap: 0.4rem; align-items: center; margin: 0.5rem 0; }
-.legend-item { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; }
-.legend-color { width: 14px; height: 14px; border-radius: 3px; }
-.legend-holiday { background: #fef3c7; border: 1px solid #fcd34d; }
-.legend-event { background: #f0fdf4; border: 1px solid #86efac; }
-
-/* Event badge */
-.event-badge { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px;
-  background: #10b981; color: #fff; font-size: 0.65rem; font-weight: 700; border-radius: 50%; position: absolute; top: 1px; right: 1px; }
-
-/* Day popup */
-.day-popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  background: #fff; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 9999;
-  max-width: 400px; width: 90%; max-height: 80vh; overflow-y: auto; padding: 1.5rem; }
-.day-popup.show { display: block; }
-.day-popup-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5); z-index: 9998; }
-.day-popup-overlay.show { display: block; }
-.day-popup-title { font-size: 1.1rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem; }
-.day-popup-close { position: absolute; top: 0.75rem; right: 1rem; background: none; border: none;
-  font-size: 1.5rem; cursor: pointer; color: #94a3b8; }
-.day-event-item { background: #f8fafc; border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 6px; }
-.day-event-time { font-size: 0.8rem; color: #0f766e; font-weight: 600; }
-.day-event-title { font-size: 0.95rem; font-weight: 700; color: #0f172a; margin: 0.25rem 0; }
-.day-event-meta { font-size: 0.75rem; color: #64748b; }
-
-/* Tooltip */
-.cal-tooltip { position: fixed; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15); padding: 0.75rem 1rem; font-size: 0.85rem;
-  z-index: 9997; max-width: 250px; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
-.cal-tooltip.show { opacity: 1; pointer-events: auto; }
-.cal-tooltip-title { font-weight: 700; color: #0f172a; margin-bottom: 0.3rem; }
-.cal-tooltip-subtitle { font-size: 0.75rem; color: #64748b; }
 </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <a href="index.html" class="navbar-brand">
-    <div class="navbar-logo" style="background:#fff;padding:3px;"><img src="assets/img/logo.jpg" alt="โลโก้กองทุนหลักประกันสุขภาพจังหวัดระยอง" style="width:100%;height:100%;object-fit:contain;border-radius:6px;display:block;"></div>
-    <span>กองทุนหลักประกันสุขภาพ จังหวัดระยอง</span>
-  </a>
-  <a href="index.html" class="nav-back-btn">← กลับหน้าหลัก</a>
-</nav>
+<div id="siteNav"></div>
+<script src="assets/js/site-nav.js"></script>
 
 <div class="hero">
   <div class="hero-title">📅 ปฏิทินกิจกรรม</div>
-  <div class="hero-subtitle">กิจกรรมที่กำลังจะเกิดขึ้นของกองทุนฯ</div>
+  <div class="hero-subtitle">การประชุม โครงการ และการลงพื้นที่ของกองทุนฯ</div>
 </div>
 
-<div class="container">
-  <!-- Legend -->
-  <div class="calendar-legend">
-    <div class="legend-item">
-      <div class="legend-color legend-holiday"></div>
-      <span>🏛️ วันหยุดราชการ</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-color legend-event"></div>
-      <span>📅 กิจกรรม (คลิกดูรายละเอียด)</span>
-    </div>
-  </div>
+<div class="wrap">
+  <div id="note"></div>
+  <div class="chips" id="chips"></div>
 
-  <div class="cal-card">
-    <div class="cal-header">
-      <button onclick="changeMonth(-1)">‹</button>
-      <div class="cal-month-label" id="calMonthLabel"></div>
-      <button onclick="changeMonth(1)">›</button>
+  <div class="layout">
+    <div class="cal-card">
+      <div class="cal-header">
+        <button type="button" onclick="changeMonth(-1)" aria-label="เดือนก่อนหน้า">‹</button>
+        <div class="cal-month-label" id="calMonthLabel"></div>
+        <button type="button" onclick="changeMonth(1)" aria-label="เดือนถัดไป">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <button type="button" class="today-btn" onclick="goToday()">กลับไปเดือนปัจจุบัน</button>
     </div>
-    <div class="cal-grid" id="calGrid"></div>
-  </div>
 
-  <div>
-    <div class="upcoming-title">🔜 กิจกรรมที่กำลังจะมาถึง</div>
-    <div id="upcomingList"><div class="status-msg">กำลังโหลด...</div></div>
+    <div>
+      <div class="list-title" id="listTitle">กิจกรรมเดือนนี้</div>
+      <div id="monthList"><div class="status-msg">กำลังโหลด...</div></div>
+    </div>
   </div>
 </div>
 
-<!-- Day events popup -->
-<div id="dayPopupOverlay" class="day-popup-overlay" onclick="closeDayPopup()"></div>
-<div id="dayPopup" class="day-popup">
-  <button class="day-popup-close" onclick="closeDayPopup()">✕</button>
-  <div class="day-popup-title" id="dayPopupTitle"></div>
-  <div id="dayPopupEvents"></div>
+<div class="pop-bg" id="popBg" onclick="closePop()"></div>
+<div class="pop" id="pop" role="dialog" aria-modal="true" aria-labelledby="popTitle">
+  <div class="pop-head"><b id="popTitle"></b><button type="button" class="pop-close" onclick="closePop()" aria-label="ปิด">✕</button></div>
+  <div id="popBody"></div>
 </div>
 
-<!-- Tooltip -->
-<div id="calTooltip" class="cal-tooltip">
-  <div class="cal-tooltip-title" id="tooltipTitle"></div>
-  <div class="cal-tooltip-subtitle" id="tooltipContent"></div>
-</div>
-
+<script src="assets/js/fund-events.js"></script>
 <script>
-var EVENTS_API_URL = 'https://script.google.com/macros/s/AKfycbzRxsboi-rH2oS669v3xFesNpYcS1ndvHhjGRxfGq4UaVwYMEgPjz6WmLScSS1WVVSeGQ/exec';
+var FE = window.FundEvents;
 var allEvents = [];
-var calYear, calMonth; // calMonth: 0-11
+var hidden = {}; // type key -> true when filtered out
+var calYear, calMonth;
 
-// วันหยุดราชการและวันสำคัญศาสนา ปี 2026 (ค.ศ.) = 2569 (พ.ศ.)
-var HOLIDAYS_2569 = {
-  '2026-01-01': {name: 'วันปีใหม่', emoji: '🎆'},
-  '2026-02-10': {name: 'สมาคมสงครามพระยศรี', emoji: '🏛️'},
-  '2026-02-26': {name: 'วันมัฆบูชา', emoji: '🙏'},
-  '2026-04-06': {name: 'วันจักรีธรรมการ', emoji: '👑'},
-  '2026-04-13': {name: 'วันสงกรานต์', emoji: '💦'},
-  '2026-04-14': {name: 'วันสงกรานต์', emoji: '💦'},
-  '2026-04-15': {name: 'วันสงกรานต์', emoji: '💦'},
-  '2026-04-22': {name: 'วันที่ 22 เมษายน', emoji: '📌'},
-  '2026-05-01': {name: 'วันแรงงาน', emoji: '👷'},
-  '2026-05-22': {name: 'วันวิสาขบูชา', emoji: '🙏'},
-  '2026-07-28': {name: 'วันเฉลิมพระชนมพรรษาพระนางสยามมาตา', emoji: '👑'},
-  '2026-07-30': {name: 'วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าอยู่หัว', emoji: '👑'},
-  '2026-07-31': {name: 'วันราชสำเร็จ', emoji: '🏛️'},
-  '2026-08-12': {name: 'วันแม่แห่งชาติ (วันเฉลิมพระชนมพรรษา)', emoji: '👑'},
-  '2026-10-13': {name: 'วันคล้ายวันสวรรคตพระบาทสมเด็จพระปรมินทรมหาภูมิพลอดุลยเดช', emoji: '🙏'},
-  '2026-10-14': {name: 'วันธรรมชาติถือว่าเป็นวันพระราชทานธรรม', emoji: '🏛️'},
-  '2026-10-23': {name: 'วันเฉลิมพระชนมพรรษาสมเด็จพระเจ้าลูกยาเธอ', emoji: '👑'},
-  '2026-12-05': {name: 'วันคล้ายวันสวรรคตพระบาทสมเด็จพระปรมินทรมหาภูมิพลอดุลยเดช', emoji: '🙏'},
-  '2026-12-10': {name: 'วันรัฐธรรมนูญ', emoji: '📜'},
-  '2026-12-31': {name: 'วันสิ้นปี', emoji: '🎆'}
-};
+function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function visible() { return allEvents.filter(function (ev) { return !hidden[FE.typeOf(ev).key]; }); }
 
-function esc(s) {
-  var d = document.createElement('div');
-  d.textContent = s || '';
-  return d.innerHTML;
-}
-function fmtDate(v) {
-  var d = new Date(v);
-  if (isNaN(d.getTime())) return '';
-  return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
-}
-function ymd_(d) {
-  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-}
-function isHoliday(dateStr) {
-  return HOLIDAYS_2569.hasOwnProperty(dateStr);
-}
-function getHolidayName(dateStr) {
-  var holiday = HOLIDAYS_2569[dateStr];
-  if (!holiday) return 'วันหยุดราชการ';
-  return (holiday.emoji || '🏛️') + ' ' + holiday.name;
-}
-function getSession() {
-  try { return JSON.parse(localStorage.getItem('rf_user') || 'null'); } catch (e) { return null; }
+function card(ev) {
+  var t = FE.typeOf(ev), d = FE.toDate(ev.start), n = FE.daysUntil(ev);
+  var tags = '<span class="tag">' + t.icon + ' ' + esc(ev.type || t.key) + '</span>';
+  if (FE.isCancelled(ev)) tags += '<span class="tag cancel">ยกเลิก</span>';
+  else if (FE.isPostponed(ev)) tags += '<span class="tag postpone">เลื่อน</span>';
+  else tags += '<span class="tag when' + (n >= 0 && n <= 3 ? ' soon' : '') + '">' + FE.whenLabel(ev) + '</span>';
+  function row(icon, v) { return v ? '<div><span>' + icon + '</span><span>' + esc(v) + '</span></div>' : ''; }
+  return '<div class="ev' + (n < 0 ? ' past' : '') + (FE.isCancelled(ev) ? ' cancelled' : '') + '" data-start="' + ev.start +
+    '" style="--c:' + t.color + ';--bg:' + t.bg + '">' +
+    '<div class="ev-date"><b>' + d.getDate() + '</b><small>' + FE.MONTHS_SHORT[d.getMonth()] + '</small></div>' +
+    '<div class="ev-body"><div class="ev-top">' + tags + '</div>' +
+    '<div class="ev-title">' + esc(ev.title) + '</div><div class="ev-rows">' +
+    row('🗓️', FE.fmtRange(ev, { weekday: ev.start === ev.end })) +
+    row('⏰', ev.time) + row('📍', ev.place) + row('👥', ev.audience ? 'กลุ่มเป้าหมาย: ' + ev.audience : '') +
+    row('🏢', ev.organizer ? 'ผู้จัด: ' + ev.organizer : '') + '</div>' +
+    (ev.detail ? '<div class="ev-detail">' + esc(ev.detail) + '</div>' : '') +
+    (n >= 0 && !FE.isCancelled(ev) ? '<a class="ev-add" href="' + FE.googleCalUrl(ev) + '" target="_blank" rel="noopener">➕ เพิ่มลงปฏิทินของฉัน</a>' : '') +
+    '</div></div>';
 }
 
-function load() {
-  renderCalendar();
-  fetch(EVENTS_API_URL + '?action=events_list')
-    .then(function(r) { return r.json(); })
-    .then(function(json) {
-      if (!json.ok) throw new Error(json.error || 'load failed');
-      allEvents = json.events || [];
-      renderCalendar();
-      renderUpcoming();
-    })
-    .catch(function(err) {
-      document.getElementById('upcomingList').innerHTML = '<div class="status-msg">⚠️ โหลดไม่สำเร็จ กรุณาลองใหม่</div>';
-      console.error('[Calendar] load failed:', err);
-    });
+function renderChips() {
+  document.getElementById('chips').innerHTML = FE.TYPES.filter(function (t) {
+    return allEvents.some(function (ev) { return FE.typeOf(ev).key === t.key; });
+  }).map(function (t) {
+    return '<button type="button" class="chip' + (hidden[t.key] ? '' : ' on') + '" style="--c:' + t.color + ';--bg:' + t.bg +
+      '" onclick="toggleType(\'' + t.key + '\')" aria-pressed="' + !hidden[t.key] + '"><span class="dot" style="background:' + t.color +
+      '"></span>' + t.icon + ' ' + t.key + '</button>';
+  }).join('');
 }
-
-function eventsOnDate_(dateStr) {
-  return allEvents.filter(function(ev) {
-    var start = String(ev.event_date || '').slice(0, 10);
-    var end = String(ev.end_date || ev.event_date || '').slice(0, 10);
-    return dateStr >= start && dateStr <= end;
-  });
-}
+function toggleType(k) { hidden[k] = !hidden[k]; renderChips(); renderCalendar(); renderMonthList(); }
 
 function changeMonth(delta) {
   calMonth += delta;
   if (calMonth < 0) { calMonth = 11; calYear--; }
   if (calMonth > 11) { calMonth = 0; calYear++; }
-  renderCalendar();
+  renderCalendar(); renderMonthList();
 }
+function goToday() { var n = new Date(); calYear = n.getFullYear(); calMonth = n.getMonth(); renderCalendar(); renderMonthList(); }
 
 function renderCalendar() {
-  var monthNames = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-  document.getElementById('calMonthLabel').textContent = monthNames[calMonth] + ' ' + (calYear + 543);
-
-  var dows = ['อา','จ','อ','พ','พฤ','ศ','ส'];
-  var grid = document.getElementById('calGrid');
-  var html = dows.map(function(d) { return '<div class="cal-dow">' + d + '</div>'; }).join('');
-
-  var firstDay = new Date(calYear, calMonth, 1);
-  var startOffset = firstDay.getDay();
-  var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-  var todayStr = ymd_(new Date());
-
-  for (var i = 0; i < startOffset; i++) html += '<div class="cal-day empty"></div>';
-  for (var day = 1; day <= daysInMonth; day++) {
-    var dateStr = ymd_(new Date(calYear, calMonth, day));
-    var dayEvents = eventsOnDate_(dateStr);
-    var hasEvent = dayEvents.length > 0;
-    var isHol = isHoliday(dateStr);
-    var cls = 'cal-day' + (dateStr === todayStr ? ' today' : '') + (hasEvent ? ' has-event' : '') + (isHol ? ' holiday' : '');
-    var title = '';
-    if (isHol) title = getHolidayName(dateStr);
-    if (hasEvent) title += (title ? ' | ' : '') + esc(dayEvents.map(function(e){return e.title;}).join(', '));
-    var eventBadge = hasEvent ? '<span class="event-badge">' + dayEvents.length + '</span>' : '';
-    var clickable = hasEvent ? ' style="cursor:pointer;" onclick="showDayEvents(\'' + dateStr + '\')"' : '';
-    var hoverAttrs = (hasEvent || isHol) ? ' onmouseover="showTooltip(\'' + dateStr + '\')" onmouseout="hideTooltip()"' : '';
-    html += '<div class="' + cls + '"' + hoverAttrs + ' title="' + title + '"' + clickable + '>' + day + eventBadge + '</div>';
-  }
-  grid.innerHTML = html;
-}
-
-function renderUpcoming() {
-  var todayStr = ymd_(new Date());
-  var upcoming = allEvents.filter(function(ev) {
-    var end = String(ev.end_date || ev.event_date || '').slice(0, 10);
-    return end >= todayStr;
-  });
-  var el = document.getElementById('upcomingList');
-  if (!upcoming.length) { el.innerHTML = '<div class="status-msg">ยังไม่มีกิจกรรมที่กำลังจะมาถึง</div>'; return; }
-  el.innerHTML = upcoming.map(function(ev) {
-    var dateLabel = fmtDate(ev.event_date) + (ev.end_date && ev.end_date !== ev.event_date ? ' – ' + fmtDate(ev.end_date) : '');
-    return '<div class="event-item">'
-      + '<span class="event-date-badge">🗓️ ' + dateLabel + '</span>'
-      + '<div class="event-title">' + esc(ev.title) + '</div>'
-      + (ev.location ? '<div class="event-meta">📍 ' + esc(ev.location) + '</div>' : '')
-      + (ev.description ? '<div class="event-desc">' + esc(ev.description) + '</div>' : '')
-      + '</div>';
+  document.getElementById('calMonthLabel').textContent = FE.MONTHS[calMonth] + ' ' + (calYear + 543);
+  var evs = visible();
+  var html = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'].map(function (d, i) {
+    return '<div class="cal-dow' + (i === 0 ? ' sun' : '') + '">' + d + '</div>';
   }).join('');
-}
-
-function showDayEvents(dateStr) {
-  var dayEvents = eventsOnDate_(dateStr);
-  if (!dayEvents.length) return;
-
-  var date = new Date(dateStr);
-  var dateLabel = date.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
-  var session = getSession();
-  var isAdmin = session && (session.role === 'admin' || session.role === 'superadmin');
-
-  document.getElementById('dayPopupTitle').textContent = '📅 ' + dateLabel;
-  document.getElementById('dayPopupEvents').innerHTML = dayEvents.map(function(ev) {
-    var timeStr = '';
-    if (ev.event_time) {
-      timeStr = ev.event_time;
-      if (ev.end_time && ev.end_time !== ev.event_time) timeStr += ' - ' + ev.end_time;
-      timeStr = '⏰ ' + timeStr;
+  var offset = new Date(calYear, calMonth, 1).getDay();
+  var days = new Date(calYear, calMonth + 1, 0).getDate();
+  var todayStr = FE.ymd(new Date());
+  for (var i = 0; i < offset; i++) html += '<div class="cal-day empty"></div>';
+  for (var day = 1; day <= days; day++) {
+    var s = FE.ymd(new Date(calYear, calMonth, day));
+    var on = FE.onDate(evs, s);
+    var cls = 'cal-day' + (s === todayStr ? ' today' : '') + (on.length ? ' has-event' : '');
+    var dots = on.slice(0, 3).map(function (ev) { return '<i style="background:' + FE.typeOf(ev).color + '"></i>'; }).join('');
+    if (on.length) {
+      html += '<button type="button" class="' + cls + '" onclick="openDay(\'' + s + '\')" aria-label="' + day + ' มี ' + on.length +
+        ' กิจกรรม">' + day + '<span class="cal-dots">' + dots + '</span></button>';
+    } else {
+      html += '<div class="' + cls + '">' + day + '<span class="cal-dots"></span></div>';
     }
-    var categoryStr = ev.category ? '📂 ' + {
-      'meeting': 'ประชุม',
-      'training': 'ฝึกอบรม',
-      'ceremony': 'พิธีกรรม',
-      'inspection': 'ตรวจสอบ',
-      'other': 'อื่นๆ'
-    }[ev.category] : '';
-    var priorityClass = { 'urgent': '#dc2626', 'important': '#f97316', 'normal': '#10b981' }[ev.priority] || '#10b981';
-    var actionBtns = '';
-
-    return '<div class="day-event-item" style="border-left-color:' + priorityClass + ';">'
-      + '<div class="day-event-title">' + esc(ev.title) + '</div>'
-      + (timeStr ? '<div class="day-event-time">' + timeStr + '</div>' : '')
-      + (categoryStr ? '<div class="day-event-meta">' + categoryStr + '</div>' : '')
-      + (ev.location ? '<div class="day-event-meta">📍 ' + esc(ev.location) + '</div>' : '')
-      + (ev.description ? '<div class="day-event-meta">' + esc(ev.description) + '</div>' : '')
-      + actionBtns
-      + '</div>';
-  }).join('');
-
-  document.getElementById('dayPopupOverlay').classList.add('show');
-  document.getElementById('dayPopup').classList.add('show');
-}
-
-function closeDayPopup() {
-  document.getElementById('dayPopupOverlay').classList.remove('show');
-  document.getElementById('dayPopup').classList.remove('show');
-}
-
-function showTooltip(dateStr) {
-  var dayEvents = eventsOnDate_(dateStr);
-  var isHol = isHoliday(dateStr);
-
-  if (!isHol && !dayEvents.length) return;
-
-  var tooltip = document.getElementById('calTooltip');
-  var title = document.getElementById('tooltipTitle');
-  var content = document.getElementById('tooltipContent');
-
-  if (isHol) {
-    title.textContent = getHolidayName(dateStr);
-    content.textContent = '';
-  } else if (dayEvents.length > 0) {
-    title.textContent = '📅 ' + dayEvents.length + ' กิจกรรม';
-    content.textContent = dayEvents.map(function(e) { return e.title; }).join(', ');
   }
-
-  var rect = event.currentTarget.getBoundingClientRect();
-  tooltip.style.left = (rect.left + rect.width / 2) + 'px';
-  tooltip.style.top = (rect.top - 10) + 'px';
-  tooltip.style.transform = 'translate(-50%, -100%)';
-
-  tooltip.classList.add('show');
+  document.getElementById('calGrid').innerHTML = html;
 }
 
-function hideTooltip() {
-  var tooltip = document.getElementById('calTooltip');
-  tooltip.classList.remove('show');
+function renderMonthList() {
+  var first = FE.ymd(new Date(calYear, calMonth, 1)), last = FE.ymd(new Date(calYear, calMonth + 1, 0));
+  var list = visible().filter(function (ev) { return ev.start <= last && ev.end >= first; });
+  document.getElementById('listTitle').textContent = 'กิจกรรมเดือน' + FE.MONTHS[calMonth] + ' ' + (calYear + 543) +
+    (list.length ? ' (' + list.length + ' รายการ)' : '');
+  document.getElementById('monthList').innerHTML = list.length ? list.map(card).join('') :
+    '<div class="status-msg">ไม่มีกิจกรรมในเดือนนี้</div>';
 }
 
+function openDay(s) {
+  var on = FE.onDate(visible(), s);
+  if (!on.length) return;
+  document.getElementById('popTitle').textContent = '📅 ' + FE.fmtDay(s, { weekday: true });
+  document.getElementById('popBody').innerHTML = on.map(card).join('');
+  document.getElementById('popBg').classList.add('show');
+  document.getElementById('pop').classList.add('show');
+}
+function closePop() {
+  document.getElementById('popBg').classList.remove('show');
+  document.getElementById('pop').classList.remove('show');
+}
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePop(); });
 
-
-(function() {
-  var now = new Date();
-  calYear = now.getFullYear();
-  calMonth = now.getMonth();
+(function init() {
+  var n = new Date(); calYear = n.getFullYear(); calMonth = n.getMonth();
+  renderCalendar();
+  FE.load().then(function (res) {
+    allEvents = res.events;
+    if (res.demo) document.getElementById('note').innerHTML = '<div class="demo-note">⚠️ หน้าทดลอง — กิจกรรมที่เห็นเป็นข้อมูลตัวอย่าง ยังไม่ใช่กิจกรรมจริงของกองทุนฯ</div>';
+    else if (!res.ok) document.getElementById('note').innerHTML = '<div class="err-note">โหลดข้อมูลกิจกรรมไม่สำเร็จ กรุณาลองใหม่อีกครั้ง</div>';
+    // calendar.html?d=2026-11-05 (from the home page strip) opens that day
+    var m = location.search.match(/[?&]d=(\d{4}-\d{2}-\d{2})/);
+    if (m) { var d = FE.toDate(m[1]); calYear = d.getFullYear(); calMonth = d.getMonth(); }
+    renderChips(); renderCalendar(); renderMonthList();
+    if (m) openDay(m[1]);
+  });
 })();
-load();
 </script>
 </body>
 </html>
