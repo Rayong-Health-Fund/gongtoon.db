@@ -32,8 +32,8 @@
     <div class="rf-guide-head">📋 วิธีใช้งาน (ประมาณ 1 นาที) ทำตามลำดับข้อ 1 ถึง 4</div>
     <ol>
       <li><b>ข้อมูลผู้กรอก</b> กรอกครั้งแรกครั้งเดียว ครั้งต่อไประบบจำให้</li>
-      <li><b>เลือกหน่วยบริการ</b> แล้วจะเห็นยอดอุปกรณ์ปัจจุบันของหน่วย</li>
-      <li><b>ใส่รายการที่เปลี่ยน</b> กรอกเฉพาะอุปกรณ์ที่มีการยืม คืน หรือชำรุด เช่น สัปดาห์นี้มีคนยืมเตียง 1 หลัง และคืนรถเข็น 2 คัน ก็กรอกแค่ 2 รายการนี้ ระบบบวกลบกับยอดเดิมให้เอง</li>
+      <li><b>เลือกหน่วยบริการ</b> แล้วแตะชื่ออุปกรณ์ที่มีการยืม คืน หรือชำรุด เลือกว่าเกิดอะไรขึ้นและจำนวน เช่น สัปดาห์นี้มีคนยืมเตียง 1 หลัง และคืนรถเข็น 2 คัน ก็แตะแค่ 2 รายการนี้ ระบบบวกลบกับยอดเดิมให้เอง</li>
+      <li><b>ดูสรุปรายการ</b> และใส่วันที่เกิดรายการ ถ้าเพิ่มผิดกด ✕ ลบ แล้วแตะเพิ่มใหม่</li>
       <li><b>ตรวจทานและกดส่ง</b> ถ้ายังขาดอะไร ระบบจะบอกให้</li>
     </ol>
   </div>
@@ -80,55 +80,17 @@
         </div>
       </div>
       <div id="stockBox" class="rf-hidden" style="margin-top:14px">
-        <div style="font-weight:700;margin-bottom:6px">ยอดอุปกรณ์ปัจจุบันของหน่วย <span id="stockAsOf" style="font-weight:400;color:var(--rf-muted);font-size:.9rem"></span></div>
+        <div style="font-weight:700;margin-bottom:2px">ยอดอุปกรณ์ปัจจุบันของหน่วย <span id="stockAsOf" style="font-weight:400;color:var(--rf-muted);font-size:.9rem"></span></div>
+        <div class="hint" style="font-size:.9rem;color:var(--rf-muted);margin-bottom:6px">👆 แตะชื่ออุปกรณ์ที่มีการยืม คืน หรือชำรุด แล้วเลือกว่าเกิดอะไรขึ้น</div>
         <div class="rf-table-wrap">
-          <table class="rf-table">
+          <table class="rf-table rf-tight-table">
             <thead><tr><th>อุปกรณ์</th><th class="num">พร้อมให้ยืม</th><th class="num">ยืมใช้งาน</th><th class="num">ชำรุด</th></tr></thead>
             <tbody id="stockBody"></tbody>
           </table>
         </div>
       </div>
       <div id="stockMsg"></div>
-    </section>
-
-    <!-- 3. รายการที่เปลี่ยน -->
-    <section class="rf-card" id="linesCard">
-      <h2><span class="rf-step">3</span>รายการที่มีการยืม คืน หรือชำรุด</h2>
-      <p class="rf-sub">เพิ่มทีละรายการ ส่งพร้อมกันได้หลายรายการ</p>
-      <div class="rf-field" style="max-width:260px;margin-bottom:12px">
-        <label for="eventDate">วันที่เกิดรายการ <span class="req">*</span></label>
-        <input class="rf-input" id="eventDate" type="date" required>
-        <div class="hint">ถ้าเกิดต่างวันกัน ให้ส่งแยกเป็นวันละครั้ง</div>
-      </div>
-      <div class="rf-example" aria-label="ตัวอย่างการกรอก">
-        <div class="rf-example-head">💡 ตัวอย่างการกรอก <span>(กรอกไม่ได้ ใช้ดูเป็นแบบเท่านั้น)</span></div>
-        <ol class="rf-example-steps">
-          <li>เลือก<b>อุปกรณ์</b>ที่มีการเปลี่ยนแปลง</li>
-          <li>เลือกว่า<b>เกิดอะไรขึ้น</b> เช่น ยืมออก หรือรับคืน</li>
-          <li>ใส่<b>จำนวน</b>ชิ้น</li>
-          <li>ถ้ามีอุปกรณ์อื่นอีก กด <b>＋ เพิ่มรายการ</b> แล้วทำซ้ำ</li>
-        </ol>
-        <div class="rf-example-caption">สัปดาห์นี้มีผู้มายืมเตียงผู้ป่วย 1 หลัง และมีผู้นำรถเข็นมาคืน 2 คัน (สภาพดี):</div>
-        <div class="rf-line rf-example-line" aria-hidden="true">
-          <div class="rf-field"><label>อุปกรณ์</label><div class="rf-fake">22. เตียงผู้ป่วยสามไกร์ราวสไลด์พร้อมเบาะและเสาน้ำเกลือ</div></div>
-          <div class="rf-field"><label>การเปลี่ยนแปลง</label><div class="rf-fake">ยืมออก</div></div>
-          <div class="rf-field"><label>จำนวน (ชิ้น)</label><div class="rf-fake">1</div></div>
-          <span class="rf-link-btn" style="visibility:hidden">✕ ลบ</span>
-          <div class="rf-effect">→ พร้อมให้ยืม ลด 1 · ยืมใช้งาน เพิ่ม 1</div>
-        </div>
-        <div class="rf-line rf-example-line" aria-hidden="true">
-          <div class="rf-field"><label>อุปกรณ์</label><div class="rf-fake">11. รถเข็นแบบ ชนิดเบา</div></div>
-          <div class="rf-field"><label>การเปลี่ยนแปลง</label><div class="rf-fake">รับคืน (สภาพดี)</div></div>
-          <div class="rf-field"><label>จำนวน (ชิ้น)</label><div class="rf-fake">2</div></div>
-          <span class="rf-link-btn" style="visibility:hidden">✕ ลบ</span>
-          <div class="rf-effect">→ ยืมใช้งาน ลด 2 · พร้อมให้ยืม เพิ่ม 2</div>
-        </div>
-      </div>
-      <div class="rf-locked" id="pickUnitFirst">👆 <b>เลือกอำเภอและหน่วยบริการในข้อ 2 ก่อน</b><br>แล้วช่องกรอกรายการอุปกรณ์ของหน่วยท่านจะแสดงขึ้นที่นี่</div>
-      <div class="rf-lines-head rf-hidden" id="linesHead">กรอกรายการของหน่วยท่านด้านล่างนี้ ↓</div>
-      <div id="lines"></div>
-      <button type="button" class="rf-btn ghost" id="addLine" disabled>＋ เพิ่มรายการ</button>
-      <details style="margin-top:12px;font-size:.92rem;color:var(--rf-muted)">
+      <details style="margin-top:10px;font-size:.92rem;color:var(--rf-muted)">
         <summary style="cursor:pointer;font-weight:600">ควรเลือกแบบไหน?</summary>
         <ul style="margin:6px 0 0;padding-left:20px">
           <li><b>ยืมออก</b> มีผู้มายืมอุปกรณ์ไป</li>
@@ -139,6 +101,28 @@
           <li><b>จำหน่าย</b> ของที่ชำรุดซ่อมไม่ได้ ตัดออกจากบัญชี</li>
         </ul>
       </details>
+    </section>
+
+    <!-- 3. สรุปรายการ -->
+    <section class="rf-card" id="linesCard">
+      <h2><span class="rf-step">3</span>สรุปรายการที่อัปเดต</h2>
+      <p class="rf-sub">รายการที่เพิ่มจากตารางในข้อ 2 จะแสดงที่นี่ ตรวจดูให้ถูกต้องก่อนส่ง</p>
+      <div class="rf-field" style="max-width:260px;margin-bottom:12px">
+        <label for="eventDate">วันที่เกิดรายการ <span class="req">*</span></label>
+        <input class="rf-input" id="eventDate" type="date" required>
+        <div class="hint">ถ้าเกิดต่างวันกัน ให้ส่งแยกเป็นวันละครั้ง</div>
+      </div>
+      <div class="rf-locked" id="pickUnitFirst">👆 <b>เลือกอำเภอและหน่วยบริการในข้อ 2 ก่อน</b><br>แล้วแตะชื่ออุปกรณ์ในตาราง รายการจะมาสรุปที่นี่</div>
+      <div id="lines"></div>
+      <div id="review" class="rf-hidden" style="margin-top:4px">
+        <div style="font-weight:700;margin-bottom:6px">ยอดหลังบันทึก</div>
+        <div class="rf-table-wrap">
+          <table class="rf-table rf-tight-table">
+            <thead><tr><th>อุปกรณ์</th><th class="num">พร้อมให้ยืม</th><th class="num">ยืมใช้งาน</th><th class="num">ชำรุด</th><th class="num">จำหน่าย</th></tr></thead>
+            <tbody id="reviewBody"></tbody>
+          </table>
+        </div>
+      </div>
     </section>
 
     <!-- 4. ตรวจทานและส่ง -->
@@ -156,15 +140,6 @@
         <div class="hint">ห้ามกรอกชื่อหรือเลขบัตรประชาชนของผู้ยืม</div>
       </div>
       <div class="rf-hp" aria-hidden="true"><label>เว็บไซต์<input id="website" tabindex="-1" autocomplete="off"></label></div>
-      <div id="review" class="rf-hidden" style="margin-top:14px">
-        <div style="font-weight:700;margin-bottom:6px">ยอดหลังบันทึก</div>
-        <div class="rf-table-wrap">
-          <table class="rf-table">
-            <thead><tr><th>อุปกรณ์</th><th class="num">พร้อมให้ยืม</th><th class="num">ยืมใช้งาน</th><th class="num">ชำรุด</th><th class="num">จำหน่าย</th></tr></thead>
-            <tbody id="reviewBody"></tbody>
-          </table>
-        </div>
-      </div>
       <label class="rf-check"><input type="checkbox" id="confirm"> ข้าพเจ้าตรวจสอบแล้วว่าข้อมูลถูกต้อง</label>
       <div id="formMsg"></div>
       <button type="submit" class="rf-btn big" id="submitBtn" style="margin-top:12px">ส่งข้อมูล</button>
@@ -221,7 +196,7 @@
   var data = null;        // dashboard_data.json
   var asOf = '';          // วันที่ของยอดตั้งต้น
   var stock = null;       // [{no,name,available,borrowed,damaged,disposed}] ของหน่วยที่เลือก
-  var lineSeq = 0;
+  var picked = [];       // [{itemNo, action, qty}] รายการที่เพิ่มจากตารางในข้อ 2
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -294,15 +269,13 @@
   }
   function showLines(on) {
     $('pickUnitFirst').classList.toggle('rf-hidden', on);
-    $('linesHead').classList.toggle('rf-hidden', !on);
-    $('addLine').classList.toggle('rf-hidden', !on);
+    $('lines').classList.toggle('rf-hidden', !on);
   }
   function onUnitChange() {
     var district = $('uDistrict').value, unit = $('uUnit').value;
     stock = null;
     showLines(false);
-    $('lines').innerHTML = '';
-    $('addLine').disabled = true;
+    picked = [];
     $('stockBox').classList.add('rf-hidden');
     updateReview();
     if (!unit) return;
@@ -313,12 +286,11 @@
       stock = res.items.filter(function (it) { return it.available + it.borrowed + it.damaged > 0; });
       if (res.asOf) { asOf = res.asOf; $('eventDate').min = asOf; }
       if (!DEMO) enablePhotos(res.features && res.features.photos || 0);
-      msg('stockMsg', 'ok', '✓ โหลดยอดของหน่วยแล้ว เลื่อนลงไปกรอกรายการในข้อ 3 ต่อได้เลย');
+      msg('stockMsg', 'ok', '✓ โหลดยอดของหน่วยแล้ว แตะชื่ออุปกรณ์ในตารางเพื่อกรอกได้เลย');
       showLines(true);
       renderStock();
-      $('addLine').disabled = !stock.length;
+      updateReview();
       if (!stock.length) msg('stockMsg', 'warn', 'ไม่พบรายการอุปกรณ์ของหน่วยนี้ กรุณาติดต่อกองทุน');
-      else addLine();
     }).catch(function (err) {
       msg('stockMsg', 'bad', 'โหลดยอดอุปกรณ์ไม่สำเร็จ: ' + esc(err.message) + ' กรุณาลองใหม่อีกครั้ง');
     });
@@ -326,62 +298,120 @@
   function renderStock() {
     $('stockAsOf').textContent = DEMO ? '(ยอดจากเว็บไซต์ + รายการทดลอง)' : '';
     $('stockBody').innerHTML = stock.map(function (it) {
-      return '<tr><td>' + esc(it.no + '. ' + it.name) + '</td><td class="num">' + it.available +
-        '</td><td class="num">' + it.borrowed + '</td><td class="num">' + it.damaged + '</td></tr>';
+      return '<tr class="rf-stock-row" data-no="' + it.no + '" tabindex="0" role="button" aria-expanded="false">' +
+        '<td>' + esc(it.no + '. ' + it.name) +
+          '<span class="rf-stock-added" data-added></span><span class="rf-stock-tap">แตะเพื่อกรอก ›</span></td>' +
+        '<td class="num">' + it.available + '</td><td class="num">' + it.borrowed + '</td><td class="num">' + it.damaged + '</td></tr>';
     }).join('');
     $('stockBox').classList.remove('rf-hidden');
+    markStock();
   }
 
-  // ── รายการที่เปลี่ยน ──
-  function addLine() {
-    var id = 'ln' + (++lineSeq);
-    var opts = stock.map(function (it) { return '<option value="' + it.no + '">' + esc(it.no + '. ' + it.name) + '</option>'; }).join('');
-    var acts = Object.keys(ACTIONS).map(function (a) { return '<option>' + esc(a) + '</option>'; }).join('');
-    $('lines').insertAdjacentHTML('beforeend',
-      '<div class="rf-line" id="' + id + '">' +
-        '<div class="rf-field"><label>อุปกรณ์</label><select class="rf-select" data-k="item"><option value="">— เลือกอุปกรณ์ —</option>' + opts + '</select></div>' +
+  // ── แตะชื่ออุปกรณ์ในตาราง → กรอกใต้แถวนั้นเลย ไม่เลื่อนหน้าจอ แล้วไปสรุปในข้อ 3 ──
+  function closeEditor() {
+    var ed = document.querySelector('#stockBody .rf-stock-edit');
+    if (!ed) return;
+    var row = ed.previousElementSibling;
+    row.classList.remove('open');
+    row.setAttribute('aria-expanded', 'false');
+    ed.remove();
+  }
+  function openEditor(row) {
+    var no = Number(row.getAttribute('data-no'));
+    var wasOpen = row.classList.contains('open');
+    closeEditor();
+    if (wasOpen) return;
+    // ยอดหลังรวมรายการที่กรอกไว้แล้ว ใช้ปิดตัวเลือกที่ทำไม่ได้ (เช่น ไม่มีชิ้นพร้อมให้ยืม → ยืมออกไม่ได้)
+    var now = applyLines(stock, picked)
+      .items.filter(function (it) { return it.no === no; })[0];
+    var acts = Object.keys(ACTIONS).map(function (a) {
+      var left = now[ACTIONS[a].from];
+      return '<option value="' + esc(a) + '"' + (left > 0 ? '' : ' disabled') + '>' + esc(a) +
+        (left > 0 ? '' : ' (ไม่มี' + LABEL[ACTIONS[a].from] + ')') + '</option>';
+    }).join('');
+    row.classList.add('open');
+    row.setAttribute('aria-expanded', 'true');
+    row.insertAdjacentHTML('afterend',
+      '<tr class="rf-stock-edit"><td colspan="4"><div class="rf-stock-form">' +
         '<div class="rf-field"><label>การเปลี่ยนแปลง</label><select class="rf-select" data-k="action"><option value="">— เลือก —</option>' + acts + '</select></div>' +
         '<div class="rf-field"><label>จำนวน (ชิ้น)</label><input class="rf-input" data-k="qty" type="number" inputmode="numeric" min="1" max="500" step="1" value="1"></div>' +
-        '<button type="button" class="rf-link-btn" data-k="remove" aria-label="ลบรายการนี้">✕ ลบ</button>' +
+        '<div class="rf-stock-btns"><button type="button" class="rf-btn" data-k="add">＋ เพิ่มลงรายการ</button>' +
+        '<button type="button" class="rf-link-btn" data-k="cancel" style="color:var(--rf-muted)">ยกเลิก</button></div>' +
         '<div class="rf-effect"></div>' +
-      '</div>');
-    var el = $(id);
-    el.addEventListener('input', updateReview);
-    el.addEventListener('change', updateReview);
-    el.querySelector('[data-k=remove]').addEventListener('click', function () { el.remove(); updateReview(); });
-    updateReview();
+      '</div></td></tr>');
+    var ed = row.nextElementSibling;
+    var eff = ed.querySelector('.rf-effect');
+    var check = function () {
+      var a = ed.querySelector('[data-k=action]').value, q = ed.querySelector('[data-k=qty]').value;
+      var qty = /^\d+$/.test(q) ? Number(q) : NaN;
+      var problem = !a ? 'เลือกการเปลี่ยนแปลง'
+        : !(qty >= 1 && qty <= 500) ? 'จำนวนต้องเป็นเลข 1-500'
+        : qty > now[ACTIONS[a].from] ? LABEL[ACTIONS[a].from] + 'มีอยู่ ' + now[ACTIONS[a].from] + ' ชิ้น' : '';
+      eff.className = 'rf-effect' + (problem && a ? ' bad' : '');
+      eff.textContent = problem ? (a ? '⚠ ' : '') + problem
+        : '→ ' + LABEL[ACTIONS[a].from] + ' ลด ' + qty + ' · ' + LABEL[ACTIONS[a].to] + ' เพิ่ม ' + qty;
+      return problem ? null : { action: a, qty: qty };
+    };
+    ed.addEventListener('input', check);
+    ed.addEventListener('change', check);
+    check();
+    ed.querySelector('[data-k=cancel]').addEventListener('click', function () { closeEditor(); row.focus(); });
+    ed.querySelector('[data-k=add]').addEventListener('click', function () {
+      var v = check();
+      if (!v) return;
+      // อุปกรณ์เดิม + การเปลี่ยนแปลงเดิม → รวมจำนวนเป็นรายการเดียว
+      var same = picked.filter(function (p) { return p.itemNo === no && p.action === v.action; })[0];
+      if (same) same.qty += v.qty;
+      else picked.push({ itemNo: no, action: v.action, qty: v.qty });
+      closeEditor();
+      updateReview();
+      var it = stock.filter(function (s) { return s.no === no; })[0];
+      msg('stockMsg', 'ok', '✓ เพิ่ม <b>' + esc(it.no + '. ' + it.name) + '</b> ' + esc(v.action) + ' ' + v.qty +
+        ' ชิ้น แล้ว · แตะอุปกรณ์อื่นเพื่อเพิ่มต่อ หรือเลื่อนลงไปดูสรุปในข้อ 3 และกดส่ง');
+      row.focus({ preventScroll: true });
+    });
+    ed.querySelector('[data-k=action]').focus({ preventScroll: true });
   }
-  function readLines() {
-    return Array.prototype.map.call(document.querySelectorAll('#lines .rf-line'), function (el) {
-      var q = el.querySelector('[data-k=qty]').value;
-      return { el: el, itemNo: Number(el.querySelector('[data-k=item]').value) || 0,
-        action: el.querySelector('[data-k=action]').value,
-        qty: /^\d+$/.test(q) ? Number(q) : NaN };
+  // ป้าย "✓ ยืมออก 1" ในตาราง บอกว่าอุปกรณ์ไหนกรอกไปแล้ว
+  function markStock() {
+    var byNo = {};
+    picked.forEach(function (p) { (byNo[p.itemNo] = byNo[p.itemNo] || []).push(p.action + ' ' + p.qty); });
+    Array.prototype.forEach.call(document.querySelectorAll('#stockBody .rf-stock-row'), function (row) {
+      var list = byNo[row.getAttribute('data-no')];
+      row.querySelector('[data-added]').textContent = list ? '✓ ' + list.join(', ') : '';
     });
   }
+  $('stockBody').addEventListener('click', function (e) {
+    var row = e.target.closest('.rf-stock-row');
+    if (row) openEditor(row);
+  });
+  $('stockBody').addEventListener('keydown', function (e) {
+    var row = e.target.closest('.rf-stock-row');
+    if (row && e.target === row && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openEditor(row); }
+  });
+
+  // ── ข้อ 3: สรุปรายการ ──
   function updateReview() {
     if (!stock) { $('review').classList.add('rf-hidden'); return { ok: false }; }
-    var lines = readLines();
+    var lines = picked;
     var res = applyLines(stock, lines);
     var ok = lines.length > 0;
-    lines.forEach(function (ln, i) {
-      var eff = ln.el.querySelector('.rf-effect');
-      var problem = '';
-      if (!ln.itemNo) problem = 'เลือกอุปกรณ์';
-      else if (!ln.action) problem = 'เลือกการเปลี่ยนแปลง';
-      else if (!(ln.qty >= 1 && ln.qty <= 500)) problem = 'จำนวนต้องเป็นเลข 1-500';
-      else if (res.errors[i]) problem = res.errors[i];
-      ln.el.classList.toggle('has-error', !!problem && !!(ln.itemNo && ln.action));
-      if (problem) {
-        ok = false;
-        eff.className = 'rf-effect' + (ln.itemNo && ln.action ? ' bad' : '');
-        eff.textContent = ln.itemNo && ln.action ? '⚠ ' + problem : problem;
-      } else {
-        var act = ACTIONS[ln.action];
-        eff.className = 'rf-effect';
-        eff.textContent = '→ ' + LABEL[act.from] + ' ลด ' + ln.qty + ' · ' + LABEL[act.to] + ' เพิ่ม ' + ln.qty;
-      }
-    });
+    var byNo = {};
+    stock.forEach(function (it) { byNo[it.no] = it; });
+    // ลบรายการก่อนหน้าออกแล้ว รายการหลังอาจทำไม่ได้ (เช่น รับคืนแล้วยืมออกต่อ) → เตือนให้ลบ
+    $('lines').innerHTML = !lines.length
+      ? '<div class="rf-sum-empty">ยังไม่มีรายการ · แตะชื่ออุปกรณ์ในตารางข้อ 2 เพื่อเพิ่ม</div>'
+      : lines.map(function (ln, i) {
+          var act = ACTIONS[ln.action], it = byNo[ln.itemNo];
+          if (res.errors[i]) ok = false;
+          return '<div class="rf-sum' + (res.errors[i] ? ' has-error' : '') + '">' +
+            '<div class="rf-sum-main"><b>' + esc(it.no + '. ' + it.name) + '</b>' +
+              '<div><span class="rf-sum-act">' + esc(ln.action) + ' ' + ln.qty + ' ชิ้น</span></div>' +
+              '<div class="rf-effect' + (res.errors[i] ? ' bad' : '') + '">' + (res.errors[i] ? '⚠ ' + esc(res.errors[i]) + ' กรุณาลบรายการนี้'
+                : '→ ' + LABEL[act.from] + ' ลด ' + ln.qty + ' · ' + LABEL[act.to] + ' เพิ่ม ' + ln.qty) + '</div></div>' +
+            '<button type="button" class="rf-link-btn" data-remove="' + i + '" aria-label="ลบรายการนี้">✕ ลบ</button>' +
+          '</div>';
+        }).join('');
     var touched = {};
     lines.forEach(function (ln) { if (ln.itemNo) touched[ln.itemNo] = true; });
     var before = {};
@@ -395,6 +425,7 @@
     });
     $('reviewBody').innerHTML = rows.join('');
     $('review').classList.toggle('rf-hidden', !rows.length);
+    markStock();
     return { ok: ok, lines: lines, items: res.items };
   }
 
@@ -414,7 +445,7 @@
     var d = $('eventDate').value;
     mark('eventDate', !d || d > today() || (asOf && d < asOf), 'วันที่เกิดรายการต้องอยู่ระหว่าง ' + asOf + ' ถึงวันนี้');
     var rv = updateReview();
-    if (stock && !rv.ok) problems.push(rv.lines && rv.lines.length ? 'แก้ไขรายการอุปกรณ์ที่มีเครื่องหมาย ⚠ หรือยังเลือกไม่ครบ' : 'เพิ่มรายการอุปกรณ์อย่างน้อย 1 รายการ');
+    if (stock && !rv.ok) problems.push(rv.lines && rv.lines.length ? 'ลบรายการที่มีเครื่องหมาย ⚠ ในข้อ 3' : 'แตะชื่ออุปกรณ์ในตารางข้อ 2 เพื่อเพิ่มรายการอย่างน้อย 1 รายการ');
     if (photos.busy()) problems.push('รอให้ระบบเตรียมรูปเสร็จก่อน');
     if (photosEnabled && photos.count() && !$('photoConsent').checked) problems.push('ติ๊กยืนยันว่าผู้ป่วยหรือญาติยินยอมให้ถ่ายรูป');
     if (!$('confirm').checked) problems.push('ติ๊กยืนยันว่าตรวจสอบข้อมูลแล้ว');
@@ -521,7 +552,12 @@
   $('eventDate').max = today();
   $('uDistrict').addEventListener('change', function () { fillUnits(this.value); onUnitChange(); });
   $('uUnit').addEventListener('change', onUnitChange);
-  $('addLine').addEventListener('click', addLine);
+  $('lines').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-remove]');
+    if (!btn) return;
+    picked.splice(Number(btn.getAttribute('data-remove')), 1);
+    updateReview();
+  });
   $('reportForm').addEventListener('submit', submit);
   $('again').addEventListener('click', again);
   $('donePopOk').addEventListener('click', closePop);

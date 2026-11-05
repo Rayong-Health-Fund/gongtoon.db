@@ -97,6 +97,42 @@ body {
 .rf-line.has-error { border-color: var(--rf-bad); background: var(--rf-bad-soft); }
 .rf-line .rf-effect.bad { color: var(--rf-bad); font-weight: 600; }
 
+/* ตารางยอดของหน่วย: แตะแถวเพื่อกรอกใต้แถวนั้น (ไม่มีภาพเคลื่อนไหว ไม่เลื่อนหน้าจอ) */
+.rf-stock-row { cursor: pointer; }
+.rf-stock-row:hover td, .rf-stock-row.open td { background: var(--rf-primary-soft); }
+.rf-stock-row:focus-visible { outline: 3px solid rgba(15, 118, 110, 0.35); outline-offset: -3px; }
+.rf-stock-row.open td { border-bottom-color: transparent; }
+.rf-stock-tap { display: block; font-size: 0.82rem; color: var(--rf-primary); font-weight: 600; }
+.rf-stock-row.open .rf-stock-tap { visibility: hidden; }
+.rf-stock-added { display: block; font-size: 0.85rem; color: var(--rf-ok); font-weight: 700; }
+.rf-stock-added:empty { display: none; }
+.rf-stock-edit td { background: var(--rf-primary-soft); padding-top: 4px; }
+.rf-stock-form { display: grid; grid-template-columns: 1.6fr 110px auto; gap: 10px; align-items: end; }
+.rf-stock-btns { display: flex; gap: 6px; align-items: center; }
+.rf-stock-form .rf-effect { grid-column: 1 / -1; font-size: 0.9rem; color: var(--rf-muted); }
+.rf-stock-form .rf-effect.bad { color: var(--rf-bad); font-weight: 600; }
+/* สรุปรายการ (ข้อ 3) */
+.rf-sum {
+  border: 1.5px solid var(--rf-line); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px;
+  display: flex; gap: 10px; align-items: flex-start; justify-content: space-between;
+}
+.rf-sum.has-error { border-color: var(--rf-bad); background: var(--rf-bad-soft); }
+.rf-sum-act { display: inline-block; margin-top: 2px; font-weight: 700; color: var(--rf-primary); }
+.rf-sum .rf-effect { font-size: 0.9rem; color: var(--rf-muted); }
+.rf-sum .rf-effect.bad { color: var(--rf-bad); font-weight: 600; }
+.rf-sum .rf-link-btn { flex: none; }
+.rf-sum-empty {
+  border: 1.5px dashed var(--rf-line); border-radius: 12px; padding: 14px; margin-bottom: 8px;
+  color: var(--rf-muted); text-align: center;
+}
+@media (max-width: 720px) {
+  /* หัวคอลัมน์ตัวเลขตัดบรรทัดได้ ชื่ออุปกรณ์จะได้มีที่มากขึ้น */
+  .rf-tight-table th.num { white-space: normal; font-size: 0.85rem; }
+  .rf-tight-table th, .rf-tight-table td { padding: 8px 6px; }
+  .rf-stock-form { grid-template-columns: 1fr 1fr; }
+  .rf-stock-form .rf-field:first-child, .rf-stock-btns { grid-column: 1 / -1; }
+}
+
 .rf-note { border-radius: 10px; padding: 10px 14px; font-size: 0.95rem; margin: 10px 0; }
 .rf-note.info { background: var(--rf-primary-soft); color: #115e59; }
 .rf-note.warn { background: var(--rf-warn-soft); color: var(--rf-warn); }
